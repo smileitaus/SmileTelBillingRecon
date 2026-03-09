@@ -1,0 +1,50 @@
+[
+  {
+    "accountNumber": "",
+    "supplierName": "Telstra",
+    "serviceCount": 8,
+    "monthlyCost": 792.0
+  },
+  {
+    "accountNumber": "192549800",
+    "supplierName": "Telstra",
+    "serviceCount": 64,
+    "monthlyCost": 0.0
+  },
+  {
+    "accountNumber": "2000703186948",
+    "supplierName": "Telstra",
+    "serviceCount": 3,
+    "monthlyCost": 279.0
+  },
+  {
+    "accountNumber": "2000703916450",
+    "supplierName": "Telstra",
+    "serviceCount": 1,
+    "monthlyCost": 93.0
+  },
+  {
+    "accountNumber": "2000719405571",
+    "supplierName": "Telstra",
+    "serviceCount": 23,
+    "monthlyCost": 2179.0
+  },
+  {
+    "accountNumber": "2000719405639",
+    "supplierName": "Telstra",
+    "serviceCount": 2,
+    "monthlyCost": 186.0
+  },
+  {
+    "accountNumber": "586992900",
+    "supplierName": "Telstra",
+    "serviceCount": 170,
+    "monthlyCost": 606.0
+  },
+  {
+    "accountNumber": "9466986800",
+    "supplierName": "Telstra",
+    "serviceCount": 37,
+    "monthlyCost": 3441.0
+  }
+]
