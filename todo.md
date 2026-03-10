@@ -37,3 +37,5 @@
 
 # Bug Fixes
 - [x] Fix: Published site redirects to Manus OAuth instead of showing team password login form
+- [x] Fix: Remove misleading drag-drop zone from Unmatched Services page
+- [x] Fix: Replace with inline customer search-and-assign workflow

@@ -6,7 +6,6 @@ import {
   Check,
   ChevronDown,
   ChevronRight,
-  GripVertical,
   Info,
   Loader2,
   Phone,
@@ -19,8 +18,9 @@ import {
   Smartphone,
   X,
   LinkIcon,
+  UserPlus,
 } from "lucide-react";
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import { toast } from "sonner";
 
 type ConfidenceLevel = "high" | "medium" | "low" | "none";
@@ -85,7 +85,6 @@ function ServiceCard({
         onClick={() => onExpand(service.externalId)}
         className="w-full flex items-center gap-3 px-4 py-3 text-left"
       >
-        <GripVertical className="w-4 h-4 text-muted-foreground/40 shrink-0 cursor-grab" />
         <div
           className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${
             service.serviceType === "Internet"
@@ -139,9 +138,7 @@ function ServiceCard({
         )}
       </button>
 
-      {isExpanded && (
-        <ExpandedPanel service={service} />
-      )}
+      {isExpanded && <ExpandedPanel service={service} />}
     </div>
   );
 }
@@ -154,12 +151,20 @@ function ExpandedPanel({ service }: { service: any }) {
     );
   const [customerSearch, setCustomerSearch] = useState("");
   const [showManualSearch, setShowManualSearch] = useState(false);
+  const searchInputRef = useRef<HTMLInputElement>(null);
   const { data: searchResults } = trpc.billing.search.useQuery(
     { query: customerSearch },
     { enabled: customerSearch.length >= 2 }
   );
   const assignMutation = trpc.billing.unmatched.assign.useMutation();
   const utils = trpc.useUtils();
+
+  // Auto-focus search input when manual search is opened
+  useEffect(() => {
+    if (showManualSearch && searchInputRef.current) {
+      searchInputRef.current.focus();
+    }
+  }, [showManualSearch]);
 
   const handleAssign = async (customerExternalId: string) => {
     try {
@@ -176,31 +181,10 @@ function ExpandedPanel({ service }: { service: any }) {
     }
   };
 
-  // Drag-and-drop: allow dropping a customer onto this panel
-  const [isDragOver, setIsDragOver] = useState(false);
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragOver(true);
-  };
-  const handleDragLeave = () => setIsDragOver(false);
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragOver(false);
-    const custId = e.dataTransfer.getData("customer/externalId");
-    if (custId) {
-      handleAssign(custId);
-    }
-  };
+  const hasSuggestions = suggestions && suggestions.length > 0;
 
   return (
-    <div
-      className={`border-t border-border px-4 py-4 space-y-4 ${
-        isDragOver ? "bg-primary/5 ring-2 ring-primary/20 ring-inset" : ""
-      }`}
-      onDragOver={handleDragOver}
-      onDragLeave={handleDragLeave}
-      onDrop={handleDrop}
-    >
+    <div className="border-t border-border px-4 py-4 space-y-4">
       {/* Service Details */}
       <div className="grid grid-cols-2 gap-x-6 gap-y-2 text-xs">
         <div>
@@ -241,10 +225,12 @@ function ExpandedPanel({ service }: { service: any }) {
             <Loader2 className="w-4 h-4 animate-spin" />
             Analysing service data for matches...
           </div>
-        ) : suggestions && suggestions.length > 0 ? (
+        ) : hasSuggestions ? (
           <div className="space-y-2">
             {suggestions.map((s: any, idx: number) => {
-              const conf = confidenceConfig[s.confidence as ConfidenceLevel] || confidenceConfig.none;
+              const conf =
+                confidenceConfig[s.confidence as ConfidenceLevel] ||
+                confidenceConfig.none;
               const ConfIcon = conf.icon;
               return (
                 <div
@@ -295,8 +281,7 @@ function ExpandedPanel({ service }: { service: any }) {
         ) : (
           <div className="flex items-center gap-2 py-3 px-3 bg-muted/50 rounded-lg text-sm text-muted-foreground">
             <ShieldQuestion className="w-4 h-4" />
-            No automatic matches found. Use manual search below or drag a
-            customer here.
+            No automatic matches found. Use the search below to find and assign a customer.
           </div>
         )}
       </div>
@@ -327,64 +312,111 @@ function ExpandedPanel({ service }: { service: any }) {
         </div>
       )}
 
-      {/* Manual Search */}
-      <div>
+      {/* Assign to Customer Section */}
+      <div className="border border-border rounded-lg overflow-hidden">
         <button
           onClick={() => setShowManualSearch(!showManualSearch)}
-          className="flex items-center gap-1.5 text-xs font-medium text-primary hover:text-primary/80 transition-colors"
+          className={`w-full flex items-center gap-2 px-4 py-3 text-sm font-medium transition-colors ${
+            showManualSearch
+              ? "bg-primary/5 text-primary border-b border-border"
+              : "bg-muted/30 text-foreground hover:bg-muted/50"
+          }`}
         >
-          <Search className="w-3.5 h-3.5" />
-          {showManualSearch ? "Hide" : "Search"} for customer manually
+          <UserPlus className="w-4 h-4" />
+          <span>Find and assign a customer</span>
+          <span className="text-xs text-muted-foreground ml-1">
+            — search by name, phone, or AVC ID
+          </span>
+          <div className="flex-1" />
+          {showManualSearch ? (
+            <X className="w-4 h-4 text-muted-foreground" />
+          ) : (
+            <Search className="w-4 h-4 text-muted-foreground" />
+          )}
         </button>
+
         {showManualSearch && (
-          <div className="mt-2 space-y-2">
-            <input
-              type="text"
-              value={customerSearch}
-              onChange={(e) => setCustomerSearch(e.target.value)}
-              placeholder="Search by customer name..."
-              className="w-full px-3 py-2 text-sm bg-muted/50 border border-border rounded-md outline-none focus:ring-2 focus:ring-ring"
-            />
-            {searchResults && searchResults.customers.length > 0 && (
-              <div className="border border-border rounded-md divide-y divide-border max-h-48 overflow-y-auto">
-                {searchResults.customers.map((c: any) => (
-                  <div
-                    key={c.id}
-                    className="flex items-center justify-between px-3 py-2 hover:bg-muted/50 transition-colors"
-                    draggable
-                    onDragStart={(e) => {
-                      e.dataTransfer.setData(
-                        "customer/externalId",
-                        c.externalId
-                      );
-                    }}
-                  >
-                    <div>
-                      <p className="text-sm font-medium">{c.name}</p>
-                      <p className="text-xs text-muted-foreground">
-                        {c.serviceCount} services
-                      </p>
-                    </div>
-                    <button
-                      onClick={() => handleAssign(c.externalId)}
-                      disabled={assignMutation.isPending}
-                      className="flex items-center gap-1 px-2.5 py-1 text-xs font-medium bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors disabled:opacity-50"
-                    >
-                      <ArrowRight className="w-3 h-3" />
-                      Assign
-                    </button>
+          <div className="p-4 space-y-3">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <input
+                ref={searchInputRef}
+                type="text"
+                value={customerSearch}
+                onChange={(e) => setCustomerSearch(e.target.value)}
+                placeholder="Type customer name, phone number, or AVC ID..."
+                className="w-full pl-9 pr-3 py-2.5 text-sm bg-background border border-border rounded-lg outline-none focus:ring-2 focus:ring-ring focus:border-primary transition-all"
+              />
+              {customerSearch && (
+                <button
+                  onClick={() => setCustomerSearch("")}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              )}
+            </div>
+
+            {customerSearch.length < 2 && (
+              <p className="text-xs text-muted-foreground px-1">
+                Type at least 2 characters to search...
+              </p>
+            )}
+
+            {searchResults && customerSearch.length >= 2 && (
+              <>
+                {searchResults.customers.length > 0 ? (
+                  <div className="border border-border rounded-lg divide-y divide-border max-h-64 overflow-y-auto">
+                    {searchResults.customers.map((c: any) => (
+                      <div
+                        key={c.id}
+                        className="flex items-center justify-between px-4 py-3 hover:bg-muted/50 transition-colors group"
+                      >
+                        <div className="min-w-0 flex-1">
+                          <p className="text-sm font-medium truncate">
+                            {c.name}
+                          </p>
+                          <div className="flex items-center gap-3 mt-0.5">
+                            <span className="text-xs text-muted-foreground">
+                              {c.serviceCount} services
+                            </span>
+                            {c.billingPlatform && (
+                              <span className="text-[10px] bg-muted px-1.5 py-0.5 rounded font-mono">
+                                {c.billingPlatform}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                        <button
+                          onClick={() => handleAssign(c.externalId)}
+                          disabled={assignMutation.isPending}
+                          className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors disabled:opacity-50 opacity-80 group-hover:opacity-100"
+                        >
+                          {assignMutation.isPending ? (
+                            <Loader2 className="w-3 h-3 animate-spin" />
+                          ) : (
+                            <ArrowRight className="w-3 h-3" />
+                          )}
+                          Assign
+                        </button>
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
+                ) : (
+                  <div className="flex flex-col items-center py-6 text-muted-foreground">
+                    <Search className="w-5 h-5 mb-2 opacity-50" />
+                    <p className="text-sm">
+                      No customers found for "{customerSearch}"
+                    </p>
+                    <p className="text-xs mt-1">
+                      Try a different name, phone number, or AVC ID
+                    </p>
+                  </div>
+                )}
+              </>
             )}
           </div>
         )}
-      </div>
-
-      {/* Drop Zone Hint */}
-      <div className="flex items-center justify-center py-2 border-2 border-dashed border-border rounded-lg text-xs text-muted-foreground">
-        <GripVertical className="w-3.5 h-3.5 mr-1.5" />
-        Drag a customer from the sidebar or search results to assign
       </div>
     </div>
   );
@@ -459,15 +491,14 @@ export default function UnmatchedServices() {
   const { data: services, isLoading } =
     trpc.billing.unmatched.list.useQuery();
   const [expandedId, setExpandedId] = useState<string | null>(null);
-  const [filter, setFilter] = useState<"all" | "Internet" | "Mobile" | "Voice">("all");
+  const [filter, setFilter] = useState<
+    "all" | "Internet" | "Mobile" | "Voice"
+  >("all");
   const [sortBy, setSortBy] = useState<"cost" | "type" | "account">("cost");
 
-  const handleExpand = useCallback(
-    (id: string) => {
-      setExpandedId((prev) => (prev === id ? null : id));
-    },
-    []
-  );
+  const handleExpand = useCallback((id: string) => {
+    setExpandedId((prev) => (prev === id ? null : id));
+  }, []);
 
   if (isLoading) {
     return (
@@ -520,7 +551,7 @@ export default function UnmatchedServices() {
         </h1>
         <p className="text-sm text-muted-foreground mt-1">
           {allServices.length} services not yet linked to a customer. Expand
-          each to see suggested matches, or drag customers to assign.
+          each to see suggested matches or search for a customer to assign.
         </p>
       </div>
 
