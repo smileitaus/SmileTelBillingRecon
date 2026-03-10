@@ -920,23 +920,30 @@ export default function UnmatchedServices() {
         {/* Status filter */}
         <div className="flex items-center gap-1 bg-muted/50 rounded-md p-0.5">
           {([
-            { value: "all", label: "All Status" },
-            { value: "unmatched", label: "Unmatched" },
-            { value: "flagged_for_termination", label: "Flagged" },
-            { value: "terminated", label: "Terminated" },
+            { value: "all", label: "All", count: allServices.length },
+            { value: "unmatched", label: "Unmatched", count: allServices.filter((s: any) => s.status === "unmatched").length },
+            { value: "flagged_for_termination", label: "Flagged", count: flaggedCount },
+            { value: "terminated", label: "Terminated", count: terminatedCount },
           ] as const).map((f) => (
             <button
               key={f.value}
               onClick={() => setStatusFilter(f.value as any)}
-              className={`px-3 py-1.5 text-xs rounded-md transition-colors ${
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md transition-colors ${
                 statusFilter === f.value
                   ? "bg-background shadow-sm font-medium"
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
               {f.label}
-              {f.value === "flagged_for_termination" && flaggedCount > 0 ? ` (${flaggedCount})` : ""}
-              {f.value === "terminated" && terminatedCount > 0 ? ` (${terminatedCount})` : ""}
+              <span className={`inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 text-[10px] font-semibold rounded-full ${
+                statusFilter === f.value
+                  ? f.value === "flagged_for_termination" ? "bg-rose-100 text-rose-700"
+                    : f.value === "terminated" ? "bg-gray-200 text-gray-600"
+                    : "bg-primary/10 text-primary"
+                  : "bg-muted text-muted-foreground"
+              }`}>
+                {f.count}
+              </span>
             </button>
           ))}
         </div>

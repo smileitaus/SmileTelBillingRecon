@@ -274,7 +274,14 @@ export async function getUnmatchedServices() {
   const db = await getDb();
   if (!db) return [];
 
-  const result = await db.select().from(services).where(eq(services.status, 'unmatched')).orderBy(desc(services.monthlyCost));
+  // Return all non-active services: unmatched, flagged_for_termination, and terminated
+  const result = await db.select().from(services).where(
+    or(
+      eq(services.status, 'unmatched'),
+      eq(services.status, 'flagged_for_termination'),
+      eq(services.status, 'terminated')
+    )
+  ).orderBy(desc(services.monthlyCost));
   return result.map(s => ({
     ...s,
     monthlyCost: parseFloat(s.monthlyCost),
@@ -527,21 +534,96 @@ export async function searchAll(query: string) {
   const db = await getDb();
   if (!db) return { customers: [], services: [] };
 
-  const term = `%${query}%`;
+  const rawQuery = query.trim();
+  const term = `%${rawQuery}%`;
+  // Normalize: strip spaces, dashes, parens for phone/number matching
+  const digitsOnly = rawQuery.replace(/[\s\-\(\)\.]/g, '');
+  const digitsTerm = digitsOnly.length >= 3 ? `%${digitsOnly}%` : null;
 
+  // Search customers by name
   const custResults = await db.select().from(customers).where(
     like(customers.name, term)
   ).limit(10);
 
+  // Build service search conditions across ALL fields
+  const svcConditions = [
+    like(services.customerName, term),
+    like(services.connectionId, term),
+    like(services.serviceId, term),
+    like(services.locationAddress, term),
+    like(services.planName, term),
+    like(services.supplierAccount, term),
+    like(services.serviceType, term),
+    like(services.serviceTypeDetail, term),
+    like(services.email, term),
+    like(services.ipAddress, term),
+    like(services.locId, term),
+  ];
+
+  // For phone numbers, also search with digits-only normalization
+  // This matches "0436097699" against stored "0436 097 699" and vice versa
+  if (digitsTerm) {
+    svcConditions.push(
+      sql`REPLACE(REPLACE(REPLACE(REPLACE(${services.phoneNumber}, ' ', ''), '-', ''), '(', ''), ')', '') LIKE ${digitsTerm}`
+    );
+    svcConditions.push(
+      sql`REPLACE(REPLACE(REPLACE(REPLACE(${services.serviceId}, ' ', ''), '-', ''), '(', ''), ')', '') LIKE ${digitsTerm}`
+    );
+  } else {
+    svcConditions.push(like(services.phoneNumber, term));
+  }
+
   const svcResults = await db.select().from(services).where(
-    or(
-      like(services.customerName, term),
-      like(services.phoneNumber, term),
-      like(services.connectionId, term),
-      like(services.serviceId, term),
-      like(services.locationAddress, term)
-    )
-  ).limit(20);
+    or(...svcConditions)
+  ).limit(30);
+
+  // Determine which field matched for each service result
+  const lowerQuery = rawQuery.toLowerCase();
+  const servicesWithMatchField = svcResults.map(s => {
+    let matchedField = 'service';
+    let matchedValue = '';
+
+    const checkField = (value: string | null, fieldName: string, displayName: string) => {
+      if (!value) return false;
+      // Check both regular and digits-only match
+      if (value.toLowerCase().includes(lowerQuery)) {
+        matchedField = displayName;
+        matchedValue = value;
+        return true;
+      }
+      if (digitsTerm && fieldName === 'phoneNumber') {
+        const normalizedVal = value.replace(/[\s\-\(\)\.]/g, '');
+        if (normalizedVal.includes(digitsOnly)) {
+          matchedField = displayName;
+          matchedValue = value;
+          return true;
+        }
+      }
+      return false;
+    };
+
+    // Check fields in priority order
+    checkField(s.phoneNumber, 'phoneNumber', 'Phone') ||
+    checkField(s.serviceId, 'serviceId', 'Service ID') ||
+    checkField(s.connectionId, 'connectionId', 'AVC/Connection') ||
+    checkField(s.supplierAccount, 'supplierAccount', 'Account') ||
+    checkField(s.planName, 'planName', 'Plan') ||
+    checkField(s.locationAddress, 'locationAddress', 'Address') ||
+    checkField(s.customerName, 'customerName', 'Customer') ||
+    checkField(s.serviceType, 'serviceType', 'Type') ||
+    checkField(s.serviceTypeDetail, 'serviceTypeDetail', 'Type') ||
+    checkField(s.email, 'email', 'Email') ||
+    checkField(s.ipAddress, 'ipAddress', 'IP Address') ||
+    checkField(s.locId, 'locId', 'Location ID');
+
+    return {
+      ...s,
+      monthlyCost: parseFloat(s.monthlyCost),
+      billingHistory: s.billingHistory ? JSON.parse(s.billingHistory) : [],
+      matchedField,
+      matchedValue,
+    };
+  });
 
   return {
     customers: custResults.map(c => ({
@@ -549,10 +631,6 @@ export async function searchAll(query: string) {
       billingPlatforms: c.billingPlatforms ? JSON.parse(c.billingPlatforms) : [],
       monthlyCost: parseFloat(c.monthlyCost),
     })),
-    services: svcResults.map(s => ({
-      ...s,
-      monthlyCost: parseFloat(s.monthlyCost),
-      billingHistory: s.billingHistory ? JSON.parse(s.billingHistory) : [],
-    })),
+    services: servicesWithMatchField,
   };
 }

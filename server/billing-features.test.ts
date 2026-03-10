@@ -163,8 +163,10 @@ describe("billing.unmatched", () => {
 
     const unmatched = await caller.billing.unmatched.list();
     expect(Array.isArray(unmatched)).toBe(true);
+    // The list now returns all non-active services: unmatched, flagged_for_termination, and terminated
+    const validStatuses = ['unmatched', 'flagged_for_termination', 'terminated'];
     unmatched.forEach((s) => {
-      expect(s.status).toBe("unmatched");
+      expect(validStatuses).toContain(s.status);
     });
   });
 

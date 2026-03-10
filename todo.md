@@ -66,3 +66,15 @@
 - [x] Improve matching: supplier account-based matching
 - [x] Improve matching: service type + plan similarity matching
 - [x] Add automated discovery scoring / confidence improvements
+
+# Global Search Improvements
+- [x] Fix search to find SIM numbers / phone numbers
+- [x] Add search across AVC/connection IDs
+- [x] Add search across supplier account numbers
+- [x] Add search across service descriptions / plan names
+- [x] Add search across service addresses
+- [x] Display matched field type in search results for clarity
+
+# Bug Fixes & UI Improvements
+- [x] Fix: Flagged for termination filter not correctly populating the list
+- [x] Add count numbers to status filter tabs (Unmatched, Flagged, Terminated)

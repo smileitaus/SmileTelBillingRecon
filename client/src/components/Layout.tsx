@@ -38,6 +38,10 @@ interface SearchService {
   serviceId: string | null;
   customerName: string | null;
   serviceType: string;
+  planName: string | null;
+  supplierAccount: string | null;
+  matchedField: string;
+  matchedValue: string;
 }
 
 function CommandSearch() {
@@ -124,7 +128,7 @@ function CommandSearch() {
                 ref={inputRef}
                 value={query}
                 onChange={(e) => handleChange(e.target.value)}
-                placeholder="Search customers, services, phone numbers..."
+                placeholder="Search by name, SIM, phone, AVC, account, plan..."
                 className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
               />
               <kbd className="text-[10px] font-mono text-muted-foreground bg-muted px-1.5 py-0.5 rounded border border-border">
@@ -180,14 +184,21 @@ function CommandSearch() {
                         }}
                         className="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-accent text-sm transition-colors"
                       >
-                        <ChevronRight className="w-3.5 h-3.5 text-muted-foreground" />
+                        <ChevronRight className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
                         <div className="flex-1 min-w-0">
-                          <p className="truncate">{s.customerName}</p>
+                          <div className="flex items-center gap-2">
+                            <p className="truncate">{s.customerName || s.planName || 'Unknown'}</p>
+                            {s.matchedField && s.matchedField !== 'Customer' && (
+                              <span className="shrink-0 text-[9px] font-semibold uppercase px-1.5 py-0.5 rounded bg-primary/10 text-primary">
+                                {s.matchedField}
+                              </span>
+                            )}
+                          </div>
                           <p className="data-value text-muted-foreground truncate">
-                            {s.phoneNumber || s.connectionId || s.serviceId}
+                            {s.matchedValue || s.phoneNumber || s.connectionId || s.serviceId}
                           </p>
                         </div>
-                        <span className="text-xs text-muted-foreground">{s.serviceType}</span>
+                        <span className="text-xs text-muted-foreground shrink-0">{s.serviceType}</span>
                       </Link>
                     ))}
                   </div>
