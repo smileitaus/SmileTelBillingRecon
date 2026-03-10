@@ -1,0 +1,36 @@
+{
+  "query": "SELECT * FROM customers WHERE name LIKE '%Osprey%' OR name LIKE '%CTS4773%' LIMIT 5;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3M17pEiktKAmnzx.5240b4750712 --database 4LVfr96qhVoYSkLinpTZkt --execute SELECT * FROM customers WHERE name LIKE '%Osprey%' OR name LIKE '%CTS4773%' LIMIT 5;",
+  "rows": [
+    {
+      "id": "104",
+      "externalId": "C0038",
+      "name": "Body Corporate for Osprey Mooloolaba CTS4773",
+      "billingPlatforms": "[\"ECN\"]",
+      "serviceCount": "1",
+      "monthlyCost": "768.90",
+      "unmatchedCount": "0",
+      "matchedCount": "1",
+      "status": "active",
+      "createdAt": "2026-03-10 00:08:46",
+      "updatedAt": "2026-03-10 12:58:57"
+    },
+    {
+      "id": "282",
+      "externalId": "C2635",
+      "name": "Osprey",
+      "billingPlatforms": "[]",
+      "serviceCount": "0",
+      "monthlyCost": "0.00",
+      "unmatchedCount": "0",
+      "matchedCount": "0",
+      "status": "active",
+      "createdAt": "2026-03-10 00:08:46",
+      "updatedAt": "2026-03-10 00:08:46"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\texternalId\tname\tbillingPlatforms\tserviceCount\tmonthlyCost\tunmatchedCount\tmatchedCount\tstatus\tcreatedAt\tupdatedAt\n104\tC0038\tBody Corporate for Osprey Mooloolaba CTS4773\t[\"ECN\"]\t1\t768.90\t0\t1\tactive\t2026-03-10 00:08:46\t2026-03-10 12:58:57\n282\tC2635\tOsprey\t[]\t0\t0.00\t0\t0\tactive\t2026-03-10 00:08:46\t2026-03-10 00:08:46\n",
+  "stderr": "",
+  "execution_time_ms": 1616
+}

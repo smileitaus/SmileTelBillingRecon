@@ -402,6 +402,8 @@ function ExpandedPanel({ service }: { service: any }) {
   );
   const assignMutation = trpc.billing.unmatched.assign.useMutation();
   const dismissMutation = trpc.billing.unmatched.dismiss.useMutation();
+  const [assigningCustomerId, setAssigningCustomerId] = useState<string | null>(null);
+  const [dismissingCustomerId, setDismissingCustomerId] = useState<string | null>(null);
   const utils = trpc.useUtils();
 
   useEffect(() => {
@@ -411,6 +413,7 @@ function ExpandedPanel({ service }: { service: any }) {
   }, [showManualSearch]);
 
   const handleAssign = async (customerExternalId: string) => {
+    setAssigningCustomerId(customerExternalId);
     try {
       await assignMutation.mutateAsync({
         serviceExternalId: service.externalId,
@@ -422,10 +425,13 @@ function ExpandedPanel({ service }: { service: any }) {
       utils.billing.customers.list.invalidate();
     } catch {
       toast.error("Failed to assign service");
+    } finally {
+      setAssigningCustomerId(null);
     }
   };
 
   const handleDismiss = async (customerExternalId: string) => {
+    setDismissingCustomerId(customerExternalId);
     try {
       await dismissMutation.mutateAsync({
         serviceExternalId: service.externalId,
@@ -435,6 +441,8 @@ function ExpandedPanel({ service }: { service: any }) {
       utils.billing.unmatched.suggestions.invalidate({ serviceId: service.externalId });
     } catch {
       toast.error("Failed to dismiss suggestion");
+    } finally {
+      setDismissingCustomerId(null);
     }
   };
 
@@ -543,7 +551,7 @@ function ExpandedPanel({ service }: { service: any }) {
                         className="flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium border border-border text-muted-foreground rounded-md hover:bg-muted/80 hover:text-foreground transition-colors disabled:opacity-50"
                         title="Dismiss this suggestion"
                       >
-                        {dismissMutation.isPending ? (
+                        {dismissingCustomerId === s.customer.externalId ? (
                           <Loader2 className="w-3 h-3 animate-spin" />
                         ) : (
                           <X className="w-3 h-3" />
@@ -555,7 +563,7 @@ function ExpandedPanel({ service }: { service: any }) {
                         disabled={assignMutation.isPending}
                         className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors disabled:opacity-50"
                       >
-                        {assignMutation.isPending ? (
+                        {assigningCustomerId === s.customer.externalId ? (
                           <Loader2 className="w-3 h-3 animate-spin" />
                         ) : (
                           <LinkIcon className="w-3 h-3" />
@@ -683,7 +691,7 @@ function ExpandedPanel({ service }: { service: any }) {
                             disabled={assignMutation.isPending}
                             className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors disabled:opacity-50 opacity-80 group-hover:opacity-100"
                           >
-                            {assignMutation.isPending ? (
+                            {assigningCustomerId === c.externalId ? (
                               <Loader2 className="w-3 h-3 animate-spin" />
                             ) : (
                               <ArrowRight className="w-3 h-3" />

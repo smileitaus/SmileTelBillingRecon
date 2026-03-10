@@ -132,3 +132,12 @@
 - [x] Add supplier filter to Customer List page
 - [x] Add supplier search functionality (search by supplier name)
 - [x] Ensure status badges are visible across all views (Unmatched, Customer Detail, Service Detail)
+
+# Bug Fixes - Manually Matched Customers & Search Assign
+- [x] Fix manually matched customers showing no service details in Customer Detail page (e.g. Body Corporate for Osprey Mooloolaba CTS4773)
+- [x] Fix search assign-all button showing spinning wheels that never complete (tracked per-customer ID now)
+
+# Bug Fixes - Assign & Filters (Round 2)
+- [x] Fix assign button spinning wheels that never complete on Unmatched Services page (spinner now only shows on the specific clicked button)
+- [x] Restore missing status filters (Flagged, Terminated, etc.) on Customer List page
+- [x] Add provider filter (Telstra, ABB) — supplier filter dropdown added to Customer List page

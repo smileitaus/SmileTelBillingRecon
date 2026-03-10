@@ -311,12 +311,25 @@ export default function CustomerDetail() {
     return acc;
   }, {});
 
-  // Services without a proper location
-  const unlocatedServices = customerServices.filter(
-    (s) => !s.locationAddress || s.locationAddress === "Unknown Location"
-  );
+  // Build a set of location IDs that have actual location records
+  const locationIdSet = new Set(customerLocations.map(l => l.externalId));
+
+  // Services that belong to a known location record
   const locatedLocations = customerLocations.filter(
     (l) => l.address && l.address !== "Unknown Location"
+  );
+
+  // Services without a matching location record (either no locationExternalId, or their locationExternalId doesn't match any location)
+  const orphanedServices = customerServices.filter(
+    (s) => !s.locationExternalId || !locationIdSet.has(s.locationExternalId)
+  );
+
+  // Split orphaned services: those with an address vs those truly unlocated
+  const orphanedWithAddress = orphanedServices.filter(
+    (s) => s.locationAddress && s.locationAddress !== "Unknown Location"
+  );
+  const unlocatedServices = orphanedServices.filter(
+    (s) => !s.locationAddress || s.locationAddress === "Unknown Location"
   );
 
   return (
@@ -556,6 +569,38 @@ export default function CustomerDetail() {
             </div>
           );
         })}
+
+        {/* Orphaned services with addresses (no location record but have an address) */}
+        {orphanedWithAddress.length > 0 && (() => {
+          // Group orphaned services by their locationAddress
+          const grouped: Record<string, typeof orphanedWithAddress> = {};
+          for (const s of orphanedWithAddress) {
+            const addr = s.locationAddress || "";
+            if (!grouped[addr]) grouped[addr] = [];
+            grouped[addr].push(s);
+          }
+          return Object.entries(grouped).map(([addr, svcs]) => (
+            <div
+              key={`orphan-${addr}`}
+              className="bg-card border border-border rounded-lg overflow-hidden border-l-[3px] border-l-teal"
+            >
+              <div className="flex items-center gap-3 px-4 py-3 border-b border-border bg-muted/30">
+                <MapPin className="w-4 h-4 text-muted-foreground shrink-0" />
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium truncate">{addr}</p>
+                </div>
+                <span className="text-xs text-muted-foreground shrink-0">
+                  {svcs.length} service{svcs.length !== 1 ? "s" : ""}
+                </span>
+              </div>
+              <div>
+                {svcs.map((svc) => (
+                  <ServiceRow key={svc.id} service={svc} />
+                ))}
+              </div>
+            </div>
+          ));
+        })()}
 
         {/* Unlocated services */}
         {unlocatedServices.length > 0 && (

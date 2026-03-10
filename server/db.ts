@@ -102,7 +102,19 @@ export async function getAllCustomers(search?: string, statusFilter?: string, pl
   }
 
   if (statusFilter && statusFilter !== 'all') {
-    conditions.push(eq(customers.status, statusFilter));
+    if (statusFilter === 'flagged') {
+      // Filter customers that have at least one service flagged for termination
+      conditions.push(
+        sql`${customers.externalId} IN (SELECT DISTINCT customerExternalId FROM services WHERE status = 'flagged_for_termination' AND customerExternalId IS NOT NULL)`
+      );
+    } else if (statusFilter === 'terminated') {
+      // Filter customers that have at least one terminated service
+      conditions.push(
+        sql`${customers.externalId} IN (SELECT DISTINCT customerExternalId FROM services WHERE status = 'terminated' AND customerExternalId IS NOT NULL)`
+      );
+    } else {
+      conditions.push(eq(customers.status, statusFilter));
+    }
   }
 
   if (platformFilter && platformFilter !== 'all') {
