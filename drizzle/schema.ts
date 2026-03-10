@@ -32,6 +32,14 @@ export const customers = mysqlTable("customers", {
   unmatchedCount: int("unmatchedCount").default(0).notNull(),
   matchedCount: int("matchedCount").default(0).notNull(),
   status: varchar("status", { length: 32 }).default("active").notNull(),
+  // Franchise/business info from Zambrero sites list
+  businessName: varchar("businessName", { length: 512 }).default(""),
+  contactName: varchar("contactName", { length: 256 }).default(""),
+  contactEmail: varchar("contactEmail", { length: 320 }).default(""),
+  contactPhone: varchar("contactPhone", { length: 64 }).default(""),
+  ownershipType: varchar("ownershipType", { length: 16 }).default(""),
+  siteAddress: varchar("siteAddress", { length: 1024 }).default(""),
+  notes: text("notes"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });

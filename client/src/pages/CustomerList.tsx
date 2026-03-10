@@ -260,16 +260,21 @@ function CustomerRow({ customer }: { customer: any }) {
     <Link href={`/customers/${customer.externalId}`} asChild>
       <tr className="border-b border-border/50 last:border-0 hover:bg-accent/50 transition-colors cursor-pointer group">
         <td className="px-4 py-3">
-          <div className="flex items-center gap-2">
-            <span className="text-sm font-medium">{customer.name}</span>
-            {avcStats && avcStats.missing > 0 && (
-              <span
-                className="inline-flex items-center gap-0.5 text-[10px] text-amber-600 bg-amber-50 px-1 py-0.5 rounded"
-                title={`${avcStats.missing} service${avcStats.missing !== 1 ? "s" : ""} missing AVC`}
-              >
-                <AlertTriangle className="w-2.5 h-2.5" />
-                {avcStats.missing}
-              </span>
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-medium">{customer.name}</span>
+              {avcStats && avcStats.missing > 0 && (
+                <span
+                  className="inline-flex items-center gap-0.5 text-[10px] text-amber-600 bg-amber-50 px-1 py-0.5 rounded"
+                  title={`${avcStats.missing} service${avcStats.missing !== 1 ? "s" : ""} missing AVC`}
+                >
+                  <AlertTriangle className="w-2.5 h-2.5" />
+                  {avcStats.missing}
+                </span>
+              )}
+            </div>
+            {customer.businessName && (
+              <p className="text-[10px] text-muted-foreground mt-0.5 truncate max-w-[300px]">{customer.businessName}</p>
             )}
           </div>
         </td>

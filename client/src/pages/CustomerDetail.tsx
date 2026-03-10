@@ -346,6 +346,9 @@ export default function CustomerDetail() {
       {/* Customer Header */}
       <div className="mb-6">
         <h1 className="text-xl font-bold tracking-tight">{customer.name}</h1>
+        {customer.businessName && (
+          <p className="text-sm text-muted-foreground mt-0.5">{customer.businessName}</p>
+        )}
         <div className="flex flex-wrap items-center gap-3 mt-2">
           {customer.billingPlatforms.map((p: string) => (
             <span
@@ -355,8 +358,54 @@ export default function CustomerDetail() {
               {p}
             </span>
           ))}
+          {customer.ownershipType && (
+            <span className={`text-[10px] px-2 py-0.5 rounded font-medium uppercase tracking-wider ${
+              customer.ownershipType === 'C' ? 'bg-blue-50 text-blue-700 border border-blue-200' : 'bg-muted text-muted-foreground'
+            }`}>
+              {customer.ownershipType === 'C' ? 'Corporate' : customer.ownershipType === 'F' ? 'Franchise' : customer.ownershipType}
+            </span>
+          )}
         </div>
       </div>
+
+      {/* Business Contact Info */}
+      {(customer.contactName || customer.contactEmail || customer.contactPhone || customer.siteAddress) && (
+        <div className="bg-card border border-border rounded-lg px-4 py-3 mb-6">
+          <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold mb-2">Contact & Site Info</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+            {customer.contactName && (
+              <div>
+                <p className="text-[10px] text-muted-foreground">Contact</p>
+                <p className="text-sm font-medium">{customer.contactName}</p>
+              </div>
+            )}
+            {customer.contactEmail && (
+              <div>
+                <p className="text-[10px] text-muted-foreground">Email</p>
+                <a href={`mailto:${customer.contactEmail}`} className="text-sm font-medium text-teal hover:underline">{customer.contactEmail}</a>
+              </div>
+            )}
+            {customer.contactPhone && (
+              <div>
+                <p className="text-[10px] text-muted-foreground">Phone</p>
+                <a href={`tel:${customer.contactPhone}`} className="text-sm font-medium text-teal hover:underline">{customer.contactPhone}</a>
+              </div>
+            )}
+            {customer.siteAddress && (
+              <div>
+                <p className="text-[10px] text-muted-foreground">Site Address</p>
+                <p className="text-sm font-medium">{customer.siteAddress}</p>
+              </div>
+            )}
+          </div>
+          {customer.notes && (
+            <div className="mt-2 pt-2 border-t border-border">
+              <p className="text-[10px] text-muted-foreground">Notes</p>
+              <p className="text-xs text-muted-foreground">{customer.notes}</p>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Summary Stats */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-8">

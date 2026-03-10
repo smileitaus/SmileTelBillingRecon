@@ -141,3 +141,16 @@
 - [x] Fix assign button spinning wheels that never complete on Unmatched Services page (spinner now only shows on the specific clicked button)
 - [x] Restore missing status filters (Flagged, Terminated, etc.) on Customer List page
 - [x] Add provider filter (Telstra, ABB) — supplier filter dropdown added to Customer List page
+
+# Zambrero Sites Import & Matching
+- [x] Clean and parse AllZambreroSitesSummaryList.xlsx (292 sites)
+- [x] Build fuzzy name matching (handle reversed names like Perth Zambrero > Zambrero Perth)
+- [x] Match sites to existing customers by normalized name
+- [x] Match sites to existing customers by address/suburb
+- [x] Apply business names (franchisee names) to matched customers
+- [x] Store remaining data (phone, email, contact, hardware, etc.) in customer fields + notes
+- [ ] Create new customer records for unmatched sites if needed (181 unmatched sites)
+- [x] Update customer schema with businessName, contactName, contactEmail, contactPhone, ownershipType, siteAddress, notes
+- [x] Display business info on Customer Detail page (contact card)
+- [x] Display business name subtitle on Customer List table
+- [x] Generate unmatched sites report (Zambrero_Unmatched_Sites_Report.xlsx)
