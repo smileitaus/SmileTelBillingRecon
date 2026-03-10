@@ -250,6 +250,13 @@ export async function getSummary() {
   // No data use count
   const [noDataUseCount] = await db.select({ count: sql<number>`count(*)` }).from(services).where(eq(services.noDataUse, 1));
 
+  // Provider breakdown
+  const providerBreakdown = await db.select({
+    provider: services.provider,
+    count: sql<number>`count(*)`,
+    cost: sql<string>`COALESCE(SUM(monthlyCost), 0)`,
+  }).from(services).groupBy(services.provider);
+
   return {
     totalCustomers: custCount.count,
     totalLocations: locCount.count,
@@ -258,6 +265,7 @@ export async function getSummary() {
     unmatchedServices: unmatchedCount.count,
     totalMonthlyCost: parseFloat(totalCost.total),
     servicesByType: Object.fromEntries(typeBreakdown.map(t => [t.serviceType, t.count])),
+    servicesByProvider: Object.fromEntries(providerBreakdown.map(p => [p.provider || 'Unknown', { count: p.count, cost: parseFloat(p.cost) }])),
     supplierAccounts: accts.map(sa => ({
       ...sa,
       monthlyCost: parseFloat(sa.monthlyCost),
@@ -586,6 +594,13 @@ export async function searchAll(query: string) {
     like(services.deviceType, term),
     like(services.userName, term),
     like(services.flexiplanName, term),
+    like(services.provider, term),
+    like(services.carbonAlias, term),
+    like(services.avcId, term),
+    like(services.technology, term),
+    like(services.speedTier, term),
+    like(services.carbonPlanName, term),
+    like(services.carbonServiceId, term),
   ];
 
   // For phone numbers, also search with digits-only normalization
@@ -654,6 +669,13 @@ export async function searchAll(query: string) {
     checkField(s.deviceType, 'deviceType', 'Device Type') ||
     checkField(s.userName, 'userName', 'User Name') ||
     checkField(s.flexiplanName, 'flexiplanName', 'Flexiplan') ||
+    checkField(s.provider, 'provider', 'Provider') ||
+    checkField(s.carbonAlias, 'carbonAlias', 'Carbon Alias') ||
+    checkField(s.avcId, 'avcId', 'AVC ID') ||
+    checkField(s.technology, 'technology', 'Technology') ||
+    checkField(s.speedTier, 'speedTier', 'Speed Tier') ||
+    checkField(s.carbonPlanName, 'carbonPlanName', 'Carbon Plan') ||
+    checkField(s.carbonServiceId, 'carbonServiceId', 'Carbon ID') ||
     checkField(s.discoveryNotes, 'discoveryNotes', 'Notes');
 
     return {

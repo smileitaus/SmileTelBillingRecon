@@ -97,6 +97,23 @@ export const services = mysqlTable("services", {
   dataPlanGb: varchar("dataPlanGb", { length: 32 }).default(""),
   purchaseDate: varchar("purchaseDate", { length: 64 }).default(""),
   dataSource: varchar("dataSource", { length: 256 }).default(""),
+  // Provider identification
+  provider: varchar("provider", { length: 64 }).default("Unknown"),
+  // Carbon API fields (ABB)
+  carbonServiceId: varchar("carbonServiceId", { length: 64 }).default(""),
+  carbonServiceType: varchar("carbonServiceType", { length: 64 }).default(""),
+  carbonStatus: varchar("carbonStatus", { length: 64 }).default(""),
+  avcId: varchar("avcId", { length: 128 }).default(""),
+  technology: varchar("technology", { length: 64 }).default(""),
+  speedTier: varchar("speedTier", { length: 128 }).default(""),
+  nbnSla: varchar("nbnSla", { length: 128 }).default(""),
+  supportPack: varchar("supportPack", { length: 64 }).default(""),
+  poiName: varchar("poiName", { length: 128 }).default(""),
+  zone: varchar("zone", { length: 64 }).default(""),
+  openDate: varchar("openDate", { length: 64 }).default(""),
+  carbonMonthlyCost: decimal("carbonMonthlyCost", { precision: 10, scale: 2 }),
+  carbonPlanName: varchar("carbonPlanName", { length: 256 }).default(""),
+  carbonAlias: varchar("carbonAlias", { length: 512 }).default(""),
   // Blitz Report fields
   imei: varchar("imei", { length: 64 }).default(""),
   deviceName: varchar("deviceName", { length: 256 }).default(""),

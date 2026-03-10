@@ -26,9 +26,10 @@ import {
   Save,
   ZapOff,
 } from "lucide-react";
-import { useState, useCallback, useRef, useEffect } from "react";
+import { useState, useCallback, useRef, useEffect, useMemo } from "react";
 import { toast } from "sonner";
 import { useAuth } from "@/_core/hooks/useAuth";
+import { ProviderBadge } from "@/components/ProviderBadge";
 
 type ConfidenceLevel = "high" | "medium" | "low" | "none";
 
@@ -339,6 +340,7 @@ function ServiceCard({
                 No Data Use
               </span>
             )}
+            <ProviderBadge provider={service.provider} size="xs" />
           </div>
           <div className="flex items-center gap-3 mt-0.5">
             {service.phoneNumber && (
@@ -787,11 +789,32 @@ export default function UnmatchedServices() {
   const [statusFilter, setStatusFilter] = useState<
     "all" | "unmatched" | "flagged_for_termination" | "terminated" | "no_data_use"
   >("all");
+  const [providerFilter, setProviderFilter] = useState<string>("all");
   const [sortBy, setSortBy] = useState<"cost" | "type" | "account">("cost");
 
   const handleExpand = useCallback((id: string) => {
     setExpandedId((prev) => (prev === id ? null : id));
   }, []);
+
+  const allServices = services || [];
+
+  // Provider counts (must be before early return to satisfy hooks rules)
+  const providerCounts = useMemo(() => {
+    return allServices.reduce(
+      (acc: Record<string, number>, s: any) => {
+        const p = s.provider || "Unknown";
+        acc[p] = (acc[p] || 0) + 1;
+        return acc;
+      },
+      {}
+    );
+  }, [allServices]);
+
+  const providerList = useMemo(() => {
+    return Object.entries(providerCounts)
+      .sort((a, b) => b[1] - a[1])
+      .map(([name, count]) => ({ name, count }));
+  }, [providerCounts]);
 
   if (isLoading) {
     return (
@@ -806,8 +829,6 @@ export default function UnmatchedServices() {
     );
   }
 
-  const allServices = services || [];
-
   // Apply type filter
   let filtered = typeFilter === "all"
     ? allServices
@@ -818,6 +839,11 @@ export default function UnmatchedServices() {
     filtered = filtered.filter((s: any) => s.noDataUse === 1);
   } else if (statusFilter !== "all") {
     filtered = filtered.filter((s: any) => s.status === statusFilter);
+  }
+
+  // Apply provider filter
+  if (providerFilter !== "all") {
+    filtered = filtered.filter((s: any) => (s.provider || "Unknown") === providerFilter);
   }
 
   const sorted = [...filtered].sort((a: any, b: any) => {
@@ -972,6 +998,42 @@ export default function UnmatchedServices() {
             </button>
           ))}
         </div>
+
+        {/* Provider filter */}
+        {providerList.length > 1 && (
+          <div className="flex items-center gap-1 bg-muted/50 rounded-md p-0.5">
+            <button
+              onClick={() => setProviderFilter("all")}
+              className={`px-3 py-1.5 text-xs rounded-md transition-colors ${
+                providerFilter === "all"
+                  ? "bg-background shadow-sm font-medium"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              All Providers
+            </button>
+            {providerList.map((p) => (
+              <button
+                key={p.name}
+                onClick={() => setProviderFilter(p.name)}
+                className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md transition-colors ${
+                  providerFilter === p.name
+                    ? "bg-background shadow-sm font-medium"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                {p.name}
+                <span className={`inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 text-[10px] font-semibold rounded-full ${
+                  providerFilter === p.name
+                    ? "bg-primary/10 text-primary"
+                    : "bg-muted text-muted-foreground"
+                }`}>
+                  {p.count}
+                </span>
+              </button>
+            ))}
+          </div>
+        )}
 
         <div className="flex-1" />
         <select

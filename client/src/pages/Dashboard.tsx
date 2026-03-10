@@ -1,6 +1,6 @@
 /*
  * Swiss Data Design — Dashboard Overview
- * Summary stat cards, service type breakdown, supplier account table
+ * Summary stat cards, service type breakdown, provider breakdown, supplier account table
  * Minimal, data-dense, no decorative elements
  */
 
@@ -20,6 +20,7 @@ import {
   ZapOff,
 } from "lucide-react";
 import { useSummary, useSupplierAccounts, useCustomerSearch } from "@/hooks/useData";
+import { PROVIDER_COLORS } from "@/components/ProviderBadge";
 
 function StatCard({
   label,
@@ -89,6 +90,37 @@ function ServiceTypeBar({
   );
 }
 
+function ProviderBar({
+  label,
+  count,
+  cost,
+  total,
+  color,
+}: {
+  label: string;
+  count: number;
+  cost: number;
+  total: number;
+  color: string;
+}) {
+  const pct = total > 0 ? (count / total) * 100 : 0;
+  return (
+    <div className="flex items-center gap-3 py-2">
+      <span className="text-sm w-20 shrink-0 font-medium">{label}</span>
+      <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
+        <div
+          className="h-full rounded-full transition-all duration-500"
+          style={{ width: `${pct}%`, backgroundColor: color }}
+        />
+      </div>
+      <span className="data-value text-sm text-muted-foreground w-12 text-right">{count}</span>
+      <span className="data-value text-xs text-muted-foreground w-24 text-right">
+        ${cost.toLocaleString("en-AU", { minimumFractionDigits: 2 })}
+      </span>
+    </div>
+  );
+}
+
 export default function Dashboard() {
   const { summary, isLoading: summaryLoading } = useSummary();
   const { supplierAccounts, isLoading: accountsLoading } = useSupplierAccounts();
@@ -112,6 +144,7 @@ export default function Dashboard() {
       : 0;
 
   const servicesByType = summary.servicesByType as Record<string, number>;
+  const servicesByProvider = (summary.servicesByProvider || {}) as Record<string, { count: number; cost: number }>;
 
   return (
     <div className="p-6 lg:p-8">
@@ -119,7 +152,7 @@ export default function Dashboard() {
       <div className="mb-6">
         <h1 className="text-xl font-bold tracking-tight">Dashboard</h1>
         <p className="text-sm text-muted-foreground mt-1">
-          Telstra billing reconciliation overview
+          Multi-supplier billing reconciliation overview
         </p>
       </div>
 
@@ -206,6 +239,32 @@ export default function Dashboard() {
           />
         </div>
 
+        {/* Provider Breakdown */}
+        <div className="bg-card border border-border rounded-lg p-5">
+          <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-4">
+            Services by Provider
+          </h2>
+          {Object.entries(servicesByProvider)
+            .sort((a, b) => b[1].count - a[1].count)
+            .map(([provider, data]) => (
+              <ProviderBar
+                key={provider}
+                label={provider}
+                count={data.count}
+                cost={data.cost}
+                total={summary.totalServices}
+                color={PROVIDER_COLORS[provider] || PROVIDER_COLORS.Unknown}
+              />
+            ))}
+          {Object.keys(servicesByProvider).length === 0 && (
+            <p className="text-sm text-muted-foreground py-4 text-center">
+              No provider data available
+            </p>
+          )}
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         {/* Invoice Processing Stats */}
         <div className="bg-card border border-border rounded-lg p-5">
           <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-4">
@@ -244,14 +303,12 @@ export default function Dashboard() {
             </div>
           </div>
         </div>
-      </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Supplier Accounts */}
         <div className="bg-card border border-border rounded-lg overflow-hidden">
           <div className="px-5 py-4 border-b border-border">
             <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              Telstra Accounts
+              Supplier Accounts
             </h2>
           </div>
           {accountsLoading ? (
@@ -290,40 +347,40 @@ export default function Dashboard() {
             </table>
           )}
         </div>
+      </div>
 
-        {/* Top Customers by Spend */}
-        <div className="bg-card border border-border rounded-lg overflow-hidden">
-          <div className="px-5 py-4 border-b border-border flex items-center justify-between">
-            <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              Top Customers by Spend
-            </h2>
-            <Link
-              href="/customers"
-              className="text-xs text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1"
-            >
-              View all <ChevronRight className="w-3 h-3" />
-            </Link>
-          </div>
-          <div>
-            {topCustomers.map((c) => (
-              <Link key={c.id} href={`/customers/${c.externalId}`}>
-                <div className="flex items-center justify-between px-5 py-2.5 border-b border-border/30 last:border-0 hover:bg-accent/30 transition-colors">
-                  <div className="flex items-center gap-3 min-w-0">
-                    <Building2 className="w-4 h-4 text-muted-foreground shrink-0" />
-                    <span className="text-sm truncate">{c.name}</span>
-                  </div>
-                  <div className="text-right shrink-0 ml-4">
-                    <span className="data-value text-sm">
-                      ${Number(c.monthlyCost).toLocaleString("en-AU", { minimumFractionDigits: 2 })}
-                    </span>
-                    <span className="text-[10px] text-muted-foreground block">
-                      {c.serviceCount} svc
-                    </span>
-                  </div>
+      {/* Top Customers by Spend */}
+      <div className="bg-card border border-border rounded-lg overflow-hidden">
+        <div className="px-5 py-4 border-b border-border flex items-center justify-between">
+          <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            Top Customers by Spend
+          </h2>
+          <Link
+            href="/customers"
+            className="text-xs text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1"
+          >
+            View all <ChevronRight className="w-3 h-3" />
+          </Link>
+        </div>
+        <div>
+          {topCustomers.map((c) => (
+            <Link key={c.id} href={`/customers/${c.externalId}`}>
+              <div className="flex items-center justify-between px-5 py-2.5 border-b border-border/30 last:border-0 hover:bg-accent/30 transition-colors">
+                <div className="flex items-center gap-3 min-w-0">
+                  <Building2 className="w-4 h-4 text-muted-foreground shrink-0" />
+                  <span className="text-sm truncate">{c.name}</span>
                 </div>
-              </Link>
-            ))}
-          </div>
+                <div className="text-right shrink-0 ml-4">
+                  <span className="data-value text-sm">
+                    ${Number(c.monthlyCost).toLocaleString("en-AU", { minimumFractionDigits: 2 })}
+                  </span>
+                  <span className="text-[10px] text-muted-foreground block">
+                    {c.serviceCount} svc
+                  </span>
+                </div>
+              </div>
+            </Link>
+          ))}
         </div>
       </div>
     </div>

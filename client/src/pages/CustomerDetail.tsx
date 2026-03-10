@@ -28,6 +28,7 @@ import { useCustomerDetail } from "@/hooks/useData";
 import { trpc } from "@/lib/trpc";
 import { useState } from "react";
 import { toast } from "sonner";
+import { ProviderBadge } from "@/components/ProviderBadge";
 
 function ServiceTypeIcon({ type }: { type: string }) {
   switch (type) {
@@ -210,6 +211,7 @@ function ServiceRow({ service }: { service: any }) {
                 <MessageSquare className="w-3 h-3 text-amber-600" />
               </span>
             )}
+            <ProviderBadge provider={service.provider} size="xs" />
           </div>
           <div className="flex items-center gap-3 mt-0.5">
             {service.phoneNumber && (

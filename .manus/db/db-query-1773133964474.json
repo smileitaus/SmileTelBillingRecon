@@ -1,0 +1,45 @@
+{
+  "query": "SELECT externalId, provider, carbonServiceId, avcId, technology FROM services WHERE provider = 'ABB' AND carbonServiceId IS NOT NULL LIMIT 5;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3M17pEiktKAmnzx.5240b4750712 --database 4LVfr96qhVoYSkLinpTZkt --execute SELECT externalId, provider, carbonServiceId, avcId, technology FROM services WHERE provider = 'ABB' AND carbonServiceId IS NOT NULL LIMIT 5;",
+  "rows": [
+    {
+      "externalId": "S0001",
+      "provider": "ABB",
+      "carbonServiceId": "4462164",
+      "avcId": "AVC400059555247",
+      "technology": "HFC"
+    },
+    {
+      "externalId": "S0006",
+      "provider": "ABB",
+      "carbonServiceId": "4523602",
+      "avcId": "AVC000238795993",
+      "technology": "FTTN"
+    },
+    {
+      "externalId": "S0007",
+      "provider": "ABB",
+      "carbonServiceId": "4502491",
+      "avcId": "AVC000238190683",
+      "technology": "FTTN"
+    },
+    {
+      "externalId": "S0009",
+      "provider": "ABB",
+      "carbonServiceId": "4460558",
+      "avcId": "AVC000236936717",
+      "technology": "Fibre"
+    },
+    {
+      "externalId": "S0011",
+      "provider": "ABB",
+      "carbonServiceId": "4565458",
+      "avcId": "AVC000240073798",
+      "technology": "Fibre"
+    }
+  ],
+  "messages": [],
+  "stdout": "externalId\tprovider\tcarbonServiceId\tavcId\ttechnology\nS0001\tABB\t4462164\tAVC400059555247\tHFC\nS0006\tABB\t4523602\tAVC000238795993\tFTTN\nS0007\tABB\t4502491\tAVC000238190683\tFTTN\nS0009\tABB\t4460558\tAVC000236936717\tFibre\nS0011\tABB\t4565458\tAVC000240073798\tFibre\n",
+  "stderr": "",
+  "execution_time_ms": 1683
+}

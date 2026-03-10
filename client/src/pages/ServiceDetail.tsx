@@ -43,6 +43,7 @@ import { trpc } from "@/lib/trpc";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useAuth } from "@/_core/hooks/useAuth";
+import { ProviderBadge } from "@/components/ProviderBadge";
 
 function ServiceTypeIcon({ type }: { type: string }) {
   switch (type) {
@@ -573,6 +574,7 @@ export default function ServiceDetail() {
           </h1>
           <div className="flex items-center gap-3 mt-1.5">
             <StatusBadge status={service.status} />
+            <ProviderBadge provider={service.provider} />
             <span className="data-value text-muted-foreground">
               {service.phoneNumber ||
                 service.connectionId ||
@@ -635,6 +637,7 @@ export default function ServiceDetail() {
         <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">
           Service Attributes
         </h2>
+        <DetailRow label="Provider" value={service.provider || 'Unknown'} />
         <DetailRow label="Supplier" value={service.supplierName} />
         <DetailRow label="Account" value={service.supplierAccount} mono />
         <DetailRow
@@ -722,6 +725,40 @@ export default function ServiceDetail() {
           <DetailRow label="Plan" value={service.proposedPlan} />
           <DetailRow label="Cost" value={service.proposedCost ? `$${service.proposedCost}/mo` : null} mono />
           <DetailRow label="Data" value={service.proposedDataGb ? `${service.proposedDataGb} GB` : null} />
+        </div>
+      )}
+
+      {/* Carbon API Data (ABB) */}
+      {(service.carbonServiceId || service.avcId || service.technology || service.speedTier || service.carbonPlanName || service.carbonAlias) && (
+        <div className="bg-card border border-indigo-200 rounded-lg p-5 mb-4">
+          <div className="flex items-center gap-2 mb-3">
+            <Database className="w-4 h-4 text-indigo-600" />
+            <h2 className="text-xs font-semibold uppercase tracking-wider text-indigo-700">
+              Carbon API Data (ABB)
+            </h2>
+            <span className="text-[10px] bg-indigo-50 text-indigo-700 px-1.5 py-0.5 rounded font-medium border border-indigo-200">
+              Aussie Broadband
+            </span>
+          </div>
+          <DetailRow label="Carbon ID" value={service.carbonServiceId} mono />
+          <DetailRow label="AVC ID" value={service.avcId} mono />
+          <DetailRow label="Alias" value={service.carbonAlias} />
+          <DetailRow label="Technology" value={service.technology} />
+          <DetailRow label="Speed Tier" value={service.speedTier} />
+          <DetailRow label="NBN SLA" value={service.nbnSla} />
+          <DetailRow label="Support Pack" value={service.supportPack} />
+          <DetailRow label="POI" value={service.poiName} />
+          <DetailRow label="Zone" value={service.zone} />
+          <DetailRow label="Carbon Plan" value={service.carbonPlanName} />
+          <DetailRow label="Carbon Status" value={service.carbonStatus} />
+          <DetailRow label="Open Date" value={service.openDate} />
+          {service.carbonMonthlyCost && parseFloat(String(service.carbonMonthlyCost)) > 0 && (
+            <DetailRow
+              label="Carbon Cost"
+              value={`$${parseFloat(String(service.carbonMonthlyCost)).toLocaleString("en-AU", { minimumFractionDigits: 2 })}/mo`}
+              mono
+            />
+          )}
         </div>
       )}
 

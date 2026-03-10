@@ -110,3 +110,18 @@
 - [x] Update frontend to display No Data Use flag prominently on service cards
 - [x] Update frontend to show device info, IMEI, contract dates on service detail
 - [x] Make No Data Use services searchable and filterable
+
+# ABB Carbon API Integration & Provider Identification
+- [x] Review Carbon API documentation and understand available endpoints
+- [x] Configure Carbon API key from secrets (Carbon_SmiletelAPI)
+- [x] Add provider field to services schema (ABB, Telstra, Exetel, AAPT, Vocus, Optus, Unknown)
+- [x] Implement provider detection logic for all existing services based on data source, notes, account numbers
+- [x] Build ABB Carbon API integration to fetch services
+- [x] Match ABB API services against existing records by AVC, phone, address
+- [x] Enrich matched records with ABB-specific data (service IDs, speeds, technology, status)
+- [x] Create new records for unmatched ABB services
+- [x] Add provider filter to Unmatched Services page
+- [x] Add provider filter to Customer List/Detail pages
+- [x] Add provider badges on service cards across all views
+- [x] Update Dashboard with provider breakdown
+- [x] Update search to include provider field
