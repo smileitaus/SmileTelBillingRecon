@@ -78,3 +78,5 @@
 # Bug Fixes & UI Improvements
 - [x] Fix: Flagged for termination filter not correctly populating the list
 - [x] Add count numbers to status filter tabs (Unmatched, Flagged, Terminated)
+- [x] Fix: Flagged filter on Unmatched page shows 0 results despite flagged services existing
+- [x] Add dedicated Flagged/Terminated services section to Customer Detail page

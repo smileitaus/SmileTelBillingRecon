@@ -275,6 +275,7 @@ export async function getUnmatchedServices() {
   if (!db) return [];
 
   // Return all non-active services: unmatched, flagged_for_termination, and terminated
+  // This includes both unassigned services AND assigned services that have been flagged/terminated
   const result = await db.select().from(services).where(
     or(
       eq(services.status, 'unmatched'),

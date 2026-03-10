@@ -415,6 +415,66 @@ export default function CustomerDetail() {
         </div>
       </div>
 
+      {/* Flagged / Terminated Services */}
+      {(flaggedCount > 0 || terminatedCount > 0) && (
+        <div className="space-y-3 mb-8">
+          <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
+            <Flag className="w-3.5 h-3.5 text-rose-600" />
+            Flagged & Terminated Services
+          </h2>
+
+          {/* Flagged services */}
+          {flaggedCount > 0 && (
+            <div className="bg-card border border-rose-200 rounded-lg overflow-hidden border-l-[3px] border-l-rose-500">
+              <div className="flex items-center gap-3 px-4 py-3 border-b border-rose-100 bg-rose-50/50">
+                <Flag className="w-4 h-4 text-rose-600 shrink-0" />
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-rose-900">Flagged for Termination</p>
+                  <p className="text-xs text-rose-600/80">
+                    These services have been flagged and are pending termination
+                  </p>
+                </div>
+                <span className="text-xs font-semibold text-rose-700 bg-rose-100 px-2 py-0.5 rounded-full">
+                  {flaggedCount} service{flaggedCount !== 1 ? "s" : ""}
+                </span>
+              </div>
+              <div>
+                {customerServices
+                  .filter((s) => s.status === "flagged_for_termination")
+                  .map((svc) => (
+                    <ServiceRow key={svc.id} service={svc} />
+                  ))}
+              </div>
+            </div>
+          )}
+
+          {/* Terminated services */}
+          {terminatedCount > 0 && (
+            <div className="bg-card border border-gray-200 rounded-lg overflow-hidden border-l-[3px] border-l-gray-400">
+              <div className="flex items-center gap-3 px-4 py-3 border-b border-gray-100 bg-gray-50/50">
+                <Ban className="w-4 h-4 text-gray-500 shrink-0" />
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-gray-700">Terminated</p>
+                  <p className="text-xs text-gray-500">
+                    These services have been terminated
+                  </p>
+                </div>
+                <span className="text-xs font-semibold text-gray-600 bg-gray-100 px-2 py-0.5 rounded-full">
+                  {terminatedCount} service{terminatedCount !== 1 ? "s" : ""}
+                </span>
+              </div>
+              <div>
+                {customerServices
+                  .filter((s) => s.status === "terminated")
+                  .map((svc) => (
+                    <ServiceRow key={svc.id} service={svc} />
+                  ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
       {/* Locations & Services */}
       <div className="space-y-4">
         <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
