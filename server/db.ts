@@ -531,6 +531,17 @@ export async function updateServiceStatus(serviceExternalId: string, status: str
   return { success: true };
 }
 
+export async function updateServiceCustomerName(serviceExternalId: string, customerName: string) {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+
+  await db.update(services).set({
+    customerName: customerName,
+  }).where(eq(services.externalId, serviceExternalId));
+
+  return { success: true };
+}
+
 export async function searchAll(query: string) {
   const db = await getDb();
   if (!db) return { customers: [], services: [] };
@@ -559,6 +570,12 @@ export async function searchAll(query: string) {
     like(services.email, term),
     like(services.ipAddress, term),
     like(services.locId, term),
+    like(services.simSerialNumber, term),
+    like(services.macAddress, term),
+    like(services.modemSerialNumber, term),
+    like(services.hardwareType, term),
+    like(services.simOwner, term),
+    like(services.discoveryNotes, term),
   ];
 
   // For phone numbers, also search with digits-only normalization
@@ -615,7 +632,13 @@ export async function searchAll(query: string) {
     checkField(s.serviceTypeDetail, 'serviceTypeDetail', 'Type') ||
     checkField(s.email, 'email', 'Email') ||
     checkField(s.ipAddress, 'ipAddress', 'IP Address') ||
-    checkField(s.locId, 'locId', 'Location ID');
+    checkField(s.locId, 'locId', 'Location ID') ||
+    checkField(s.simSerialNumber, 'simSerialNumber', 'SIM S/N') ||
+    checkField(s.macAddress, 'macAddress', 'MAC Address') ||
+    checkField(s.modemSerialNumber, 'modemSerialNumber', 'Modem S/N') ||
+    checkField(s.hardwareType, 'hardwareType', 'Hardware') ||
+    checkField(s.simOwner, 'simOwner', 'SIM Owner') ||
+    checkField(s.discoveryNotes, 'discoveryNotes', 'Notes');
 
     return {
       ...s,

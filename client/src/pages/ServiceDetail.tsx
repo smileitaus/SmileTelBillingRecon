@@ -27,6 +27,10 @@ import {
   StickyNote,
   Save,
   MessageSquare,
+  Cpu,
+  CreditCard,
+  Router,
+  Database,
 } from "lucide-react";
 import { useServiceDetail } from "@/hooks/useData";
 import { trpc } from "@/lib/trpc";
@@ -291,6 +295,90 @@ function DiscoveryNotesPanel({ service }: { service: any }) {
   );
 }
 
+function CustomerNameEditor({ service }: { service: any }) {
+  const [editing, setEditing] = useState(false);
+  const [name, setName] = useState(service.customerName || "");
+  const updateName = trpc.billing.updateCustomerName.useMutation();
+  const utils = trpc.useUtils();
+
+  const handleSave = async () => {
+    try {
+      await updateName.mutateAsync({
+        serviceExternalId: service.externalId,
+        customerName: name.trim(),
+      });
+      toast.success("Customer name updated");
+      setEditing(false);
+      utils.billing.services.byId.invalidate({ id: service.externalId });
+      utils.billing.unmatched.list.invalidate();
+    } catch {
+      toast.error("Failed to update customer name");
+    }
+  };
+
+  if (editing) {
+    return (
+      <div className="flex items-center gap-2">
+        <input
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="Enter customer name"
+          className="flex-1 px-2 py-1 text-sm bg-background border border-primary/30 rounded outline-none focus:ring-1 focus:ring-primary/40"
+          autoFocus
+          onKeyDown={(e) => {
+            if (e.key === "Enter") handleSave();
+            if (e.key === "Escape") setEditing(false);
+          }}
+        />
+        <button
+          onClick={handleSave}
+          disabled={updateName.isPending}
+          className="p-1 text-emerald-600 hover:text-emerald-700"
+        >
+          <Check className="w-3.5 h-3.5" />
+        </button>
+        <button
+          onClick={() => { setName(service.customerName || ""); setEditing(false); }}
+          className="p-1 text-muted-foreground hover:text-foreground"
+        >
+          <X className="w-3.5 h-3.5" />
+        </button>
+      </div>
+    );
+  }
+
+  if (service.customerName) {
+    return (
+      <div>
+        <span className="inline-flex items-center gap-2">
+          <p className="text-sm font-medium">{service.customerName}</p>
+          <button
+            onClick={() => setEditing(true)}
+            className="p-0.5 text-muted-foreground/50 hover:text-primary transition-colors"
+            title="Edit customer name"
+          >
+            <Pencil className="w-3 h-3" />
+          </button>
+        </span>
+        <p className="text-xs text-muted-foreground mt-0.5">
+          Not linked to a customer record
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <button
+      onClick={() => setEditing(true)}
+      className="inline-flex items-center gap-1.5 text-xs text-amber-600 bg-amber-50 px-2 py-1 rounded hover:bg-amber-100 transition-colors"
+    >
+      <Pencil className="w-3.5 h-3.5" />
+      Unassigned — click to set customer name
+    </button>
+  );
+}
+
 function ServiceStatusActions({ service }: { service: any }) {
   const updateStatus = trpc.billing.updateStatus.useMutation();
   const utils = trpc.useUtils();
@@ -540,6 +628,32 @@ export default function ServiceDetail() {
         />
       </div>
 
+      {/* SIM & Hardware Panel */}
+      {(service.simSerialNumber || service.hardwareType || service.macAddress || service.modemSerialNumber || service.dataPlanGb || service.simOwner || service.purchaseDate || service.lastWanIp || service.wifiPassword || service.dataSource) && (
+        <div className="bg-card border border-border rounded-lg p-5 mb-4">
+          <div className="flex items-center gap-2 mb-3">
+            <CreditCard className="w-4 h-4 text-muted-foreground" />
+            <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              SIM & Hardware
+            </h2>
+            {service.dataSource && (
+              <span className="text-[10px] bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded font-medium">
+                {service.dataSource}
+              </span>
+            )}
+          </div>
+          <DetailRow label="SIM Serial" value={service.simSerialNumber} mono />
+          <DetailRow label="Hardware" value={service.hardwareType} />
+          <DetailRow label="Modem S/N" value={service.modemSerialNumber} mono />
+          <DetailRow label="MAC Address" value={service.macAddress} mono />
+          <DetailRow label="Data Plan" value={service.dataPlanGb ? `${service.dataPlanGb} GB` : null} />
+          <DetailRow label="SIM Owner" value={service.simOwner} />
+          <DetailRow label="Purchase Date" value={service.purchaseDate} />
+          <DetailRow label="Last WAN IP" value={service.lastWanIp} mono />
+          <DetailRow label="WiFi Password" value={service.wifiPassword} mono />
+        </div>
+      )}
+
       {/* Customer & Location */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
         {customer ? (
@@ -569,10 +683,7 @@ export default function ServiceDetail() {
                 Customer
               </span>
             </div>
-            <p className="text-sm font-medium text-amber-600">Unassigned</p>
-            <p className="text-xs text-muted-foreground mt-0.5">
-              This service is not linked to a customer
-            </p>
+            <CustomerNameEditor service={service} />
           </div>
         )}
 

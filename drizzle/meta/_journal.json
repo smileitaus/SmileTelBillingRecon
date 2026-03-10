@@ -15,6 +15,13 @@
       "when": 1773118344931,
       "tag": "0001_sleepy_human_robot",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1773123516260,
+      "tag": "0002_numerous_mad_thinker",
+      "breakpoints": true
     }
   ]
 }

@@ -20,6 +20,7 @@ import {
   updateServiceNotes,
   updateServiceStatus,
   dismissSuggestion,
+  updateServiceCustomerName,
 } from "./db";
 
 export const appRouter = router({
@@ -169,6 +170,15 @@ export const appRouter = router({
       }))
       .mutation(async ({ input }) => {
         return await updateServiceStatus(input.serviceExternalId, input.status);
+      }),
+
+    updateCustomerName: protectedProcedure
+      .input(z.object({
+        serviceExternalId: z.string(),
+        customerName: z.string(),
+      }))
+      .mutation(async ({ input }) => {
+        return await updateServiceCustomerName(input.serviceExternalId, input.customerName);
       }),
   }),
 });

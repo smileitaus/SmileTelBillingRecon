@@ -80,3 +80,13 @@
 - [x] Add count numbers to status filter tabs (Unmatched, Flagged, Terminated)
 - [x] Fix: Flagged filter on Unmatched page shows 0 results despite flagged services existing
 - [x] Add dedicated Flagged/Terminated services section to Customer Detail page
+
+# RVC Customer List Import (TelstraSIM's)
+- [x] Add new schema fields: simSerialNumber, hardwareType, macAddress, modemSerialNumber, wifiPassword, lastWanIp, simOwner, dataPlanGb, purchaseDate, dataSource
+- [x] Create import script to match by phone number and enrich existing services
+- [x] Create new service records for unmatched SIMs
+- [x] Make customer names editable on service records
+- [x] Update frontend to display new fields (SIM, hardware, modem, MAC, etc.)
+- [x] Store uncategorized data in searchable notes
+- [x] Import LOG sheet entries as activity notes
+- [x] Update search to include new fields (SIM number, MAC address, modem S/N)
