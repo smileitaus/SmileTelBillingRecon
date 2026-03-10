@@ -163,3 +163,12 @@
 - [x] Build address-based fuzzy matching script for 644 unmatched services
 - [x] Apply matches and update service customerExternalId + customer service counts
 - [x] Verify matched count increase on Dashboard (98 → 233, 13% → 31%)
+
+# DataGate Customers Import
+- [x] Analyze DatagateCustomers_03-10-2026.xlsx structure and data quality (122 customers)
+- [x] Match DataGate customers to existing DB customers by name and address (77 matched)
+- [x] Update matched customers with DataGate billing platform
+- [x] Extract and apply useful info (contact email, phone, DataGate code, legacy code, address)
+- [x] Create 34 new customer records for unmatched DataGate customers (Spicers, Swains, etc.)
+- [x] Auto-match unmatched services to DataGate customers by address
+- [x] Matched services increased from 233 → 531 (71% match rate), 706 total customers in DB
