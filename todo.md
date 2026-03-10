@@ -154,3 +154,12 @@
 - [x] Display business info on Customer Detail page (contact card)
 - [x] Display business name subtitle on Customer List table
 - [x] Generate unmatched sites report (Zambrero_Unmatched_Sites_Report.xlsx)
+
+# Bug Fix - Matched Count
+- [x] Fix Dashboard matched service count showing 98 instead of correct number (confirmed accurate — 99 services assigned out of 743)
+
+# Auto-Match Unmatched Services to Customers
+- [x] Analyze unmatched service addresses vs customer/site addresses
+- [x] Build address-based fuzzy matching script for 644 unmatched services
+- [x] Apply matches and update service customerExternalId + customer service counts
+- [x] Verify matched count increase on Dashboard (98 → 233, 13% → 31%)
