@@ -5,10 +5,9 @@
  */
 
 import { Link } from "wouter";
-import { Search, Filter, ChevronRight, ArrowUpDown } from "lucide-react";
+import { Search, Filter, ChevronRight, ArrowUpDown, Loader2 } from "lucide-react";
 import { useCustomerSearch } from "@/hooks/useData";
 import { useState, useMemo } from "react";
-import type { Customer } from "@/lib/types";
 
 type SortKey = "name" | "serviceCount" | "monthlyCost" | "unmatchedCount";
 type SortDir = "asc" | "desc";
@@ -43,6 +42,7 @@ export default function CustomerList() {
     setPlatformFilter,
     filtered,
     totalActive,
+    isLoading,
   } = useCustomerSearch();
 
   const [sortKey, setSortKey] = useState<SortKey>("name");
@@ -79,6 +79,14 @@ export default function CustomerList() {
       <ArrowUpDown className={`w-3 h-3 ${sortKey === field ? "opacity-100" : "opacity-30"}`} />
     </button>
   );
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
 
   return (
     <div className="p-6 lg:p-8">
@@ -164,15 +172,15 @@ export default function CustomerList() {
             </tr>
           </thead>
           <tbody>
-            {sorted.map((customer: Customer) => (
-              <Link key={customer.id} href={`/customers/${customer.id}`} asChild>
+            {sorted.map((customer) => (
+              <Link key={customer.id} href={`/customers/${customer.externalId}`} asChild>
                 <tr className="border-b border-border/50 last:border-0 hover:bg-accent/50 transition-colors cursor-pointer group">
                   <td className="px-4 py-3">
                     <span className="text-sm font-medium">{customer.name}</span>
                   </td>
                   <td className="px-4 py-3 hidden md:table-cell">
                     <div className="flex flex-wrap gap-1">
-                      {customer.billingPlatforms.map((p) => (
+                      {customer.billingPlatforms.map((p: string) => (
                         <span
                           key={p}
                           className="text-[10px] px-1.5 py-0.5 bg-muted rounded font-medium text-muted-foreground"
@@ -187,7 +195,7 @@ export default function CustomerList() {
                   </td>
                   <td className="px-4 py-3 text-right hidden sm:table-cell">
                     <span className="data-value">
-                      ${customer.monthlyCost.toLocaleString("en-AU", { minimumFractionDigits: 2 })}
+                      ${Number(customer.monthlyCost).toLocaleString("en-AU", { minimumFractionDigits: 2 })}
                     </span>
                   </td>
                   <td className="px-4 py-3 text-right hidden lg:table-cell">

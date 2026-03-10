@@ -2,6 +2,7 @@
  * Design: Swiss Data Design — persistent left sidebar (220px)
  * Navigation: sidebar with icon + label, active state highlighted
  * Font: DM Sans for labels, JetBrains Mono for data
+ * Auth: uses DashboardLayout's auth guard via parent wrapper
  */
 
 import { Link, useLocation } from "wouter";
@@ -11,22 +12,62 @@ import {
   Search,
   ChevronRight,
 } from "lucide-react";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { useGlobalSearch } from "@/hooks/useData";
-import type { Customer, Service } from "@/lib/types";
+import { useAuth } from "@/_core/hooks/useAuth";
 
 const navItems = [
   { path: "/", label: "Dashboard", icon: LayoutDashboard },
   { path: "/customers", label: "Customers", icon: Users },
 ];
 
+interface SearchCustomer {
+  id: number;
+  externalId: string;
+  name: string;
+  serviceCount: number;
+}
+
+interface SearchService {
+  id: number;
+  externalId: string;
+  phoneNumber: string | null;
+  connectionId: string | null;
+  serviceId: string | null;
+  customerName: string | null;
+  serviceType: string;
+}
+
 function CommandSearch() {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
+  const [results, setResults] = useState<{
+    customers: SearchCustomer[];
+    services: SearchService[];
+  }>({ customers: [], services: [] });
   const { search } = useGlobalSearch();
   const inputRef = useRef<HTMLInputElement>(null);
-  const results = query.length >= 2 ? search(query) : { customers: [], services: [] };
+  const debounceRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+
   const hasResults = results.customers.length > 0 || results.services.length > 0;
+
+  const doSearch = useCallback(
+    async (q: string) => {
+      if (q.length < 2) {
+        setResults({ customers: [], services: [] });
+        return;
+      }
+      const r = await search(q);
+      setResults(r as { customers: SearchCustomer[]; services: SearchService[] });
+    },
+    [search]
+  );
+
+  const handleChange = (val: string) => {
+    setQuery(val);
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => doSearch(val), 250);
+  };
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -38,6 +79,7 @@ function CommandSearch() {
       if (e.key === "Escape") {
         setOpen(false);
         setQuery("");
+        setResults({ customers: [], services: [] });
       }
     };
     window.addEventListener("keydown", handler);
@@ -63,7 +105,11 @@ function CommandSearch() {
       {open && (
         <div
           className="fixed inset-0 z-50 flex items-start justify-center pt-[15vh]"
-          onClick={() => { setOpen(false); setQuery(""); }}
+          onClick={() => {
+            setOpen(false);
+            setQuery("");
+            setResults({ customers: [], services: [] });
+          }}
         >
           <div className="fixed inset-0 bg-black/40 backdrop-blur-sm" />
           <div
@@ -75,7 +121,7 @@ function CommandSearch() {
               <input
                 ref={inputRef}
                 value={query}
-                onChange={(e) => setQuery(e.target.value)}
+                onChange={(e) => handleChange(e.target.value)}
                 placeholder="Search customers, services, phone numbers..."
                 className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
               />
@@ -96,11 +142,15 @@ function CommandSearch() {
                     <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold px-3 py-1">
                       Customers
                     </p>
-                    {results.customers.map((c: Customer) => (
+                    {results.customers.map((c) => (
                       <Link
                         key={c.id}
-                        href={`/customers/${c.id}`}
-                        onClick={() => { setOpen(false); setQuery(""); }}
+                        href={`/customers/${c.externalId}`}
+                        onClick={() => {
+                          setOpen(false);
+                          setQuery("");
+                          setResults({ customers: [], services: [] });
+                        }}
                         className="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-accent text-sm transition-colors"
                       >
                         <Users className="w-3.5 h-3.5 text-muted-foreground" />
@@ -117,11 +167,15 @@ function CommandSearch() {
                     <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold px-3 py-1">
                       Services
                     </p>
-                    {results.services.map((s: Service) => (
+                    {results.services.map((s) => (
                       <Link
                         key={s.id}
-                        href={`/services/${s.id}`}
-                        onClick={() => { setOpen(false); setQuery(""); }}
+                        href={`/services/${s.externalId}`}
+                        onClick={() => {
+                          setOpen(false);
+                          setQuery("");
+                          setResults({ customers: [], services: [] });
+                        }}
                         className="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-accent text-sm transition-colors"
                       >
                         <ChevronRight className="w-3.5 h-3.5 text-muted-foreground" />
@@ -147,6 +201,7 @@ function CommandSearch() {
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const [location] = useLocation();
+  const { user, logout } = useAuth();
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -192,8 +247,22 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           })}
         </nav>
 
-        {/* Footer */}
-        <div className="px-5 py-4 border-t border-border">
+        {/* User & Footer */}
+        <div className="px-4 py-3 border-t border-border">
+          {user && (
+            <div className="flex items-center justify-between mb-2">
+              <div className="min-w-0">
+                <p className="text-xs font-medium truncate">{user.name || "User"}</p>
+                <p className="text-[10px] text-muted-foreground truncate">{user.email || ""}</p>
+              </div>
+              <button
+                onClick={logout}
+                className="text-[10px] text-muted-foreground hover:text-destructive transition-colors shrink-0 ml-2"
+              >
+                Sign out
+              </button>
+            </div>
+          )}
           <p className="text-[10px] text-muted-foreground">
             Data as of Feb 2026
           </p>

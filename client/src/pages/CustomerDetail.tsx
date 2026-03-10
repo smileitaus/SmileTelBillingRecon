@@ -5,9 +5,8 @@
  */
 
 import { Link, useParams } from "wouter";
-import { ArrowLeft, MapPin, Wifi, Phone, Smartphone, Globe, ChevronRight, AlertTriangle } from "lucide-react";
+import { ArrowLeft, MapPin, Wifi, Phone, Smartphone, Globe, ChevronRight, AlertTriangle, Loader2 } from "lucide-react";
 import { useCustomerDetail } from "@/hooks/useData";
-import type { Service } from "@/lib/types";
 
 function ServiceTypeIcon({ type }: { type: string }) {
   switch (type) {
@@ -44,9 +43,10 @@ function StatusPill({ status }: { status: string }) {
   return <span className={cls}>{label}</span>;
 }
 
-function ServiceRow({ service }: { service: Service }) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function ServiceRow({ service }: { service: any }) {
   return (
-    <Link href={`/services/${service.id}`} asChild>
+    <Link href={`/services/${service.externalId || service.id}`} asChild>
       <div className="flex items-center gap-3 px-4 py-2.5 hover:bg-accent/50 transition-colors cursor-pointer group border-b border-border/30 last:border-0">
         <div className="w-7 h-7 rounded-md bg-muted flex items-center justify-center text-muted-foreground">
           <ServiceTypeIcon type={service.serviceType} />
@@ -70,7 +70,7 @@ function ServiceRow({ service }: { service: Service }) {
         </div>
         <div className="text-right shrink-0 hidden sm:block">
           <span className="data-value text-sm">
-            ${service.monthlyCost.toLocaleString("en-AU", { minimumFractionDigits: 2 })}
+            ${Number(service.monthlyCost).toLocaleString("en-AU", { minimumFractionDigits: 2 })}
           </span>
           <span className="text-[10px] text-muted-foreground block">/month</span>
         </div>
@@ -85,8 +85,16 @@ function ServiceRow({ service }: { service: Service }) {
 
 export default function CustomerDetail() {
   const params = useParams<{ id: string }>();
-  const { customer, customerServices, customerLocations, servicesByLocation } =
+  const { customer, customerServices, customerLocations, servicesByLocation, isLoading } =
     useCustomerDetail(params.id || "");
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
 
   if (!customer) {
     return (
@@ -99,7 +107,7 @@ export default function CustomerDetail() {
     );
   }
 
-  const totalCost = customerServices.reduce((sum, s) => sum + s.monthlyCost, 0);
+  const totalCost = customerServices.reduce((sum, s) => sum + Number(s.monthlyCost), 0);
   const matchedCount = customerServices.filter((s) => s.status === "active").length;
   const unmatchedCount = customerServices.filter((s) => s.status === "unmatched").length;
 
@@ -123,7 +131,7 @@ export default function CustomerDetail() {
       <div className="mb-6">
         <h1 className="text-xl font-bold tracking-tight">{customer.name}</h1>
         <div className="flex flex-wrap items-center gap-3 mt-2">
-          {customer.billingPlatforms.map((p) => (
+          {customer.billingPlatforms.map((p: string) => (
             <span
               key={p}
               className="text-[10px] px-2 py-0.5 bg-muted rounded font-medium text-muted-foreground uppercase tracking-wider"
@@ -173,8 +181,9 @@ export default function CustomerDetail() {
         </h2>
 
         {locatedLocations.map((loc) => {
-          const locServices = servicesByLocation[loc.id] || [];
-          const locUnmatched = locServices.filter((s) => s.status === "unmatched").length;
+          const locId = loc.externalId || String(loc.id);
+          const locServices = servicesByLocation[locId] || [];
+          const locUnmatched = locServices.filter((s: { status: string }) => s.status === "unmatched").length;
           const borderColor = locUnmatched > 0 ? "border-l-amber" : "border-l-teal";
 
           return (
@@ -195,7 +204,7 @@ export default function CustomerDetail() {
 
               {/* Services */}
               <div>
-                {locServices.map((svc) => (
+                {locServices.map((svc: { id: number; externalId?: string }) => (
                   <ServiceRow key={svc.id} service={svc} />
                 ))}
               </div>

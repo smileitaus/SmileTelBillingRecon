@@ -5,7 +5,7 @@
  */
 
 import { Link, useParams } from "wouter";
-import { ArrowLeft, Wifi, Phone, Smartphone, Globe, MapPin, Building2, FileText, Flag, AlertTriangle } from "lucide-react";
+import { ArrowLeft, Wifi, Phone, Smartphone, Globe, MapPin, Building2, FileText, Flag, AlertTriangle, Loader2 } from "lucide-react";
 import { useServiceDetail } from "@/hooks/useData";
 import { toast } from "sonner";
 
@@ -38,7 +38,7 @@ function StatusBadge({ status }: { status: string }) {
   );
 }
 
-function DetailRow({ label, value, mono = false }: { label: string; value: string; mono?: boolean }) {
+function DetailRow({ label, value, mono = false }: { label: string; value: string | null | undefined; mono?: boolean }) {
   if (!value || value === "Unknown" || value === "Unknown Plan") return null;
   return (
     <div className="flex items-start justify-between py-2.5 border-b border-border/50 last:border-0">
@@ -52,7 +52,15 @@ function DetailRow({ label, value, mono = false }: { label: string; value: strin
 
 export default function ServiceDetail() {
   const params = useParams<{ id: string }>();
-  const { service, location, customer } = useServiceDetail(params.id || "");
+  const { service, location, customer, isLoading } = useServiceDetail(params.id || "");
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
 
   if (!service) {
     return (
@@ -65,19 +73,20 @@ export default function ServiceDetail() {
     );
   }
 
+  const billingHistory = service.billingHistory || [];
+
   return (
     <div className="p-6 lg:p-8 max-w-3xl">
       {/* Breadcrumb */}
-      {customer && (
+      {customer ? (
         <Link
-          href={`/customers/${customer.id}`}
+          href={`/customers/${customer.externalId || customer.id}`}
           className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors mb-4"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           Back to {customer.name}
         </Link>
-      )}
-      {!customer && (
+      ) : (
         <Link
           href="/customers"
           className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors mb-4"
@@ -94,7 +103,7 @@ export default function ServiceDetail() {
         </div>
         <div className="flex-1 min-w-0">
           <h1 className="text-xl font-bold tracking-tight">
-            {service.serviceType} — {service.planName}
+            {service.serviceType} — {service.planName || "Unknown Plan"}
           </h1>
           <div className="flex items-center gap-3 mt-1.5">
             <StatusBadge status={service.status} />
@@ -121,15 +130,15 @@ export default function ServiceDetail() {
         <DetailRow label="IP Address" value={service.ipAddress} mono />
         <DetailRow
           label="Monthly Cost"
-          value={`$${service.monthlyCost.toLocaleString("en-AU", { minimumFractionDigits: 2 })}`}
+          value={`$${Number(service.monthlyCost).toLocaleString("en-AU", { minimumFractionDigits: 2 })}`}
           mono
         />
       </div>
 
       {/* Customer & Location */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-        {customer && (
-          <Link href={`/customers/${customer.id}`}>
+        {customer ? (
+          <Link href={`/customers/${customer.externalId || customer.id}`}>
             <div className="bg-card border border-border rounded-lg p-4 hover:bg-accent/30 transition-colors">
               <div className="flex items-center gap-2 mb-2">
                 <Building2 className="w-4 h-4 text-muted-foreground" />
@@ -139,12 +148,11 @@ export default function ServiceDetail() {
               </div>
               <p className="text-sm font-medium">{customer.name}</p>
               <p className="text-xs text-muted-foreground mt-0.5">
-                {customer.serviceCount} services · ${customer.monthlyCost.toLocaleString("en-AU", { minimumFractionDigits: 2 })}/mo
+                {customer.serviceCount} services · ${Number(customer.monthlyCost).toLocaleString("en-AU", { minimumFractionDigits: 2 })}/mo
               </p>
             </div>
           </Link>
-        )}
-        {!customer && (
+        ) : (
           <div className="bg-card border border-border rounded-lg p-4 border-l-[3px] border-l-amber">
             <div className="flex items-center gap-2 mb-2">
               <AlertTriangle className="w-4 h-4 text-amber" />
@@ -181,13 +189,13 @@ export default function ServiceDetail() {
           </h2>
         </div>
 
-        {service.billingHistory.length === 0 ? (
+        {billingHistory.length === 0 ? (
           <p className="text-sm text-muted-foreground py-4 text-center">
             No invoice line items matched to this service
           </p>
         ) : (
           <div className="space-y-0">
-            {service.billingHistory.map((item, idx) => (
+            {billingHistory.map((item: { period: string; source: string; cost: number }, idx: number) => (
               <div
                 key={idx}
                 className="flex items-center justify-between py-2.5 border-b border-border/50 last:border-0"
@@ -200,7 +208,7 @@ export default function ServiceDetail() {
                 </div>
                 <span className="data-value text-sm font-medium">
                   {item.cost > 0
-                    ? `$${item.cost.toLocaleString("en-AU", { minimumFractionDigits: 2 })}`
+                    ? `$${Number(item.cost).toLocaleString("en-AU", { minimumFractionDigits: 2 })}`
                     : "—"}
                 </span>
               </div>

@@ -7,7 +7,6 @@
 import { Link } from "wouter";
 import {
   Users,
-  MapPin,
   Wifi,
   DollarSign,
   CheckCircle2,
@@ -15,8 +14,9 @@ import {
   ChevronRight,
   FileText,
   Building2,
+  Loader2,
 } from "lucide-react";
-import { useData } from "@/hooks/useData";
+import { useSummary, useSupplierAccounts, useCustomerSearch } from "@/hooks/useData";
 
 function StatCard({
   label,
@@ -83,10 +83,19 @@ function ServiceTypeBar({
 }
 
 export default function Dashboard() {
-  const { summary, supplierAccounts, customers } = useData();
+  const { summary, isLoading: summaryLoading } = useSummary();
+  const { supplierAccounts, isLoading: accountsLoading } = useSupplierAccounts();
+  const { filtered: customers } = useCustomerSearch();
 
-  const activeCustomers = customers.filter((c) => c.serviceCount > 0);
-  const topCustomers = [...activeCustomers]
+  if (summaryLoading || !summary) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
+
+  const topCustomers = [...customers]
     .sort((a, b) => b.monthlyCost - a.monthlyCost)
     .slice(0, 8);
 
@@ -94,6 +103,8 @@ export default function Dashboard() {
     summary.totalServices > 0
       ? Math.round((summary.matchedServices / summary.totalServices) * 100)
       : 0;
+
+  const servicesByType = summary.servicesByType as Record<string, number>;
 
   return (
     <div className="p-6 lg:p-8">
@@ -115,7 +126,7 @@ export default function Dashboard() {
         />
         <StatCard
           label="Monthly Spend"
-          value={`$${summary.totalMonthlyCost.toLocaleString("en-AU", { minimumFractionDigits: 2 })}`}
+          value={`$${Number(summary.totalMonthlyCost).toLocaleString("en-AU", { minimumFractionDigits: 2 })}`}
           icon={DollarSign}
           subtext="Estimated from invoices"
         />
@@ -143,25 +154,25 @@ export default function Dashboard() {
           </h2>
           <ServiceTypeBar
             label="Internet"
-            count={summary.servicesByType.Internet || 0}
+            count={servicesByType.Internet || 0}
             total={summary.totalServices}
             color="oklch(0.637 0.137 175.8)"
           />
           <ServiceTypeBar
             label="Mobile"
-            count={summary.servicesByType.Mobile || 0}
+            count={servicesByType.Mobile || 0}
             total={summary.totalServices}
             color="oklch(0.55 0.15 260)"
           />
           <ServiceTypeBar
             label="Voice"
-            count={summary.servicesByType.Voice || 0}
+            count={servicesByType.Voice || 0}
             total={summary.totalServices}
             color="oklch(0.666 0.16 75.8)"
           />
           <ServiceTypeBar
             label="Other"
-            count={summary.servicesByType.Other || 0}
+            count={servicesByType.Other || 0}
             total={summary.totalServices}
             color="oklch(0.7 0.01 56)"
           />
@@ -215,35 +226,41 @@ export default function Dashboard() {
               Telstra Accounts
             </h2>
           </div>
-          <table className="w-full">
-            <thead>
-              <tr className="border-b border-border text-[10px] text-muted-foreground uppercase tracking-wider">
-                <th className="text-left px-5 py-2 font-semibold">Account</th>
-                <th className="text-right px-5 py-2 font-semibold">Services</th>
-                <th className="text-right px-5 py-2 font-semibold">Monthly</th>
-              </tr>
-            </thead>
-            <tbody>
-              {supplierAccounts
-                .filter((a) => a.accountNumber)
-                .sort((a, b) => b.monthlyCost - a.monthlyCost)
-                .map((acct) => (
-                  <tr key={acct.accountNumber} className="border-b border-border/30 last:border-0">
-                    <td className="px-5 py-2.5">
-                      <span className="data-value text-sm">{acct.accountNumber}</span>
-                    </td>
-                    <td className="px-5 py-2.5 text-right">
-                      <span className="data-value text-sm">{acct.serviceCount}</span>
-                    </td>
-                    <td className="px-5 py-2.5 text-right">
-                      <span className="data-value text-sm">
-                        ${acct.monthlyCost.toLocaleString("en-AU", { minimumFractionDigits: 2 })}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-            </tbody>
-          </table>
+          {accountsLoading ? (
+            <div className="flex items-center justify-center py-8">
+              <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
+            </div>
+          ) : (
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-border text-[10px] text-muted-foreground uppercase tracking-wider">
+                  <th className="text-left px-5 py-2 font-semibold">Account</th>
+                  <th className="text-right px-5 py-2 font-semibold">Services</th>
+                  <th className="text-right px-5 py-2 font-semibold">Monthly</th>
+                </tr>
+              </thead>
+              <tbody>
+                {supplierAccounts
+                  .filter((a: { accountNumber: string }) => a.accountNumber)
+                  .sort((a: { monthlyCost: number }, b: { monthlyCost: number }) => b.monthlyCost - a.monthlyCost)
+                  .map((acct: { accountNumber: string; serviceCount: number; monthlyCost: number }) => (
+                    <tr key={acct.accountNumber} className="border-b border-border/30 last:border-0">
+                      <td className="px-5 py-2.5">
+                        <span className="data-value text-sm">{acct.accountNumber}</span>
+                      </td>
+                      <td className="px-5 py-2.5 text-right">
+                        <span className="data-value text-sm">{acct.serviceCount}</span>
+                      </td>
+                      <td className="px-5 py-2.5 text-right">
+                        <span className="data-value text-sm">
+                          ${Number(acct.monthlyCost).toLocaleString("en-AU", { minimumFractionDigits: 2 })}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          )}
         </div>
 
         {/* Top Customers by Spend */}
@@ -261,7 +278,7 @@ export default function Dashboard() {
           </div>
           <div>
             {topCustomers.map((c) => (
-              <Link key={c.id} href={`/customers/${c.id}`}>
+              <Link key={c.id} href={`/customers/${c.externalId}`}>
                 <div className="flex items-center justify-between px-5 py-2.5 border-b border-border/30 last:border-0 hover:bg-accent/30 transition-colors">
                   <div className="flex items-center gap-3 min-w-0">
                     <Building2 className="w-4 h-4 text-muted-foreground shrink-0" />
@@ -269,7 +286,7 @@ export default function Dashboard() {
                   </div>
                   <div className="text-right shrink-0 ml-4">
                     <span className="data-value text-sm">
-                      ${c.monthlyCost.toLocaleString("en-AU", { minimumFractionDigits: 2 })}
+                      ${Number(c.monthlyCost).toLocaleString("en-AU", { minimumFractionDigits: 2 })}
                     </span>
                     <span className="text-[10px] text-muted-foreground block">
                       {c.serviceCount} svc
