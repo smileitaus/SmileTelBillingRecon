@@ -13,6 +13,10 @@ import {
   getSupplierAccounts,
   getSummary,
   searchAll,
+  getUnmatchedServices,
+  getSuggestedMatches,
+  assignServiceToCustomer,
+  updateServiceAvc,
 } from "./db";
 
 export const appRouter = router({
@@ -99,6 +103,41 @@ export const appRouter = router({
       .input(z.object({ query: z.string() }))
       .query(async ({ input }) => {
         return await searchAll(input.query);
+      }),
+
+    unmatched: router({
+      list: protectedProcedure.query(async () => {
+        return await getUnmatchedServices();
+      }),
+
+      suggestions: protectedProcedure
+        .input(z.object({ serviceId: z.string() }))
+        .query(async ({ input }) => {
+          return await getSuggestedMatches(input.serviceId);
+        }),
+
+      assign: protectedProcedure
+        .input(z.object({
+          serviceExternalId: z.string(),
+          customerExternalId: z.string(),
+          locationExternalId: z.string().optional(),
+        }))
+        .mutation(async ({ input }) => {
+          return await assignServiceToCustomer(
+            input.serviceExternalId,
+            input.customerExternalId,
+            input.locationExternalId
+          );
+        }),
+    }),
+
+    updateAvc: protectedProcedure
+      .input(z.object({
+        serviceExternalId: z.string(),
+        connectionId: z.string(),
+      }))
+      .mutation(async ({ input }) => {
+        return await updateServiceAvc(input.serviceExternalId, input.connectionId);
       }),
   }),
 });

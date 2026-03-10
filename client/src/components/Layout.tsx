@@ -7,6 +7,7 @@
 
 import { Link, useLocation } from "wouter";
 import {
+  AlertTriangle,
   LayoutDashboard,
   Users,
   Search,
@@ -19,6 +20,7 @@ import { useAuth } from "@/_core/hooks/useAuth";
 const navItems = [
   { path: "/", label: "Dashboard", icon: LayoutDashboard },
   { path: "/customers", label: "Customers", icon: Users },
+  { path: "/unmatched", label: "Unmatched", icon: AlertTriangle },
 ];
 
 interface SearchCustomer {

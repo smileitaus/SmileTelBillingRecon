@@ -2,19 +2,42 @@
  * Swiss Data Design — Service Detail View
  * All attributes, billing history timeline, status & actions
  * Monospaced data values, thin horizontal rules
+ * AVC tracking with inline editing and missing-AVC warnings
  */
 
 import { Link, useParams } from "wouter";
-import { ArrowLeft, Wifi, Phone, Smartphone, Globe, MapPin, Building2, FileText, Flag, AlertTriangle, Loader2 } from "lucide-react";
+import {
+  ArrowLeft,
+  Wifi,
+  Phone,
+  Smartphone,
+  Globe,
+  MapPin,
+  Building2,
+  FileText,
+  Flag,
+  AlertTriangle,
+  Loader2,
+  Check,
+  X,
+  Pencil,
+  LinkIcon,
+} from "lucide-react";
 import { useServiceDetail } from "@/hooks/useData";
+import { trpc } from "@/lib/trpc";
+import { useState } from "react";
 import { toast } from "sonner";
 
 function ServiceTypeIcon({ type }: { type: string }) {
   switch (type) {
-    case "Internet": return <Wifi className="w-5 h-5" />;
-    case "Mobile": return <Smartphone className="w-5 h-5" />;
-    case "Voice": return <Phone className="w-5 h-5" />;
-    default: return <Globe className="w-5 h-5" />;
+    case "Internet":
+      return <Wifi className="w-5 h-5" />;
+    case "Mobile":
+      return <Smartphone className="w-5 h-5" />;
+    case "Voice":
+      return <Phone className="w-5 h-5" />;
+    default:
+      return <Globe className="w-5 h-5" />;
   }
 }
 
@@ -32,27 +55,135 @@ function StatusBadge({ status }: { status: string }) {
     terminated: "Terminated",
   };
   return (
-    <span className={`inline-flex items-center gap-1.5 px-3 py-1 text-xs font-medium rounded-full border ${styles[status] || styles.unmatched}`}>
+    <span
+      className={`inline-flex items-center gap-1.5 px-3 py-1 text-xs font-medium rounded-full border ${styles[status] || styles.unmatched}`}
+    >
       {labels[status] || status}
     </span>
   );
 }
 
-function DetailRow({ label, value, mono = false }: { label: string; value: string | null | undefined; mono?: boolean }) {
-  if (!value || value === "Unknown" || value === "Unknown Plan") return null;
+function DetailRow({
+  label,
+  value,
+  mono = false,
+  children,
+}: {
+  label: string;
+  value?: string | null;
+  mono?: boolean;
+  children?: React.ReactNode;
+}) {
+  if (!children && (!value || value === "Unknown" || value === "Unknown Plan"))
+    return null;
   return (
     <div className="flex items-start justify-between py-2.5 border-b border-border/50 last:border-0">
       <span className="text-xs text-muted-foreground uppercase tracking-wider font-semibold shrink-0 w-36">
         {label}
       </span>
-      <span className={`text-sm text-right ${mono ? "data-value" : ""}`}>{value}</span>
+      {children ? (
+        <div className="text-sm text-right">{children}</div>
+      ) : (
+        <span className={`text-sm text-right ${mono ? "data-value" : ""}`}>
+          {value}
+        </span>
+      )}
     </div>
+  );
+}
+
+function AvcEditor({
+  serviceExternalId,
+  currentAvc,
+}: {
+  serviceExternalId: string;
+  currentAvc: string | null | undefined;
+}) {
+  const [editing, setEditing] = useState(false);
+  const [avcValue, setAvcValue] = useState(currentAvc || "");
+  const updateAvc = trpc.billing.updateAvc.useMutation();
+  const utils = trpc.useUtils();
+
+  const handleSave = async () => {
+    if (!avcValue.trim()) return;
+    try {
+      await updateAvc.mutateAsync({
+        serviceExternalId,
+        connectionId: avcValue.trim(),
+      });
+      toast.success("AVC/Connection ID updated");
+      setEditing(false);
+      utils.billing.services.byId.invalidate({ id: serviceExternalId });
+    } catch {
+      toast.error("Failed to update AVC");
+    }
+  };
+
+  const hasAvc = currentAvc && currentAvc.trim() !== "";
+
+  if (editing) {
+    return (
+      <div className="flex items-center gap-2">
+        <input
+          type="text"
+          value={avcValue}
+          onChange={(e) => setAvcValue(e.target.value)}
+          placeholder="Enter AVC ID (e.g. AVC000068152861)"
+          className="w-56 px-2 py-1 text-xs font-mono bg-background border border-primary/30 rounded outline-none focus:ring-1 focus:ring-primary/40"
+          autoFocus
+          onKeyDown={(e) => {
+            if (e.key === "Enter") handleSave();
+            if (e.key === "Escape") setEditing(false);
+          }}
+        />
+        <button
+          onClick={handleSave}
+          disabled={updateAvc.isPending}
+          className="p-1 text-emerald-600 hover:text-emerald-700"
+        >
+          <Check className="w-3.5 h-3.5" />
+        </button>
+        <button
+          onClick={() => setEditing(false)}
+          className="p-1 text-muted-foreground hover:text-foreground"
+        >
+          <X className="w-3.5 h-3.5" />
+        </button>
+      </div>
+    );
+  }
+
+  if (hasAvc) {
+    return (
+      <span className="inline-flex items-center gap-2">
+        <span className="data-value">{currentAvc}</span>
+        <button
+          onClick={() => setEditing(true)}
+          className="p-0.5 text-muted-foreground/50 hover:text-primary transition-colors"
+          title="Edit AVC"
+        >
+          <Pencil className="w-3 h-3" />
+        </button>
+      </span>
+    );
+  }
+
+  return (
+    <button
+      onClick={() => setEditing(true)}
+      className="inline-flex items-center gap-1.5 text-xs text-amber-600 bg-amber-50 px-2 py-1 rounded hover:bg-amber-100 transition-colors"
+    >
+      <AlertTriangle className="w-3.5 h-3.5" />
+      Missing AVC — click to add
+    </button>
   );
 }
 
 export default function ServiceDetail() {
   const params = useParams<{ id: string }>();
-  const { service, location, customer, isLoading } = useServiceDetail(params.id || "");
+  const { service, location, customer, isLoading } = useServiceDetail(
+    params.id || ""
+  );
 
   if (isLoading) {
     return (
@@ -66,7 +197,10 @@ export default function ServiceDetail() {
     return (
       <div className="p-8 text-center text-muted-foreground">
         <p>Service not found</p>
-        <Link href="/customers" className="text-sm underline mt-2 inline-block">
+        <Link
+          href="/customers"
+          className="text-sm underline mt-2 inline-block"
+        >
           Back to customers
         </Link>
       </div>
@@ -74,6 +208,7 @@ export default function ServiceDetail() {
   }
 
   const billingHistory = service.billingHistory || [];
+  const hasAvc = service.connectionId && service.connectionId.trim() !== "";
 
   return (
     <div className="p-6 lg:p-8 max-w-3xl">
@@ -108,11 +243,36 @@ export default function ServiceDetail() {
           <div className="flex items-center gap-3 mt-1.5">
             <StatusBadge status={service.status} />
             <span className="data-value text-muted-foreground">
-              {service.phoneNumber || service.connectionId || service.serviceId}
+              {service.phoneNumber ||
+                service.connectionId ||
+                service.serviceId}
             </span>
           </div>
         </div>
       </div>
+
+      {/* AVC Warning Banner */}
+      {!hasAvc && (
+        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-4 flex items-start gap-3">
+          <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+          <div className="flex-1">
+            <p className="text-sm font-medium text-amber-800">
+              AVC/Connection ID is missing
+            </p>
+            <p className="text-xs text-amber-700 mt-0.5">
+              This service does not have an AVC or Connection ID recorded.
+              Adding one will improve matching confidence and help identify this
+              service on Telstra invoices.
+            </p>
+            <div className="mt-2">
+              <AvcEditor
+                serviceExternalId={service.externalId}
+                currentAvc={service.connectionId}
+              />
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Attributes Panel */}
       <div className="bg-card border border-border rounded-lg p-5 mb-4">
@@ -121,10 +281,18 @@ export default function ServiceDetail() {
         </h2>
         <DetailRow label="Supplier" value={service.supplierName} />
         <DetailRow label="Account" value={service.supplierAccount} mono />
-        <DetailRow label="Service Type" value={service.serviceTypeDetail || service.serviceType} />
+        <DetailRow
+          label="Service Type"
+          value={service.serviceTypeDetail || service.serviceType}
+        />
         <DetailRow label="Plan" value={service.planName} />
         <DetailRow label="Phone Number" value={service.phoneNumber} mono />
-        <DetailRow label="Connection ID" value={service.connectionId} mono />
+        <DetailRow label="AVC / Conn ID">
+          <AvcEditor
+            serviceExternalId={service.externalId}
+            currentAvc={service.connectionId}
+          />
+        </DetailRow>
         <DetailRow label="Email" value={service.email} mono />
         <DetailRow label="Location ID" value={service.locId} mono />
         <DetailRow label="IP Address" value={service.ipAddress} mono />
@@ -148,7 +316,11 @@ export default function ServiceDetail() {
               </div>
               <p className="text-sm font-medium">{customer.name}</p>
               <p className="text-xs text-muted-foreground mt-0.5">
-                {customer.serviceCount} services · ${Number(customer.monthlyCost).toLocaleString("en-AU", { minimumFractionDigits: 2 })}/mo
+                {customer.serviceCount} services · $
+                {Number(customer.monthlyCost).toLocaleString("en-AU", {
+                  minimumFractionDigits: 2,
+                })}
+                /mo
               </p>
             </div>
           </Link>
@@ -195,24 +367,29 @@ export default function ServiceDetail() {
           </p>
         ) : (
           <div className="space-y-0">
-            {billingHistory.map((item: { period: string; source: string; cost: number }, idx: number) => (
-              <div
-                key={idx}
-                className="flex items-center justify-between py-2.5 border-b border-border/50 last:border-0"
-              >
-                <div>
-                  <p className="text-sm">{item.period}</p>
-                  <p className="text-[10px] text-muted-foreground data-value mt-0.5">
-                    {item.source}
-                  </p>
+            {billingHistory.map(
+              (
+                item: { period: string; source: string; cost: number },
+                idx: number
+              ) => (
+                <div
+                  key={idx}
+                  className="flex items-center justify-between py-2.5 border-b border-border/50 last:border-0"
+                >
+                  <div>
+                    <p className="text-sm">{item.period}</p>
+                    <p className="text-[10px] text-muted-foreground data-value mt-0.5">
+                      {item.source}
+                    </p>
+                  </div>
+                  <span className="data-value text-sm font-medium">
+                    {item.cost > 0
+                      ? `$${Number(item.cost).toLocaleString("en-AU", { minimumFractionDigits: 2 })}`
+                      : "\u2014"}
+                  </span>
                 </div>
-                <span className="data-value text-sm font-medium">
-                  {item.cost > 0
-                    ? `$${Number(item.cost).toLocaleString("en-AU", { minimumFractionDigits: 2 })}`
-                    : "—"}
-                </span>
-              </div>
-            ))}
+              )
+            )}
           </div>
         )}
       </div>
@@ -224,14 +401,18 @@ export default function ServiceDetail() {
         </h2>
         <div className="flex flex-wrap gap-2">
           <button
-            onClick={() => toast.info("Flag for termination — feature coming soon")}
+            onClick={() =>
+              toast.info("Flag for termination — feature coming soon")
+            }
             className="inline-flex items-center gap-2 px-3 py-2 text-sm border border-destructive/30 text-destructive rounded-md hover:bg-destructive/5 transition-colors"
           >
             <Flag className="w-3.5 h-3.5" />
             Flag for Termination
           </button>
           <button
-            onClick={() => toast.info("Edit customer link — feature coming soon")}
+            onClick={() =>
+              toast.info("Edit customer link — feature coming soon")
+            }
             className="inline-flex items-center gap-2 px-3 py-2 text-sm border border-border text-foreground rounded-md hover:bg-accent transition-colors"
           >
             <Building2 className="w-3.5 h-3.5" />

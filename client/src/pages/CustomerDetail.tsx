@@ -2,11 +2,29 @@
  * Swiss Data Design — Customer Detail View
  * Summary panel + locations as grouped sections + services as rows within
  * Left colour stripe on location groups indicating health
+ * AVC tracking with missing-AVC icons and inline editing
  */
 
 import { Link, useParams } from "wouter";
-import { ArrowLeft, MapPin, Wifi, Phone, Smartphone, Globe, ChevronRight, AlertTriangle, Loader2 } from "lucide-react";
+import {
+  ArrowLeft,
+  MapPin,
+  Wifi,
+  Phone,
+  Smartphone,
+  Globe,
+  ChevronRight,
+  AlertTriangle,
+  Loader2,
+  Check,
+  X,
+  Pencil,
+  LinkIcon,
+} from "lucide-react";
 import { useCustomerDetail } from "@/hooks/useData";
+import { trpc } from "@/lib/trpc";
+import { useState } from "react";
+import { toast } from "sonner";
 
 function ServiceTypeIcon({ type }: { type: string }) {
   switch (type) {
@@ -43,8 +61,122 @@ function StatusPill({ status }: { status: string }) {
   return <span className={cls}>{label}</span>;
 }
 
+function AvcInlineEditor({
+  service,
+  onSaved,
+}: {
+  service: { externalId: string; connectionId?: string | null };
+  onSaved?: () => void;
+}) {
+  const [editing, setEditing] = useState(false);
+  const [avcValue, setAvcValue] = useState(service.connectionId || "");
+  const updateAvc = trpc.billing.updateAvc.useMutation();
+  const utils = trpc.useUtils();
+
+  const handleSave = async () => {
+    if (!avcValue.trim()) return;
+    try {
+      await updateAvc.mutateAsync({
+        serviceExternalId: service.externalId,
+        connectionId: avcValue.trim(),
+      });
+      toast.success("AVC/Connection ID updated");
+      setEditing(false);
+      utils.billing.customers.services.invalidate();
+      utils.billing.services.byId.invalidate();
+      onSaved?.();
+    } catch {
+      toast.error("Failed to update AVC");
+    }
+  };
+
+  const hasAvc = service.connectionId && service.connectionId.trim() !== "";
+
+  if (editing) {
+    return (
+      <div
+        className="flex items-center gap-1.5"
+        onClick={(e) => e.preventDefault()}
+      >
+        <input
+          type="text"
+          value={avcValue}
+          onChange={(e) => setAvcValue(e.target.value)}
+          placeholder="Enter AVC ID"
+          className="w-40 px-2 py-0.5 text-xs font-mono bg-background border border-primary/30 rounded outline-none focus:ring-1 focus:ring-primary/40"
+          autoFocus
+          onClick={(e) => e.stopPropagation()}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") handleSave();
+            if (e.key === "Escape") setEditing(false);
+          }}
+        />
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            handleSave();
+          }}
+          disabled={updateAvc.isPending}
+          className="p-0.5 text-emerald-600 hover:text-emerald-700"
+        >
+          <Check className="w-3 h-3" />
+        </button>
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            setEditing(false);
+          }}
+          className="p-0.5 text-muted-foreground hover:text-foreground"
+        >
+          <X className="w-3 h-3" />
+        </button>
+      </div>
+    );
+  }
+
+  if (hasAvc) {
+    return (
+      <span className="inline-flex items-center gap-1.5">
+        <span className="data-value text-muted-foreground">
+          {service.connectionId}
+        </span>
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            setEditing(true);
+          }}
+          className="p-0.5 text-muted-foreground/50 hover:text-primary transition-colors"
+          title="Edit AVC"
+        >
+          <Pencil className="w-3 h-3" />
+        </button>
+      </span>
+    );
+  }
+
+  return (
+    <button
+      onClick={(e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        setEditing(true);
+      }}
+      className="inline-flex items-center gap-1 text-[10px] text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded hover:bg-amber-100 transition-colors"
+      title="Add AVC/Connection ID"
+    >
+      <AlertTriangle className="w-3 h-3" />
+      No AVC — click to add
+    </button>
+  );
+}
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function ServiceRow({ service }: { service: any }) {
+  const hasAvc = service.connectionId && service.connectionId.trim() !== "";
+
   return (
     <Link href={`/services/${service.externalId || service.id}`} asChild>
       <div className="flex items-center gap-3 px-4 py-2.5 hover:bg-accent/50 transition-colors cursor-pointer group border-b border-border/30 last:border-0">
@@ -53,26 +185,37 @@ function ServiceRow({ service }: { service: any }) {
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
-            <span className="text-sm font-medium truncate">{service.serviceType}</span>
-            <span className="text-xs text-muted-foreground">{service.serviceTypeDetail || service.planName}</span>
+            <span className="text-sm font-medium truncate">
+              {service.serviceType}
+            </span>
+            <span className="text-xs text-muted-foreground">
+              {service.serviceTypeDetail || service.planName}
+            </span>
           </div>
           <div className="flex items-center gap-3 mt-0.5">
             {service.phoneNumber && (
-              <span className="data-value text-muted-foreground">{service.phoneNumber}</span>
+              <span className="data-value text-muted-foreground">
+                {service.phoneNumber}
+              </span>
             )}
-            {service.connectionId && (
-              <span className="data-value text-muted-foreground">{service.connectionId}</span>
-            )}
-            {!service.phoneNumber && !service.connectionId && (
-              <span className="data-value text-muted-foreground">{service.serviceId}</span>
+            <AvcInlineEditor service={service} />
+            {!service.phoneNumber && !hasAvc && (
+              <span className="data-value text-muted-foreground">
+                {service.serviceId}
+              </span>
             )}
           </div>
         </div>
         <div className="text-right shrink-0 hidden sm:block">
           <span className="data-value text-sm">
-            ${Number(service.monthlyCost).toLocaleString("en-AU", { minimumFractionDigits: 2 })}
+            $
+            {Number(service.monthlyCost).toLocaleString("en-AU", {
+              minimumFractionDigits: 2,
+            })}
           </span>
-          <span className="text-[10px] text-muted-foreground block">/month</span>
+          <span className="text-[10px] text-muted-foreground block">
+            /month
+          </span>
         </div>
         <div className="shrink-0 hidden md:block">
           <StatusPill status={service.status} />
@@ -85,8 +228,13 @@ function ServiceRow({ service }: { service: any }) {
 
 export default function CustomerDetail() {
   const params = useParams<{ id: string }>();
-  const { customer, customerServices, customerLocations, servicesByLocation, isLoading } =
-    useCustomerDetail(params.id || "");
+  const {
+    customer,
+    customerServices,
+    customerLocations,
+    servicesByLocation,
+    isLoading,
+  } = useCustomerDetail(params.id || "");
 
   if (isLoading) {
     return (
@@ -100,16 +248,32 @@ export default function CustomerDetail() {
     return (
       <div className="p-8 text-center text-muted-foreground">
         <p>Customer not found</p>
-        <Link href="/customers" className="text-sm underline mt-2 inline-block">
+        <Link
+          href="/customers"
+          className="text-sm underline mt-2 inline-block"
+        >
           Back to customers
         </Link>
       </div>
     );
   }
 
-  const totalCost = customerServices.reduce((sum, s) => sum + Number(s.monthlyCost), 0);
-  const matchedCount = customerServices.filter((s) => s.status === "active").length;
-  const unmatchedCount = customerServices.filter((s) => s.status === "unmatched").length;
+  const totalCost = customerServices.reduce(
+    (sum, s) => sum + Number(s.monthlyCost),
+    0
+  );
+  const matchedCount = customerServices.filter(
+    (s) => s.status === "active"
+  ).length;
+  const unmatchedCount = customerServices.filter(
+    (s) => s.status === "unmatched"
+  ).length;
+
+  // AVC tracking
+  const servicesWithAvc = customerServices.filter(
+    (s) => s.connectionId && s.connectionId.trim() !== ""
+  ).length;
+  const servicesMissingAvc = customerServices.length - servicesWithAvc;
 
   // Services without a proper location
   const unlocatedServices = customerServices.filter(
@@ -122,7 +286,10 @@ export default function CustomerDetail() {
   return (
     <div className="p-6 lg:p-8">
       {/* Breadcrumb */}
-      <Link href="/customers" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors mb-4">
+      <Link
+        href="/customers"
+        className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors mb-4"
+      >
         <ArrowLeft className="w-3.5 h-3.5" />
         Back to Customers
       </Link>
@@ -143,34 +310,62 @@ export default function CustomerDetail() {
       </div>
 
       {/* Summary Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-8">
         <div className="bg-card border border-border rounded-lg px-4 py-3">
           <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">
             Total Services
           </p>
-          <p className="text-2xl font-bold mt-1 data-value">{customerServices.length}</p>
+          <p className="text-2xl font-bold mt-1 data-value">
+            {customerServices.length}
+          </p>
         </div>
         <div className="bg-card border border-border rounded-lg px-4 py-3">
           <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">
             Monthly Cost
           </p>
           <p className="text-2xl font-bold mt-1 data-value">
-            ${totalCost.toLocaleString("en-AU", { minimumFractionDigits: 2 })}
+            $
+            {totalCost.toLocaleString("en-AU", {
+              minimumFractionDigits: 2,
+            })}
           </p>
         </div>
         <div className="bg-card border border-border rounded-lg px-4 py-3">
           <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">
             Matched
           </p>
-          <p className="text-2xl font-bold mt-1 data-value text-teal">{matchedCount}</p>
+          <p className="text-2xl font-bold mt-1 data-value text-teal">
+            {matchedCount}
+          </p>
         </div>
         <div className="bg-card border border-border rounded-lg px-4 py-3">
           <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">
             Unmatched
           </p>
-          <p className={`text-2xl font-bold mt-1 data-value ${unmatchedCount > 0 ? "text-amber" : "text-muted-foreground"}`}>
+          <p
+            className={`text-2xl font-bold mt-1 data-value ${unmatchedCount > 0 ? "text-amber" : "text-muted-foreground"}`}
+          >
             {unmatchedCount}
           </p>
+        </div>
+        <div className="bg-card border border-border rounded-lg px-4 py-3">
+          <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">
+            AVC Coverage
+          </p>
+          <div className="flex items-center gap-2 mt-1">
+            <p className="text-2xl font-bold data-value">
+              {servicesWithAvc}
+              <span className="text-sm text-muted-foreground font-normal">
+                /{customerServices.length}
+              </span>
+            </p>
+            {servicesMissingAvc > 0 && (
+              <span className="inline-flex items-center gap-1 text-[10px] text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded">
+                <AlertTriangle className="w-3 h-3" />
+                {servicesMissingAvc} missing
+              </span>
+            )}
+          </div>
         </div>
       </div>
 
@@ -183,8 +378,15 @@ export default function CustomerDetail() {
         {locatedLocations.map((loc) => {
           const locId = loc.externalId || String(loc.id);
           const locServices = servicesByLocation[locId] || [];
-          const locUnmatched = locServices.filter((s: { status: string }) => s.status === "unmatched").length;
-          const borderColor = locUnmatched > 0 ? "border-l-amber" : "border-l-teal";
+          const locUnmatched = locServices.filter(
+            (s: { status: string }) => s.status === "unmatched"
+          ).length;
+          const locMissingAvc = locServices.filter(
+            (s: { connectionId?: string | null }) =>
+              !s.connectionId || s.connectionId.trim() === ""
+          ).length;
+          const borderColor =
+            locUnmatched > 0 ? "border-l-amber" : "border-l-teal";
 
           return (
             <div
@@ -197,16 +399,27 @@ export default function CustomerDetail() {
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium truncate">{loc.address}</p>
                 </div>
-                <span className="text-xs text-muted-foreground shrink-0">
-                  {locServices.length} service{locServices.length !== 1 ? "s" : ""}
-                </span>
+                <div className="flex items-center gap-3 shrink-0">
+                  {locMissingAvc > 0 && (
+                    <span className="inline-flex items-center gap-1 text-[10px] text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded">
+                      <AlertTriangle className="w-3 h-3" />
+                      {locMissingAvc} missing AVC
+                    </span>
+                  )}
+                  <span className="text-xs text-muted-foreground">
+                    {locServices.length} service
+                    {locServices.length !== 1 ? "s" : ""}
+                  </span>
+                </div>
               </div>
 
               {/* Services */}
               <div>
-                {locServices.map((svc: { id: number; externalId?: string }) => (
-                  <ServiceRow key={svc.id} service={svc} />
-                ))}
+                {locServices.map(
+                  (svc: { id: number; externalId?: string }) => (
+                    <ServiceRow key={svc.id} service={svc} />
+                  )
+                )}
               </div>
             </div>
           );
@@ -219,10 +432,13 @@ export default function CustomerDetail() {
               <AlertTriangle className="w-4 h-4 text-amber shrink-0" />
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium">Unknown Location</p>
-                <p className="text-xs text-muted-foreground">Services without a confirmed site address</p>
+                <p className="text-xs text-muted-foreground">
+                  Services without a confirmed site address
+                </p>
               </div>
               <span className="text-xs text-muted-foreground shrink-0">
-                {unlocatedServices.length} service{unlocatedServices.length !== 1 ? "s" : ""}
+                {unlocatedServices.length} service
+                {unlocatedServices.length !== 1 ? "s" : ""}
               </span>
             </div>
             <div>

@@ -2,14 +2,28 @@
  * Swiss Data Design — Customer List View (Landing Page)
  * Dense data table with search bar and filter dropdowns
  * Status pills with dot indicators, monospaced financial data
+ * AVC coverage column with warning icons for missing AVCs
  */
 
 import { Link } from "wouter";
-import { Search, Filter, ChevronRight, ArrowUpDown, Loader2 } from "lucide-react";
+import {
+  Search,
+  Filter,
+  ChevronRight,
+  ArrowUpDown,
+  Loader2,
+  AlertTriangle,
+  LinkIcon,
+} from "lucide-react";
 import { useCustomerSearch } from "@/hooks/useData";
 import { useState, useMemo } from "react";
+import { trpc } from "@/lib/trpc";
 
-type SortKey = "name" | "serviceCount" | "monthlyCost" | "unmatchedCount";
+type SortKey =
+  | "name"
+  | "serviceCount"
+  | "monthlyCost"
+  | "unmatchedCount";
 type SortDir = "asc" | "desc";
 
 function StatusPill({ status }: { status: string }) {
@@ -53,9 +67,12 @@ export default function CustomerList() {
     arr.sort((a, b) => {
       let cmp = 0;
       if (sortKey === "name") cmp = a.name.localeCompare(b.name);
-      else if (sortKey === "serviceCount") cmp = a.serviceCount - b.serviceCount;
-      else if (sortKey === "monthlyCost") cmp = a.monthlyCost - b.monthlyCost;
-      else if (sortKey === "unmatchedCount") cmp = a.unmatchedCount - b.unmatchedCount;
+      else if (sortKey === "serviceCount")
+        cmp = a.serviceCount - b.serviceCount;
+      else if (sortKey === "monthlyCost")
+        cmp = a.monthlyCost - b.monthlyCost;
+      else if (sortKey === "unmatchedCount")
+        cmp = a.unmatchedCount - b.unmatchedCount;
       return sortDir === "asc" ? cmp : -cmp;
     });
     return arr;
@@ -70,13 +87,21 @@ export default function CustomerList() {
     }
   };
 
-  const SortHeader = ({ label, field }: { label: string; field: SortKey }) => (
+  const SortHeader = ({
+    label,
+    field,
+  }: {
+    label: string;
+    field: SortKey;
+  }) => (
     <button
       onClick={() => toggleSort(field)}
       className="flex items-center gap-1 hover:text-foreground transition-colors"
     >
       {label}
-      <ArrowUpDown className={`w-3 h-3 ${sortKey === field ? "opacity-100" : "opacity-30"}`} />
+      <ArrowUpDown
+        className={`w-3 h-3 ${sortKey === field ? "opacity-100" : "opacity-30"}`}
+      />
     </button>
   );
 
@@ -173,44 +198,7 @@ export default function CustomerList() {
           </thead>
           <tbody>
             {sorted.map((customer) => (
-              <Link key={customer.id} href={`/customers/${customer.externalId}`} asChild>
-                <tr className="border-b border-border/50 last:border-0 hover:bg-accent/50 transition-colors cursor-pointer group">
-                  <td className="px-4 py-3">
-                    <span className="text-sm font-medium">{customer.name}</span>
-                  </td>
-                  <td className="px-4 py-3 hidden md:table-cell">
-                    <div className="flex flex-wrap gap-1">
-                      {customer.billingPlatforms.map((p: string) => (
-                        <span
-                          key={p}
-                          className="text-[10px] px-1.5 py-0.5 bg-muted rounded font-medium text-muted-foreground"
-                        >
-                          {p}
-                        </span>
-                      ))}
-                    </div>
-                  </td>
-                  <td className="px-4 py-3 text-right">
-                    <span className="data-value">{customer.serviceCount}</span>
-                  </td>
-                  <td className="px-4 py-3 text-right hidden sm:table-cell">
-                    <span className="data-value">
-                      ${Number(customer.monthlyCost).toLocaleString("en-AU", { minimumFractionDigits: 2 })}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3 text-right hidden lg:table-cell">
-                    <span className={`data-value ${customer.unmatchedCount > 0 ? "text-amber" : "text-muted-foreground"}`}>
-                      {customer.unmatchedCount}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3 text-center">
-                    <StatusPill status={customer.status} />
-                  </td>
-                  <td className="px-2 py-3">
-                    <ChevronRight className="w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
-                  </td>
-                </tr>
-              </Link>
+              <CustomerRow key={customer.id} customer={customer} />
             ))}
           </tbody>
         </table>
@@ -222,5 +210,79 @@ export default function CustomerList() {
         )}
       </div>
     </div>
+  );
+}
+
+function CustomerRow({ customer }: { customer: any }) {
+  // Query the customer's services to check AVC coverage
+  const { data: customerServices } = trpc.billing.customers.services.useQuery(
+    { customerId: customer.externalId },
+    { staleTime: 60_000 }
+  );
+
+  const avcStats = useMemo(() => {
+    if (!customerServices) return null;
+    const withAvc = customerServices.filter(
+      (s: any) => s.connectionId && s.connectionId.trim() !== ""
+    ).length;
+    const total = customerServices.length;
+    return { withAvc, total, missing: total - withAvc };
+  }, [customerServices]);
+
+  return (
+    <Link href={`/customers/${customer.externalId}`} asChild>
+      <tr className="border-b border-border/50 last:border-0 hover:bg-accent/50 transition-colors cursor-pointer group">
+        <td className="px-4 py-3">
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-medium">{customer.name}</span>
+            {avcStats && avcStats.missing > 0 && (
+              <span
+                className="inline-flex items-center gap-0.5 text-[10px] text-amber-600 bg-amber-50 px-1 py-0.5 rounded"
+                title={`${avcStats.missing} service${avcStats.missing !== 1 ? "s" : ""} missing AVC`}
+              >
+                <AlertTriangle className="w-2.5 h-2.5" />
+                {avcStats.missing}
+              </span>
+            )}
+          </div>
+        </td>
+        <td className="px-4 py-3 hidden md:table-cell">
+          <div className="flex flex-wrap gap-1">
+            {customer.billingPlatforms.map((p: string) => (
+              <span
+                key={p}
+                className="text-[10px] px-1.5 py-0.5 bg-muted rounded font-medium text-muted-foreground"
+              >
+                {p}
+              </span>
+            ))}
+          </div>
+        </td>
+        <td className="px-4 py-3 text-right">
+          <span className="data-value">{customer.serviceCount}</span>
+        </td>
+        <td className="px-4 py-3 text-right hidden sm:table-cell">
+          <span className="data-value">
+            $
+            {Number(customer.monthlyCost).toLocaleString("en-AU", {
+              minimumFractionDigits: 2,
+            })}
+          </span>
+        </td>
+        <td className="px-4 py-3 text-right hidden lg:table-cell">
+          <span
+            className={`data-value ${customer.unmatchedCount > 0 ? "text-amber" : "text-muted-foreground"}`}
+          >
+            {customer.unmatchedCount}
+          </span>
+        </td>
+        <td className="px-4 py-3 text-center">
+          <StatusPill status={customer.status} />
+        </td>
+        <td className="px-2 py-3">
+          <ChevronRight className="w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+        </td>
+      </tr>
+    </Link>
   );
 }

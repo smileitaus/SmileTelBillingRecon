@@ -15,6 +15,7 @@ import {
   FileText,
   Building2,
   Loader2,
+  LinkIcon,
 } from "lucide-react";
 import { useSummary, useSupplierAccounts, useCustomerSearch } from "@/hooks/useData";
 
@@ -117,7 +118,7 @@ export default function Dashboard() {
       </div>
 
       {/* Summary Stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-8">
+      <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 mb-8">
         <StatCard
           label="Total Services"
           value={summary.totalServices}
@@ -143,6 +144,13 @@ export default function Dashboard() {
           icon={AlertTriangle}
           subtext="Require review"
           accent="amber"
+        />
+        <StatCard
+          label="AVC Coverage"
+          value={`${summary.servicesWithAvc ?? 0} / ${summary.totalServices}`}
+          icon={LinkIcon}
+          subtext={`${summary.servicesMissingAvc ?? 0} missing AVC ID`}
+          accent={((summary.servicesMissingAvc ?? 0) > 0) ? "rose" : "teal"}
         />
       </div>
 
