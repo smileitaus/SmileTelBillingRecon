@@ -47,9 +47,10 @@ export const appRouter = router({
           search: z.string().optional(),
           status: z.string().optional(),
           platform: z.string().optional(),
+          supplier: z.string().optional(),
         }).optional())
         .query(async ({ input }) => {
-          return await getAllCustomers(input?.search, input?.status, input?.platform);
+          return await getAllCustomers(input?.search, input?.status, input?.platform, input?.supplier);
         }),
 
       byId: protectedProcedure

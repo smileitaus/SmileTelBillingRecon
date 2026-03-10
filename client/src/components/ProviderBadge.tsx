@@ -1,40 +1,145 @@
 /**
  * Provider Badge Component
- * Displays a color-coded badge for upstream network providers
+ * Displays a color-coded badge with supplier logos for upstream network providers
  * (Telstra, ABB, Vocus, Exetel, AAPT, Optus, Unknown)
  */
 
-const providerStyles: Record<string, { bg: string; text: string; border: string }> = {
-  Telstra: { bg: "bg-blue-50", text: "text-blue-700", border: "border-blue-200" },
-  ABB: { bg: "bg-indigo-50", text: "text-indigo-700", border: "border-indigo-200" },
-  Vocus: { bg: "bg-purple-50", text: "text-purple-700", border: "border-purple-200" },
-  Exetel: { bg: "bg-cyan-50", text: "text-cyan-700", border: "border-cyan-200" },
-  AAPT: { bg: "bg-teal-50", text: "text-teal-700", border: "border-teal-200" },
-  Optus: { bg: "bg-emerald-50", text: "text-emerald-700", border: "border-emerald-200" },
-  OptiComm: { bg: "bg-lime-50", text: "text-lime-700", border: "border-lime-200" },
-  Unknown: { bg: "bg-gray-50", text: "text-gray-500", border: "border-gray-200" },
+const TELSTRA_LOGO = "https://d2xsxph8kpxj0f.cloudfront.net/310519663389833130/4LVfr96qhVoYSkLinpTZkt/telstra-logo_b494a2f4.png";
+const ABB_LOGO = "https://d2xsxph8kpxj0f.cloudfront.net/310519663389833130/4LVfr96qhVoYSkLinpTZkt/abb-logo_9ac49ae1.png";
+
+const providerConfig: Record<string, {
+  bg: string;
+  text: string;
+  border: string;
+  logo?: string;
+  label: string;
+}> = {
+  Telstra: {
+    bg: "bg-blue-50",
+    text: "text-blue-700",
+    border: "border-blue-200",
+    logo: TELSTRA_LOGO,
+    label: "Telstra",
+  },
+  ABB: {
+    bg: "bg-green-50",
+    text: "text-green-700",
+    border: "border-green-200",
+    logo: ABB_LOGO,
+    label: "ABB",
+  },
+  Vocus: {
+    bg: "bg-purple-50",
+    text: "text-purple-700",
+    border: "border-purple-200",
+    label: "Vocus",
+  },
+  Exetel: {
+    bg: "bg-cyan-50",
+    text: "text-cyan-700",
+    border: "border-cyan-200",
+    label: "Exetel",
+  },
+  AAPT: {
+    bg: "bg-teal-50",
+    text: "text-teal-700",
+    border: "border-teal-200",
+    label: "AAPT",
+  },
+  Optus: {
+    bg: "bg-emerald-50",
+    text: "text-emerald-700",
+    border: "border-emerald-200",
+    label: "Optus",
+  },
+  OptiComm: {
+    bg: "bg-lime-50",
+    text: "text-lime-700",
+    border: "border-lime-200",
+    label: "OptiComm",
+  },
+  Unknown: {
+    bg: "bg-gray-50",
+    text: "text-gray-500",
+    border: "border-gray-200",
+    label: "Unknown",
+  },
 };
 
 export function ProviderBadge({
   provider,
   size = "sm",
+  showLabel = true,
 }: {
   provider: string | null | undefined;
-  size?: "xs" | "sm";
+  size?: "xs" | "sm" | "md";
+  showLabel?: boolean;
 }) {
   const name = provider || "Unknown";
-  const style = providerStyles[name] || providerStyles.Unknown;
-  const sizeClasses =
-    size === "xs"
-      ? "text-[9px] px-1.5 py-0"
-      : "text-[10px] px-2 py-0.5";
+  const config = providerConfig[name] || providerConfig.Unknown;
+
+  const sizeClasses = {
+    xs: "text-[9px] px-1.5 py-0 gap-1",
+    sm: "text-[10px] px-2 py-0.5 gap-1",
+    md: "text-xs px-2.5 py-1 gap-1.5",
+  }[size];
+
+  const logoSize = {
+    xs: "w-3 h-3",
+    sm: "w-3.5 h-3.5",
+    md: "w-4 h-4",
+  }[size];
 
   return (
     <span
-      className={`inline-flex items-center font-semibold rounded-full border ${style.bg} ${style.text} ${style.border} ${sizeClasses}`}
+      className={`inline-flex items-center font-semibold rounded-full border ${config.bg} ${config.text} ${config.border} ${sizeClasses}`}
     >
-      {name}
+      {config.logo && (
+        <img
+          src={config.logo}
+          alt={config.label}
+          className={`${logoSize} object-contain`}
+        />
+      )}
+      {showLabel && config.label}
     </span>
+  );
+}
+
+export function ProviderLogo({
+  provider,
+  size = "sm",
+}: {
+  provider: string | null | undefined;
+  size?: "xs" | "sm" | "md" | "lg";
+}) {
+  const name = provider || "Unknown";
+  const config = providerConfig[name] || providerConfig.Unknown;
+
+  const logoSize = {
+    xs: "w-4 h-4",
+    sm: "w-5 h-5",
+    md: "w-6 h-6",
+    lg: "w-8 h-8",
+  }[size];
+
+  if (!config.logo) {
+    // Fallback: colored dot with text
+    return (
+      <span className="inline-flex items-center gap-1">
+        <span className={`w-2 h-2 rounded-full ${config.bg} ${config.border} border`} />
+        <span className={`text-[10px] font-medium ${config.text}`}>{config.label}</span>
+      </span>
+    );
+  }
+
+  return (
+    <img
+      src={config.logo}
+      alt={config.label}
+      title={config.label}
+      className={`${logoSize} object-contain`}
+    />
   );
 }
 
@@ -46,7 +151,7 @@ export function ProviderDot({
   const name = provider || "Unknown";
   const dotColors: Record<string, string> = {
     Telstra: "bg-blue-500",
-    ABB: "bg-indigo-500",
+    ABB: "bg-green-600",
     Vocus: "bg-purple-500",
     Exetel: "bg-cyan-500",
     AAPT: "bg-teal-500",
@@ -66,7 +171,7 @@ export function ProviderDot({
 
 export const PROVIDER_COLORS: Record<string, string> = {
   Telstra: "oklch(0.55 0.15 250)",
-  ABB: "oklch(0.5 0.15 280)",
+  ABB: "oklch(0.5 0.15 150)",
   Vocus: "oklch(0.55 0.15 300)",
   Exetel: "oklch(0.55 0.15 200)",
   AAPT: "oklch(0.55 0.15 170)",
@@ -74,3 +179,5 @@ export const PROVIDER_COLORS: Record<string, string> = {
   OptiComm: "oklch(0.55 0.15 130)",
   Unknown: "oklch(0.6 0.01 56)",
 };
+
+export { providerConfig };

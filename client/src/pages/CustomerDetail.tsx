@@ -302,6 +302,15 @@ export default function CustomerDetail() {
   ).length;
   const servicesMissingAvc = customerServices.length - servicesWithAvc;
 
+  // Provider breakdown for this customer
+  const providerBreakdown = customerServices.reduce((acc: Record<string, { count: number; cost: number }>, s) => {
+    const provider = s.provider || 'Unknown';
+    if (!acc[provider]) acc[provider] = { count: 0, cost: 0 };
+    acc[provider].count++;
+    acc[provider].cost += Number(s.monthlyCost);
+    return acc;
+  }, {});
+
   // Services without a proper location
   const unlocatedServices = customerServices.filter(
     (s) => !s.locationAddress || s.locationAddress === "Unknown Location"
@@ -416,6 +425,21 @@ export default function CustomerDetail() {
           </div>
         </div>
       </div>
+
+      {/* Provider Breakdown */}
+      {Object.keys(providerBreakdown).length > 0 && (
+        <div className="flex flex-wrap items-center gap-3 mb-6">
+          <span className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">Suppliers:</span>
+          {Object.entries(providerBreakdown).map(([provider, data]) => (
+            <div key={provider} className="inline-flex items-center gap-2 bg-card border border-border rounded-lg px-3 py-1.5">
+              <ProviderBadge provider={provider} size="sm" />
+              <span className="text-xs text-muted-foreground">
+                {data.count} svc · ${data.cost.toLocaleString("en-AU", { minimumFractionDigits: 2 })}/mo
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* Flagged / Terminated Services */}
       {(flaggedCount > 0 || terminatedCount > 0) && (

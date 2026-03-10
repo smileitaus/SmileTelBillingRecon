@@ -18,6 +18,7 @@ import {
 import { useCustomerSearch } from "@/hooks/useData";
 import { useState, useMemo } from "react";
 import { trpc } from "@/lib/trpc";
+import { ProviderBadge, ProviderLogo } from "@/components/ProviderBadge";
 
 type SortKey =
   | "name"
@@ -54,6 +55,8 @@ export default function CustomerList() {
     setStatusFilter,
     platformFilter,
     setPlatformFilter,
+    supplierFilter,
+    setSupplierFilter,
     filtered,
     totalActive,
     isLoading,
@@ -162,6 +165,16 @@ export default function CustomerList() {
             <option value="ECN">ECN</option>
             <option value="Halo">Halo</option>
           </select>
+
+          <select
+            value={supplierFilter}
+            onChange={(e) => setSupplierFilter(e.target.value)}
+            className="text-sm bg-card border border-border rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-ring/20"
+          >
+            <option value="all">All Suppliers</option>
+            <option value="Telstra">Telstra</option>
+            <option value="ABB">ABB / Aussie Broadband</option>
+          </select>
         </div>
       </div>
 
@@ -182,6 +195,9 @@ export default function CustomerList() {
               </th>
               <th className="text-left px-4 py-3 font-semibold hidden md:table-cell">
                 Platform
+              </th>
+              <th className="text-center px-4 py-3 font-semibold hidden lg:table-cell">
+                Suppliers
               </th>
               <th className="text-right px-4 py-3 font-semibold">
                 <SortHeader label="Services" field="serviceCount" />
@@ -229,6 +245,15 @@ function CustomerRow({ customer }: { customer: any }) {
     return { withAvc, total, missing: total - withAvc };
   }, [customerServices]);
 
+  const providerSet = useMemo(() => {
+    if (!customerServices) return [];
+    const providers = new Set<string>();
+    customerServices.forEach((s: any) => {
+      providers.add(s.provider || "Unknown");
+    });
+    return Array.from(providers).sort();
+  }, [customerServices]);
+
   return (
     <Link href={`/customers/${customer.externalId}`} asChild>
       <tr className="border-b border-border/50 last:border-0 hover:bg-accent/50 transition-colors cursor-pointer group">
@@ -255,6 +280,13 @@ function CustomerRow({ customer }: { customer: any }) {
               >
                 {p}
               </span>
+            ))}
+          </div>
+        </td>
+        <td className="px-4 py-3 hidden lg:table-cell">
+          <div className="flex items-center justify-center gap-1.5">
+            {providerSet.map((p) => (
+              <ProviderBadge key={p} provider={p} size="xs" showLabel={false} />
             ))}
           </div>
         </td>

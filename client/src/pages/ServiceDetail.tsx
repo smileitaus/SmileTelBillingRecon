@@ -730,15 +730,13 @@ export default function ServiceDetail() {
 
       {/* Carbon API Data (ABB) */}
       {(service.carbonServiceId || service.avcId || service.technology || service.speedTier || service.carbonPlanName || service.carbonAlias) && (
-        <div className="bg-card border border-indigo-200 rounded-lg p-5 mb-4">
+        <div className="bg-card border border-green-200 rounded-lg p-5 mb-4">
           <div className="flex items-center gap-2 mb-3">
-            <Database className="w-4 h-4 text-indigo-600" />
-            <h2 className="text-xs font-semibold uppercase tracking-wider text-indigo-700">
-              Carbon API Data (ABB)
+            <Database className="w-4 h-4 text-green-600" />
+            <h2 className="text-xs font-semibold uppercase tracking-wider text-green-700">
+              Carbon API Data
             </h2>
-            <span className="text-[10px] bg-indigo-50 text-indigo-700 px-1.5 py-0.5 rounded font-medium border border-indigo-200">
-              Aussie Broadband
-            </span>
+            <ProviderBadge provider="ABB" size="sm" />
           </div>
           <DetailRow label="Carbon ID" value={service.carbonServiceId} mono />
           <DetailRow label="AVC ID" value={service.avcId} mono />

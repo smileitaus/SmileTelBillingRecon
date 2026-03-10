@@ -90,7 +90,7 @@ export async function getUserByOpenId(openId: string) {
 
 // ==================== Billing Data Queries ====================
 
-export async function getAllCustomers(search?: string, statusFilter?: string, platformFilter?: string) {
+export async function getAllCustomers(search?: string, statusFilter?: string, platformFilter?: string, supplierFilter?: string) {
   const db = await getDb();
   if (!db) return [];
 
@@ -107,6 +107,13 @@ export async function getAllCustomers(search?: string, statusFilter?: string, pl
 
   if (platformFilter && platformFilter !== 'all') {
     conditions.push(like(customers.billingPlatforms, `%${platformFilter}%`));
+  }
+
+  // Filter by supplier: find customers that have at least one service from the specified provider
+  if (supplierFilter && supplierFilter !== 'all') {
+    conditions.push(
+      sql`${customers.externalId} IN (SELECT DISTINCT customerExternalId FROM services WHERE provider = ${supplierFilter} AND customerExternalId IS NOT NULL)`
+    );
   }
 
   const whereClause = conditions.length > 0

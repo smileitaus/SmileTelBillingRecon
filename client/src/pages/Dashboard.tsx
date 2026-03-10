@@ -20,7 +20,7 @@ import {
   ZapOff,
 } from "lucide-react";
 import { useSummary, useSupplierAccounts, useCustomerSearch } from "@/hooks/useData";
-import { PROVIDER_COLORS } from "@/components/ProviderBadge";
+import { ProviderBadge, PROVIDER_COLORS } from "@/components/ProviderBadge";
 
 function StatCard({
   label,
@@ -91,13 +91,13 @@ function ServiceTypeBar({
 }
 
 function ProviderBar({
-  label,
+  provider,
   count,
   cost,
   total,
   color,
 }: {
-  label: string;
+  provider: string;
   count: number;
   cost: number;
   total: number;
@@ -106,7 +106,9 @@ function ProviderBar({
   const pct = total > 0 ? (count / total) * 100 : 0;
   return (
     <div className="flex items-center gap-3 py-2">
-      <span className="text-sm w-20 shrink-0 font-medium">{label}</span>
+      <div className="w-24 shrink-0">
+        <ProviderBadge provider={provider} size="sm" />
+      </div>
       <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
         <div
           className="h-full rounded-full transition-all duration-500"
@@ -249,7 +251,7 @@ export default function Dashboard() {
             .map(([provider, data]) => (
               <ProviderBar
                 key={provider}
-                label={provider}
+                provider={provider}
                 count={data.count}
                 cost={data.cost}
                 total={summary.totalServices}

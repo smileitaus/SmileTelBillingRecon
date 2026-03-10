@@ -1022,7 +1022,7 @@ export default function UnmatchedServices() {
                     : "text-muted-foreground hover:text-foreground"
                 }`}
               >
-                {p.name}
+                <ProviderBadge provider={p.name} size="xs" showLabel={true} />
                 <span className={`inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 text-[10px] font-semibold rounded-full ${
                   providerFilter === p.name
                     ? "bg-primary/10 text-primary"

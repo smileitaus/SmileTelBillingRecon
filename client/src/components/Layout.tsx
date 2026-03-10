@@ -16,6 +16,7 @@ import {
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useGlobalSearch } from "@/hooks/useData";
 import { useAuth } from "@/_core/hooks/useAuth";
+import { ProviderBadge } from "@/components/ProviderBadge";
 
 const navItems = [
   { path: "/", label: "Dashboard", icon: LayoutDashboard },
@@ -40,6 +41,7 @@ interface SearchService {
   serviceType: string;
   planName: string | null;
   supplierAccount: string | null;
+  provider: string | null;
   matchedField: string;
   matchedValue: string;
 }
@@ -198,6 +200,7 @@ function CommandSearch() {
                             {s.matchedValue || s.phoneNumber || s.connectionId || s.serviceId}
                           </p>
                         </div>
+                        <ProviderBadge provider={s.provider} size="xs" />
                         <span className="text-xs text-muted-foreground shrink-0">{s.serviceType}</span>
                       </Link>
                     ))}

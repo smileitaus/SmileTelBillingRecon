@@ -125,3 +125,10 @@
 - [x] Add provider badges on service cards across all views
 - [x] Update Dashboard with provider breakdown
 - [x] Update search to include provider field
+
+# Status Indicators & Supplier Logos
+- [x] Fix missing flagged for termination / terminated / no data use status indicators on service cards
+- [x] Add supplier logos (Telstra, ABB/Aussie Broadband) on service cards and customer tabs
+- [x] Add supplier filter to Customer List page
+- [x] Add supplier search functionality (search by supplier name)
+- [x] Ensure status badges are visible across all views (Unmatched, Customer Detail, Service Detail)

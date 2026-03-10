@@ -18,6 +18,7 @@ export function useCustomerSearch() {
     search: query || undefined,
     status: statusFilter !== "all" ? statusFilter : undefined,
     platform: platformFilter !== "all" ? platformFilter : undefined,
+    supplier: supplierFilter !== "all" ? supplierFilter : undefined,
   });
 
   const activeCustomers = useMemo(
