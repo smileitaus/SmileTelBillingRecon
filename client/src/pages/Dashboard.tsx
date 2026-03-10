@@ -17,6 +17,7 @@ import {
   Loader2,
   LinkIcon,
   Flag,
+  ZapOff,
 } from "lucide-react";
 import { useSummary, useSupplierAccounts, useCustomerSearch } from "@/hooks/useData";
 
@@ -31,7 +32,7 @@ function StatCard({
   value: string | number;
   icon: React.ElementType;
   subtext?: string;
-  accent?: "teal" | "amber" | "rose" | "gray";
+  accent?: "teal" | "amber" | "rose" | "gray" | "orange";
 }) {
   const accentColor =
     accent === "teal"
@@ -40,9 +41,11 @@ function StatCard({
         ? "text-amber"
         : accent === "rose"
           ? "text-rose"
-          : accent === "gray"
-            ? "text-gray-500"
-            : "text-foreground";
+            : accent === "gray"
+              ? "text-gray-500"
+              : accent === "orange"
+                ? "text-orange-600"
+                : "text-foreground";
 
   return (
     <div className="bg-card border border-border rounded-lg px-5 py-4">
@@ -121,7 +124,7 @@ export default function Dashboard() {
       </div>
 
       {/* Summary Stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-6 gap-3 mb-8">
+      <div className="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-7 gap-3 mb-8">
         <StatCard
           label="Total Services"
           value={summary.totalServices}
@@ -161,6 +164,13 @@ export default function Dashboard() {
           icon={LinkIcon}
           subtext={`${summary.servicesMissingAvc ?? 0} missing AVC ID`}
           accent={((summary.servicesMissingAvc ?? 0) > 0) ? "rose" : "teal"}
+        />
+        <StatCard
+          label="No Data Use"
+          value={summary.noDataUseServices ?? 0}
+          icon={ZapOff}
+          subtext="Termination prospects"
+          accent={(summary.noDataUseServices ?? 0) > 0 ? "orange" : "gray"}
         />
       </div>
 

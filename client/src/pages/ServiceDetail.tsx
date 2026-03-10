@@ -31,6 +31,12 @@ import {
   CreditCard,
   Router,
   Database,
+  Zap,
+  ZapOff,
+  CircleDollarSign,
+  Calendar,
+  User,
+  Activity,
 } from "lucide-react";
 import { useServiceDetail } from "@/hooks/useData";
 import { trpc } from "@/lib/trpc";
@@ -576,6 +582,31 @@ export default function ServiceDetail() {
         </div>
       </div>
 
+      {/* No Data Use Banner */}
+      {service.noDataUse === 1 && (
+        <div className="bg-orange-50 border-2 border-orange-400 rounded-lg p-4 mb-4 flex items-start gap-3">
+          <ZapOff className="w-5 h-5 text-orange-600 shrink-0 mt-0.5" />
+          <div className="flex-1">
+            <p className="text-sm font-bold text-orange-800">
+              No Data Use Detected — Termination Prospect
+            </p>
+            <p className="text-xs text-orange-700 mt-0.5">
+              This SIM has shown no data usage in the 2025 Blitz Report analysis period.
+              Consider flagging for termination to reduce costs.
+            </p>
+            {service.blitzCategory && (
+              <div className="flex flex-wrap gap-1.5 mt-2">
+                {service.blitzCategory.split(', ').map((cat: string, i: number) => (
+                  <span key={i} className="text-[10px] bg-orange-100 text-orange-800 px-1.5 py-0.5 rounded font-medium">
+                    {cat}
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* AVC Warning Banner */}
       {!hasAvc && !isTerminated && (
         <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-4 flex items-start gap-3">
@@ -651,6 +682,46 @@ export default function ServiceDetail() {
           <DetailRow label="Purchase Date" value={service.purchaseDate} />
           <DetailRow label="Last WAN IP" value={service.lastWanIp} mono />
           <DetailRow label="WiFi Password" value={service.wifiPassword} mono />
+        </div>
+      )}
+
+      {/* Device & Blitz Report Info */}
+      {(service.imei || service.deviceName || service.deviceType || service.deviceCategory || service.imsi || service.userName || service.serviceActivationDate || service.flexiplanName || service.contractEndDate) && (
+        <div className="bg-card border border-border rounded-lg p-5 mb-4">
+          <div className="flex items-center gap-2 mb-3">
+            <Activity className="w-4 h-4 text-muted-foreground" />
+            <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              Device & Contract Info
+            </h2>
+            <span className="text-[10px] bg-purple-50 text-purple-700 px-1.5 py-0.5 rounded font-medium">
+              2025 Blitz Report
+            </span>
+          </div>
+          <DetailRow label="IMEI" value={service.imei} mono />
+          <DetailRow label="IMSI" value={service.imsi} mono />
+          <DetailRow label="Device Name" value={service.deviceName} />
+          <DetailRow label="Device Type" value={service.deviceType} />
+          <DetailRow label="Category" value={service.deviceCategory} />
+          <DetailRow label="User Name" value={service.userName} />
+          <DetailRow label="Activated" value={service.serviceActivationDate} />
+          <DetailRow label="Service End" value={service.serviceEndDate} />
+          <DetailRow label="Flexiplan" value={service.flexiplanName || service.flexiplanCode} />
+          <DetailRow label="Contract End" value={service.contractEndDate} />
+        </div>
+      )}
+
+      {/* Proposed Plan */}
+      {service.proposedPlan && (
+        <div className="bg-card border border-blue-200 rounded-lg p-5 mb-4">
+          <div className="flex items-center gap-2 mb-3">
+            <CircleDollarSign className="w-4 h-4 text-blue-600" />
+            <h2 className="text-xs font-semibold uppercase tracking-wider text-blue-700">
+              Proposed Plan
+            </h2>
+          </div>
+          <DetailRow label="Plan" value={service.proposedPlan} />
+          <DetailRow label="Cost" value={service.proposedCost ? `$${service.proposedCost}/mo` : null} mono />
+          <DetailRow label="Data" value={service.proposedDataGb ? `${service.proposedDataGb} GB` : null} />
         </div>
       )}
 

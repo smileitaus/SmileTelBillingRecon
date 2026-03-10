@@ -247,6 +247,9 @@ export async function getSummary() {
   const [flaggedCount2] = await db.select({ count: sql<number>`count(*)` }).from(services).where(eq(services.status, 'flagged_for_termination'));
   const [terminatedCount] = await db.select({ count: sql<number>`count(*)` }).from(services).where(eq(services.status, 'terminated'));
 
+  // No data use count
+  const [noDataUseCount] = await db.select({ count: sql<number>`count(*)` }).from(services).where(eq(services.noDataUse, 1));
+
   return {
     totalCustomers: custCount.count,
     totalLocations: locCount.count,
@@ -267,6 +270,7 @@ export async function getSummary() {
     servicesMissingAvc: withoutAvc.count,
     flaggedServices: flaggedCount2.count,
     terminatedServices: terminatedCount.count,
+    noDataUseServices: noDataUseCount.count,
   };
 }
 
@@ -576,6 +580,12 @@ export async function searchAll(query: string) {
     like(services.hardwareType, term),
     like(services.simOwner, term),
     like(services.discoveryNotes, term),
+    like(services.imei, term),
+    like(services.imsi, term),
+    like(services.deviceName, term),
+    like(services.deviceType, term),
+    like(services.userName, term),
+    like(services.flexiplanName, term),
   ];
 
   // For phone numbers, also search with digits-only normalization
@@ -638,6 +648,12 @@ export async function searchAll(query: string) {
     checkField(s.modemSerialNumber, 'modemSerialNumber', 'Modem S/N') ||
     checkField(s.hardwareType, 'hardwareType', 'Hardware') ||
     checkField(s.simOwner, 'simOwner', 'SIM Owner') ||
+    checkField(s.imei, 'imei', 'IMEI') ||
+    checkField(s.imsi, 'imsi', 'IMSI') ||
+    checkField(s.deviceName, 'deviceName', 'Device') ||
+    checkField(s.deviceType, 'deviceType', 'Device Type') ||
+    checkField(s.userName, 'userName', 'User Name') ||
+    checkField(s.flexiplanName, 'flexiplanName', 'Flexiplan') ||
     checkField(s.discoveryNotes, 'discoveryNotes', 'Notes');
 
     return {

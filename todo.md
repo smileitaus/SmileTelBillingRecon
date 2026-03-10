@@ -90,3 +90,23 @@
 - [x] Store uncategorized data in searchable notes
 - [x] Import LOG sheet entries as activity notes
 - [x] Update search to include new fields (SIM number, MAC address, modem S/N)
+
+# SmileTel Internet Services Import
+- [x] Analyze SmileTel spreadsheet structure and data quality
+- [x] Match SmileTel records to existing services by address and phone number
+- [x] Enrich matched services with AVC, address, and additional data
+- [x] Add unmatched/uncategorized data to notes
+- [x] Process all matched services
+
+# 2025 Blitz Report Import (SMILEIT-FULLBLITZ.xlsx)
+- [x] Add new schema fields: imei, deviceName, deviceType, deviceCategory, serviceActivationDate, flexiplanCode, flexiplanName, contractEndDate, userName, proposedPlan, proposedCost, noDataUse flag
+- [x] Match Blitz Report services by SIM serial number and phone number against existing DB records
+- [x] Enrich matched records with device info, IMEI, user names, plan details, contract dates
+- [x] Create new service records for unmatched SIMs
+- [x] Flag 162 No Data Usage SIMs with prominent 'No Data Use' indicator
+- [x] Import proposed plan/cost data from Blitz Report section
+- [x] Import non-chargeable/backup SIM categorization
+- [x] Import unused-last-month status
+- [x] Update frontend to display No Data Use flag prominently on service cards
+- [x] Update frontend to show device info, IMEI, contract dates on service detail
+- [x] Make No Data Use services searchable and filterable

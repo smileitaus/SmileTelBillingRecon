@@ -24,6 +24,7 @@ import {
   Ban,
   StickyNote,
   Save,
+  ZapOff,
 } from "lucide-react";
 import { useState, useCallback, useRef, useEffect } from "react";
 import { toast } from "sonner";
@@ -286,6 +287,7 @@ function ServiceCard({
   const hasNotes = service.discoveryNotes && service.discoveryNotes.trim() !== "";
   const isFlagged = service.status === "flagged_for_termination";
   const isTerminated = service.status === "terminated";
+  const noDataUse = service.noDataUse === 1;
 
   return (
     <div
@@ -294,6 +296,8 @@ function ServiceCard({
           ? "border-gray-200 bg-gray-50/50 opacity-70"
           : isFlagged
           ? "border-rose-200 bg-rose-50/30"
+          : noDataUse
+          ? "border-orange-300 bg-orange-50/30"
           : isExpanded
           ? "border-primary/30 shadow-md bg-card"
           : "border-border bg-card hover:border-primary/20 hover:shadow-sm"
@@ -328,6 +332,12 @@ function ServiceCard({
             </span>
             {(isFlagged || isTerminated) && (
               <StatusBadge status={service.status} />
+            )}
+            {noDataUse && (
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-bold rounded-full border border-orange-400 bg-orange-100 text-orange-800">
+                <ZapOff className="w-2.5 h-2.5" />
+                No Data Use
+              </span>
             )}
           </div>
           <div className="flex items-center gap-3 mt-0.5">
@@ -775,7 +785,7 @@ export default function UnmatchedServices() {
     "all" | "Internet" | "Mobile" | "Voice"
   >("all");
   const [statusFilter, setStatusFilter] = useState<
-    "all" | "unmatched" | "flagged_for_termination" | "terminated"
+    "all" | "unmatched" | "flagged_for_termination" | "terminated" | "no_data_use"
   >("all");
   const [sortBy, setSortBy] = useState<"cost" | "type" | "account">("cost");
 
@@ -804,7 +814,9 @@ export default function UnmatchedServices() {
     : allServices.filter((s: any) => s.serviceType === typeFilter);
 
   // Apply status filter
-  if (statusFilter !== "all") {
+  if (statusFilter === "no_data_use") {
+    filtered = filtered.filter((s: any) => s.noDataUse === 1);
+  } else if (statusFilter !== "all") {
     filtered = filtered.filter((s: any) => s.status === statusFilter);
   }
 
@@ -830,6 +842,9 @@ export default function UnmatchedServices() {
   ).length;
   const terminatedCount = allServices.filter(
     (s: any) => s.status === "terminated"
+  ).length;
+  const noDataUseCount = allServices.filter(
+    (s: any) => s.noDataUse === 1
   ).length;
 
   const typeCounts = allServices.reduce(
@@ -895,6 +910,14 @@ export default function UnmatchedServices() {
             {withoutAvc}
           </p>
         </div>
+        <div className="bg-card border border-orange-300 rounded-lg p-4">
+          <p className="text-[10px] uppercase tracking-wider text-orange-700 font-semibold">
+            No Data Use
+          </p>
+          <p className={`text-2xl font-bold mt-1 ${noDataUseCount > 0 ? "text-orange-600" : "text-muted-foreground"}`}>
+            {noDataUseCount}
+          </p>
+        </div>
       </div>
 
       {/* Filters & Sort */}
@@ -924,6 +947,7 @@ export default function UnmatchedServices() {
             { value: "unmatched", label: "Unmatched", count: allServices.filter((s: any) => s.status === "unmatched").length },
             { value: "flagged_for_termination", label: "Flagged", count: flaggedCount },
             { value: "terminated", label: "Terminated", count: terminatedCount },
+            { value: "no_data_use", label: "No Data Use", count: noDataUseCount },
           ] as const).map((f) => (
             <button
               key={f.value}
@@ -939,6 +963,7 @@ export default function UnmatchedServices() {
                 statusFilter === f.value
                   ? f.value === "flagged_for_termination" ? "bg-rose-100 text-rose-700"
                     : f.value === "terminated" ? "bg-gray-200 text-gray-600"
+                    : f.value === "no_data_use" ? "bg-orange-200 text-orange-800"
                     : "bg-primary/10 text-primary"
                   : "bg-muted text-muted-foreground"
               }`}>
