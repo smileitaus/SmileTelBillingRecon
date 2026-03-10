@@ -34,3 +34,6 @@
 - [x] Build drag-and-drop AVC assignment interface
 - [x] Allow inline AVC editing on Service Detail page
 - [x] Add AVC column to Customer List table with missing indicator
+
+# Bug Fixes
+- [x] Fix: Published site redirects to Manus OAuth instead of showing team password login form
