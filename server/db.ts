@@ -243,6 +243,10 @@ export async function getSummary() {
   const [withAvc] = await db.select({ count: sql<number>`count(*)` }).from(services).where(sql`connectionId IS NOT NULL AND connectionId != ''`);
   const [withoutAvc] = await db.select({ count: sql<number>`count(*)` }).from(services).where(sql`connectionId IS NULL OR connectionId = ''`);
 
+  // Flagged and terminated counts
+  const [flaggedCount2] = await db.select({ count: sql<number>`count(*)` }).from(services).where(eq(services.status, 'flagged_for_termination'));
+  const [terminatedCount] = await db.select({ count: sql<number>`count(*)` }).from(services).where(eq(services.status, 'terminated'));
+
   return {
     totalCustomers: custCount.count,
     totalLocations: locCount.count,
@@ -261,6 +265,8 @@ export async function getSummary() {
     servicesWithHistory: withHistory.count,
     servicesWithAvc: withAvc.count,
     servicesMissingAvc: withoutAvc.count,
+    flaggedServices: flaggedCount2.count,
+    terminatedServices: terminatedCount.count,
   };
 }
 
@@ -276,98 +282,174 @@ export async function getUnmatchedServices() {
   }));
 }
 
+// Helper: extract meaningful address parts, skipping generic prefixes
+function extractStreetName(address: string): string | null {
+  if (!address || address === 'Unknown Location') return null;
+  const genericPrefixes = /^(shop|unit|suite|level|lot|floor|apt|apartment|office|bldg|building|bg|l|g|t)\b/i;
+  const parts = address.split(',').map(p => p.trim()).filter(Boolean);
+  // Walk through comma-separated parts and find one that looks like a street
+  for (const part of parts) {
+    // Remove leading numbers/unit identifiers
+    const cleaned = part.replace(/^[\d\s\/\-]+/, '').trim();
+    if (cleaned.length < 4) continue;
+    if (genericPrefixes.test(cleaned)) continue;
+    // Look for street-type keywords
+    if (/\b(st|street|rd|road|ave|avenue|dr|drive|pl|place|tce|terrace|ct|court|way|blvd|boulevard|cres|crescent|ln|lane|hwy|highway|pde|parade|cir|circuit)\b/i.test(cleaned)) {
+      return cleaned;
+    }
+  }
+  // Fallback: try the second part (often the street after unit number)
+  if (parts.length >= 2) {
+    const second = parts[1].replace(/^[\d\s\/\-]+/, '').trim();
+    if (second.length > 5 && !genericPrefixes.test(second)) return second;
+  }
+  return null;
+}
+
+// Helper: normalize phone number for comparison (strip spaces, dashes)
+function normalizePhone(phone: string): string {
+  return phone.replace(/[\s\-\(\)]/g, '').trim();
+}
+
 export async function getSuggestedMatches(serviceExternalId: string) {
   const db = await getDb();
   if (!db) return [];
 
-  // Get the service first
   const [svc] = await db.select().from(services).where(eq(services.externalId, serviceExternalId)).limit(1);
   if (!svc) return [];
 
-  // Try to find matching customers based on available data
-  const suggestions: Array<{
+  // Parse dismissed suggestions
+  const dismissed: string[] = svc.dismissedSuggestions ? JSON.parse(svc.dismissedSuggestions) : [];
+
+  type SuggestionType = {
     customer: { id: number; externalId: string; name: string; billingPlatforms: string[]; serviceCount: number; monthlyCost: number; unmatchedCount: number; matchedCount: number; status: string };
     confidence: 'high' | 'medium' | 'low';
     reason: string;
     missingInfo: string[];
-  }> = [];
+  };
+  const suggestions: SuggestionType[] = [];
+  const seenCustIds = new Set<string>();
 
-  // Match by phone number area code + location
-  if (svc.phoneNumber && svc.phoneNumber.length > 4) {
-    const areaPrefix = svc.phoneNumber.substring(0, 6);
-    const phoneCusts = await db.select().from(services)
-      .where(sql`phoneNumber LIKE ${areaPrefix + '%'} AND status = 'active' AND customerExternalId != ''`)
-      .limit(10);
+  function formatCustomer(cust: typeof customers.$inferSelect) {
+    return { ...cust, billingPlatforms: cust.billingPlatforms ? JSON.parse(cust.billingPlatforms) : [], monthlyCost: parseFloat(cust.monthlyCost) };
+  }
 
-    const custIds = Array.from(new Set(phoneCusts.map(s => s.customerExternalId).filter((x): x is string => !!x)));
-    for (const custId of custIds.slice(0, 5)) {
-      const [cust] = await db.select().from(customers).where(eq(customers.externalId, custId)).limit(1);
-      if (cust) {
-        const missingInfo: string[] = [];
-        if (!svc.connectionId) missingInfo.push('AVC/Connection ID');
-        if (!svc.locationAddress) missingInfo.push('Service address');
+  function buildMissingInfo(): string[] {
+    const missing: string[] = [];
+    if (!svc.connectionId || svc.connectionId.trim() === '') missing.push('AVC/Connection ID');
+    if (!svc.locationAddress || svc.locationAddress === 'Unknown Location') missing.push('Service address');
+    return missing;
+  }
 
-        suggestions.push({
-          customer: { ...cust, billingPlatforms: cust.billingPlatforms ? JSON.parse(cust.billingPlatforms) : [], monthlyCost: parseFloat(cust.monthlyCost) },
-          confidence: svc.locationAddress ? 'medium' : 'low',
-          reason: `Phone number area code match (${areaPrefix})`,
-          missingInfo,
-        });
+  async function addSuggestion(custId: string, confidence: 'high' | 'medium' | 'low', reason: string) {
+    if (seenCustIds.has(custId)) return;
+    if (dismissed.includes(custId)) return;
+    seenCustIds.add(custId);
+    const [cust] = await db!.select().from(customers).where(eq(customers.externalId, custId)).limit(1);
+    if (cust) {
+      suggestions.push({
+        customer: formatCustomer(cust),
+        confidence,
+        reason,
+        missingInfo: buildMissingInfo(),
+      });
+    }
+  }
+
+  // 1. EXACT phone number match (highest confidence)
+  const phone = svc.phoneNumber ? normalizePhone(svc.phoneNumber) : '';
+  if (phone.length >= 8) {
+    const exactPhoneMatches = await db.select().from(services)
+      .where(sql`REPLACE(REPLACE(REPLACE(REPLACE(phoneNumber, ' ', ''), '-', ''), '(', ''), ')', '') = ${phone} AND status = 'active' AND customerExternalId != '' AND externalId != ${svc.externalId}`)
+      .limit(5);
+    for (const match of exactPhoneMatches) {
+      if (match.customerExternalId) {
+        await addSuggestion(match.customerExternalId, 'high', `Exact phone number match (${svc.phoneNumber})`);
       }
     }
   }
 
-  // Match by location address similarity
-  if (svc.locationAddress && svc.locationAddress.length > 5) {
-    const addrParts = svc.locationAddress.split(',')[0]?.trim() || '';
-    if (addrParts.length > 3) {
-      const addrCusts = await db.select().from(services)
-        .where(sql`locationAddress LIKE ${'%' + addrParts + '%'} AND status = 'active' AND customerExternalId != ''`)
-        .limit(10);
-
-      const custIds = Array.from(new Set(addrCusts.map(s => s.customerExternalId).filter((x): x is string => !!x)));
-      for (const custId of custIds.slice(0, 5)) {
-        // Skip if already suggested
-        if (suggestions.some(s => s.customer.externalId === custId)) continue;
-        const [cust] = await db.select().from(customers).where(eq(customers.externalId, custId)).limit(1);
-        if (cust) {
-          const missingInfo: string[] = [];
-          if (!svc.connectionId) missingInfo.push('AVC/Connection ID');
-
-          suggestions.push({
-            customer: { ...cust, billingPlatforms: cust.billingPlatforms ? JSON.parse(cust.billingPlatforms) : [], monthlyCost: parseFloat(cust.monthlyCost) },
-            confidence: 'medium',
-            reason: `Address match: ${addrParts}`,
-            missingInfo,
-          });
-        }
-      }
-    }
-  }
-
-  // Match by connection ID prefix
-  if (svc.connectionId && svc.connectionId.length > 5) {
-    const connPrefix = svc.connectionId.substring(0, 10);
-    const connCusts = await db.select().from(services)
+  // 2. Connection ID prefix match (high confidence)
+  if (svc.connectionId && svc.connectionId.trim().length > 5) {
+    const connPrefix = svc.connectionId.trim().substring(0, 10);
+    const connMatches = await db.select().from(services)
       .where(sql`connectionId LIKE ${connPrefix + '%'} AND status = 'active' AND customerExternalId != ''`)
       .limit(10);
+    const custIds = Array.from(new Set(connMatches.map(s => s.customerExternalId).filter((x): x is string => !!x)));
+    for (const custId of custIds.slice(0, 3)) {
+      await addSuggestion(custId, 'high', `Connection ID prefix match (${connPrefix})`);
+    }
+  }
 
-    const custIds = Array.from(new Set(connCusts.map(s => s.customerExternalId).filter((x): x is string => !!x)));
-    for (const custId of custIds.slice(0, 5)) {
-      if (suggestions.some(s => s.customer.externalId === custId)) continue;
-      const [cust] = await db.select().from(customers).where(eq(customers.externalId, custId)).limit(1);
-      if (cust) {
-        suggestions.push({
-          customer: { ...cust, billingPlatforms: cust.billingPlatforms ? JSON.parse(cust.billingPlatforms) : [], monthlyCost: parseFloat(cust.monthlyCost) },
-          confidence: 'high',
-          reason: `Connection ID prefix match (${connPrefix})`,
-          missingInfo: [],
-        });
+  // 3. Supplier account match (medium confidence - same Telstra account)
+  if (svc.supplierAccount && svc.supplierAccount.trim() !== '') {
+    const acctMatches = await db.select({
+      customerExternalId: services.customerExternalId,
+      cnt: sql<number>`COUNT(*)`,
+    }).from(services)
+      .where(sql`supplierAccount = ${svc.supplierAccount} AND status = 'active' AND customerExternalId != ''`)
+      .groupBy(services.customerExternalId)
+      .orderBy(sql`COUNT(*) DESC`)
+      .limit(5);
+    for (const match of acctMatches) {
+      if (match.customerExternalId) {
+        await addSuggestion(
+          match.customerExternalId,
+          'medium',
+          `Same supplier account (${svc.supplierAccount}) — ${match.cnt} matched services`
+        );
       }
     }
   }
 
-  return suggestions;
+  // 4. Address street name match (medium confidence, with improved parsing)
+  const streetName = extractStreetName(svc.locationAddress || '');
+  if (streetName && streetName.length > 5) {
+    const addrMatches = await db.select().from(services)
+      .where(sql`locationAddress LIKE ${'%' + streetName + '%'} AND status = 'active' AND customerExternalId != ''`)
+      .limit(10);
+    const custIds = Array.from(new Set(addrMatches.map(s => s.customerExternalId).filter((x): x is string => !!x)));
+    for (const custId of custIds.slice(0, 3)) {
+      await addSuggestion(custId, 'medium', `Address match: ${streetName}`);
+    }
+  }
+
+  // 5. Phone area code match for landlines (low confidence, only for 0X XXXX pattern)
+  if (phone.length >= 10 && phone.startsWith('0') && !phone.startsWith('04')) {
+    // Landline: area code + exchange (first 6 digits meaningful)
+    const landlinePrefix = phone.substring(0, 6);
+    const landlineMatches = await db.select().from(services)
+      .where(sql`REPLACE(REPLACE(REPLACE(REPLACE(phoneNumber, ' ', ''), '-', ''), '(', ''), ')', '') LIKE ${landlinePrefix + '%'} AND status = 'active' AND customerExternalId != ''`)
+      .limit(10);
+    const custIds = Array.from(new Set(landlineMatches.map(s => s.customerExternalId).filter((x): x is string => !!x)));
+    for (const custId of custIds.slice(0, 3)) {
+      await addSuggestion(custId, 'low', `Landline area code match (${landlinePrefix.substring(0,2)} ${landlinePrefix.substring(2)})`);
+    }
+  }
+
+  // Sort: high > medium > low
+  const confidenceOrder = { high: 0, medium: 1, low: 2 };
+  suggestions.sort((a, b) => confidenceOrder[a.confidence] - confidenceOrder[b.confidence]);
+
+  return suggestions.slice(0, 8);
+}
+
+export async function dismissSuggestion(serviceExternalId: string, customerExternalId: string) {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+
+  // Get current dismissed list
+  const [svc] = await db.select({ dismissedSuggestions: services.dismissedSuggestions }).from(services).where(eq(services.externalId, serviceExternalId)).limit(1);
+  const current: string[] = svc?.dismissedSuggestions ? JSON.parse(svc.dismissedSuggestions) : [];
+  if (!current.includes(customerExternalId)) {
+    current.push(customerExternalId);
+  }
+
+  await db.update(services).set({
+    dismissedSuggestions: JSON.stringify(current),
+  }).where(eq(services.externalId, serviceExternalId));
+
+  return { success: true };
 }
 
 export async function assignServiceToCustomer(
@@ -412,6 +494,30 @@ export async function updateServiceAvc(serviceExternalId: string, connectionId: 
 
   await db.update(services).set({
     connectionId: connectionId,
+  }).where(eq(services.externalId, serviceExternalId));
+
+  return { success: true };
+}
+
+export async function updateServiceNotes(serviceExternalId: string, notes: string, author: string) {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+
+  await db.update(services).set({
+    discoveryNotes: notes || null,
+    notesAuthor: author || null,
+    notesUpdatedAt: new Date(),
+  }).where(eq(services.externalId, serviceExternalId));
+
+  return { success: true };
+}
+
+export async function updateServiceStatus(serviceExternalId: string, status: string) {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+
+  await db.update(services).set({
+    status: status,
   }).where(eq(services.externalId, serviceExternalId));
 
   return { success: true };

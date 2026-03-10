@@ -20,6 +20,9 @@ import {
   X,
   Pencil,
   LinkIcon,
+  Flag,
+  Ban,
+  MessageSquare,
 } from "lucide-react";
 import { useCustomerDetail } from "@/hooks/useData";
 import { trpc } from "@/lib/trpc";
@@ -42,23 +45,31 @@ function ServiceTypeIcon({ type }: { type: string }) {
 }
 
 function StatusPill({ status }: { status: string }) {
-  const cls =
-    status === "active"
-      ? "status-active"
-      : status === "unmatched"
-        ? "status-unmatched"
-        : status === "flagged"
-          ? "status-flagged"
-          : "status-review";
-  const label =
-    status === "active"
-      ? "Matched"
-      : status === "unmatched"
-        ? "Unmatched"
-        : status === "flagged"
-          ? "Flagged"
-          : "Review";
-  return <span className={cls}>{label}</span>;
+  const styles: Record<string, string> = {
+    active: "status-active",
+    unmatched: "status-unmatched",
+    flagged_for_termination: "inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-semibold rounded-full border bg-rose-50 text-rose-700 border-rose-200",
+    terminated: "inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-semibold rounded-full border bg-gray-100 text-gray-500 border-gray-200",
+    flagged: "status-flagged",
+    review: "status-review",
+  };
+  const labels: Record<string, string> = {
+    active: "Matched",
+    unmatched: "Unmatched",
+    flagged_for_termination: "Flagged",
+    terminated: "Terminated",
+    flagged: "Flagged",
+    review: "Review",
+  };
+  const cls = styles[status] || "status-review";
+  const label = labels[status] || status;
+  return (
+    <span className={cls}>
+      {status === "flagged_for_termination" && <Flag className="w-2.5 h-2.5" />}
+      {status === "terminated" && <Ban className="w-2.5 h-2.5" />}
+      {label}
+    </span>
+  );
 }
 
 function AvcInlineEditor({
@@ -176,21 +187,29 @@ function AvcInlineEditor({
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function ServiceRow({ service }: { service: any }) {
   const hasAvc = service.connectionId && service.connectionId.trim() !== "";
+  const isTerminated = service.status === "terminated";
+  const isFlagged = service.status === "flagged_for_termination";
+  const hasNotes = service.discoveryNotes && service.discoveryNotes.trim() !== "";
 
   return (
     <Link href={`/services/${service.externalId || service.id}`} asChild>
-      <div className="flex items-center gap-3 px-4 py-2.5 hover:bg-accent/50 transition-colors cursor-pointer group border-b border-border/30 last:border-0">
-        <div className="w-7 h-7 rounded-md bg-muted flex items-center justify-center text-muted-foreground">
+      <div className={`flex items-center gap-3 px-4 py-2.5 hover:bg-accent/50 transition-colors cursor-pointer group border-b border-border/30 last:border-0 ${isTerminated ? "opacity-60" : isFlagged ? "bg-rose-50/30" : ""}`}>
+        <div className={`w-7 h-7 rounded-md flex items-center justify-center ${isTerminated ? "bg-gray-100 text-gray-400" : isFlagged ? "bg-rose-50 text-rose-600" : "bg-muted text-muted-foreground"}`}>
           <ServiceTypeIcon type={service.serviceType} />
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
-            <span className="text-sm font-medium truncate">
+            <span className={`text-sm font-medium truncate ${isTerminated ? "line-through text-muted-foreground" : ""}`}>
               {service.serviceType}
             </span>
             <span className="text-xs text-muted-foreground">
               {service.serviceTypeDetail || service.planName}
             </span>
+            {hasNotes && (
+              <span title="Has discovery notes">
+                <MessageSquare className="w-3 h-3 text-amber-600" />
+              </span>
+            )}
           </div>
           <div className="flex items-center gap-3 mt-0.5">
             {service.phoneNumber && (
@@ -267,6 +286,12 @@ export default function CustomerDetail() {
   ).length;
   const unmatchedCount = customerServices.filter(
     (s) => s.status === "unmatched"
+  ).length;
+  const flaggedCount = customerServices.filter(
+    (s) => s.status === "flagged_for_termination"
+  ).length;
+  const terminatedCount = customerServices.filter(
+    (s) => s.status === "terminated"
   ).length;
 
   // AVC tracking
@@ -348,6 +373,27 @@ export default function CustomerDetail() {
             {unmatchedCount}
           </p>
         </div>
+        {(flaggedCount > 0 || terminatedCount > 0) && (
+          <div className="bg-card border border-border rounded-lg px-4 py-3">
+            <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">
+              Flagged / Terminated
+            </p>
+            <div className="flex items-center gap-2 mt-1">
+              {flaggedCount > 0 && (
+                <span className="inline-flex items-center gap-1 text-sm font-bold text-rose-600">
+                  <Flag className="w-3 h-3" />
+                  {flaggedCount}
+                </span>
+              )}
+              {terminatedCount > 0 && (
+                <span className="inline-flex items-center gap-1 text-sm font-bold text-gray-500">
+                  <Ban className="w-3 h-3" />
+                  {terminatedCount}
+                </span>
+              )}
+            </div>
+          </div>
+        )}
         <div className="bg-card border border-border rounded-lg px-4 py-3">
           <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">
             AVC Coverage

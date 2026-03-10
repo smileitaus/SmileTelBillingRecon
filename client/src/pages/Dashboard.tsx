@@ -16,6 +16,7 @@ import {
   Building2,
   Loader2,
   LinkIcon,
+  Flag,
 } from "lucide-react";
 import { useSummary, useSupplierAccounts, useCustomerSearch } from "@/hooks/useData";
 
@@ -30,7 +31,7 @@ function StatCard({
   value: string | number;
   icon: React.ElementType;
   subtext?: string;
-  accent?: "teal" | "amber" | "rose";
+  accent?: "teal" | "amber" | "rose" | "gray";
 }) {
   const accentColor =
     accent === "teal"
@@ -39,7 +40,9 @@ function StatCard({
         ? "text-amber"
         : accent === "rose"
           ? "text-rose"
-          : "text-foreground";
+          : accent === "gray"
+            ? "text-gray-500"
+            : "text-foreground";
 
   return (
     <div className="bg-card border border-border rounded-lg px-5 py-4">
@@ -118,7 +121,7 @@ export default function Dashboard() {
       </div>
 
       {/* Summary Stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 mb-8">
+      <div className="grid grid-cols-2 lg:grid-cols-6 gap-3 mb-8">
         <StatCard
           label="Total Services"
           value={summary.totalServices}
@@ -144,6 +147,13 @@ export default function Dashboard() {
           icon={AlertTriangle}
           subtext="Require review"
           accent="amber"
+        />
+        <StatCard
+          label="Flagged"
+          value={summary.flaggedServices ?? 0}
+          icon={Flag}
+          subtext="For termination"
+          accent={(summary.flaggedServices ?? 0) > 0 ? "rose" : "gray"}
         />
         <StatCard
           label="AVC Coverage"

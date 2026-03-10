@@ -1,0 +1,41 @@
+Investigation: Unmatched Services Matching Algorithm
+=====================================================
+
+KEY FINDINGS:
+
+1. The Yiros Marketplace Bug:
+   - Yiros has phone prefix "073279" - no unmatched services share this prefix
+   - The bug is likely in the ADDRESS matching: Yiros has address "Shop T47 G, BG 1 DFO Jindalee, 16 Amazons Place, Jindalee QLD 4074"
+   - Current algorithm splits on comma, takes first part: "Shop T47 G"
+   - "Shop" is a very common substring that would match many addresses!
+   - FIX: Need better address parsing - skip generic prefixes like "Shop", "Unit", "Level", "Suite"
+
+2. Unmatched Service Data Availability (217 total):
+   - 213 have phone numbers
+   - Only 3 have real addresses (rest are "Unknown Location")
+   - Only 4 have connection IDs
+   - 213 have supplier account numbers
+
+3. Supplier Account Distribution:
+   - Account 586992900: 170 unmatched, 0 matched (ALL unmatched - no reference data)
+   - Account 192549800: 31 unmatched, 33 matched (good for account-based matching!)
+   - Account 9466986800: 6 unmatched, 31 matched
+   - Account 2000719405571: 5 unmatched, 18 matched
+
+4. Service Types in Unmatched:
+   - Mobile: 161 (mostly on account 586992900)
+   - Internet: 56
+
+5. Account 586992900 is ALL Mobile plans (Business Data Plan S, etc.)
+   - No matched services exist on this account at all
+   - These are likely a fleet of mobile data SIMs
+   - Cannot match by phone prefix (mobile numbers are random)
+   - Cannot match by address (all "Unknown Location")
+   - BEST APPROACH: These may all belong to one customer - suggest grouping by account
+
+IMPROVED MATCHING STRATEGY:
+- Account-based: If unmatched service shares supplier account with matched services, suggest those customers
+- Full phone match: Look for exact phone number matches (not just prefix)
+- Address: Skip generic prefixes (Shop, Unit, Level, Suite, Lot) and match on street name
+- Plan-based: Services with same plan on same account likely belong to same customer
+- For account 586992900: Flag as "bulk mobile fleet - may belong to single customer"

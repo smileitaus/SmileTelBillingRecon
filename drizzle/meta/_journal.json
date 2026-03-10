@@ -8,6 +8,13 @@
       "when": 1773101500000,
       "tag": "0000_tiny_radioactive_man",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1773118344931,
+      "tag": "0001_sleepy_human_robot",
+      "breakpoints": true
     }
   ]
 }

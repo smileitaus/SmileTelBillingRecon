@@ -3,6 +3,7 @@
  * All attributes, billing history timeline, status & actions
  * Monospaced data values, thin horizontal rules
  * AVC tracking with inline editing and missing-AVC warnings
+ * Discovery notes and termination status workflow
  */
 
 import { Link, useParams } from "wouter";
@@ -22,11 +23,16 @@ import {
   X,
   Pencil,
   LinkIcon,
+  Ban,
+  StickyNote,
+  Save,
+  MessageSquare,
 } from "lucide-react";
 import { useServiceDetail } from "@/hooks/useData";
 import { trpc } from "@/lib/trpc";
 import { useState } from "react";
 import { toast } from "sonner";
+import { useAuth } from "@/_core/hooks/useAuth";
 
 function ServiceTypeIcon({ type }: { type: string }) {
   switch (type) {
@@ -43,21 +49,23 @@ function ServiceTypeIcon({ type }: { type: string }) {
 
 function StatusBadge({ status }: { status: string }) {
   const styles: Record<string, string> = {
-    active: "bg-teal/10 text-teal border-teal/20",
-    unmatched: "bg-amber/10 text-amber border-amber/20",
-    flagged: "bg-rose/10 text-rose border-rose/20",
-    terminated: "bg-muted text-muted-foreground border-border",
+    active: "bg-emerald-50 text-emerald-700 border-emerald-200",
+    unmatched: "bg-amber-50 text-amber-700 border-amber-200",
+    flagged_for_termination: "bg-rose-50 text-rose-700 border-rose-200",
+    terminated: "bg-gray-100 text-gray-500 border-gray-200",
   };
   const labels: Record<string, string> = {
     active: "Active & Matched",
     unmatched: "Unmatched",
-    flagged: "Flagged for Review",
+    flagged_for_termination: "Flagged for Termination",
     terminated: "Terminated",
   };
   return (
     <span
       className={`inline-flex items-center gap-1.5 px-3 py-1 text-xs font-medium rounded-full border ${styles[status] || styles.unmatched}`}
     >
+      {status === "flagged_for_termination" && <Flag className="w-3 h-3" />}
+      {status === "terminated" && <Ban className="w-3 h-3" />}
       {labels[status] || status}
     </span>
   );
@@ -179,6 +187,201 @@ function AvcEditor({
   );
 }
 
+function DiscoveryNotesPanel({ service }: { service: any }) {
+  const { user } = useAuth();
+  const [notes, setNotes] = useState(service.discoveryNotes || "");
+  const [isEditing, setIsEditing] = useState(false);
+  const updateNotes = trpc.billing.updateNotes.useMutation();
+  const utils = trpc.useUtils();
+
+  const handleSave = async () => {
+    try {
+      await updateNotes.mutateAsync({
+        serviceExternalId: service.externalId,
+        notes: notes.trim(),
+        author: user?.name || user?.email || "Team Member",
+      });
+      toast.success("Discovery notes saved");
+      setIsEditing(false);
+      utils.billing.services.byId.invalidate({ id: service.externalId });
+    } catch {
+      toast.error("Failed to save notes");
+    }
+  };
+
+  const hasExistingNotes = service.discoveryNotes && service.discoveryNotes.trim() !== "";
+
+  return (
+    <div className="bg-card border border-border rounded-lg p-5">
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center gap-2">
+          <StickyNote className="w-4 h-4 text-muted-foreground" />
+          <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            Discovery Notes
+          </h2>
+          {hasExistingNotes && (
+            <MessageSquare className="w-3.5 h-3.5 text-amber-600" />
+          )}
+        </div>
+        {hasExistingNotes && !isEditing && (
+          <button
+            onClick={() => setIsEditing(true)}
+            className="text-xs text-primary hover:text-primary/80 transition-colors"
+          >
+            Edit
+          </button>
+        )}
+      </div>
+
+      {isEditing || !hasExistingNotes ? (
+        <div className="space-y-3">
+          <textarea
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
+            placeholder="Add notes about this service — e.g. investigation findings, who to contact, what action to take..."
+            className="w-full px-3 py-2.5 text-sm bg-background border border-border rounded-md outline-none focus:ring-2 focus:ring-ring resize-y min-h-[100px] transition-all"
+            rows={4}
+            autoFocus={isEditing}
+          />
+          <div className="flex items-center justify-between">
+            <p className="text-[10px] text-muted-foreground">
+              Saved as {user?.name || user?.email || "Team Member"}
+            </p>
+            <div className="flex items-center gap-2">
+              {isEditing && (
+                <button
+                  onClick={() => {
+                    setNotes(service.discoveryNotes || "");
+                    setIsEditing(false);
+                  }}
+                  className="px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  Cancel
+                </button>
+              )}
+              <button
+                onClick={handleSave}
+                disabled={updateNotes.isPending || (!notes.trim() && !hasExistingNotes)}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors disabled:opacity-50"
+              >
+                {updateNotes.isPending ? (
+                  <Loader2 className="w-3 h-3 animate-spin" />
+                ) : (
+                  <Save className="w-3 h-3" />
+                )}
+                Save Notes
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div>
+          <p className="text-sm whitespace-pre-wrap">{service.discoveryNotes}</p>
+          {service.notesAuthor && (
+            <p className="text-[10px] text-muted-foreground mt-3 pt-2 border-t border-border/50">
+              Last updated by {service.notesAuthor}
+              {service.notesUpdatedAt && (
+                <> · {new Date(service.notesUpdatedAt).toLocaleDateString("en-AU", { day: "numeric", month: "short", year: "numeric" })}</>
+              )}
+            </p>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function ServiceStatusActions({ service }: { service: any }) {
+  const updateStatus = trpc.billing.updateStatus.useMutation();
+  const utils = trpc.useUtils();
+
+  const handleStatusChange = async (newStatus: string) => {
+    try {
+      await updateStatus.mutateAsync({
+        serviceExternalId: service.externalId,
+        status: newStatus as any,
+      });
+      const labels: Record<string, string> = {
+        flagged_for_termination: "Service flagged for termination",
+        terminated: "Service marked as terminated",
+        unmatched: "Service status reset to unmatched",
+        active: "Service status reset to active",
+      };
+      toast.success(labels[newStatus] || "Status updated");
+      utils.billing.services.byId.invalidate({ id: service.externalId });
+      utils.billing.unmatched.list.invalidate();
+      utils.billing.summary.invalidate();
+      utils.billing.customers.list.invalidate();
+    } catch {
+      toast.error("Failed to update status");
+    }
+  };
+
+  const currentStatus = service.status;
+
+  return (
+    <div className="flex flex-wrap gap-2">
+      {currentStatus !== "flagged_for_termination" && currentStatus !== "terminated" && (
+        <button
+          onClick={() => handleStatusChange("flagged_for_termination")}
+          disabled={updateStatus.isPending}
+          className="inline-flex items-center gap-2 px-3 py-2 text-sm border border-destructive/30 text-destructive rounded-md hover:bg-destructive/5 transition-colors disabled:opacity-50"
+        >
+          {updateStatus.isPending ? (
+            <Loader2 className="w-3.5 h-3.5 animate-spin" />
+          ) : (
+            <Flag className="w-3.5 h-3.5" />
+          )}
+          Flag for Termination
+        </button>
+      )}
+      {currentStatus === "flagged_for_termination" && (
+        <>
+          <button
+            onClick={() => handleStatusChange("terminated")}
+            disabled={updateStatus.isPending}
+            className="inline-flex items-center gap-2 px-3 py-2 text-sm border border-gray-300 text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors disabled:opacity-50"
+          >
+            {updateStatus.isPending ? (
+              <Loader2 className="w-3.5 h-3.5 animate-spin" />
+            ) : (
+              <Ban className="w-3.5 h-3.5" />
+            )}
+            Mark as Terminated
+          </button>
+          <button
+            onClick={() => handleStatusChange(service.customerExternalId ? "active" : "unmatched")}
+            disabled={updateStatus.isPending}
+            className="inline-flex items-center gap-2 px-3 py-2 text-sm border border-border text-foreground rounded-md hover:bg-accent transition-colors disabled:opacity-50"
+          >
+            Unflag
+          </button>
+        </>
+      )}
+      {currentStatus === "terminated" && (
+        <button
+          onClick={() => handleStatusChange(service.customerExternalId ? "active" : "unmatched")}
+          disabled={updateStatus.isPending}
+          className="inline-flex items-center gap-2 px-3 py-2 text-sm border border-border text-foreground rounded-md hover:bg-accent transition-colors disabled:opacity-50"
+        >
+          Undo Termination
+        </button>
+      )}
+      {(currentStatus === "active" || currentStatus === "unmatched") && (
+        <button
+          onClick={() =>
+            toast.info("Edit customer link — feature coming soon")
+          }
+          className="inline-flex items-center gap-2 px-3 py-2 text-sm border border-border text-foreground rounded-md hover:bg-accent transition-colors"
+        >
+          <Building2 className="w-3.5 h-3.5" />
+          Edit Customer Link
+        </button>
+      )}
+    </div>
+  );
+}
+
 export default function ServiceDetail() {
   const params = useParams<{ id: string }>();
   const { service, location, customer, isLoading } = useServiceDetail(
@@ -209,6 +412,8 @@ export default function ServiceDetail() {
 
   const billingHistory = service.billingHistory || [];
   const hasAvc = service.connectionId && service.connectionId.trim() !== "";
+  const isTerminated = service.status === "terminated";
+  const isFlagged = service.status === "flagged_for_termination";
 
   return (
     <div className="p-6 lg:p-8 max-w-3xl">
@@ -231,13 +436,45 @@ export default function ServiceDetail() {
         </Link>
       )}
 
+      {/* Termination Banner */}
+      {isTerminated && (
+        <div className="bg-gray-100 border border-gray-200 rounded-lg p-4 mb-4 flex items-start gap-3">
+          <Ban className="w-5 h-5 text-gray-500 shrink-0 mt-0.5" />
+          <div className="flex-1">
+            <p className="text-sm font-medium text-gray-700">
+              This service has been terminated
+            </p>
+            <p className="text-xs text-gray-500 mt-0.5">
+              It is no longer active and should be removed from Telstra billing.
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* Flagged Banner */}
+      {isFlagged && (
+        <div className="bg-rose-50 border border-rose-200 rounded-lg p-4 mb-4 flex items-start gap-3">
+          <Flag className="w-5 h-5 text-rose-600 shrink-0 mt-0.5" />
+          <div className="flex-1">
+            <p className="text-sm font-medium text-rose-800">
+              This service is flagged for termination
+            </p>
+            <p className="text-xs text-rose-700 mt-0.5">
+              Review and confirm termination, or unflag if this service should remain active.
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* Service Header */}
       <div className="flex items-start gap-4 mb-6">
-        <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center text-muted-foreground shrink-0">
+        <div className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 ${
+          isTerminated ? "bg-gray-100 text-gray-400" : isFlagged ? "bg-rose-50 text-rose-600" : "bg-muted text-muted-foreground"
+        }`}>
           <ServiceTypeIcon type={service.serviceType} />
         </div>
         <div className="flex-1 min-w-0">
-          <h1 className="text-xl font-bold tracking-tight">
+          <h1 className={`text-xl font-bold tracking-tight ${isTerminated ? "line-through text-muted-foreground" : ""}`}>
             {service.serviceType} — {service.planName || "Unknown Plan"}
           </h1>
           <div className="flex items-center gap-3 mt-1.5">
@@ -252,7 +489,7 @@ export default function ServiceDetail() {
       </div>
 
       {/* AVC Warning Banner */}
-      {!hasAvc && (
+      {!hasAvc && !isTerminated && (
         <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-4 flex items-start gap-3">
           <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
           <div className="flex-1">
@@ -325,14 +562,14 @@ export default function ServiceDetail() {
             </div>
           </Link>
         ) : (
-          <div className="bg-card border border-border rounded-lg p-4 border-l-[3px] border-l-amber">
+          <div className="bg-card border border-border rounded-lg p-4">
             <div className="flex items-center gap-2 mb-2">
-              <AlertTriangle className="w-4 h-4 text-amber" />
+              <AlertTriangle className="w-4 h-4 text-amber-600" />
               <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Customer
               </span>
             </div>
-            <p className="text-sm font-medium text-amber">Unassigned</p>
+            <p className="text-sm font-medium text-amber-600">Unassigned</p>
             <p className="text-xs text-muted-foreground mt-0.5">
               This service is not linked to a customer
             </p>
@@ -350,6 +587,11 @@ export default function ServiceDetail() {
             {location?.address || service.locationAddress || "Unknown"}
           </p>
         </div>
+      </div>
+
+      {/* Discovery Notes */}
+      <div className="mb-4">
+        <DiscoveryNotesPanel service={service} />
       </div>
 
       {/* Billing History */}
@@ -399,26 +641,7 @@ export default function ServiceDetail() {
         <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">
           Actions
         </h2>
-        <div className="flex flex-wrap gap-2">
-          <button
-            onClick={() =>
-              toast.info("Flag for termination — feature coming soon")
-            }
-            className="inline-flex items-center gap-2 px-3 py-2 text-sm border border-destructive/30 text-destructive rounded-md hover:bg-destructive/5 transition-colors"
-          >
-            <Flag className="w-3.5 h-3.5" />
-            Flag for Termination
-          </button>
-          <button
-            onClick={() =>
-              toast.info("Edit customer link — feature coming soon")
-            }
-            className="inline-flex items-center gap-2 px-3 py-2 text-sm border border-border text-foreground rounded-md hover:bg-accent transition-colors"
-          >
-            <Building2 className="w-3.5 h-3.5" />
-            Edit Customer Link
-          </button>
-        </div>
+        <ServiceStatusActions service={service} />
       </div>
     </div>
   );

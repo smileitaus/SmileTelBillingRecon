@@ -17,6 +17,9 @@ import {
   getSuggestedMatches,
   assignServiceToCustomer,
   updateServiceAvc,
+  updateServiceNotes,
+  updateServiceStatus,
+  dismissSuggestion,
 } from "./db";
 
 export const appRouter = router({
@@ -129,6 +132,15 @@ export const appRouter = router({
             input.locationExternalId
           );
         }),
+
+      dismiss: protectedProcedure
+        .input(z.object({
+          serviceExternalId: z.string(),
+          customerExternalId: z.string(),
+        }))
+        .mutation(async ({ input }) => {
+          return await dismissSuggestion(input.serviceExternalId, input.customerExternalId);
+        }),
     }),
 
     updateAvc: protectedProcedure
@@ -138,6 +150,25 @@ export const appRouter = router({
       }))
       .mutation(async ({ input }) => {
         return await updateServiceAvc(input.serviceExternalId, input.connectionId);
+      }),
+
+    updateNotes: protectedProcedure
+      .input(z.object({
+        serviceExternalId: z.string(),
+        notes: z.string(),
+        author: z.string(),
+      }))
+      .mutation(async ({ input }) => {
+        return await updateServiceNotes(input.serviceExternalId, input.notes, input.author);
+      }),
+
+    updateStatus: protectedProcedure
+      .input(z.object({
+        serviceExternalId: z.string(),
+        status: z.enum(['active', 'unmatched', 'flagged_for_termination', 'terminated']),
+      }))
+      .mutation(async ({ input }) => {
+        return await updateServiceStatus(input.serviceExternalId, input.status);
       }),
   }),
 });

@@ -83,6 +83,10 @@ export const services = mysqlTable("services", {
   customerExternalId: varchar("customerExternalId", { length: 32 }).default(""),
   monthlyCost: decimal("monthlyCost", { precision: 10, scale: 2 }).default("0.00").notNull(),
   billingHistory: text("billingHistory"),
+  discoveryNotes: text("discoveryNotes"),
+  notesAuthor: varchar("notesAuthor", { length: 256 }),
+  notesUpdatedAt: timestamp("notesUpdatedAt"),
+  dismissedSuggestions: text("dismissedSuggestions"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });

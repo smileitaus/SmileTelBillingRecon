@@ -48,6 +48,20 @@ describe("billing.summary", () => {
       expect(summary.servicesWithAvc + summary.servicesMissingAvc).toBe(summary.totalServices);
     }
   });
+
+  it("returns summary with flagged and terminated service counts", async () => {
+    const ctx = createAuthContext();
+    const caller = appRouter.createCaller(ctx);
+
+    const summary = await caller.billing.summary();
+    expect(summary).toBeDefined();
+    if (summary) {
+      expect(summary).toHaveProperty("flaggedServices");
+      expect(summary).toHaveProperty("terminatedServices");
+      expect(typeof summary.flaggedServices).toBe("number");
+      expect(typeof summary.terminatedServices).toBe("number");
+    }
+  });
 });
 
 describe("billing.customers", () => {
@@ -186,6 +200,96 @@ describe("billing.search", () => {
   });
 });
 
+describe("billing.updateNotes", () => {
+  it("saves discovery notes for a service", async () => {
+    const ctx = createAuthContext();
+    const caller = appRouter.createCaller(ctx);
+
+    const result = await caller.billing.updateNotes({
+      serviceExternalId: "svc-001",
+      notes: "Checked Telstra portal - service appears to belong to ABC Corp",
+      author: "Test User",
+    });
+
+    expect(result).toEqual({ success: true });
+  });
+
+  it("allows saving empty notes to clear them", async () => {
+    const ctx = createAuthContext();
+    const caller = appRouter.createCaller(ctx);
+
+    const result = await caller.billing.updateNotes({
+      serviceExternalId: "svc-001",
+      notes: "",
+      author: "Test User",
+    });
+
+    expect(result).toEqual({ success: true });
+  });
+});
+
+describe("billing.updateStatus", () => {
+  it("flags a service for termination", async () => {
+    const ctx = createAuthContext();
+    const caller = appRouter.createCaller(ctx);
+
+    const result = await caller.billing.updateStatus({
+      serviceExternalId: "svc-002",
+      status: "flagged_for_termination",
+    });
+
+    expect(result).toEqual({ success: true });
+  });
+
+  it("marks a service as terminated", async () => {
+    const ctx = createAuthContext();
+    const caller = appRouter.createCaller(ctx);
+
+    const result = await caller.billing.updateStatus({
+      serviceExternalId: "svc-003",
+      status: "terminated",
+    });
+
+    expect(result).toEqual({ success: true });
+  });
+
+  it("resets a service to active", async () => {
+    const ctx = createAuthContext();
+    const caller = appRouter.createCaller(ctx);
+
+    const result = await caller.billing.updateStatus({
+      serviceExternalId: "svc-004",
+      status: "active",
+    });
+
+    expect(result).toEqual({ success: true });
+  });
+
+  it("resets a service to unmatched", async () => {
+    const ctx = createAuthContext();
+    const caller = appRouter.createCaller(ctx);
+
+    const result = await caller.billing.updateStatus({
+      serviceExternalId: "svc-005",
+      status: "unmatched",
+    });
+
+    expect(result).toEqual({ success: true });
+  });
+
+  it("rejects invalid status values", async () => {
+    const ctx = createAuthContext();
+    const caller = appRouter.createCaller(ctx);
+
+    await expect(
+      caller.billing.updateStatus({
+        serviceExternalId: "svc-006",
+        status: "invalid_status" as any,
+      })
+    ).rejects.toThrow();
+  });
+});
+
 describe("billing.supplierAccounts", () => {
   it("returns supplier accounts", async () => {
     const ctx = createAuthContext();
@@ -199,5 +303,105 @@ describe("billing.supplierAccounts", () => {
     expect(first).toHaveProperty("accountNumber");
     expect(first).toHaveProperty("serviceCount");
     expect(first).toHaveProperty("monthlyCost");
+  });
+});
+
+describe("billing.unmatched.dismiss", () => {
+  it("dismisses a suggestion for a service", async () => {
+    const ctx = createAuthContext();
+    const caller = appRouter.createCaller(ctx);
+
+    // Get an unmatched service with suggestions
+    const unmatched = await caller.billing.unmatched.list();
+    expect(unmatched.length).toBeGreaterThan(0);
+
+    // Find one with a supplier account that has matches
+    const svcWithAcct = unmatched.find(s => s.supplierAccount && s.supplierAccount !== '');
+    if (svcWithAcct) {
+      const suggestions = await caller.billing.unmatched.suggestions({ serviceId: svcWithAcct.externalId });
+      if (suggestions.length > 0) {
+        const firstSuggestion = suggestions[0];
+
+        // Dismiss the first suggestion
+        const result = await caller.billing.unmatched.dismiss({
+          serviceExternalId: svcWithAcct.externalId,
+          customerExternalId: firstSuggestion.customer.externalId,
+        });
+        expect(result).toEqual({ success: true });
+
+        // Verify the dismissed suggestion no longer appears
+        const updatedSuggestions = await caller.billing.unmatched.suggestions({ serviceId: svcWithAcct.externalId });
+        const dismissed = updatedSuggestions.find(
+          s => s.customer.externalId === firstSuggestion.customer.externalId
+        );
+        expect(dismissed).toBeUndefined();
+      }
+    }
+  });
+});
+
+describe("matching algorithm - supplier account", () => {
+  it("suggests customers from same supplier account", async () => {
+    const ctx = createAuthContext();
+    const caller = appRouter.createCaller(ctx);
+
+    // Find an unmatched service on account 192549800 (has matched services)
+    const unmatched = await caller.billing.unmatched.list();
+    const svcOnSharedAcct = unmatched.find(s => s.supplierAccount === '192549800');
+    if (svcOnSharedAcct) {
+      const suggestions = await caller.billing.unmatched.suggestions({ serviceId: svcOnSharedAcct.externalId });
+      expect(suggestions.length).toBeGreaterThan(0);
+      // Should suggest Zambrero locations (which are on the same account)
+      const hasZambrero = suggestions.some(s => s.customer.name.includes('Zambrero'));
+      expect(hasZambrero).toBe(true);
+      // Reason should mention supplier account
+      const acctSuggestion = suggestions.find(s => s.reason.includes('supplier account'));
+      expect(acctSuggestion).toBeDefined();
+    }
+  });
+
+  it("does not suggest Yiros Marketplace for unrelated services", async () => {
+    const ctx = createAuthContext();
+    const caller = appRouter.createCaller(ctx);
+
+    // Check a service on account 586992900 (no matched services on this account)
+    const unmatched = await caller.billing.unmatched.list();
+    const svcOn586 = unmatched.find(s => s.supplierAccount === '586992900');
+    if (svcOn586) {
+      const suggestions = await caller.billing.unmatched.suggestions({ serviceId: svcOn586.externalId });
+      const hasYiros = suggestions.some(s => s.customer.name.includes('Yiros'));
+      expect(hasYiros).toBe(false);
+    }
+  });
+});
+
+describe("matching algorithm - confidence levels", () => {
+  it("returns suggestions sorted by confidence (high > medium > low)", async () => {
+    const ctx = createAuthContext();
+    const caller = appRouter.createCaller(ctx);
+
+    const unmatched = await caller.billing.unmatched.list();
+    if (unmatched.length > 0) {
+      const suggestions = await caller.billing.unmatched.suggestions({ serviceId: unmatched[0].externalId });
+      if (suggestions.length >= 2) {
+        const confidenceOrder = { high: 0, medium: 1, low: 2 };
+        for (let i = 1; i < suggestions.length; i++) {
+          const prev = confidenceOrder[suggestions[i - 1].confidence as keyof typeof confidenceOrder];
+          const curr = confidenceOrder[suggestions[i].confidence as keyof typeof confidenceOrder];
+          expect(prev).toBeLessThanOrEqual(curr);
+        }
+      }
+    }
+  });
+
+  it("limits suggestions to max 8 results", async () => {
+    const ctx = createAuthContext();
+    const caller = appRouter.createCaller(ctx);
+
+    const unmatched = await caller.billing.unmatched.list();
+    for (const svc of unmatched.slice(0, 5)) {
+      const suggestions = await caller.billing.unmatched.suggestions({ serviceId: svc.externalId });
+      expect(suggestions.length).toBeLessThanOrEqual(8);
+    }
   });
 });
