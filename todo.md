@@ -189,3 +189,17 @@
 - [x] Clean up billing platform data — normalized all values to consistent JSON array format
 - [x] Updated Customer List to show all 887 customers (not just those with services)
 - [x] Added 3 new tests for platform filter and Zambrero import verification
+
+# Customer Deduplication
+- [x] Analyze duplicate customer records (32 groups, 68 records, 36 duplicates)
+- [x] Build dedup script to merge duplicates (consolidate services, billing platforms, contacts)
+- [x] Reassign services from duplicate records to primary record (Mischief Travel 295 svcs preserved)
+- [x] Delete 36 duplicate customer records (887 → 851 customers)
+- [x] Verify no orphaned services after dedup (0 orphans)
+
+# Phone-Based Matching for Remaining Unmatched Services
+- [x] Identify 44 unmatched services with phone numbers
+- [x] Built phone lookup from 524 entries (221 customer contacts + 303 matched service phones)
+- [x] Result: 0 phone matches — all 44 phones are unique/unregistered numbers
+- [x] Remaining 210 unmatched: 199 unassigned SIMs, 5 personal mobiles, 6 generic labels
+- [x] Confirmed: remaining services need manual review or additional data to match
