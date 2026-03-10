@@ -59,6 +59,7 @@ export default function CustomerList() {
     setSupplierFilter,
     filtered,
     totalActive,
+    totalWithServices,
     isLoading,
   } = useCustomerSearch();
 
@@ -122,7 +123,7 @@ export default function CustomerList() {
       <div className="mb-6">
         <h1 className="text-xl font-bold tracking-tight">Customers</h1>
         <p className="text-sm text-muted-foreground mt-1">
-          {totalActive} customers with active Telstra services
+          {totalActive} customers total &middot; {totalWithServices} with active services
         </p>
       </div>
 
@@ -161,11 +162,11 @@ export default function CustomerList() {
             className="text-sm bg-card border border-border rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-ring/20"
           >
             <option value="all">All Platforms</option>
-            <option value="Datagate">Datagate</option>
-            <option value="Sasboss">Sasboss</option>
+            <option value="DATAGATE">DATAGATE</option>
             <option value="Onebill">Onebill</option>
             <option value="ECN">ECN</option>
-            <option value="Halo">Halo</option>
+            <option value="Sasboss">Sasboss</option>
+            <option value="none">No Platform</option>
           </select>
 
           <select

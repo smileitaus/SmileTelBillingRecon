@@ -149,7 +149,7 @@
 - [x] Match sites to existing customers by address/suburb
 - [x] Apply business names (franchisee names) to matched customers
 - [x] Store remaining data (phone, email, contact, hardware, etc.) in customer fields + notes
-- [ ] Create new customer records for unmatched sites if needed (181 unmatched sites)
+- [x] Create new customer records for unmatched sites if needed (181 unmatched sites)
 - [x] Update customer schema with businessName, contactName, contactEmail, contactPhone, ownershipType, siteAddress, notes
 - [x] Display business info on Customer Detail page (contact card)
 - [x] Display business name subtitle on Customer List table
@@ -172,3 +172,20 @@
 - [x] Create 34 new customer records for unmatched DataGate customers (Spicers, Swains, etc.)
 - [x] Auto-match unmatched services to DataGate customers by address
 - [x] Matched services increased from 233 → 531 (71% match rate), 706 total customers in DB
+
+# Second-Pass Address Matching
+- [x] Analyzed remaining 210 unmatched services — all have no address data (mobile SIMs, unassigned services)
+- [x] Confirmed address-based matching already exhausted — no further address matches possible
+- [x] Remaining 210 unmatched: ~166 Unassigned SIMs, ~7 personal mobiles, ~37 misc services
+
+# Import Unmatched Zambrero Sites
+- [x] Import 181 unmatched Zambrero sites as new placeholder customer records
+- [x] Apply business names, contacts, addresses, emails, ownership from spreadsheet data
+- [x] Total customers now 887 (303 Zambrero customers total)
+
+# Billing Platform Filter
+- [x] Add billing platform filter dropdown to Customer List page (DATAGATE, Onebill, ECN, Sasboss, No Platform)
+- [x] Wire filter to server-side query with 'none' option for customers without billing platform
+- [x] Clean up billing platform data — normalized all values to consistent JSON array format
+- [x] Updated Customer List to show all 887 customers (not just those with services)
+- [x] Added 3 new tests for platform filter and Zambrero import verification

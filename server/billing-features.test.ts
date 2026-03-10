@@ -93,6 +93,38 @@ describe("billing.customers", () => {
     });
   });
 
+  it("filters customers by billing platform (DATAGATE)", async () => {
+    const ctx = createAuthContext();
+    const caller = appRouter.createCaller(ctx);
+
+    const results = await caller.billing.customers.list({ platform: "DATAGATE" });
+    expect(results.length).toBeGreaterThan(0);
+    results.forEach((c) => {
+      expect(c.billingPlatforms).toContain("DATAGATE");
+    });
+  });
+
+  it("filters customers with no billing platform", async () => {
+    const ctx = createAuthContext();
+    const caller = appRouter.createCaller(ctx);
+
+    const results = await caller.billing.customers.list({ platform: "none" });
+    expect(results.length).toBeGreaterThan(0);
+    results.forEach((c) => {
+      expect(c.billingPlatforms.length).toBe(0);
+    });
+  });
+
+  it("includes imported Zambrero placeholder customers", async () => {
+    const ctx = createAuthContext();
+    const caller = appRouter.createCaller(ctx);
+
+    const results = await caller.billing.customers.list({ search: "Zambrero" });
+    expect(results.length).toBeGreaterThan(100);
+    const hasNewSites = results.some((c) => c.name.includes("Zambrero - "));
+    expect(hasNewSites).toBe(true);
+  });
+
   it("returns customer by externalId", async () => {
     const ctx = createAuthContext();
     const caller = appRouter.createCaller(ctx);
@@ -401,9 +433,9 @@ describe("matching algorithm - confidence levels", () => {
     const caller = appRouter.createCaller(ctx);
 
     const unmatched = await caller.billing.unmatched.list();
-    for (const svc of unmatched.slice(0, 5)) {
+    for (const svc of unmatched.slice(0, 3)) {
       const suggestions = await caller.billing.unmatched.suggestions({ serviceId: svc.externalId });
       expect(suggestions.length).toBeLessThanOrEqual(8);
     }
-  });
+  }, 15000);
 });

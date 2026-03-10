@@ -21,9 +21,14 @@ export function useCustomerSearch() {
     supplier: supplierFilter !== "all" ? supplierFilter : undefined,
   });
 
-  const activeCustomers = useMemo(
-    () => (customers ?? []).filter((c) => c.serviceCount > 0),
+  const allCustomers = useMemo(
+    () => customers ?? [],
     [customers]
+  );
+
+  const totalWithServices = useMemo(
+    () => allCustomers.filter((c) => c.serviceCount > 0).length,
+    [allCustomers]
   );
 
   // Client-side sorting is still done in the component
@@ -36,8 +41,9 @@ export function useCustomerSearch() {
     setPlatformFilter,
     supplierFilter,
     setSupplierFilter,
-    filtered: activeCustomers,
-    totalActive: activeCustomers.length,
+    filtered: allCustomers,
+    totalActive: allCustomers.length,
+    totalWithServices,
     isLoading,
   };
 }

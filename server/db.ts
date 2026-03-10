@@ -118,7 +118,13 @@ export async function getAllCustomers(search?: string, statusFilter?: string, pl
   }
 
   if (platformFilter && platformFilter !== 'all') {
-    conditions.push(like(customers.billingPlatforms, `%${platformFilter}%`));
+    if (platformFilter === 'none') {
+      conditions.push(
+        sql`(${customers.billingPlatforms} IS NULL OR ${customers.billingPlatforms} = '' OR ${customers.billingPlatforms} = '[]')`
+      );
+    } else {
+      conditions.push(like(customers.billingPlatforms, `%${platformFilter}%`));
+    }
   }
 
   // Filter by supplier: find customers that have at least one service from the specified provider

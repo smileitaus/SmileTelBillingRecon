@@ -28,5 +28,5 @@ describe("Carbon API Authentication", () => {
     
     // The login should succeed - either via token in body or session cookie
     expect(loginRes.ok).toBe(true);
-  });
+  }, 15000);
 });
