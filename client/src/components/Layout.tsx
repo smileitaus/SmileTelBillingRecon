@@ -12,6 +12,9 @@ import {
   Users,
   Search,
   ChevronRight,
+  TrendingUp,
+  FileWarning,
+  Merge,
 } from "lucide-react";
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useGlobalSearch } from "@/hooks/useData";
@@ -22,6 +25,9 @@ const navItems = [
   { path: "/", label: "Dashboard", icon: LayoutDashboard },
   { path: "/customers", label: "Customers", icon: Users },
   { path: "/unmatched", label: "Unmatched", icon: AlertTriangle },
+  { path: "/revenue", label: "Revenue & Margin", icon: TrendingUp },
+  { path: "/billing", label: "Billing Match", icon: FileWarning },
+  { path: "/merge", label: "Merge Customers", icon: Merge },
 ];
 
 interface SearchCustomer {

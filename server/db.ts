@@ -721,3 +721,347 @@ export async function searchAll(query: string) {
     services: servicesWithMatchField,
   };
 }
+
+// ==================== Billing Items Queries ====================
+
+import { billingItems } from "../drizzle/schema";
+
+export async function getBillingItems(filters?: {
+  matchStatus?: string;
+  customerExternalId?: string;
+  category?: string;
+  billingPlatform?: string;
+}) {
+  const db = await getDb();
+  if (!db) return [];
+
+  const conditions = [];
+  if (filters?.matchStatus && filters.matchStatus !== 'all') {
+    conditions.push(eq(billingItems.matchStatus, filters.matchStatus));
+  }
+  if (filters?.customerExternalId) {
+    conditions.push(eq(billingItems.customerExternalId, filters.customerExternalId));
+  }
+  if (filters?.category && filters.category !== 'all') {
+    conditions.push(eq(billingItems.category, filters.category));
+  }
+  if (filters?.billingPlatform && filters.billingPlatform !== 'all') {
+    conditions.push(eq(billingItems.billingPlatform, filters.billingPlatform));
+  }
+
+  const whereClause = conditions.length > 0
+    ? conditions.reduce((acc, c) => sql`${acc} AND ${c}`)
+    : undefined;
+
+  const result = await db.select().from(billingItems)
+    .where(whereClause)
+    .orderBy(desc(billingItems.lineAmount));
+
+  return result.map(bi => ({
+    ...bi,
+    lineAmount: parseFloat(bi.lineAmount),
+    unitAmount: parseFloat(bi.unitAmount),
+    taxAmount: bi.taxAmount ? parseFloat(bi.taxAmount) : 0,
+    quantity: parseFloat(bi.quantity),
+    discount: bi.discount ? parseFloat(bi.discount) : 0,
+  }));
+}
+
+export async function getBillingItemsByService(serviceExternalId: string) {
+  const db = await getDb();
+  if (!db) return [];
+
+  const result = await db.select().from(billingItems)
+    .where(eq(billingItems.serviceExternalId, serviceExternalId));
+
+  return result.map(bi => ({
+    ...bi,
+    lineAmount: parseFloat(bi.lineAmount),
+    unitAmount: parseFloat(bi.unitAmount),
+    taxAmount: bi.taxAmount ? parseFloat(bi.taxAmount) : 0,
+    quantity: parseFloat(bi.quantity),
+    discount: bi.discount ? parseFloat(bi.discount) : 0,
+  }));
+}
+
+export async function getBillingItemsByCustomer(customerExternalId: string) {
+  const db = await getDb();
+  if (!db) return [];
+
+  const result = await db.select().from(billingItems)
+    .where(eq(billingItems.customerExternalId, customerExternalId))
+    .orderBy(desc(billingItems.lineAmount));
+
+  return result.map(bi => ({
+    ...bi,
+    lineAmount: parseFloat(bi.lineAmount),
+    unitAmount: parseFloat(bi.unitAmount),
+    taxAmount: bi.taxAmount ? parseFloat(bi.taxAmount) : 0,
+    quantity: parseFloat(bi.quantity),
+    discount: bi.discount ? parseFloat(bi.discount) : 0,
+  }));
+}
+
+export async function getBillingSummary() {
+  const db = await getDb();
+  if (!db) return null;
+
+  const [totals] = await db.select({
+    totalItems: sql<number>`count(*)`,
+    totalRevenue: sql<string>`COALESCE(SUM(lineAmount), 0)`,
+    totalTax: sql<string>`COALESCE(SUM(taxAmount), 0)`,
+  }).from(billingItems);
+
+  const statusBreakdown = await db.select({
+    matchStatus: billingItems.matchStatus,
+    count: sql<number>`count(*)`,
+    revenue: sql<string>`COALESCE(SUM(lineAmount), 0)`,
+  }).from(billingItems).groupBy(billingItems.matchStatus);
+
+  const categoryBreakdown = await db.select({
+    category: billingItems.category,
+    count: sql<number>`count(*)`,
+    revenue: sql<string>`COALESCE(SUM(lineAmount), 0)`,
+  }).from(billingItems).groupBy(billingItems.category).orderBy(sql`SUM(lineAmount) DESC`);
+
+  // Margin stats from services with revenue
+  const [marginStats] = await db.select({
+    servicesWithRevenue: sql<number>`count(*)`,
+    avgMargin: sql<string>`COALESCE(AVG(marginPercent), 0)`,
+    negativeMarginCount: sql<number>`SUM(CASE WHEN marginPercent < 0 THEN 1 ELSE 0 END)`,
+    lowMarginCount: sql<number>`SUM(CASE WHEN marginPercent >= 0 AND marginPercent < 20 THEN 1 ELSE 0 END)`,
+    totalCost: sql<string>`COALESCE(SUM(monthlyCost), 0)`,
+    totalRevenue: sql<string>`COALESCE(SUM(monthlyRevenue), 0)`,
+  }).from(services).where(sql`monthlyRevenue > 0`);
+
+  // Unmatched billing contacts (distinct)
+  const unmatchedContacts = await db.select({
+    contactName: billingItems.contactName,
+    count: sql<number>`count(*)`,
+    revenue: sql<string>`COALESCE(SUM(lineAmount), 0)`,
+  }).from(billingItems)
+    .where(eq(billingItems.matchStatus, 'unmatched'))
+    .groupBy(billingItems.contactName)
+    .orderBy(sql`SUM(lineAmount) DESC`);
+
+  return {
+    totalItems: totals.totalItems,
+    totalRevenue: parseFloat(totals.totalRevenue),
+    totalTax: parseFloat(totals.totalTax),
+    statusBreakdown: statusBreakdown.map(s => ({
+      ...s,
+      revenue: parseFloat(s.revenue),
+    })),
+    categoryBreakdown: categoryBreakdown.map(c => ({
+      ...c,
+      revenue: parseFloat(c.revenue),
+    })),
+    marginStats: {
+      servicesWithRevenue: marginStats.servicesWithRevenue,
+      avgMargin: parseFloat(marginStats.avgMargin),
+      negativeMarginCount: marginStats.negativeMarginCount,
+      lowMarginCount: marginStats.lowMarginCount,
+      totalCost: parseFloat(marginStats.totalCost),
+      totalRevenue: parseFloat(marginStats.totalRevenue),
+    },
+    unmatchedContacts: unmatchedContacts.map(c => ({
+      ...c,
+      revenue: parseFloat(c.revenue),
+    })),
+  };
+}
+
+// ==================== Margin Queries ====================
+
+export async function getServicesWithMargin(filters?: {
+  marginFilter?: string; // 'all', 'negative', 'low', 'healthy', 'high'
+  customerExternalId?: string;
+  serviceType?: string;
+  provider?: string;
+}) {
+  const db = await getDb();
+  if (!db) return [];
+
+  const conditions = [sql`monthlyRevenue > 0`];
+
+  if (filters?.marginFilter && filters.marginFilter !== 'all') {
+    switch (filters.marginFilter) {
+      case 'negative':
+        conditions.push(sql`marginPercent < 0`);
+        break;
+      case 'low':
+        conditions.push(sql`marginPercent >= 0 AND marginPercent < 20`);
+        break;
+      case 'healthy':
+        conditions.push(sql`marginPercent >= 20 AND marginPercent < 50`);
+        break;
+      case 'high':
+        conditions.push(sql`marginPercent >= 50`);
+        break;
+    }
+  }
+
+  if (filters?.customerExternalId) {
+    conditions.push(eq(services.customerExternalId, filters.customerExternalId));
+  }
+  if (filters?.serviceType && filters.serviceType !== 'all') {
+    conditions.push(eq(services.serviceType, filters.serviceType));
+  }
+  if (filters?.provider && filters.provider !== 'all') {
+    conditions.push(eq(services.provider, filters.provider));
+  }
+
+  const whereClause = conditions.reduce((acc, c) => sql`${acc} AND ${c}`);
+
+  const result = await db.select().from(services)
+    .where(whereClause)
+    .orderBy(asc(sql`marginPercent`));
+
+  return result.map(s => ({
+    ...s,
+    monthlyCost: parseFloat(s.monthlyCost),
+    monthlyRevenue: parseFloat(s.monthlyRevenue),
+    marginPercent: s.marginPercent ? parseFloat(s.marginPercent) : null,
+    billingHistory: s.billingHistory ? JSON.parse(s.billingHistory) : [],
+  }));
+}
+
+// ==================== Customer Merge ====================
+
+export async function mergeCustomers(primaryExternalId: string, secondaryExternalId: string) {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+
+  // Get both customers
+  const [primary] = await db.select().from(customers).where(eq(customers.externalId, primaryExternalId)).limit(1);
+  const [secondary] = await db.select().from(customers).where(eq(customers.externalId, secondaryExternalId)).limit(1);
+
+  if (!primary || !secondary) throw new Error('Customer not found');
+
+  // Reassign all services from secondary to primary
+  await db.update(services).set({
+    customerExternalId: primaryExternalId,
+    customerName: primary.name,
+  }).where(eq(services.customerExternalId, secondaryExternalId));
+
+  // Reassign all locations from secondary to primary
+  await db.update(locations).set({
+    customerExternalId: primaryExternalId,
+    customerName: primary.name,
+  }).where(eq(locations.customerExternalId, secondaryExternalId));
+
+  // Reassign billing items
+  await db.update(billingItems).set({
+    customerExternalId: primaryExternalId,
+  }).where(eq(billingItems.customerExternalId, secondaryExternalId));
+
+  // Merge billing platforms
+  const primaryPlatforms = primary.billingPlatforms ? JSON.parse(primary.billingPlatforms) : [];
+  const secondaryPlatforms = secondary.billingPlatforms ? JSON.parse(secondary.billingPlatforms) : [];
+  const mergedPlatforms = Array.from(new Set([...primaryPlatforms, ...secondaryPlatforms]));
+
+  // Merge contact info (prefer non-empty from secondary if primary is empty)
+  const mergedContact = {
+    contactName: primary.contactName || secondary.contactName || '',
+    contactEmail: primary.contactEmail || secondary.contactEmail || '',
+    contactPhone: primary.contactPhone || secondary.contactPhone || '',
+    siteAddress: primary.siteAddress || secondary.siteAddress || '',
+    xeroContactName: primary.xeroContactName || secondary.xeroContactName || '',
+    xeroAccountNumber: primary.xeroAccountNumber || secondary.xeroAccountNumber || '',
+    notes: [primary.notes, secondary.notes].filter(Boolean).join('\n---\nMerged from ' + secondary.name + ':\n'),
+  };
+
+  // Recount services
+  const [svcCount] = await db.select({ count: sql<number>`count(*)` }).from(services).where(eq(services.customerExternalId, primaryExternalId));
+  const [costSum] = await db.select({ total: sql<string>`COALESCE(SUM(monthlyCost), 0)` }).from(services).where(eq(services.customerExternalId, primaryExternalId));
+  const [revenueSum] = await db.select({ total: sql<string>`COALESCE(SUM(monthlyRevenue), 0)` }).from(services).where(eq(services.customerExternalId, primaryExternalId));
+
+  // Update primary customer
+  await db.update(customers).set({
+    billingPlatforms: JSON.stringify(mergedPlatforms),
+    serviceCount: svcCount.count,
+    monthlyCost: costSum.total,
+    monthlyRevenue: revenueSum.total,
+    ...mergedContact,
+  }).where(eq(customers.externalId, primaryExternalId));
+
+  // Delete secondary customer
+  await db.delete(customers).where(eq(customers.externalId, secondaryExternalId));
+
+  return { success: true, mergedInto: primaryExternalId, deleted: secondaryExternalId };
+}
+
+// ==================== Billing Platform Management ====================
+
+export async function updateServiceBillingPlatform(serviceExternalId: string, platforms: string[]) {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+
+  await db.update(services).set({
+    billingPlatform: JSON.stringify(platforms),
+  }).where(eq(services.externalId, serviceExternalId));
+
+  return { success: true };
+}
+
+export async function updateBillingItemMatch(billingItemId: number, serviceExternalId: string) {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+
+  await db.update(billingItems).set({
+    serviceExternalId: serviceExternalId,
+    matchStatus: 'service-matched',
+    matchConfidence: 'manual',
+  }).where(eq(billingItems.id, billingItemId));
+
+  // Recalculate service revenue
+  const [revSum] = await db.select({
+    total: sql<string>`COALESCE(SUM(lineAmount), 0)`,
+  }).from(billingItems).where(eq(billingItems.serviceExternalId, serviceExternalId));
+
+  const [svc] = await db.select({ monthlyCost: services.monthlyCost }).from(services).where(eq(services.externalId, serviceExternalId)).limit(1);
+  const revenue = parseFloat(revSum.total);
+  const cost = svc ? parseFloat(svc.monthlyCost) : 0;
+  const margin = revenue > 0 ? ((revenue - cost) / revenue * 100) : 0;
+
+  await db.update(services).set({
+    monthlyRevenue: revSum.total,
+    marginPercent: margin.toFixed(2),
+  }).where(eq(services.externalId, serviceExternalId));
+
+  return { success: true };
+}
+
+export async function assignBillingItemToCustomer(billingItemId: number, customerExternalId: string) {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+
+  await db.update(billingItems).set({
+    customerExternalId: customerExternalId,
+    matchStatus: 'customer-matched',
+  }).where(eq(billingItems.id, billingItemId));
+
+  return { success: true };
+}
+
+export async function getCustomersForMerge(search: string) {
+  const db = await getDb();
+  if (!db) return [];
+
+  const term = `%${search.trim()}%`;
+  const result = await db.select().from(customers)
+    .where(or(
+      like(customers.name, term),
+      like(customers.xeroContactName, term),
+      like(customers.contactName, term),
+    ))
+    .orderBy(asc(customers.name))
+    .limit(20);
+
+  return result.map(c => ({
+    ...c,
+    billingPlatforms: c.billingPlatforms ? JSON.parse(c.billingPlatforms) : [],
+    monthlyCost: parseFloat(c.monthlyCost),
+    monthlyRevenue: parseFloat(c.monthlyRevenue),
+  }));
+}

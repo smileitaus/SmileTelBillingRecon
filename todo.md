@@ -210,3 +210,41 @@
 - [x] Found 17 services with data usage in at least 1 month — removed their No Data Use flag
 - [x] Corrected count: 145 true No Data Use services (was 162)
 - [x] Dashboard/UI counts auto-update from database query (no code change needed)
+
+# Xero Contacts Import (Source of Truth)
+- [x] Analyze Contacts_Extracted spreadsheet structure (1,164 contacts with names, addresses, account numbers)
+- [x] Match Xero contacts to existing customer records by name/address (462 matched)
+- [x] Update 400 existing records with Xero naming, addresses, account numbers
+- [x] 680 unmatched Xero contacts identified (new customers not yet in system)
+- [x] Build customer merge UI for differing entity names (Merge Customers page)
+
+# Feb Billing Items Import
+- [x] Analyze SmileTelFeb26 spreadsheet structure (1,389 items, 405 customers)
+- [x] Clean data: excluded 66 one-off hardware items, identified 1,323 recurring
+- [x] Import 1,323 recurring billing items into database
+- [x] Match billing items to customers (1,270 matched, 53 unmatched)
+- [x] Match billing items to specific services (214 service-matched, 25 service-unmatched)
+
+# Revenue & Margin Tracking
+- [x] Calculate cost (from services), revenue (from billing), and margin % per matched record
+- [x] Build Revenue & Margin Analysis page with filtering by margin percentage
+- [x] Highlight negative margins in red, low margins in amber
+- [x] Show cost, revenue, margin on matched service records
+- [x] Summary cards: Total Cost $15,032, Total Revenue $23,074, Overall Margin 34.9%
+- [x] Filter by: Negative (37), Low <20% (17), Healthy 20-50%, High >50% (26)
+
+# Billable/Service Unmatched Workflow
+- [x] Build Billing / Service Matching page with status filters
+- [x] Show 53 unmatched items ($14,284 at risk) across 21 contact groups
+- [x] Add workflow to match billing items to customers and services
+- [x] Status breakdown: Unmatched (53), Customer Only (1,031), Needs Service Match (25), Fully Matched (214)
+- [x] Category filter (internet, voice, nbn-bundle, sip)
+
+# Billing Platform Association Per Service
+- [x] Add billingPlatform field to billing_items table (OneBill, SasBoss, ECN, Halo, DataGate)
+- [x] Add billingPlatform field to services table for per-service platform tracking
+- [x] Build UI prompt on each service to assign/edit billing platform(s) (Service Detail page)
+- [x] Xero is the data accumulator, NOT a billing platform — excluded from platform options
+- [x] Allow multiple platforms per service (JSON array)
+- [x] Show billing platform badges on service cards and detail pages
+- [x] 16 new tests for billing items, margin analysis, customer merge, and platform management

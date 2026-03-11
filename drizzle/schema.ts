@@ -40,6 +40,12 @@ export const customers = mysqlTable("customers", {
   ownershipType: varchar("ownershipType", { length: 16 }).default(""),
   siteAddress: varchar("siteAddress", { length: 1024 }).default(""),
   notes: text("notes"),
+  // Xero integration
+  xeroContactName: varchar("xeroContactName", { length: 512 }).default(""),
+  xeroAccountNumber: varchar("xeroAccountNumber", { length: 64 }).default(""),
+  // Revenue tracking
+  monthlyRevenue: decimal("monthlyRevenue", { precision: 10, scale: 2 }).default("0.00").notNull(),
+  marginPercent: decimal("marginPercent", { precision: 5, scale: 2 }),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });
@@ -138,6 +144,12 @@ export const services = mysqlTable("services", {
   proposedCost: varchar("proposedCost", { length: 32 }).default(""),
   proposedDataGb: varchar("proposedDataGb", { length: 32 }).default(""),
   noDataUse: int("noDataUse").default(0).notNull(),
+  // Revenue tracking
+  monthlyRevenue: decimal("monthlyRevenue", { precision: 10, scale: 2 }).default("0.00").notNull(),
+  marginPercent: decimal("marginPercent", { precision: 5, scale: 2 }),
+  billingItemId: varchar("billingItemId", { length: 32 }).default(""),
+  // Billing platform(s) - JSON array of: OneBill, SasBoss, ECN, Halo, DataGate
+  billingPlatform: text("billingPlatform"),
   blitzCategory: varchar("blitzCategory", { length: 128 }).default(""),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
@@ -161,3 +173,35 @@ export const supplierAccounts = mysqlTable("supplier_accounts", {
 
 export type SupplierAccount = typeof supplierAccounts.$inferSelect;
 export type InsertSupplierAccount = typeof supplierAccounts.$inferInsert;
+
+/**
+ * Billing items - recurring revenue line items from Xero invoices.
+ * Each billing item belongs to a customer and may be matched to a service.
+ */
+export const billingItems = mysqlTable("billing_items", {
+  id: int("id").autoincrement().primaryKey(),
+  externalId: varchar("externalId", { length: 32 }).notNull().unique(),
+  invoiceDate: varchar("invoiceDate", { length: 32 }).notNull(),
+  invoiceNumber: varchar("invoiceNumber", { length: 64 }).notNull(),
+  contactName: varchar("contactName", { length: 512 }).notNull(),
+  description: text("description").notNull(),
+  quantity: decimal("quantity", { precision: 10, scale: 2 }).default("1.00").notNull(),
+  unitAmount: decimal("unitAmount", { precision: 10, scale: 2 }).default("0.00").notNull(),
+  discount: decimal("discount", { precision: 10, scale: 2 }).default("0.00"),
+  lineAmount: decimal("lineAmount", { precision: 10, scale: 2 }).default("0.00").notNull(),
+  taxAmount: decimal("taxAmount", { precision: 10, scale: 2 }).default("0.00"),
+  accountCode: varchar("accountCode", { length: 16 }),
+  category: varchar("category", { length: 64 }).default("recurring").notNull(),
+  // Matching fields
+  customerExternalId: varchar("customerExternalId", { length: 32 }).default(""),
+  serviceExternalId: varchar("serviceExternalId", { length: 32 }).default(""),
+  matchStatus: varchar("matchStatus", { length: 32 }).default("unmatched").notNull(),
+  matchConfidence: varchar("matchConfidence", { length: 16 }).default(""),
+  // Billing platform source: OneBill, SasBoss, ECN, Halo, DataGate
+  billingPlatform: varchar("billingPlatform", { length: 64 }).default(""),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type BillingItem = typeof billingItems.$inferSelect;
+export type InsertBillingItem = typeof billingItems.$inferInsert;

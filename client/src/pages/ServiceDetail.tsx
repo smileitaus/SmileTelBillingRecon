@@ -386,6 +386,90 @@ function CustomerNameEditor({ service }: { service: any }) {
   );
 }
 
+const BILLING_PLATFORMS = ["OneBill", "SasBoss", "ECN", "Halo", "DataGate"];
+
+function BillingPlatformEditor({ service }: { service: any }) {
+  const [editing, setEditing] = useState(false);
+  const currentPlatforms: string[] = service.billingPlatform ? JSON.parse(service.billingPlatform) : [];
+  const [selected, setSelected] = useState<string[]>(currentPlatforms);
+  const updatePlatform = trpc.billing.updateBillingPlatform.useMutation();
+  const utils = trpc.useUtils();
+
+  const handleSave = async () => {
+    try {
+      await updatePlatform.mutateAsync({
+        serviceExternalId: service.externalId,
+        platforms: selected,
+      });
+      toast.success("Billing platform updated");
+      setEditing(false);
+      utils.billing.services.byId.invalidate({ id: service.externalId });
+    } catch {
+      toast.error("Failed to update billing platform");
+    }
+  };
+
+  const togglePlatform = (p: string) => {
+    setSelected(prev => prev.includes(p) ? prev.filter(x => x !== p) : [...prev, p]);
+  };
+
+  if (editing) {
+    return (
+      <div className="space-y-2">
+        <div className="flex flex-wrap gap-2">
+          {BILLING_PLATFORMS.map(p => (
+            <button
+              key={p}
+              onClick={() => togglePlatform(p)}
+              className={`px-3 py-1.5 text-xs rounded-md border transition-colors ${
+                selected.includes(p)
+                  ? "bg-primary text-primary-foreground border-primary"
+                  : "bg-card border-border text-foreground hover:bg-accent"
+              }`}
+            >
+              {p}
+            </button>
+          ))}
+        </div>
+        <div className="flex items-center gap-2">
+          <button onClick={handleSave} disabled={updatePlatform.isPending} className="inline-flex items-center gap-1 px-3 py-1 text-xs font-medium bg-primary text-primary-foreground rounded-md hover:bg-primary/90">
+            {updatePlatform.isPending ? <Loader2 className="w-3 h-3 animate-spin" /> : <Check className="w-3 h-3" />}
+            Save
+          </button>
+          <button onClick={() => { setSelected(currentPlatforms); setEditing(false); }} className="px-3 py-1 text-xs text-muted-foreground hover:text-foreground">
+            Cancel
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (currentPlatforms.length > 0) {
+    return (
+      <div className="flex items-center gap-2">
+        <div className="flex flex-wrap gap-1">
+          {currentPlatforms.map(p => (
+            <span key={p} className="text-[10px] bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full font-medium border border-blue-200">{p}</span>
+          ))}
+        </div>
+        <button onClick={() => setEditing(true)} className="p-0.5 text-muted-foreground/50 hover:text-primary transition-colors" title="Edit billing platforms">
+          <Pencil className="w-3 h-3" />
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <button
+      onClick={() => setEditing(true)}
+      className="inline-flex items-center gap-1.5 text-xs text-amber-600 bg-amber-50 px-2 py-1 rounded hover:bg-amber-100 transition-colors"
+    >
+      <AlertTriangle className="w-3.5 h-3.5" />
+      No billing platform — click to assign
+    </button>
+  );
+}
+
 function ServiceStatusActions({ service }: { service: any }) {
   const updateStatus = trpc.billing.updateStatus.useMutation();
   const utils = trpc.useUtils();
@@ -660,6 +744,27 @@ export default function ServiceDetail() {
           value={`$${Number(service.monthlyCost).toLocaleString("en-AU", { minimumFractionDigits: 2 })}`}
           mono
         />
+        {Number(service.monthlyRevenue) > 0 && (
+          <DetailRow
+            label="Monthly Revenue"
+            value={`$${Number(service.monthlyRevenue).toLocaleString("en-AU", { minimumFractionDigits: 2 })}`}
+            mono
+          />
+        )}
+        {service.marginPercent !== null && service.marginPercent !== undefined && Number(service.monthlyRevenue) > 0 && (
+          <DetailRow label="Margin">
+            <span className={`data-value font-medium ${
+              parseFloat(service.marginPercent) < 0 ? "text-red-700" :
+              parseFloat(service.marginPercent) < 20 ? "text-red-600" :
+              "text-emerald-700"
+            }`}>
+              {parseFloat(service.marginPercent).toFixed(1)}%
+            </span>
+          </DetailRow>
+        )}
+        <DetailRow label="Billing Platform">
+          <BillingPlatformEditor service={service} />
+        </DetailRow>
       </div>
 
       {/* SIM & Hardware Panel */}

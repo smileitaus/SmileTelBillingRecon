@@ -21,6 +21,16 @@ import {
   updateServiceStatus,
   dismissSuggestion,
   updateServiceCustomerName,
+  getBillingItems,
+  getBillingItemsByService,
+  getBillingItemsByCustomer,
+  getBillingSummary,
+  getServicesWithMargin,
+  mergeCustomers,
+  updateServiceBillingPlatform,
+  updateBillingItemMatch,
+  assignBillingItemToCustomer,
+  getCustomersForMerge,
 } from "./db";
 
 export const appRouter = router({
@@ -181,6 +191,95 @@ export const appRouter = router({
       .mutation(async ({ input }) => {
         return await updateServiceCustomerName(input.serviceExternalId, input.customerName);
       }),
+
+    updateBillingPlatform: protectedProcedure
+      .input(z.object({
+        serviceExternalId: z.string(),
+        platforms: z.array(z.string()),
+      }))
+      .mutation(async ({ input }) => {
+        return await updateServiceBillingPlatform(input.serviceExternalId, input.platforms);
+      }),
+
+    // Billing items
+    billingItems: router({
+      list: protectedProcedure
+        .input(z.object({
+          matchStatus: z.string().optional(),
+          customerExternalId: z.string().optional(),
+          category: z.string().optional(),
+          billingPlatform: z.string().optional(),
+        }).optional())
+        .query(async ({ input }) => {
+          return await getBillingItems(input);
+        }),
+
+      byService: protectedProcedure
+        .input(z.object({ serviceExternalId: z.string() }))
+        .query(async ({ input }) => {
+          return await getBillingItemsByService(input.serviceExternalId);
+        }),
+
+      byCustomer: protectedProcedure
+        .input(z.object({ customerExternalId: z.string() }))
+        .query(async ({ input }) => {
+          return await getBillingItemsByCustomer(input.customerExternalId);
+        }),
+
+      summary: protectedProcedure.query(async () => {
+        return await getBillingSummary();
+      }),
+
+      matchToService: protectedProcedure
+        .input(z.object({
+          billingItemId: z.number(),
+          serviceExternalId: z.string(),
+        }))
+        .mutation(async ({ input }) => {
+          return await updateBillingItemMatch(input.billingItemId, input.serviceExternalId);
+        }),
+
+      assignToCustomer: protectedProcedure
+        .input(z.object({
+          billingItemId: z.number(),
+          customerExternalId: z.string(),
+        }))
+        .mutation(async ({ input }) => {
+          return await assignBillingItemToCustomer(input.billingItemId, input.customerExternalId);
+        }),
+    }),
+
+    // Margin analysis
+    margin: router({
+      list: protectedProcedure
+        .input(z.object({
+          marginFilter: z.string().optional(),
+          customerExternalId: z.string().optional(),
+          serviceType: z.string().optional(),
+          provider: z.string().optional(),
+        }).optional())
+        .query(async ({ input }) => {
+          return await getServicesWithMargin(input);
+        }),
+    }),
+
+    // Customer merge
+    merge: router({
+      search: protectedProcedure
+        .input(z.object({ search: z.string() }))
+        .query(async ({ input }) => {
+          return await getCustomersForMerge(input.search);
+        }),
+
+      execute: protectedProcedure
+        .input(z.object({
+          primaryExternalId: z.string(),
+          secondaryExternalId: z.string(),
+        }))
+        .mutation(async ({ input }) => {
+          return await mergeCustomers(input.primaryExternalId, input.secondaryExternalId);
+        }),
+    }),
   }),
 });
 
