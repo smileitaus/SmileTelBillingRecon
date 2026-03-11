@@ -31,6 +31,7 @@ import {
   ArrowRightLeft,
   UserX,
   Link2,
+  UserPlus,
 } from "lucide-react";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -758,7 +759,7 @@ function IssueItemRow({
           </div>
           <div className="flex items-center gap-2">
             <span className="text-sm font-mono font-semibold text-red-600">{item.billingItemCount} items · {fmt(item.totalBilled)}</span>
-            <ItemActions itemId={item.serviceExternalId} itemName={itemName} onIgnore={onIgnore} onResolve={onResolve} onFlag={onFlag} />
+            <ItemActions itemId={item.serviceExternalId} itemName={itemName} serviceExternalId={item.serviceExternalId} currentCustomerName={item.service?.customerName} onIgnore={onIgnore} onResolve={onResolve} onFlag={onFlag} />
           </div>
         </div>
         <div className="space-y-1 ml-4">
@@ -793,7 +794,7 @@ function IssueItemRow({
           </p>
         </div>
         <span className="text-sm font-mono font-semibold text-red-600">{fmt(item.monthlyCost)}/mo</span>
-        <ItemActions itemId={item.externalId} itemName={itemName} onIgnore={onIgnore} onResolve={onResolve} onFlag={onFlag} />
+        <ItemActions itemId={item.externalId} itemName={itemName} serviceExternalId={item.externalId} currentCustomerName={item.customerName} onIgnore={onIgnore} onResolve={onResolve} onFlag={onFlag} />
       </div>
     );
   }
@@ -931,21 +932,157 @@ function IssueItemRow({
 
 // ─── Item Actions ────────────────────────────────────────────────────────────
 
+// ─── Inline Assign to Customer Popover ───────────────────────────────────────
+
+function AssignToCustomerButton({
+  serviceExternalId,
+  currentCustomerName,
+  onAssigned,
+}: {
+  serviceExternalId: string;
+  currentCustomerName?: string;
+  onAssigned?: () => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCustomer, setSelectedCustomer] = useState<{ externalId: string; name: string } | null>(null);
+  const [reason, setReason] = useState("");
+  const utils = trpc.useUtils();
+
+  const customerSearch = trpc.billing.customers.list.useQuery(
+    { search: searchQuery },
+    { enabled: searchQuery.length >= 2 }
+  );
+  const customerResults = (customerSearch.data as any)?.customers || customerSearch.data || [];
+
+  const reassignMutation = trpc.billing.reassignService.useMutation({
+    onSuccess: (result) => {
+      toast.success(`${serviceExternalId} assigned to ${result.newCustomerName || selectedCustomer?.name}`);
+      utils.billing.review.issues.invalidate();
+      setOpen(false);
+      setSearchQuery("");
+      setSelectedCustomer(null);
+      setReason("");
+      onAssigned?.();
+    },
+    onError: (err) => toast.error(err.message),
+  });
+
+  const canSubmit = selectedCustomer !== null && reason.trim().length > 0;
+
+  if (!open) {
+    return (
+      <button
+        onClick={(e) => { e.stopPropagation(); setOpen(true); }}
+        title="Assign to customer"
+        className="p-1.5 rounded hover:bg-blue-100 text-muted-foreground hover:text-blue-600 transition-colors"
+      >
+        <UserPlus className="w-3.5 h-3.5" />
+      </button>
+    );
+  }
+
+  return (
+    <div
+      className="absolute right-0 top-full mt-1 z-50 w-72 bg-card border border-border rounded-lg shadow-lg p-3"
+      onClick={(e) => e.stopPropagation()}
+    >
+      <div className="flex items-center justify-between mb-2">
+        <span className="text-xs font-semibold text-foreground">Assign {serviceExternalId} to customer</span>
+        <button onClick={() => setOpen(false)} className="text-muted-foreground hover:text-foreground">
+          <X className="w-3.5 h-3.5" />
+        </button>
+      </div>
+      {currentCustomerName && (
+        <p className="text-xs text-muted-foreground mb-2">Currently: <span className="font-medium">{currentCustomerName}</span></p>
+      )}
+      {/* Customer search */}
+      <div className="relative mb-2">
+        <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-3 h-3 text-muted-foreground" />
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={(e) => { setSearchQuery(e.target.value); setSelectedCustomer(null); }}
+          placeholder="Search customer..."
+          className="w-full pl-6 pr-2 py-1.5 text-xs bg-background border border-border rounded outline-none focus:ring-1 focus:ring-primary/40"
+          autoFocus
+        />
+      </div>
+      {selectedCustomer && (
+        <div className="flex items-center gap-1.5 mb-2 px-2 py-1 bg-blue-50 border border-blue-200 rounded text-xs">
+          <UserPlus className="w-3 h-3 text-blue-600 shrink-0" />
+          <span className="font-medium text-blue-700 truncate">{selectedCustomer.name}</span>
+          <button onClick={() => setSelectedCustomer(null)} className="ml-auto text-blue-400 hover:text-blue-600">
+            <X className="w-3 h-3" />
+          </button>
+        </div>
+      )}
+      {customerResults.length > 0 && !selectedCustomer && (
+        <div className="border border-border rounded mb-2 max-h-36 overflow-y-auto">
+          {customerResults.map((c: any) => (
+            <button
+              key={c.externalId}
+              onClick={() => { setSelectedCustomer({ externalId: c.externalId, name: c.name }); setSearchQuery(""); }}
+              className="w-full text-left px-2 py-1.5 text-xs hover:bg-accent transition-colors flex items-center justify-between"
+            >
+              <span className="truncate">{c.name}</span>
+              <span className="text-muted-foreground shrink-0 ml-1">{c.serviceCount} svc</span>
+            </button>
+          ))}
+        </div>
+      )}
+      {/* Reason */}
+      <input
+        type="text"
+        value={reason}
+        onChange={(e) => setReason(e.target.value)}
+        placeholder="Reason (required)..."
+        className="w-full px-2 py-1.5 text-xs bg-background border border-border rounded outline-none focus:ring-1 focus:ring-primary/40 mb-2"
+      />
+      <button
+        disabled={!canSubmit || reassignMutation.isPending}
+        onClick={() => reassignMutation.mutate({
+          serviceExternalId,
+          newCustomerExternalId: selectedCustomer!.externalId,
+          newCustomerName: selectedCustomer!.name,
+          reason: reason.trim(),
+        })}
+        className="w-full py-1.5 text-xs font-medium bg-primary text-primary-foreground rounded hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-1"
+      >
+        {reassignMutation.isPending && <Loader2 className="w-3 h-3 animate-spin" />}
+        Assign to Customer
+      </button>
+    </div>
+  );
+}
+
 function ItemActions({
   itemId,
   itemName,
+  serviceExternalId,
+  currentCustomerName,
   onIgnore,
   onResolve,
   onFlag,
 }: {
   itemId: string;
   itemName: string;
+  serviceExternalId?: string;
+  currentCustomerName?: string;
   onIgnore: (id: string, name: string) => void;
   onResolve: (id: string) => void;
   onFlag: (id: string) => void;
 }) {
   return (
-    <div className="flex items-center gap-1 shrink-0">
+    <div className="flex items-center gap-1 shrink-0 relative">
+      {serviceExternalId && (
+        <div className="relative">
+          <AssignToCustomerButton
+            serviceExternalId={serviceExternalId}
+            currentCustomerName={currentCustomerName}
+          />
+        </div>
+      )}
       <button
         onClick={(e) => { e.stopPropagation(); onResolve(itemId); }}
         title="Mark as reviewed"

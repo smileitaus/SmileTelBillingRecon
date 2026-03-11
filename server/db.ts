@@ -107,14 +107,24 @@ export async function getAllCustomers(search?: string, statusFilter?: string, pl
       conditions.push(
         sql`${customers.externalId} IN (SELECT DISTINCT customerExternalId FROM services WHERE status = 'flagged_for_termination' AND customerExternalId IS NOT NULL)`
       );
+      // Still exclude inactive unless explicitly requested
+      conditions.push(sql`${customers.status} != 'inactive'`);
     } else if (statusFilter === 'terminated') {
       // Filter customers that have at least one terminated service
       conditions.push(
         sql`${customers.externalId} IN (SELECT DISTINCT customerExternalId FROM services WHERE status = 'terminated' AND customerExternalId IS NOT NULL)`
       );
+      // Still exclude inactive unless explicitly requested
+      conditions.push(sql`${customers.status} != 'inactive'`);
+    } else if (statusFilter === 'inactive') {
+      // Explicitly show only inactive customers
+      conditions.push(eq(customers.status, 'inactive'));
     } else {
       conditions.push(eq(customers.status, statusFilter));
     }
+  } else {
+    // Default: hide inactive customers unless explicitly requested
+    conditions.push(sql`${customers.status} != 'inactive'`);
   }
 
   if (platformFilter && platformFilter !== 'all') {

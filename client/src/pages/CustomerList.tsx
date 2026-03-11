@@ -156,6 +156,7 @@ export default function CustomerList() {
             <option value="review">Review</option>
             <option value="flagged">Flagged for Termination</option>
             <option value="terminated">Has Terminated Services</option>
+            <option value="inactive">Inactive (No Services)</option>
           </select>
 
           <select
