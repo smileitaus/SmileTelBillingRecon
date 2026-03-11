@@ -52,6 +52,9 @@ import {
   terminateService,
   restoreTerminatedService,
   updateCustomer,
+  getFuzzyCustomerSuggestions,
+  importXeroContactAsCustomer,
+  matchXeroContactToCustomer,
 } from "./db";
 
 export const appRouter = router({
@@ -595,6 +598,31 @@ export const appRouter = router({
         .mutation(async ({ input, ctx }) => {
           const committedBy = ctx.user?.name || ctx.user?.email || 'Unknown';
           return await commitAliasAutoMatch(input.approvedMatches, committedBy);
+        }),
+    }),
+
+    // Xero contact import workflow
+    xeroContacts: router({
+      // Get fuzzy customer suggestions for a given Xero contact name
+      suggestions: protectedProcedure
+        .input(z.object({ contactName: z.string() }))
+        .query(async ({ input }) => {
+          return await getFuzzyCustomerSuggestions(input.contactName);
+        }),
+      // Import a Xero contact as a new customer (creates customer + assigns billing items)
+      importAsCustomer: protectedProcedure
+        .input(z.object({ contactName: z.string() }))
+        .mutation(async ({ input }) => {
+          return await importXeroContactAsCustomer(input.contactName);
+        }),
+      // Match all unmatched billing items for a Xero contact to an existing customer
+      matchToCustomer: protectedProcedure
+        .input(z.object({
+          contactName: z.string(),
+          customerExternalId: z.string(),
+        }))
+        .mutation(async ({ input }) => {
+          return await matchXeroContactToCustomer(input.contactName, input.customerExternalId);
         }),
     }),
 

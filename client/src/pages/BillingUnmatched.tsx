@@ -2,6 +2,12 @@
  * Billable / Service Unmatched — shows billing items that couldn't be matched
  * to a service, with workflow to prompt matching or termination of billing.
  * Groups by contact name, shows revenue at risk.
+ *
+ * Workflow for each contact group:
+ *  1. System auto-suggests fuzzy customer matches (word-overlap scoring)
+ *  2. User can accept a suggestion → all unmatched items assigned to that customer
+ *  3. User can search manually for a different customer
+ *  4. User can "Import as New Customer" → creates a new customer record and assigns all items
  */
 
 import { Link } from "wouter";
@@ -17,6 +23,9 @@ import {
   ChevronRight,
   XCircle,
   Download,
+  UserPlus,
+  CheckCircle2,
+  Sparkles,
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { useState, useMemo } from "react";
@@ -25,6 +34,18 @@ import { exportToCSV } from "@/lib/exportCsv";
 
 function formatCurrency(val: number) {
   return `$${val.toLocaleString("en-AU", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+}
+
+function ConfidenceBadge({ score }: { score: number }) {
+  const color =
+    score >= 80 ? "bg-emerald-50 text-emerald-700 border-emerald-200" :
+    score >= 60 ? "bg-blue-50 text-blue-700 border-blue-200" :
+    "bg-amber-50 text-amber-700 border-amber-200";
+  return (
+    <span className={`inline-flex items-center px-1.5 py-0.5 text-[10px] font-medium rounded border ${color}`}>
+      {score}% match
+    </span>
+  );
 }
 
 function StatusBadge({ status }: { status: string }) {
@@ -51,25 +72,48 @@ function ContactGroup({
   contactName,
   items,
   onMatchToCustomer,
+  onMatchAllToCustomer,
+  onImportAsCustomer,
 }: {
   contactName: string;
   items: any[];
   onMatchToCustomer: (billingItemId: number, customerExternalId: string) => void;
+  onMatchAllToCustomer: (contactName: string, customerExternalId: string, customerName: string) => void;
+  onImportAsCustomer: (contactName: string) => void;
 }) {
   const [expanded, setExpanded] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [showSearch, setShowSearch] = useState(false);
+  const [importing, setImporting] = useState(false);
 
   const totalRevenue = items.reduce((s, i) => s + i.lineAmount, 0);
   const unmatchedCount = items.filter(i => i.matchStatus === "unmatched").length;
+  const allMatched = unmatchedCount === 0;
 
+  // Auto-load fuzzy suggestions when the group is expanded
+  const { data: suggestions, isLoading: suggestionsLoading } = trpc.billing.xeroContacts.suggestions.useQuery(
+    { contactName },
+    { enabled: expanded && unmatchedCount > 0 }
+  );
+
+  // Manual search using the existing merge search
   const { data: searchResults } = trpc.billing.merge.search.useQuery(
     { search: searchQuery },
     { enabled: searchQuery.length >= 2 }
   );
 
+  const handleImport = async () => {
+    setImporting(true);
+    try {
+      await onImportAsCustomer(contactName);
+    } finally {
+      setImporting(false);
+    }
+  };
+
   return (
     <div className="bg-card border border-border rounded-lg overflow-visible">
+      {/* Group header */}
       <button
         onClick={() => setExpanded(!expanded)}
         className="w-full flex items-center gap-3 px-4 py-3 hover:bg-accent/30 transition-colors text-left"
@@ -81,76 +125,161 @@ function ContactGroup({
             {items.length} billing item{items.length !== 1 ? "s" : ""} · {unmatchedCount} unmatched
           </p>
         </div>
-        <span className="data-value text-sm font-medium text-amber-700">{formatCurrency(totalRevenue)}</span>
+        {allMatched ? (
+          <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
+        ) : (
+          <span className="data-value text-sm font-medium text-amber-700">{formatCurrency(totalRevenue)}</span>
+        )}
       </button>
 
       {expanded && (
         <div className="border-t border-border">
-          {/* Quick match to customer */}
-          <div className="px-4 py-3 bg-muted/20 border-b border-border">
-            <div className="flex items-center gap-2 mb-2">
-              <Users className="w-3.5 h-3.5 text-muted-foreground" />
-              <span className="text-xs font-medium text-muted-foreground">Match all to customer:</span>
-              <button
-                onClick={() => setShowSearch(!showSearch)}
-                className="text-xs text-primary hover:text-primary/80 transition-colors"
-              >
-                {showSearch ? "Cancel" : "Search..."}
-              </button>
-            </div>
-            {showSearch && (
-              <div className="relative">
-                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={e => setSearchQuery(e.target.value)}
-                  placeholder="Search customer name..."
-                  className="w-full pl-8 pr-3 py-2 text-sm bg-background border border-border rounded-md outline-none focus:ring-1 focus:ring-primary/40"
-                  autoFocus
-                />
-                {searchResults && searchResults.length > 0 && (
-                  <div className="absolute z-[200] top-full mt-1 w-full bg-card border border-border rounded-md shadow-xl max-h-60 overflow-y-auto">
-                    {searchResults.map((c: any) => {
-                      const isStub = !c.externalId;
-                      return (
-                        <button
-                          key={c.externalId || c.name}
-                          onClick={() => {
-                            if (isStub) {
-                              toast.error(`"${c.name}" has no customer record yet. Please create the customer first, then match.`);
-                              return;
-                            }
-                            items.filter((i: any) => i.matchStatus === "unmatched").forEach((i: any) => {
-                              onMatchToCustomer(i.id, c.externalId);
-                            });
-                            setShowSearch(false);
-                            setSearchQuery("");
-                            toast.success(`Matched ${unmatchedCount} items to ${c.name}`);
-                          }}
-                          className={`w-full text-left px-3 py-2 text-sm hover:bg-accent transition-colors flex items-center justify-between ${
-                            isStub ? 'opacity-60' : ''
-                          }`}
-                        >
-                          <div className="flex items-center gap-2 min-w-0">
-                            <span className="truncate">{c.name}</span>
-                            {isStub && (
-                              <span className="text-xs bg-amber-100 text-amber-700 border border-amber-200 px-1.5 py-0.5 rounded shrink-0">
-                                No record
-                              </span>
+
+          {/* ── Workflow Panel ── */}
+          {unmatchedCount > 0 && (
+            <div className="px-4 py-3 bg-muted/20 border-b border-border space-y-3">
+
+              {/* How this screen works — inline explanation */}
+              <div className="bg-blue-50/60 border border-blue-100 rounded-md px-3 py-2 text-xs text-blue-800 leading-relaxed">
+                <strong>How to resolve:</strong> This Xero contact name ("<span className="font-medium">{contactName}</span>") could not be automatically matched to a customer in the system.
+                You can either <strong>match it to an existing customer</strong> (using the suggestions below or by searching), or <strong>import it as a new customer</strong> if this is a genuinely new account.
+              </div>
+
+              {/* ── Suggested Matches ── */}
+              <div>
+                <div className="flex items-center gap-1.5 mb-2">
+                  <Sparkles className="w-3.5 h-3.5 text-primary" />
+                  <span className="text-xs font-semibold text-foreground">Suggested customer matches</span>
+                </div>
+
+                {suggestionsLoading ? (
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground py-1">
+                    <Loader2 className="w-3 h-3 animate-spin" />
+                    Finding matches…
+                  </div>
+                ) : suggestions && suggestions.length > 0 ? (
+                  <div className="space-y-1">
+                    {suggestions.map((s: any) => (
+                      <div
+                        key={s.externalId}
+                        className="flex items-center justify-between gap-2 bg-background border border-border rounded-md px-3 py-2 hover:border-primary/40 transition-colors"
+                      >
+                        <div className="flex items-center gap-2 min-w-0">
+                          <ConfidenceBadge score={s.confidence} />
+                          <div className="min-w-0">
+                            <p className="text-sm font-medium truncate">{s.name}</p>
+                            {s.xeroContactName && s.xeroContactName !== s.name && (
+                              <p className="text-[10px] text-muted-foreground truncate">Xero: {s.xeroContactName}</p>
                             )}
                           </div>
-                          <span className="text-xs text-muted-foreground shrink-0 ml-2">{isStub ? 'billing only' : `${c.serviceCount} svc`}</span>
-                        </button>
-                      );
-                    })}
+                        </div>
+                        <div className="flex items-center gap-2 shrink-0">
+                          <span className="text-xs text-muted-foreground">{s.serviceCount} svc</span>
+                          <button
+                            onClick={() => {
+                              onMatchAllToCustomer(contactName, s.externalId, s.name);
+                            }}
+                            className="px-2.5 py-1 text-xs font-medium bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
+                          >
+                            Match all →
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-xs text-muted-foreground italic py-1">
+                    No close matches found in the customer database.
+                  </p>
+                )}
+              </div>
+
+              {/* ── Manual Search ── */}
+              <div>
+                <div className="flex items-center gap-2 mb-1.5">
+                  <Users className="w-3.5 h-3.5 text-muted-foreground" />
+                  <span className="text-xs font-medium text-muted-foreground">Search for a different customer:</span>
+                  <button
+                    onClick={() => setShowSearch(!showSearch)}
+                    className="text-xs text-primary hover:text-primary/80 transition-colors"
+                  >
+                    {showSearch ? "Cancel" : "Search…"}
+                  </button>
+                </div>
+                {showSearch && (
+                  <div className="relative">
+                    <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
+                    <input
+                      type="text"
+                      value={searchQuery}
+                      onChange={e => setSearchQuery(e.target.value)}
+                      placeholder="Search customer name…"
+                      className="w-full pl-8 pr-3 py-2 text-sm bg-background border border-border rounded-md outline-none focus:ring-1 focus:ring-primary/40"
+                      autoFocus
+                    />
+                    {searchResults && searchResults.length > 0 && (
+                      <div className="absolute z-[200] top-full mt-1 w-full bg-card border border-border rounded-md shadow-xl max-h-60 overflow-y-auto">
+                        {searchResults.map((c: any) => {
+                          const isStub = !c.externalId;
+                          return (
+                            <button
+                              key={c.externalId || c.name}
+                              onClick={() => {
+                                if (isStub) {
+                                  toast.error(`"${c.name}" has no customer record yet. Use "Import as New Customer" below.`);
+                                  return;
+                                }
+                                onMatchAllToCustomer(contactName, c.externalId, c.name);
+                                setShowSearch(false);
+                                setSearchQuery("");
+                              }}
+                              className={`w-full text-left px-3 py-2 text-sm hover:bg-accent transition-colors flex items-center justify-between ${isStub ? 'opacity-60' : ''}`}
+                            >
+                              <div className="flex items-center gap-2 min-w-0">
+                                <span className="truncate">{c.name}</span>
+                                {isStub && (
+                                  <span className="text-xs bg-amber-100 text-amber-700 border border-amber-200 px-1.5 py-0.5 rounded shrink-0">
+                                    No record
+                                  </span>
+                                )}
+                              </div>
+                              <span className="text-xs text-muted-foreground shrink-0 ml-2">{isStub ? 'billing only' : `${c.serviceCount} svc`}</span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
-            )}
-          </div>
 
-          {/* Individual items */}
+              {/* ── Import as New Customer ── */}
+              <div className="pt-1 border-t border-border/50">
+                <div className="flex items-start gap-3">
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs font-medium text-foreground">Not in the system yet?</p>
+                    <p className="text-[11px] text-muted-foreground mt-0.5">
+                      Creates a new customer record named "<span className="font-medium">{contactName}</span>" and assigns all {unmatchedCount} unmatched billing item{unmatchedCount !== 1 ? "s" : ""} to it.
+                    </p>
+                  </div>
+                  <button
+                    onClick={handleImport}
+                    disabled={importing}
+                    className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-emerald-600 text-white rounded-md hover:bg-emerald-700 disabled:opacity-60 transition-colors shrink-0"
+                  >
+                    {importing ? (
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                    ) : (
+                      <UserPlus className="w-3.5 h-3.5" />
+                    )}
+                    Import as New Customer
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ── Individual line items ── */}
           {items.map((item: any) => (
             <div key={item.id} className="flex items-center gap-3 px-4 py-2.5 border-b border-border/50 last:border-0 hover:bg-accent/20 transition-colors">
               <div className="flex-1 min-w-0">
@@ -187,6 +316,8 @@ export default function BillingUnmatched() {
   const { data: summary } = trpc.billing.billingItems.summary.useQuery();
 
   const assignToCustomer = trpc.billing.billingItems.assignToCustomer.useMutation();
+  const matchAllMutation = trpc.billing.xeroContacts.matchToCustomer.useMutation();
+  const importMutation = trpc.billing.xeroContacts.importAsCustomer.useMutation();
   const utils = trpc.useUtils();
 
   const handleMatchToCustomer = async (billingItemId: number, customerExternalId: string) => {
@@ -196,6 +327,32 @@ export default function BillingUnmatched() {
       utils.billing.billingItems.summary.invalidate();
     } catch {
       toast.error("Failed to match billing item");
+    }
+  };
+
+  const handleMatchAllToCustomer = async (contactName: string, customerExternalId: string, customerName: string) => {
+    try {
+      const result = await matchAllMutation.mutateAsync({ contactName, customerExternalId });
+      utils.billing.billingItems.list.invalidate();
+      utils.billing.billingItems.summary.invalidate();
+      toast.success(`Matched ${result.assignedItemCount} item${result.assignedItemCount !== 1 ? "s" : ""} to ${customerName}`);
+    } catch (err: any) {
+      toast.error(err?.message || "Failed to match items");
+    }
+  };
+
+  const handleImportAsCustomer = async (contactName: string) => {
+    try {
+      const result = await importMutation.mutateAsync({ contactName });
+      utils.billing.billingItems.list.invalidate();
+      utils.billing.billingItems.summary.invalidate();
+      utils.billing.customers.list.invalidate();
+      toast.success(
+        `Created customer "${contactName}" (${result.externalId}) and assigned ${result.assignedItemCount} billing item${result.assignedItemCount !== 1 ? "s" : ""}`,
+        { duration: 5000 }
+      );
+    } catch (err: any) {
+      toast.error(err?.message || "Failed to import contact as customer");
     }
   };
 
@@ -209,7 +366,7 @@ export default function BillingUnmatched() {
       map.get(key)!.push(item);
     });
     return Array.from(map.entries())
-      .map(([name, items]) => ({ name, items, total: items.reduce((s: number, i: any) => s + i.lineAmount, 0) }))
+      .map(([name, grpItems]) => ({ name, items: grpItems, total: grpItems.reduce((s: number, i: any) => s + i.lineAmount, 0) }))
       .sort((a, b) => b.total - a.total);
   }, [items]);
 
@@ -266,8 +423,10 @@ export default function BillingUnmatched() {
             return (
               <div
                 key={s.matchStatus}
-                className={`bg-card border rounded-lg p-4 cursor-pointer hover:bg-accent/30 transition-colors ${
-                  statusFilter === s.matchStatus ? "border-primary" : "border-border"
+                className={`bg-card border rounded-lg p-4 cursor-pointer transition-colors ${
+                  statusFilter === s.matchStatus
+                    ? "border-primary/60 bg-primary/5"
+                    : "border-border hover:border-primary/30"
                 }`}
                 onClick={() => setStatusFilter(s.matchStatus)}
               >
@@ -291,7 +450,8 @@ export default function BillingUnmatched() {
               {formatCurrency(totalUnmatchedRevenue)} in unmatched billing revenue
             </p>
             <p className="text-xs text-amber-700 mt-0.5">
-              These billing items from Xero couldn't be automatically matched to customers. Match them below or flag for billing review.
+              These Xero billing items could not be automatically matched to customers in the system.
+              Expand each contact group below to see suggested matches, search for an existing customer, or import the contact as a new customer record.
             </p>
           </div>
         </div>
@@ -355,6 +515,8 @@ export default function BillingUnmatched() {
               contactName={g.name}
               items={g.items}
               onMatchToCustomer={handleMatchToCustomer}
+              onMatchAllToCustomer={handleMatchAllToCustomer}
+              onImportAsCustomer={handleImportAsCustomer}
             />
           ))}
         </div>

@@ -338,3 +338,8 @@
 - [x] Add updateCustomer tRPC procedure to routers.ts
 - [x] Build customer edit dialog on CustomerDetail page (all fields: name, business name, contact, email, phone, address, notes, Xero details)
 - [x] Contact & Site Info section always visible with empty-state placeholders
+
+# Billing Match - Unmatched Customer Workflow
+- [ ] Investigate why valid Xero customers appear as Unmatched (matching logic gap)
+- [ ] Build Match to Existing Customer workflow on Billing Match screen
+- [ ] Add Import as New Customer option for genuinely new Xero contacts

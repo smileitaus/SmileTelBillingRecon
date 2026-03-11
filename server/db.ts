@@ -2698,3 +2698,184 @@ export async function restoreTerminatedService(
 
   return { success: true };
 }
+
+// ==================== Xero Contact Import Helpers ====================
+
+/**
+ * Given a Xero contact name (from billing_items.contactName), return the top
+ * customer matches using a simple word-overlap scoring approach.
+ * Returns up to 5 suggestions with a confidence score (0-100).
+ */
+export async function getFuzzyCustomerSuggestions(contactName: string): Promise<Array<{
+  externalId: string;
+  name: string;
+  xeroContactName: string;
+  serviceCount: number;
+  confidence: number;
+}>> {
+  const db = await getDb();
+  if (!db || !contactName?.trim()) return [];
+
+  const needle = contactName.trim().toLowerCase();
+  const needleWords = needle.split(/\s+/).filter(w => w.length > 2);
+
+  // Fetch all active customers (name + xeroContactName)
+  const allCustomers = await db.select({
+    externalId: customers.externalId,
+    name: customers.name,
+    xeroContactName: customers.xeroContactName,
+    serviceCount: customers.serviceCount,
+  }).from(customers)
+    .where(sql`${customers.status} != 'inactive'`)
+    .orderBy(asc(customers.name));
+
+  const scored = allCustomers.map(c => {
+    const haystack = [c.name, c.xeroContactName].filter(Boolean).join(' ').toLowerCase();
+    const haystackWords = haystack.split(/\s+/).filter(w => w.length > 2);
+
+    // Exact substring match -> high confidence
+    if (haystack.includes(needle) || needle.includes(haystack)) {
+      return { ...c, confidence: 90 };
+    }
+
+    // Word overlap score
+    const matchedWords = needleWords.filter(w => haystack.includes(w));
+    const overlapScore = needleWords.length > 0
+      ? Math.round((matchedWords.length / needleWords.length) * 80)
+      : 0;
+
+    // Also check reverse: haystack words in needle
+    const reverseMatched = haystackWords.filter(w => needle.includes(w));
+    const reverseScore = haystackWords.length > 0
+      ? Math.round((reverseMatched.length / haystackWords.length) * 80)
+      : 0;
+
+    return { ...c, confidence: Math.max(overlapScore, reverseScore) };
+  });
+
+  return scored
+    .filter(c => c.confidence >= 40)
+    .sort((a, b) => b.confidence - a.confidence)
+    .slice(0, 5)
+    .map(c => ({
+      externalId: c.externalId,
+      name: c.name || '',
+      xeroContactName: c.xeroContactName || '',
+      serviceCount: c.serviceCount,
+      confidence: c.confidence,
+    }));
+}
+
+/**
+ * Import a Xero contact (billing_items.contactName) as a new customer record.
+ * - Generates the next available externalId (C####)
+ * - Creates the customer with xeroContactName set to the contact name
+ * - Assigns all unmatched billing items for this contact to the new customer
+ * Returns the new customer's externalId.
+ */
+export async function importXeroContactAsCustomer(contactName: string): Promise<{
+  success: boolean;
+  externalId: string;
+  assignedItemCount: number;
+}> {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+
+  const trimmedName = contactName.trim();
+  if (!trimmedName) throw new Error('Contact name is required');
+
+  // Check if a customer with this name already exists
+  const existing = await db.select({ externalId: customers.externalId })
+    .from(customers)
+    .where(or(
+      sql`LOWER(${customers.name}) = LOWER(${trimmedName})`,
+      sql`LOWER(${customers.xeroContactName}) = LOWER(${trimmedName})`,
+    ))
+    .limit(1);
+  if (existing.length > 0) {
+    throw new Error(`A customer named "${trimmedName}" already exists (${existing[0].externalId}). Use the match workflow instead.`);
+  }
+
+  // Generate next externalId: find MAX(CAST(SUBSTRING(externalId, 2) AS UNSIGNED))
+  const [maxRow] = await db.select({
+    maxNum: sql<number>`MAX(CAST(SUBSTRING(externalId, 2) AS UNSIGNED))`,
+  }).from(customers);
+  const nextNum = (maxRow?.maxNum || 0) + 1;
+  const newExternalId = `C${nextNum}`;
+
+  // Insert the new customer
+  await db.insert(customers).values({
+    externalId: newExternalId,
+    name: trimmedName,
+    xeroContactName: trimmedName,
+    billingPlatforms: null,
+    serviceCount: 0,
+    monthlyCost: '0.00' as any,
+    unmatchedCount: 0,
+    matchedCount: 0,
+    status: 'active',
+    businessName: '',
+    contactName: '',
+    contactEmail: '',
+    contactPhone: '',
+    ownershipType: '',
+    siteAddress: '',
+    notes: `Imported from Xero billing contact: ${trimmedName}`,
+    xeroAccountNumber: '',
+    monthlyRevenue: '0.00' as any,
+  });
+
+  // Assign all unmatched billing items for this contact to the new customer
+  await db.update(billingItems).set({
+    customerExternalId: newExternalId,
+    matchStatus: 'customer-matched',
+  }).where(sql`${billingItems.contactName} = ${trimmedName} AND (${billingItems.customerExternalId} = '' OR ${billingItems.customerExternalId} IS NULL)`);
+
+  // Count how many were assigned
+  const [countRow] = await db.select({ count: sql<number>`count(*)` })
+    .from(billingItems)
+    .where(sql`${billingItems.customerExternalId} = ${newExternalId}`);
+
+  return {
+    success: true,
+    externalId: newExternalId,
+    assignedItemCount: countRow?.count || 0,
+  };
+}
+
+/**
+ * Match all unmatched billing items for a given Xero contact name to an existing customer.
+ * Used when the user selects a suggested customer match.
+ */
+export async function matchXeroContactToCustomer(contactName: string, customerExternalId: string): Promise<{
+  success: boolean;
+  assignedItemCount: number;
+}> {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+
+  const trimmedName = contactName.trim();
+
+  // Verify the customer exists
+  const cust = await db.select({ externalId: customers.externalId })
+    .from(customers)
+    .where(eq(customers.externalId, customerExternalId))
+    .limit(1);
+  if (cust.length === 0) throw new Error(`Customer ${customerExternalId} not found`);
+
+  // Assign all unmatched billing items for this contact to the customer
+  await db.update(billingItems).set({
+    customerExternalId: customerExternalId,
+    matchStatus: 'customer-matched',
+  }).where(sql`${billingItems.contactName} = ${trimmedName} AND (${billingItems.customerExternalId} = '' OR ${billingItems.customerExternalId} IS NULL)`);
+
+  // Count how many were assigned
+  const [countRow] = await db.select({ count: sql<number>`count(*)` })
+    .from(billingItems)
+    .where(sql`${billingItems.customerExternalId} = ${customerExternalId} AND ${billingItems.contactName} = ${trimmedName}`);
+
+  return {
+    success: true,
+    assignedItemCount: countRow?.count || 0,
+  };
+}
