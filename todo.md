@@ -203,3 +203,10 @@
 - [x] Result: 0 phone matches — all 44 phones are unique/unregistered numbers
 - [x] Remaining 210 unmatched: 199 unassigned SIMs, 5 personal mobiles, 6 generic labels
 - [x] Confirmed: remaining services need manual review or additional data to match
+
+# No Data Use Flag Verification
+- [x] Investigated noDataUse flag origin: all 162 from Blitz Report "No Data Usage" sheet, applied without checking monthly data
+- [x] Cross-referenced 162 flagged services against 12 months of data (May 2024 - Apr 2025)
+- [x] Found 17 services with data usage in at least 1 month — removed their No Data Use flag
+- [x] Corrected count: 145 true No Data Use services (was 162)
+- [x] Dashboard/UI counts auto-update from database query (no code change needed)
