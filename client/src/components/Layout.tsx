@@ -15,6 +15,7 @@ import {
   TrendingUp,
   FileWarning,
   Merge,
+  ClipboardCheck,
 } from "lucide-react";
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useGlobalSearch } from "@/hooks/useData";
@@ -27,6 +28,7 @@ const navItems = [
   { path: "/unmatched", label: "Unmatched", icon: AlertTriangle },
   { path: "/revenue", label: "Revenue & Margin", icon: TrendingUp },
   { path: "/billing", label: "Billing Match", icon: FileWarning },
+  { path: "/review", label: "Review", icon: ClipboardCheck },
   { path: "/merge", label: "Merge Customers", icon: Merge },
 ];
 
@@ -235,7 +237,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             Billing Reconciliation
           </h1>
           <p className="text-[11px] text-muted-foreground mt-0.5">
-            Telstra Service Audit
+            SmileTel Service Audit
           </p>
         </div>
 

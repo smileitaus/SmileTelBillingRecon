@@ -1065,3 +1065,683 @@ export async function getCustomersForMerge(search: string) {
     monthlyRevenue: parseFloat(c.monthlyRevenue),
   }));
 }
+
+// ==================== Review Page Queries ====================
+
+export interface ReviewIssue {
+  id: string;
+  type: string;
+  severity: 'critical' | 'warning' | 'info';
+  title: string;
+  description: string;
+  count: number;
+  financialImpact?: number;
+  items: any[];
+}
+
+// Add a review_dismissed table tracking for dismissed issues
+// For now we'll use a simple in-memory set (will persist via DB later)
+
+export async function getReviewIssues() {
+  const db = await getDb();
+  if (!db) return { billingReview: [], accountManagement: [] };
+
+  const billingReview: ReviewIssue[] = [];
+  const accountManagement: ReviewIssue[] = [];
+
+  // ============ BILLING REVIEW ============
+
+  // 1. Services Double Billed (same service has multiple billing items)
+  const doubleBilled = await db.select({
+    serviceExternalId: billingItems.serviceExternalId,
+    count: sql<number>`count(*)`,
+    totalBilled: sql<string>`COALESCE(SUM(lineAmount), 0)`,
+  }).from(billingItems)
+    .where(sql`serviceExternalId IS NOT NULL AND serviceExternalId != ''`)
+    .groupBy(billingItems.serviceExternalId)
+    .having(sql`count(*) > 1`)
+    .orderBy(sql`count(*) DESC`);
+
+  if (doubleBilled.length > 0) {
+    // Get details for each double-billed service
+    const doubleBilledDetails = [];
+    for (const db_item of doubleBilled.slice(0, 50)) {
+      const items = await db.select({
+        id: billingItems.id,
+        description: billingItems.description,
+        lineAmount: billingItems.lineAmount,
+        contactName: billingItems.contactName,
+        category: billingItems.category,
+      }).from(billingItems)
+        .where(eq(billingItems.serviceExternalId, db_item.serviceExternalId!));
+
+      const svc = await db.select({
+        planName: services.planName,
+        serviceType: services.serviceType,
+        phoneNumber: services.phoneNumber,
+        connectionId: services.connectionId,
+        customerExternalId: services.customerExternalId,
+        customerName: services.customerName,
+        monthlyCost: services.monthlyCost,
+      }).from(services)
+        .where(eq(services.externalId, db_item.serviceExternalId!))
+        .limit(1);
+
+      doubleBilledDetails.push({
+        serviceExternalId: db_item.serviceExternalId,
+        billingItemCount: db_item.count,
+        totalBilled: parseFloat(db_item.totalBilled),
+        service: svc[0] || null,
+        billingItems: items.map(i => ({
+          id: i.id,
+          description: i.description,
+          lineAmount: parseFloat(String(i.lineAmount)),
+          contactName: i.contactName,
+          category: i.category,
+        })),
+      });
+    }
+
+    billingReview.push({
+      id: 'double-billed',
+      type: 'double-billed',
+      severity: 'critical',
+      title: 'Services Double Billed',
+      description: 'These services have multiple billing line items. Review to ensure charges are correct and not duplicated.',
+      count: Number(doubleBilled.length),
+      financialImpact: doubleBilled.reduce((s, d) => s + parseFloat(String(d.totalBilled)), 0),
+      items: doubleBilledDetails,
+    });
+  }
+
+  // 2. Services Not Being Billed (active service with supplier cost but no billing item)
+  const unbilledServices = await db.select({
+    externalId: services.externalId,
+    serviceType: services.serviceType,
+    planName: services.planName,
+    phoneNumber: services.phoneNumber,
+    connectionId: services.connectionId,
+    customerExternalId: services.customerExternalId,
+    customerName: services.customerName,
+    monthlyCost: services.monthlyCost,
+    provider: services.provider,
+    status: services.status,
+  }).from(services)
+    .leftJoin(billingItems, sql`${billingItems.serviceExternalId} = ${services.externalId}`)
+    .where(sql`${billingItems.id} IS NULL AND ${services.status} != 'terminated' AND ${services.monthlyCost} > 0`)
+    .orderBy(desc(services.monthlyCost))
+    .limit(100);
+
+  const [unbilledTotals] = await db.select({
+    count: sql<number>`count(*)`,
+    totalCost: sql<string>`COALESCE(SUM(${services.monthlyCost}), 0)`,
+  }).from(services)
+    .leftJoin(billingItems, sql`${billingItems.serviceExternalId} = ${services.externalId}`)
+    .where(sql`${billingItems.id} IS NULL AND ${services.status} != 'terminated' AND ${services.monthlyCost} > 0`);
+
+  if (unbilledTotals.count > 0) {
+    billingReview.push({
+      id: 'unbilled-services',
+      type: 'unbilled-services',
+      severity: 'critical',
+      title: 'Services Not Being Billed',
+      description: 'Active services with supplier costs but no matching Xero billing item. These represent revenue leakage.',
+      count: Number(unbilledTotals.count),
+      financialImpact: parseFloat(String(unbilledTotals.totalCost)),
+      items: unbilledServices.map(s => ({
+        ...s,
+        monthlyCost: parseFloat(String(s.monthlyCost)),
+      })),
+    });
+  }
+
+  // 3. Billing With No Matching Service
+  const billingNoService = await db.select({
+    id: billingItems.id,
+    contactName: billingItems.contactName,
+    description: billingItems.description,
+    lineAmount: billingItems.lineAmount,
+    taxAmount: billingItems.taxAmount,
+    category: billingItems.category,
+    matchStatus: billingItems.matchStatus,
+    customerExternalId: billingItems.customerExternalId,
+  }).from(billingItems)
+    .where(sql`(serviceExternalId IS NULL OR serviceExternalId = '') AND matchStatus = 'unmatched'`)
+    .orderBy(desc(billingItems.lineAmount))
+    .limit(100);
+
+  const [billingNoServiceTotals] = await db.select({
+    count: sql<number>`count(*)`,
+    totalRevenue: sql<string>`COALESCE(SUM(lineAmount), 0)`,
+  }).from(billingItems)
+    .where(sql`(serviceExternalId IS NULL OR serviceExternalId = '') AND matchStatus = 'unmatched'`);
+
+  if (billingNoServiceTotals.count > 0) {
+    billingReview.push({
+      id: 'billing-no-service',
+      type: 'billing-no-service',
+      severity: 'critical',
+      title: 'Billing With No Matching Service',
+      description: 'Xero billing items that cannot be matched to any customer or service. These may be orphaned billing or require new service records.',
+      count: Number(billingNoServiceTotals.count),
+      financialImpact: parseFloat(String(billingNoServiceTotals.totalRevenue)),
+      items: billingNoService.map(b => ({
+        ...b,
+        lineAmount: parseFloat(String(b.lineAmount)),
+        taxAmount: parseFloat(String(b.taxAmount)),
+      })),
+    });
+  }
+
+  // 4. Multiple Services to Same Site
+  const multiSiteServices = await db.select({
+    customerExternalId: services.customerExternalId,
+    customerName: services.customerName,
+    count: sql<number>`count(*)`,
+    totalCost: sql<string>`COALESCE(SUM(${services.monthlyCost}), 0)`,
+  }).from(services)
+    .where(sql`${services.customerExternalId} IS NOT NULL AND ${services.customerExternalId} != '' AND ${services.status} != 'terminated'`)
+    .groupBy(services.customerExternalId, services.customerName)
+    .having(sql`count(*) > 3`)
+    .orderBy(sql`count(*) DESC`);
+
+  if (multiSiteServices.length > 0) {
+    // Get customer details with address
+    const multiSiteDetails = [];
+    for (const ms of multiSiteServices.slice(0, 30)) {
+      const [cust] = await db.select({
+        name: customers.name,
+        siteAddress: customers.siteAddress,
+      }).from(customers).where(eq(customers.externalId, ms.customerExternalId!));
+
+      const svcList = await db.select({
+        externalId: services.externalId,
+        serviceType: services.serviceType,
+        planName: services.planName,
+        phoneNumber: services.phoneNumber,
+        connectionId: services.connectionId,
+        monthlyCost: services.monthlyCost,
+        provider: services.provider,
+      }).from(services)
+        .where(eq(services.customerExternalId, ms.customerExternalId!))
+        .orderBy(desc(services.monthlyCost));
+
+      multiSiteDetails.push({
+        customerExternalId: ms.customerExternalId,
+        customerName: cust?.name || ms.customerName,
+        siteAddress: cust?.siteAddress || '',
+        serviceCount: ms.count,
+        totalCost: parseFloat(ms.totalCost),
+        services: svcList.map(s => ({
+          ...s,
+          monthlyCost: parseFloat(String(s.monthlyCost)),
+        })),
+      });
+    }
+
+    billingReview.push({
+      id: 'multi-service-site',
+      type: 'multi-service-site',
+      severity: 'info',
+      title: 'Multiple Services at Same Site',
+      description: 'Customers with more than 3 services. This may be acceptable for large sites but could indicate duplicate or unnecessary services.',
+      count: Number(multiSiteServices.length),
+      financialImpact: multiSiteServices.reduce((s, m) => s + parseFloat(String(m.totalCost)), 0),
+      items: multiSiteDetails,
+    });
+  }
+
+  // 5. Information Discrepancies (name mismatches between billing and customer)
+  const nameMismatches = await db.select({
+    billingContactName: billingItems.contactName,
+    customerName: customers.name,
+    xeroContactName: customers.xeroContactName,
+    customerExternalId: customers.externalId,
+    count: sql<number>`count(*)`,
+    totalRevenue: sql<string>`COALESCE(SUM(${billingItems.lineAmount}), 0)`,
+  }).from(billingItems)
+    .innerJoin(customers, eq(billingItems.customerExternalId, customers.externalId))
+    .where(sql`${billingItems.contactName} != ${customers.name} AND ${billingItems.contactName} != COALESCE(${customers.xeroContactName}, '')`)
+    .groupBy(billingItems.contactName, customers.name, customers.xeroContactName, customers.externalId)
+    .orderBy(sql`count(*) DESC`);
+
+  if (nameMismatches.length > 0) {
+    billingReview.push({
+      id: 'name-discrepancy',
+      type: 'name-discrepancy',
+      severity: 'warning',
+      title: 'Name Discrepancies',
+      description: 'Billing contact names that differ from customer records. These may indicate incorrect matching or outdated records.',
+      count: Number(nameMismatches.length),
+      financialImpact: nameMismatches.reduce((s, n) => s + parseFloat(String(n.totalRevenue)), 0),
+      items: nameMismatches.map(n => ({
+        billingContactName: n.billingContactName,
+        customerName: n.customerName,
+        xeroContactName: n.xeroContactName,
+        customerExternalId: n.customerExternalId,
+        billingItemCount: n.count,
+        totalRevenue: parseFloat(n.totalRevenue),
+      })),
+    });
+  }
+
+  // 6. Missing Information
+  const [missingInfo] = await db.select({
+    noPlatform: sql<number>`SUM(CASE WHEN ${services.billingPlatform} IS NULL OR ${services.billingPlatform} = '' OR ${services.billingPlatform} = '[]' THEN 1 ELSE 0 END)`,
+    noAvc: sql<number>`SUM(CASE WHEN ${services.connectionId} IS NULL OR ${services.connectionId} = '' THEN 1 ELSE 0 END)`,
+    noCustomer: sql<number>`SUM(CASE WHEN ${services.customerExternalId} IS NULL OR ${services.customerExternalId} = '' THEN 1 ELSE 0 END)`,
+    noCost: sql<number>`SUM(CASE WHEN ${services.monthlyCost} = 0 OR ${services.monthlyCost} IS NULL THEN 1 ELSE 0 END)`,
+    total: sql<number>`count(*)`,
+  }).from(services).where(sql`${services.status} != 'terminated'`);
+
+  const missingItems = [];
+  if (Number(missingInfo.noCustomer) > 0) {
+    missingItems.push({ field: 'Customer Assignment', count: Number(missingInfo.noCustomer), severity: 'critical', description: 'Services not assigned to any customer — cannot be billed or tracked' });
+  }
+  if (Number(missingInfo.noAvc) > 0) {
+    missingItems.push({ field: 'AVC / Connection ID', count: Number(missingInfo.noAvc), severity: 'warning', description: 'Services missing AVC or connection ID — harder to match with supplier invoices' });
+  }
+  if (Number(missingInfo.noPlatform) > 0) {
+    missingItems.push({ field: 'Billing Platform', count: Number(missingInfo.noPlatform), severity: 'warning', description: 'Services without an assigned billing platform (OneBill, SasBoss, ECN, Halo, DataGate)' });
+  }
+  if (Number(missingInfo.noCost) > 0) {
+    missingItems.push({ field: 'Supplier Cost', count: Number(missingInfo.noCost), severity: 'info', description: 'Services with $0 or unknown supplier cost — margin cannot be calculated' });
+  }
+
+  if (missingItems.length > 0) {
+    billingReview.push({
+      id: 'missing-info',
+      type: 'missing-info',
+      severity: 'warning',
+      title: 'Missing Information',
+      description: 'Services with incomplete data that prevents full billing assessment.',
+      count: missingItems.reduce((s, m) => s + Number(m.count), 0),
+      items: missingItems,
+    });
+  }
+
+  // ============ ACCOUNT MANAGEMENT ============
+
+  // 7. Negative/Low Margin Services
+  const negativeMarginServices = await db.select({
+    externalId: services.externalId,
+    serviceType: services.serviceType,
+    planName: services.planName,
+    phoneNumber: services.phoneNumber,
+    connectionId: services.connectionId,
+    customerExternalId: services.customerExternalId,
+    customerName: services.customerName,
+    monthlyCost: services.monthlyCost,
+    monthlyRevenue: services.monthlyRevenue,
+    marginPercent: services.marginPercent,
+    provider: services.provider,
+  }).from(services)
+    .where(sql`${services.monthlyRevenue} > 0 AND ${services.marginPercent} < 0`)
+    .orderBy(asc(services.marginPercent))
+    .limit(50);
+
+  if (negativeMarginServices.length > 0) {
+    const totalLoss = negativeMarginServices.reduce((s, svc) => {
+      const cost = parseFloat(String(svc.monthlyCost));
+      const rev = parseFloat(String(svc.monthlyRevenue));
+      return s + (cost - rev);
+    }, 0);
+
+    accountManagement.push({
+      id: 'negative-margin',
+      type: 'negative-margin',
+      severity: 'critical',
+      title: 'Negative Margin Services',
+      description: 'Services where supplier cost exceeds billing revenue. These are losing money every month and need price adjustment or renegotiation.',
+      count: Number(negativeMarginServices.length),
+      financialImpact: totalLoss,
+      items: negativeMarginServices.map(s => ({
+        ...s,
+        monthlyCost: parseFloat(String(s.monthlyCost)),
+        monthlyRevenue: parseFloat(String(s.monthlyRevenue)),
+        marginPercent: parseFloat(String(s.marginPercent)),
+        monthlyLoss: parseFloat(String(s.monthlyCost)) - parseFloat(String(s.monthlyRevenue)),
+      })),
+    });
+  }
+
+  // 8. Low Margin Services (0-20%)
+  const lowMarginServices = await db.select({
+    externalId: services.externalId,
+    serviceType: services.serviceType,
+    planName: services.planName,
+    phoneNumber: services.phoneNumber,
+    connectionId: services.connectionId,
+    customerExternalId: services.customerExternalId,
+    customerName: services.customerName,
+    monthlyCost: services.monthlyCost,
+    monthlyRevenue: services.monthlyRevenue,
+    marginPercent: services.marginPercent,
+    provider: services.provider,
+  }).from(services)
+    .where(sql`${services.monthlyRevenue} > 0 AND ${services.marginPercent} >= 0 AND ${services.marginPercent} < 20`)
+    .orderBy(asc(services.marginPercent))
+    .limit(50);
+
+  if (lowMarginServices.length > 0) {
+    accountManagement.push({
+      id: 'low-margin',
+      type: 'low-margin',
+      severity: 'warning',
+      title: 'Low Margin Services (<20%)',
+      description: 'Services with margins below 20%. Consider price increases at next contract renewal or supplier cost renegotiation.',
+      count: Number(lowMarginServices.length),
+      items: lowMarginServices.map(s => ({
+        ...s,
+        monthlyCost: parseFloat(String(s.monthlyCost)),
+        monthlyRevenue: parseFloat(String(s.monthlyRevenue)),
+        marginPercent: parseFloat(String(s.marginPercent)),
+      })),
+    });
+  }
+
+  // 9. High Margin Services (>50%)
+  const highMarginServices = await db.select({
+    externalId: services.externalId,
+    serviceType: services.serviceType,
+    planName: services.planName,
+    phoneNumber: services.phoneNumber,
+    connectionId: services.connectionId,
+    customerExternalId: services.customerExternalId,
+    customerName: services.customerName,
+    monthlyCost: services.monthlyCost,
+    monthlyRevenue: services.monthlyRevenue,
+    marginPercent: services.marginPercent,
+    provider: services.provider,
+  }).from(services)
+    .where(sql`${services.monthlyRevenue} > 0 AND ${services.marginPercent} >= 50`)
+    .orderBy(desc(services.marginPercent))
+    .limit(50);
+
+  if (highMarginServices.length > 0) {
+    accountManagement.push({
+      id: 'high-margin',
+      type: 'high-margin',
+      severity: 'info',
+      title: 'High Margin Services (>50%)',
+      description: 'Services with healthy margins above 50%. These are your most profitable services — protect these relationships.',
+      count: Number(highMarginServices.length),
+      items: highMarginServices.map(s => ({
+        ...s,
+        monthlyCost: parseFloat(String(s.monthlyCost)),
+        monthlyRevenue: parseFloat(String(s.monthlyRevenue)),
+        marginPercent: parseFloat(String(s.marginPercent)),
+      })),
+    });
+  }
+
+  // 10. Contract Expiry
+  const contractServices = await db.select({
+    externalId: services.externalId,
+    serviceType: services.serviceType,
+    planName: services.planName,
+    phoneNumber: services.phoneNumber,
+    connectionId: services.connectionId,
+    customerExternalId: services.customerExternalId,
+    customerName: services.customerName,
+    monthlyCost: services.monthlyCost,
+    monthlyRevenue: services.monthlyRevenue,
+    contractEndDate: services.contractEndDate,
+    provider: services.provider,
+  }).from(services)
+    .where(sql`${services.contractEndDate} IS NOT NULL AND ${services.contractEndDate} != ''`)
+    .orderBy(asc(services.contractEndDate));
+
+  if (contractServices.length > 0) {
+    // Convert Excel serial dates to real dates
+    const now = new Date();
+    const excelEpoch = new Date(1899, 11, 30); // Excel epoch
+    const contractItems = contractServices.map(s => {
+      const serialNum = parseInt(String(s.contractEndDate));
+      let endDate: Date | null = null;
+      let status = 'unknown';
+      if (!isNaN(serialNum) && serialNum > 40000 && serialNum < 60000) {
+        endDate = new Date(excelEpoch.getTime() + serialNum * 86400000);
+        const daysUntil = Math.floor((endDate.getTime() - now.getTime()) / 86400000);
+        if (daysUntil < 0) status = 'expired';
+        else if (daysUntil < 90) status = 'expiring-soon';
+        else status = 'active';
+      }
+      return {
+        ...s,
+        monthlyCost: parseFloat(String(s.monthlyCost)),
+        monthlyRevenue: parseFloat(String(s.monthlyRevenue)),
+        contractEndDateFormatted: endDate ? endDate.toISOString().split('T')[0] : s.contractEndDate,
+        contractStatus: status,
+        daysUntilExpiry: endDate ? Math.floor((endDate.getTime() - now.getTime()) / 86400000) : null,
+      };
+    });
+
+    const expired = contractItems.filter(c => c.contractStatus === 'expired');
+    const expiringSoon = contractItems.filter(c => c.contractStatus === 'expiring-soon');
+
+    if (expired.length > 0) {
+      accountManagement.push({
+        id: 'expired-contracts',
+        type: 'expired-contracts',
+        severity: 'critical',
+        title: 'Expired Contracts',
+        description: 'Services with contracts that have already expired. These should be renewed or renegotiated immediately.',
+        count: Number(expired.length),
+        items: expired,
+      });
+    }
+
+    if (expiringSoon.length > 0) {
+      accountManagement.push({
+        id: 'expiring-contracts',
+        type: 'expiring-contracts',
+        severity: 'warning',
+        title: 'Contracts Expiring Within 90 Days',
+        description: 'Services with contracts expiring soon. Plan renewals or renegotiations proactively.',
+        count: Number(expiringSoon.length),
+        items: expiringSoon,
+      });
+    }
+  }
+
+  // 11. No Data Use services still costing money
+  const noDataCostServices = await db.select({
+    externalId: services.externalId,
+    serviceType: services.serviceType,
+    planName: services.planName,
+    phoneNumber: services.phoneNumber,
+    simSerialNumber: services.simSerialNumber,
+    customerExternalId: services.customerExternalId,
+    customerName: services.customerName,
+    monthlyCost: services.monthlyCost,
+    provider: services.provider,
+  }).from(services)
+    .where(sql`${services.noDataUse} = 1 AND ${services.monthlyCost} > 0 AND ${services.status} != 'terminated'`)
+    .orderBy(desc(services.monthlyCost))
+    .limit(50);
+
+  if (noDataCostServices.length > 0) {
+    const totalWaste = noDataCostServices.reduce((s, svc) => s + parseFloat(String(svc.monthlyCost)), 0);
+    accountManagement.push({
+      id: 'no-data-cost',
+      type: 'no-data-cost',
+      severity: 'warning',
+      title: 'No Data Use Services Still Costing Money',
+      description: 'Services flagged as having zero data usage across all billing periods but still incurring supplier costs. Consider termination.',
+      count: Number(noDataCostServices.length),
+      financialImpact: totalWaste,
+      items: noDataCostServices.map(s => ({
+        ...s,
+        monthlyCost: parseFloat(String(s.monthlyCost)),
+      })),
+    });
+  }
+
+  // 12. Services with billing but customer-only match (need service-level match)
+  const [customerOnlyCount] = await db.select({
+    count: sql<number>`count(*)`,
+    totalRevenue: sql<string>`COALESCE(SUM(lineAmount), 0)`,
+  }).from(billingItems)
+    .where(eq(billingItems.matchStatus, 'customer-matched'));
+
+  if (customerOnlyCount.count > 0) {
+    accountManagement.push({
+      id: 'customer-only-billing',
+      type: 'customer-only-billing',
+      severity: 'info',
+      title: 'Billing Matched to Customer Only',
+      description: 'Billing items matched to a customer but not to a specific service. Service-level matching enables accurate margin calculation.',
+      count: Number(customerOnlyCount.count),
+      financialImpact: parseFloat(String(customerOnlyCount.totalRevenue)),
+      items: [],
+    });
+  }
+
+  return { billingReview, accountManagement };
+}
+
+// Mark a review issue item as resolved/ignored
+export async function resolveReviewIssue(issueType: string, itemId: string, action: 'resolve' | 'ignore' | 'flag', notes?: string) {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+
+  // For service-related issues, update the service notes
+  if (issueType === 'multi-service-site' && action === 'ignore') {
+    // Add a note that multiple services at this site have been reviewed and accepted
+    const existing = await db.select({ discoveryNotes: services.discoveryNotes }).from(services)
+      .where(eq(services.customerExternalId, itemId)).limit(1);
+    const currentNotes = existing[0]?.discoveryNotes || '';
+    const newNote = `[REVIEWED] Multiple services at this site reviewed and accepted. ${notes || ''}`;
+    if (!currentNotes.includes('[REVIEWED]')) {
+      await db.update(services).set({
+        discoveryNotes: currentNotes ? `${currentNotes}\n${newNote}` : newNote,
+      }).where(eq(services.customerExternalId, itemId));
+    }
+    return { success: true };
+  }
+
+  if (issueType === 'double-billed' && action === 'resolve') {
+    // User confirms the billing is correct (e.g., bundled services)
+    // Add note to the service
+    const svc = await db.select({ discoveryNotes: services.discoveryNotes }).from(services)
+      .where(eq(services.externalId, itemId)).limit(1);
+    const currentNotes = svc[0]?.discoveryNotes || '';
+    const newNote = `[BILLING REVIEWED] Multiple billing items confirmed correct. ${notes || ''}`;
+    if (!currentNotes.includes('[BILLING REVIEWED]')) {
+      await db.update(services).set({
+        discoveryNotes: currentNotes ? `${currentNotes}\n${newNote}` : newNote,
+      }).where(eq(services.externalId, itemId));
+    }
+    return { success: true };
+  }
+
+  if (action === 'flag') {
+    // Flag the service for termination
+    await db.update(services).set({
+      status: 'flagged_for_termination',
+    }).where(eq(services.externalId, itemId));
+    return { success: true };
+  }
+
+  return { success: true };
+}
+
+// ==================== Review Items (Manual Submissions & Ignored) ====================
+
+import { reviewItems } from "../drizzle/schema";
+
+export async function submitForReview(input: {
+  targetType: 'service' | 'customer' | 'billing-item';
+  targetId: string;
+  targetName: string;
+  note: string;
+  submittedBy: string;
+}) {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+
+  await db.insert(reviewItems).values({
+    type: 'manual',
+    targetType: input.targetType,
+    targetId: input.targetId,
+    targetName: input.targetName,
+    note: input.note,
+    submittedBy: input.submittedBy,
+    status: 'open',
+  });
+
+  return { success: true };
+}
+
+export async function ignoreReviewIssue(input: {
+  issueType: string;
+  targetType: 'service' | 'customer' | 'billing-item';
+  targetId: string;
+  targetName: string;
+  note: string;
+  submittedBy: string;
+}) {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+
+  await db.insert(reviewItems).values({
+    type: 'ignored',
+    targetType: input.targetType,
+    targetId: input.targetId,
+    targetName: input.targetName,
+    issueType: input.issueType,
+    note: input.note,
+    submittedBy: input.submittedBy,
+    status: 'open',
+  });
+
+  return { success: true };
+}
+
+export async function getManualReviewItems() {
+  const db = await getDb();
+  if (!db) return [];
+
+  const result = await db.select().from(reviewItems)
+    .where(eq(reviewItems.type, 'manual'))
+    .orderBy(desc(reviewItems.createdAt));
+
+  return result;
+}
+
+export async function getIgnoredIssues() {
+  const db = await getDb();
+  if (!db) return [];
+
+  const result = await db.select().from(reviewItems)
+    .where(eq(reviewItems.type, 'ignored'))
+    .orderBy(desc(reviewItems.createdAt));
+
+  return result;
+}
+
+export async function resolveManualReview(id: number, resolvedBy: string, resolvedNote: string) {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+
+  await db.update(reviewItems).set({
+    status: 'resolved',
+    resolvedBy,
+    resolvedNote,
+    resolvedAt: new Date(),
+  }).where(eq(reviewItems.id, id));
+
+  return { success: true };
+}
+
+export async function isIssueIgnored(issueType: string, targetId: string): Promise<boolean> {
+  const db = await getDb();
+  if (!db) return false;
+
+  const result = await db.select({ id: reviewItems.id }).from(reviewItems)
+    .where(sql`${reviewItems.type} = 'ignored' AND ${reviewItems.issueType} = ${issueType} AND ${reviewItems.targetId} = ${targetId}`)
+    .limit(1);
+
+  return result.length > 0;
+}

@@ -205,3 +205,31 @@ export const billingItems = mysqlTable("billing_items", {
 
 export type BillingItem = typeof billingItems.$inferSelect;
 export type InsertBillingItem = typeof billingItems.$inferInsert;
+
+/**
+ * Review Items - tracks user-submitted review items and ignored system-detected issues.
+ * type: 'manual' = user submitted for review, 'ignored' = user dismissed a system issue
+ */
+export const reviewItems = mysqlTable("review_items", {
+  id: int("id").autoincrement().primaryKey(),
+  type: varchar("type", { length: 16 }).notNull(), // 'manual' | 'ignored'
+  // What is being reviewed
+  targetType: varchar("targetType", { length: 16 }).notNull(), // 'service' | 'customer' | 'billing-item'
+  targetId: varchar("targetId", { length: 64 }).notNull(), // externalId of service/customer or id of billing item
+  targetName: varchar("targetName", { length: 512 }).default(""),
+  // For ignored items, which system issue type was ignored
+  issueType: varchar("issueType", { length: 64 }).default(""),
+  // User-provided note (required)
+  note: text("note").notNull(),
+  // Who submitted/ignored
+  submittedBy: varchar("submittedBy", { length: 256 }).notNull(),
+  status: varchar("status", { length: 16 }).default("open").notNull(), // 'open' | 'resolved'
+  resolvedNote: text("resolvedNote"),
+  resolvedBy: varchar("resolvedBy", { length: 256 }),
+  resolvedAt: timestamp("resolvedAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ReviewItem = typeof reviewItems.$inferSelect;
+export type InsertReviewItem = typeof reviewItems.$inferInsert;

@@ -248,3 +248,31 @@
 - [x] Allow multiple platforms per service (JSON array)
 - [x] Show billing platform badges on service cards and detail pages
 - [x] 16 new tests for billing items, margin analysis, customer merge, and platform management
+
+# Review Page - Billing Review
+- [x] Detect services double billed — 26 services, $9,835.72 at risk
+- [x] Detect services not yet being billed — 100 services, $36,271.77 in supplier costs with no billing
+- [x] Detect billing occurring with no matching service — 53 items, $14,284.09 at risk
+- [x] Detect multiple services to same site — 3 customers, $15,761 (can be marked as acceptable)
+- [x] Detect name discrepancies (billing contact vs customer record) — 3 mismatches, $272.72
+- [x] Detect missing information — 4 categories (no AVC, no customer, no cost, no billing platform)
+- [x] Build resolution workflows: mark reviewed, ignore with note, flag for termination
+
+# Review Page - Account Management
+- [x] Highlight negative margin services — 37 services, $827.32/month impact (CRITICAL, red)
+- [x] Highlight low margin services (<20%) — 17 services (WARNING, amber)
+- [x] Highlight high margin services (>50%) — 26 services (INFO)
+- [x] Detect expired contracts — 3 services with expired contract dates
+- [x] Surface billing matched to customer only — 1,031 items, $100,999 needing service-level matching
+- [x] Build resolution workflows for account management issues
+
+# Manual Review & Ignore Workflow
+- [x] Added review_items DB table for user-submitted review items and ignored items
+- [x] Added 'Submit for Review' button with Service/Customer toggle, search, and required note
+- [x] Added 'Ignore' action on all review items with required note prompt
+- [x] Tracks who submitted/ignored items and when
+- [x] Summary cards show IGNORED count on Review page header
+
+# UI & Branding
+- [x] Updated sidebar subtitle from 'Telstra Service Audit' to 'SmileTel Service Audit'
+- [x] Team access: TEAM_ACCESS_PASSWORD configured, Peter and Tony can log in with email + team password

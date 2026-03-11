@@ -17,6 +17,7 @@ import UnmatchedServices from "./pages/UnmatchedServices";
 import RevenueMargin from "./pages/RevenueMargin";
 import BillingUnmatched from "./pages/BillingUnmatched";
 import CustomerMerge from "./pages/CustomerMerge";
+import Review from "./pages/Review";
 import { useState } from "react";
 import { trpc } from "@/lib/trpc";
 
@@ -225,6 +226,7 @@ function Router() {
           <Route path="/unmatched" component={UnmatchedServices} />
           <Route path="/revenue" component={RevenueMargin} />
           <Route path="/billing" component={BillingUnmatched} />
+          <Route path="/review" component={Review} />
           <Route path="/merge" component={CustomerMerge} />
           <Route path="/404" component={NotFound} />
           <Route component={NotFound} />

@@ -31,6 +31,13 @@ import {
   updateBillingItemMatch,
   assignBillingItemToCustomer,
   getCustomersForMerge,
+  getReviewIssues,
+  resolveReviewIssue,
+  submitForReview,
+  ignoreReviewIssue,
+  getManualReviewItems,
+  getIgnoredIssues,
+  resolveManualReview,
 } from "./db";
 
 export const appRouter = router({
@@ -260,6 +267,70 @@ export const appRouter = router({
         }).optional())
         .query(async ({ input }) => {
           return await getServicesWithMargin(input);
+        }),
+    }),
+
+    // Review page
+    review: router({
+      issues: protectedProcedure.query(async () => {
+        return await getReviewIssues();
+      }),
+
+      resolve: protectedProcedure
+        .input(z.object({
+          issueType: z.string(),
+          itemId: z.string(),
+          action: z.enum(['resolve', 'ignore', 'flag']),
+          notes: z.string().optional(),
+        }))
+        .mutation(async ({ input }) => {
+          return await resolveReviewIssue(input.issueType, input.itemId, input.action, input.notes);
+        }),
+
+      submitForReview: protectedProcedure
+        .input(z.object({
+          targetType: z.enum(['service', 'customer', 'billing-item']),
+          targetId: z.string(),
+          targetName: z.string(),
+          note: z.string().min(1, 'Note is required'),
+        }))
+        .mutation(async ({ input, ctx }) => {
+          return await submitForReview({
+            ...input,
+            submittedBy: ctx.user?.name || ctx.user?.email || 'Unknown',
+          });
+        }),
+
+      ignore: protectedProcedure
+        .input(z.object({
+          issueType: z.string(),
+          targetType: z.enum(['service', 'customer', 'billing-item']),
+          targetId: z.string(),
+          targetName: z.string(),
+          note: z.string().min(1, 'Note is required'),
+        }))
+        .mutation(async ({ input, ctx }) => {
+          return await ignoreReviewIssue({
+            ...input,
+            submittedBy: ctx.user?.name || ctx.user?.email || 'Unknown',
+          });
+        }),
+
+      manualItems: protectedProcedure.query(async () => {
+        return await getManualReviewItems();
+      }),
+
+      ignoredItems: protectedProcedure.query(async () => {
+        return await getIgnoredIssues();
+      }),
+
+      resolveManual: protectedProcedure
+        .input(z.object({
+          id: z.number(),
+          resolvedNote: z.string(),
+        }))
+        .mutation(async ({ input, ctx }) => {
+          return await resolveManualReview(input.id, ctx.user?.name || ctx.user?.email || 'Unknown', input.resolvedNote);
         }),
     }),
 
