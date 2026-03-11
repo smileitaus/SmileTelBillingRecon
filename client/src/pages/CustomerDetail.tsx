@@ -186,64 +186,129 @@ function AvcInlineEditor({
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function ServiceRow({ service }: { service: any }) {
+function ServiceRow({ service, onTerminated }: { service: any; onTerminated?: () => void }) {
   const hasAvc = service.connectionId && service.connectionId.trim() !== "";
   const isTerminated = service.status === "terminated";
   const isFlagged = service.status === "flagged_for_termination";
   const hasNotes = service.discoveryNotes && service.discoveryNotes.trim() !== "";
+  const [showConfirm, setShowConfirm] = useState(false);
+  const terminateMutation = trpc.billing.terminate.useMutation();
+  const restoreMutation = trpc.billing.restore.useMutation();
+  const utils = trpc.useUtils();
+
+  const handleTerminate = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    try {
+      const result = await terminateMutation.mutateAsync({ serviceExternalId: service.externalId });
+      toast.success(`Terminated — $${result.originalCost?.toFixed(2) || '0.00'}/mo removed`);
+      utils.billing.customers.byId.invalidate();
+      utils.billing.summary.invalidate();
+      setShowConfirm(false);
+      onTerminated?.();
+    } catch { toast.error("Failed to terminate"); }
+  };
+
+  const handleRestore = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    try {
+      await restoreMutation.mutateAsync({ serviceExternalId: service.externalId });
+      toast.success("Service restored");
+      utils.billing.customers.byId.invalidate();
+      utils.billing.summary.invalidate();
+      onTerminated?.();
+    } catch { toast.error("Failed to restore"); }
+  };
 
   return (
-    <Link href={`/services/${service.externalId || service.id}`} asChild>
-      <div className={`flex items-center gap-3 px-4 py-2.5 hover:bg-accent/50 transition-colors cursor-pointer group border-b border-border/30 last:border-0 ${isTerminated ? "opacity-60" : isFlagged ? "bg-rose-50/30" : ""}`}>
-        <div className={`w-7 h-7 rounded-md flex items-center justify-center ${isTerminated ? "bg-gray-100 text-gray-400" : isFlagged ? "bg-rose-50 text-rose-600" : "bg-muted text-muted-foreground"}`}>
-          <ServiceTypeIcon type={service.serviceType} />
-        </div>
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2">
-            <span className={`text-sm font-medium truncate ${isTerminated ? "line-through text-muted-foreground" : ""}`}>
-              {service.serviceType}
-            </span>
-            <span className="text-xs text-muted-foreground">
-              {service.serviceTypeDetail || service.planName}
-            </span>
-            {hasNotes && (
-              <span title="Has discovery notes">
-                <MessageSquare className="w-3 h-3 text-amber-600" />
-              </span>
-            )}
-            <ProviderBadge provider={service.provider} size="xs" />
+    <>
+      <Link href={`/services/${service.externalId || service.id}`} asChild>
+        <div className={`flex items-center gap-3 px-4 py-2.5 hover:bg-accent/50 transition-colors cursor-pointer group border-b border-border/30 last:border-0 ${isTerminated ? "opacity-60" : isFlagged ? "bg-rose-50/30" : ""}`}>
+          <div className={`w-7 h-7 rounded-md flex items-center justify-center ${isTerminated ? "bg-gray-100 text-gray-400" : isFlagged ? "bg-rose-50 text-rose-600" : "bg-muted text-muted-foreground"}`}>
+            <ServiceTypeIcon type={service.serviceType} />
           </div>
-          <div className="flex items-center gap-3 mt-0.5">
-            {service.phoneNumber && (
-              <span className="data-value text-muted-foreground">
-                {service.phoneNumber}
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2">
+              <span className={`text-sm font-medium truncate ${isTerminated ? "line-through text-muted-foreground" : ""}`}>
+                {service.serviceType}
               </span>
-            )}
-            <AvcInlineEditor service={service} />
-            {!service.phoneNumber && !hasAvc && (
-              <span className="data-value text-muted-foreground">
-                {service.serviceId}
+              <span className="text-xs text-muted-foreground">
+                {service.serviceTypeDetail || service.planName}
               </span>
-            )}
+              {hasNotes && (
+                <span title="Has discovery notes">
+                  <MessageSquare className="w-3 h-3 text-amber-600" />
+                </span>
+              )}
+              <ProviderBadge provider={service.provider} size="xs" />
+            </div>
+            <div className="flex items-center gap-3 mt-0.5">
+              {service.phoneNumber && (
+                <span className="data-value text-muted-foreground">
+                  {service.phoneNumber}
+                </span>
+              )}
+              <AvcInlineEditor service={service} />
+              {!service.phoneNumber && !hasAvc && (
+                <span className="data-value text-muted-foreground">
+                  {service.serviceId}
+                </span>
+              )}
+            </div>
           </div>
+          <div className="text-right shrink-0 hidden sm:block">
+            <span className="data-value text-sm">
+              ${Number(service.monthlyCost).toLocaleString("en-AU", { minimumFractionDigits: 2 })}
+            </span>
+            <span className="text-[10px] text-muted-foreground block">/month</span>
+          </div>
+          <div className="shrink-0 hidden md:block">
+            <StatusPill status={service.status} />
+          </div>
+          {/* Quick terminate / restore button */}
+          {!isTerminated ? (
+            <button
+              onClick={(e) => { e.preventDefault(); e.stopPropagation(); setShowConfirm(true); }}
+              title="Terminate service"
+              className="shrink-0 p-1.5 rounded text-muted-foreground opacity-0 group-hover:opacity-100 hover:text-destructive hover:bg-destructive/10 transition-all"
+            >
+              <Ban className="w-3.5 h-3.5" />
+            </button>
+          ) : (
+            <button
+              onClick={handleRestore}
+              title="Restore service"
+              disabled={restoreMutation.isPending}
+              className="shrink-0 p-1.5 rounded text-muted-foreground opacity-0 group-hover:opacity-100 hover:text-green-600 hover:bg-green-50 transition-all"
+            >
+              {restoreMutation.isPending ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Check className="w-3.5 h-3.5" />}
+            </button>
+          )}
+          <ChevronRight className="w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
         </div>
-        <div className="text-right shrink-0 hidden sm:block">
-          <span className="data-value text-sm">
-            $
-            {Number(service.monthlyCost).toLocaleString("en-AU", {
-              minimumFractionDigits: 2,
-            })}
-          </span>
-          <span className="text-[10px] text-muted-foreground block">
-            /month
-          </span>
+      </Link>
+      {/* Inline confirmation row */}
+      {showConfirm && (
+        <div className="px-4 py-3 bg-destructive/5 border-b border-destructive/20 flex items-center gap-3">
+          <span className="text-xs text-destructive flex-1">Terminate this service? Cost of ${Number(service.monthlyCost).toFixed(2)}/mo will be removed.</span>
+          <button
+            onClick={handleTerminate}
+            disabled={terminateMutation.isPending}
+            className="text-xs px-3 py-1.5 bg-destructive text-destructive-foreground rounded-md hover:bg-destructive/90 disabled:opacity-50 inline-flex items-center gap-1"
+          >
+            {terminateMutation.isPending ? <Loader2 className="w-3 h-3 animate-spin" /> : <Ban className="w-3 h-3" />}
+            Terminate
+          </button>
+          <button
+            onClick={(e) => { e.preventDefault(); e.stopPropagation(); setShowConfirm(false); }}
+            className="text-xs px-3 py-1.5 border border-border rounded-md hover:bg-accent"
+          >
+            Cancel
+          </button>
         </div>
-        <div className="shrink-0 hidden md:block">
-          <StatusPill status={service.status} />
-        </div>
-        <ChevronRight className="w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
-      </div>
-    </Link>
+      )}
+    </>
   );
 }
 

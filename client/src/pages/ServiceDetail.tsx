@@ -473,90 +473,136 @@ function BillingPlatformEditor({ service }: { service: any }) {
 
 function ServiceStatusActions({ service }: { service: any }) {
   const updateStatus = trpc.billing.updateStatus.useMutation();
+  const terminateMutation = trpc.billing.terminate.useMutation();
+  const restoreMutation = trpc.billing.restore.useMutation();
   const utils = trpc.useUtils();
+  const [showTerminateConfirm, setShowTerminateConfirm] = useState(false);
+  const [terminateReason, setTerminateReason] = useState("");
 
-  const handleStatusChange = async (newStatus: string) => {
+  const invalidateAll = () => {
+    utils.billing.services.byId.invalidate({ id: service.externalId });
+    utils.billing.unmatched.list.invalidate();
+    utils.billing.summary.invalidate();
+    utils.billing.customers.list.invalidate();
+    utils.billing.customers.byId.invalidate();
+  };
+
+  const handleFlag = async () => {
     try {
-      await updateStatus.mutateAsync({
+      await updateStatus.mutateAsync({ serviceExternalId: service.externalId, status: 'flagged_for_termination' });
+      toast.success("Service flagged for termination");
+      invalidateAll();
+    } catch { toast.error("Failed to flag service"); }
+  };
+
+  const handleUnflag = async () => {
+    try {
+      await updateStatus.mutateAsync({ serviceExternalId: service.externalId, status: service.customerExternalId ? 'active' : 'unmatched' });
+      toast.success("Flag removed");
+      invalidateAll();
+    } catch { toast.error("Failed to unflag"); }
+  };
+
+  const handleTerminate = async () => {
+    try {
+      const result = await terminateMutation.mutateAsync({
         serviceExternalId: service.externalId,
-        status: newStatus as any,
+        reason: terminateReason || undefined,
       });
-      const labels: Record<string, string> = {
-        flagged_for_termination: "Service flagged for termination",
-        terminated: "Service marked as terminated",
-        unmatched: "Service status reset to unmatched",
-        active: "Service status reset to active",
-      };
-      toast.success(labels[newStatus] || "Status updated");
-      utils.billing.services.byId.invalidate({ id: service.externalId });
-      utils.billing.unmatched.list.invalidate();
-      utils.billing.summary.invalidate();
-      utils.billing.customers.list.invalidate();
-    } catch {
-      toast.error("Failed to update status");
-    }
+      toast.success(`Service terminated — $${result.originalCost?.toFixed(2) || '0.00'}/mo removed from costs`);
+      setShowTerminateConfirm(false);
+      setTerminateReason("");
+      invalidateAll();
+    } catch { toast.error("Failed to terminate service"); }
+  };
+
+  const handleRestore = async () => {
+    try {
+      await restoreMutation.mutateAsync({ serviceExternalId: service.externalId });
+      toast.success("Service restored to active");
+      invalidateAll();
+    } catch { toast.error("Failed to restore service"); }
   };
 
   const currentStatus = service.status;
+  const isPending = updateStatus.isPending || terminateMutation.isPending || restoreMutation.isPending;
 
   return (
     <div className="flex flex-wrap gap-2">
-      {currentStatus !== "flagged_for_termination" && currentStatus !== "terminated" && (
-        <button
-          onClick={() => handleStatusChange("flagged_for_termination")}
-          disabled={updateStatus.isPending}
-          className="inline-flex items-center gap-2 px-3 py-2 text-sm border border-destructive/30 text-destructive rounded-md hover:bg-destructive/5 transition-colors disabled:opacity-50"
-        >
-          {updateStatus.isPending ? (
-            <Loader2 className="w-3.5 h-3.5 animate-spin" />
-          ) : (
-            <Flag className="w-3.5 h-3.5" />
-          )}
-          Flag for Termination
-        </button>
+      {/* Terminate confirmation inline */}
+      {showTerminateConfirm && (
+        <div className="w-full bg-destructive/5 border border-destructive/20 rounded-lg p-4 space-y-3">
+          <p className="text-sm font-medium text-destructive">Confirm service termination</p>
+          <p className="text-xs text-muted-foreground">This will archive the service, zero out its cost (${parseFloat(service.monthlyCost || 0).toFixed(2)}/mo), and remove it from the customer's active record.</p>
+          <input
+            type="text"
+            placeholder="Reason for termination (optional)"
+            value={terminateReason}
+            onChange={e => setTerminateReason(e.target.value)}
+            className="w-full text-sm border border-border rounded-md px-3 py-2 bg-background outline-none focus:ring-2 focus:ring-ring/20"
+          />
+          <div className="flex gap-2">
+            <button
+              onClick={handleTerminate}
+              disabled={isPending}
+              className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium bg-destructive text-destructive-foreground rounded-md hover:bg-destructive/90 transition-colors disabled:opacity-50"
+            >
+              {terminateMutation.isPending ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Ban className="w-3.5 h-3.5" />}
+              Confirm Termination
+            </button>
+            <button
+              onClick={() => { setShowTerminateConfirm(false); setTerminateReason(""); }}
+              className="inline-flex items-center px-4 py-2 text-sm border border-border rounded-md hover:bg-accent transition-colors"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
       )}
-      {currentStatus === "flagged_for_termination" && (
+
+      {/* Main action buttons */}
+      {!showTerminateConfirm && (
         <>
-          <button
-            onClick={() => handleStatusChange("terminated")}
-            disabled={updateStatus.isPending}
-            className="inline-flex items-center gap-2 px-3 py-2 text-sm border border-gray-300 text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors disabled:opacity-50"
-          >
-            {updateStatus.isPending ? (
-              <Loader2 className="w-3.5 h-3.5 animate-spin" />
-            ) : (
-              <Ban className="w-3.5 h-3.5" />
-            )}
-            Mark as Terminated
-          </button>
-          <button
-            onClick={() => handleStatusChange(service.customerExternalId ? "active" : "unmatched")}
-            disabled={updateStatus.isPending}
-            className="inline-flex items-center gap-2 px-3 py-2 text-sm border border-border text-foreground rounded-md hover:bg-accent transition-colors disabled:opacity-50"
-          >
-            Unflag
-          </button>
+          {currentStatus !== "terminated" && (
+            <button
+              onClick={() => setShowTerminateConfirm(true)}
+              disabled={isPending}
+              className="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium bg-destructive text-destructive-foreground rounded-md hover:bg-destructive/90 transition-colors disabled:opacity-50"
+            >
+              {isPending ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Ban className="w-3.5 h-3.5" />}
+              Terminate Service
+            </button>
+          )}
+          {currentStatus !== "flagged_for_termination" && currentStatus !== "terminated" && (
+            <button
+              onClick={handleFlag}
+              disabled={isPending}
+              className="inline-flex items-center gap-2 px-3 py-2 text-sm border border-destructive/30 text-destructive rounded-md hover:bg-destructive/5 transition-colors disabled:opacity-50"
+            >
+              <Flag className="w-3.5 h-3.5" />
+              Flag for Termination
+            </button>
+          )}
+          {currentStatus === "flagged_for_termination" && (
+            <button
+              onClick={handleUnflag}
+              disabled={isPending}
+              className="inline-flex items-center gap-2 px-3 py-2 text-sm border border-border text-foreground rounded-md hover:bg-accent transition-colors disabled:opacity-50"
+            >
+              Unflag
+            </button>
+          )}
+          {currentStatus === "terminated" && (
+            <button
+              onClick={handleRestore}
+              disabled={isPending}
+              className="inline-flex items-center gap-2 px-3 py-2 text-sm border border-border text-foreground rounded-md hover:bg-accent transition-colors disabled:opacity-50"
+            >
+              {restoreMutation.isPending ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : null}
+              Restore Service
+            </button>
+          )}
         </>
-      )}
-      {currentStatus === "terminated" && (
-        <button
-          onClick={() => handleStatusChange(service.customerExternalId ? "active" : "unmatched")}
-          disabled={updateStatus.isPending}
-          className="inline-flex items-center gap-2 px-3 py-2 text-sm border border-border text-foreground rounded-md hover:bg-accent transition-colors disabled:opacity-50"
-        >
-          Undo Termination
-        </button>
-      )}
-      {(currentStatus === "active" || currentStatus === "unmatched") && (
-        <button
-          onClick={() =>
-            toast.info("Edit customer link — feature coming soon")
-          }
-          className="inline-flex items-center gap-2 px-3 py-2 text-sm border border-border text-foreground rounded-md hover:bg-accent transition-colors"
-        >
-          <Building2 className="w-3.5 h-3.5" />
-          Edit Customer Link
-        </button>
       )}
     </div>
   );

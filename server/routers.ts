@@ -49,6 +49,8 @@ import {
   getBillingPlatformCheckSummary,
   previewAliasAutoMatch,
   commitAliasAutoMatch,
+  terminateService,
+  restoreTerminatedService,
 } from "./db";
 
 export const appRouter = router({
@@ -256,6 +258,25 @@ export const appRouter = router({
       }))
       .mutation(async ({ input }) => {
         return await updateServiceCustomerName(input.serviceExternalId, input.customerName);
+      }),
+
+    terminate: protectedProcedure
+      .input(z.object({
+        serviceExternalId: z.string(),
+        reason: z.string().optional(),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        const userName = ctx.user?.name || ctx.user?.email || 'unknown';
+        return await terminateService(input.serviceExternalId, userName, input.reason);
+      }),
+
+    restore: protectedProcedure
+      .input(z.object({
+        serviceExternalId: z.string(),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        const userName = ctx.user?.name || ctx.user?.email || 'unknown';
+        return await restoreTerminatedService(input.serviceExternalId, userName);
       }),
 
     updateBillingPlatform: protectedProcedure

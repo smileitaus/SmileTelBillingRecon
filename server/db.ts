@@ -259,7 +259,7 @@ export async function getSummary() {
   const [matchedCount] = await db.select({ count: sql<number>`count(*)` }).from(services).where(eq(services.status, 'active'));
   const [unmatchedCount] = await db.select({ count: sql<number>`count(*)` }).from(services).where(eq(services.status, 'unmatched'));
 
-  const [totalCost] = await db.select({ total: sql<string>`COALESCE(SUM(monthlyCost), 0)` }).from(services);
+  const [totalCost] = await db.select({ total: sql<string>`COALESCE(SUM(monthlyCost), 0)` }).from(services).where(sql`status != 'terminated'`);
 
   const typeBreakdown = await db.select({
     serviceType: services.serviceType,
@@ -531,7 +531,7 @@ export async function assignServiceToCustomer(
   const [svcCount] = await db.select({ count: sql<number>`count(*)` }).from(services).where(eq(services.customerExternalId, customerExternalId));
   const [matchedCount] = await db.select({ count: sql<number>`count(*)` }).from(services).where(sql`customerExternalId = ${customerExternalId} AND status = 'active'`);
   const [unmatchedCount] = await db.select({ count: sql<number>`count(*)` }).from(services).where(sql`customerExternalId = ${customerExternalId} AND status = 'unmatched'`);
-  const [costSum] = await db.select({ total: sql<string>`COALESCE(SUM(monthlyCost), 0)` }).from(services).where(eq(services.customerExternalId, customerExternalId));
+  const [costSum] = await db.select({ total: sql<string>`COALESCE(SUM(monthlyCost), 0)` }).from(services).where(sql`customerExternalId = ${customerExternalId} AND status != 'terminated'`);
 
   await db.update(customers).set({
     serviceCount: svcCount.count,
@@ -979,10 +979,10 @@ export async function mergeCustomers(primaryExternalId: string, secondaryExterna
     notes: [primary.notes, secondary.notes].filter(Boolean).join('\n---\nMerged from ' + secondary.name + ':\n'),
   };
 
-  // Recount services
-  const [svcCount] = await db.select({ count: sql<number>`count(*)` }).from(services).where(eq(services.customerExternalId, primaryExternalId));
-  const [costSum] = await db.select({ total: sql<string>`COALESCE(SUM(monthlyCost), 0)` }).from(services).where(eq(services.customerExternalId, primaryExternalId));
-  const [revenueSum] = await db.select({ total: sql<string>`COALESCE(SUM(monthlyRevenue), 0)` }).from(services).where(eq(services.customerExternalId, primaryExternalId));
+  // Recount services (exclude terminated)
+  const [svcCount] = await db.select({ count: sql<number>`count(*)` }).from(services).where(sql`customerExternalId = ${primaryExternalId} AND status != 'terminated'`);
+  const [costSum] = await db.select({ total: sql<string>`COALESCE(SUM(monthlyCost), 0)` }).from(services).where(sql`customerExternalId = ${primaryExternalId} AND status != 'terminated'`);
+  const [revenueSum] = await db.select({ total: sql<string>`COALESCE(SUM(monthlyRevenue), 0)` }).from(services).where(sql`customerExternalId = ${primaryExternalId} AND status != 'terminated'`);
 
   // Update primary customer
   await db.update(customers).set({
@@ -2403,4 +2403,142 @@ export async function commitAliasAutoMatch(
   }
 
   return { applied, errors };
+}
+
+// ─── Terminate Service ────────────────────────────────────────────────────────
+
+/**
+ * Marks a service as terminated with the carrier:
+ * - Sets status = 'terminated'
+ * - Zeroes out monthlyCost and monthlySell so it no longer contributes to costs
+ * - Records the original cost in discoveryNotes for audit trail
+ * - Recalculates the parent customer's serviceCount, matchedCount, unmatchedCount, monthlyCost
+ *   excluding terminated services
+ */
+export async function terminateService(
+  serviceExternalId: string,
+  terminatedBy: string,
+  reason?: string
+) {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+
+  // Fetch current service state
+  const [svc] = await db.select().from(services).where(eq(services.externalId, serviceExternalId)).limit(1);
+  if (!svc) throw new Error('Service not found');
+
+  if (svc.status === 'terminated') {
+    return { success: true, alreadyTerminated: true };
+  }
+
+  const originalCost = svc.monthlyCost ?? 0;
+  const originalSell = (svc as any).monthlySell ?? 0;
+
+  // Build audit note
+  const auditNote = `[TERMINATED ${new Date().toISOString().split('T')[0]} by ${terminatedBy}]${reason ? ` Reason: ${reason}.` : ''} Original cost: $${parseFloat(String(originalCost)).toFixed(2)}/mo.`;
+  const existingNotes = svc.discoveryNotes ? svc.discoveryNotes + '\n' : '';
+
+  // Update the service
+  await db.update(services).set({
+    status: 'terminated',
+    monthlyCost: '0',
+    discoveryNotes: existingNotes + auditNote,
+  }).where(eq(services.externalId, serviceExternalId));
+
+  // Log to edit history
+  await db.insert(serviceEditHistory).values({
+    serviceExternalId,
+    editedBy: terminatedBy,
+    changes: JSON.stringify({
+      status: { from: svc.status, to: 'terminated' },
+      monthlyCost: { from: originalCost, to: 0 },
+    }),
+    reason: reason || 'Terminated with carrier',
+  });
+
+  // Recalculate customer totals if service was assigned to a customer
+  if (svc.customerExternalId) {
+    const custId = svc.customerExternalId;
+    // Count all non-terminated services for this customer
+    const [svcCount] = await db.select({ count: sql<number>`count(*)` })
+      .from(services)
+      .where(sql`customerExternalId = ${custId} AND status != 'terminated'`);
+    const [matchedCount] = await db.select({ count: sql<number>`count(*)` })
+      .from(services)
+      .where(sql`customerExternalId = ${custId} AND status = 'active'`);
+    const [unmatchedCount] = await db.select({ count: sql<number>`count(*)` })
+      .from(services)
+      .where(sql`customerExternalId = ${custId} AND status = 'unmatched'`);
+    const [costSum] = await db.select({ total: sql<string>`COALESCE(SUM(monthlyCost), 0)` })
+      .from(services)
+      .where(sql`customerExternalId = ${custId} AND status != 'terminated'`);
+
+    await db.update(customers).set({
+      serviceCount: svcCount.count,
+      matchedCount: matchedCount.count,
+      unmatchedCount: unmatchedCount.count,
+      monthlyCost: costSum.total,
+    }).where(eq(customers.externalId, custId));
+
+    // If customer now has no active services and no cost, mark as inactive
+    if (svcCount.count === 0) {
+      await db.update(customers).set({ status: 'inactive' }).where(eq(customers.externalId, custId));
+    }
+  }
+
+  return { success: true, originalCost: parseFloat(String(originalCost)) };
+}
+
+/**
+ * Restores a terminated service back to active/unmatched status
+ */
+export async function restoreTerminatedService(
+  serviceExternalId: string,
+  restoredBy: string
+) {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+
+  const [svc] = await db.select().from(services).where(eq(services.externalId, serviceExternalId)).limit(1);
+  if (!svc) throw new Error('Service not found');
+
+  const newStatus = svc.customerExternalId ? 'active' : 'unmatched';
+
+  await db.update(services).set({
+    status: newStatus,
+  }).where(eq(services.externalId, serviceExternalId));
+
+  await db.insert(serviceEditHistory).values({
+    serviceExternalId,
+    editedBy: restoredBy,
+    changes: JSON.stringify({ status: { from: 'terminated', to: newStatus } }),
+    reason: 'Service restored from terminated',
+  });
+
+  // Recalculate customer totals
+  if (svc.customerExternalId) {
+    const custId = svc.customerExternalId;
+    const [svcCount] = await db.select({ count: sql<number>`count(*)` })
+      .from(services)
+      .where(sql`customerExternalId = ${custId} AND status != 'terminated'`);
+    const [matchedCount] = await db.select({ count: sql<number>`count(*)` })
+      .from(services)
+      .where(sql`customerExternalId = ${custId} AND status = 'active'`);
+    const [unmatchedCount] = await db.select({ count: sql<number>`count(*)` })
+      .from(services)
+      .where(sql`customerExternalId = ${custId} AND status = 'unmatched'`);
+    const [costSum] = await db.select({ total: sql<string>`COALESCE(SUM(monthlyCost), 0)` })
+      .from(services)
+      .where(sql`customerExternalId = ${custId} AND status != 'terminated'`);
+
+    await db.update(customers).set({
+      serviceCount: svcCount.count,
+      matchedCount: matchedCount.count,
+      unmatchedCount: unmatchedCount.count,
+      monthlyCost: costSum.total,
+      status: svcCount.count > 0 ? 'active' : 'inactive',
+    }).where(eq(customers.externalId, custId));
+  }
+
+  return { success: true };
 }
