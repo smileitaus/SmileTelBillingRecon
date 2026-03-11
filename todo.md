@@ -324,3 +324,8 @@
 - [x] Add ex GST labels to all pricing columns across all pages
 - [x] Add Cost Review Needed filter for 135 flagged services
 - [x] Fix margin auto-recalculation: margins should refresh automatically when costs or revenue change
+
+# Additional Fixes (Mar 11 session 2)
+- [x] No Data Use count: investigated — 145 is correct (all-time zero-usage SIMs, 17 with usage already excluded)
+- [x] Fix Review page: financial totals now refresh dynamically as items are reviewed/actioned
+- [x] Add Flag for Review button to Services page (UnmatchedServices)

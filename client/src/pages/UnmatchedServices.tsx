@@ -26,6 +26,7 @@ import {
   Save,
   ZapOff,
   Download,
+  ClipboardList,
 } from "lucide-react";
 import { exportToCSV } from "@/lib/exportCsv";
 import { useState, useCallback, useRef, useEffect, useMemo } from "react";
@@ -276,6 +277,84 @@ function ServiceStatusActions({ service }: { service: any }) {
   );
 }
 
+function FlagForReviewButton({ service }: { service: any }) {
+  const { user } = useAuth();
+  const utils = trpc.useUtils();
+  const submitForReview = trpc.billing.review.submitForReview.useMutation();
+  const [showDialog, setShowDialog] = useState(false);
+  const [note, setNote] = useState("");
+
+  const handleSubmit = async () => {
+    if (!note.trim()) {
+      toast.error("Please add a note describing why this service needs review");
+      return;
+    }
+    try {
+      await submitForReview.mutateAsync({
+        targetType: "service",
+        targetId: service.externalId,
+        targetName: `${service.serviceType} — ${service.planName || service.externalId}${service.customerName ? " (" + service.customerName + ")" : ""}`,
+        note: note.trim(),
+      });
+      toast.success("Service flagged for review");
+      setShowDialog(false);
+      setNote("");
+      utils.billing.unmatched.list.invalidate();
+    } catch {
+      toast.error("Failed to flag for review");
+    }
+  };
+
+  return (
+    <>
+      <button
+        onClick={() => setShowDialog(true)}
+        className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium border border-amber-200 text-amber-700 bg-amber-50 rounded-md hover:bg-amber-100 transition-colors"
+      >
+        <ClipboardList className="w-3 h-3" />
+        Flag for Review
+      </button>
+      {showDialog && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={() => setShowDialog(false)}>
+          <div className="bg-card border border-border rounded-xl shadow-xl p-5 w-full max-w-md mx-4" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center gap-2 mb-3">
+              <ClipboardList className="w-4 h-4 text-amber-600" />
+              <h3 className="text-sm font-semibold">Flag Service for Review</h3>
+            </div>
+            <p className="text-xs text-muted-foreground mb-3">
+              <span className="font-medium text-foreground">{service.serviceType} — {service.planName || service.externalId}</span>
+              {service.customerName && <span className="ml-1">· {service.customerName}</span>}
+            </p>
+            <textarea
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+              placeholder="Describe the issue or reason for review (e.g. cost mismatch, incorrect plan, needs investigation)..."
+              className="w-full px-3 py-2 text-sm bg-background border border-border rounded-md outline-none focus:ring-2 focus:ring-ring resize-y min-h-[90px] mb-3"
+              autoFocus
+            />
+            <div className="flex items-center justify-end gap-2">
+              <button
+                onClick={() => { setShowDialog(false); setNote(""); }}
+                className="px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSubmit}
+                disabled={submitForReview.isPending || !note.trim()}
+                className="inline-flex items-center gap-1.5 px-4 py-1.5 text-xs font-medium bg-amber-600 text-white rounded-md hover:bg-amber-700 transition-colors disabled:opacity-50"
+              >
+                {submitForReview.isPending ? <Loader2 className="w-3 h-3 animate-spin" /> : <ClipboardList className="w-3 h-3" />}
+                Submit for Review
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
 function ServiceCard({
   service,
   onExpand,
@@ -492,9 +571,11 @@ function ExpandedPanel({ service }: { service: any }) {
           </span>
           <StatusBadge status={service.status} />
         </div>
-        <ServiceStatusActions service={service} />
+        <div className="flex flex-wrap items-center gap-2 mt-2">
+          <ServiceStatusActions service={service} />
+          <FlagForReviewButton service={service} />
+        </div>
       </div>
-
       {/* Discovery Notes */}
       <DiscoveryNotesEditor service={service} />
 

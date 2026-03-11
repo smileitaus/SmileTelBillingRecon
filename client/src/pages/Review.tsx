@@ -624,6 +624,28 @@ function IssueCard({
   const displayItems = showAll ? visibleItems : visibleItems.slice(0, 10);
   const activeCount = visibleItems.length;
 
+  // Compute financial impact dynamically from visible items so it updates when items are actioned
+  const dynamicFinancialImpact = (() => {
+    if (issue.financialImpact == null || issue.financialImpact <= 0) return null;
+    // Sum per-item financial values based on issue type
+    const sum = visibleItems.reduce((acc: number, item: any) => {
+      if (issue.type === 'double-billed') return acc + (item.totalBilled || 0);
+      if (issue.type === 'unbilled-services') return acc + (item.monthlyCost || 0);
+      if (issue.type === 'billing-no-service') return acc + (item.lineAmount || 0);
+      if (issue.type === 'multi-site') return acc + (item.totalCost || 0);
+      if (issue.type === 'name-mismatch') return acc + (item.totalRevenue || 0);
+      if (issue.type === 'negative-margin') return acc + (item.monthlyLoss || Math.abs((item.monthlyCost || 0) - (item.monthlyRevenue || 0)));
+      if (issue.type === 'low-margin') return acc + (item.monthlyCost || 0);
+      if (issue.type === 'high-cost') return acc + (item.monthlyCost || 0);
+      if (issue.type === 'customer-only-billing') return acc + (item.lineAmount || 0);
+      if (issue.type === 'no-data-cost') return acc + (item.monthlyCost || 0);
+      // Fallback: use financialImpact proportionally
+      return acc;
+    }, 0);
+    // If we couldn't compute per-item (sum is 0 but there are items), fall back to static value
+    return sum > 0 ? sum : (activeCount > 0 ? issue.financialImpact : 0);
+  })();
+
   return (
     <div className="border border-border rounded-lg bg-card overflow-hidden">
       {/* Header */}
@@ -640,10 +662,10 @@ function IssueCard({
           <p className="text-xs text-muted-foreground line-clamp-1">{issue.description}</p>
         </div>
         <div className="flex items-center gap-4 shrink-0">
-          {issue.financialImpact != null && issue.financialImpact > 0 && (
+          {dynamicFinancialImpact != null && dynamicFinancialImpact > 0 && (
             <div className="text-right">
               <p className={`text-sm font-mono font-semibold ${issue.severity === "critical" ? "text-red-600" : "text-amber-600"}`}>
-                {fmt(issue.financialImpact)}
+                {fmt(dynamicFinancialImpact)}
               </p>
               <p className="text-[10px] text-muted-foreground">
                 {issue.type.includes("margin") || issue.type.includes("cost") ? "monthly impact" : "at risk"}
