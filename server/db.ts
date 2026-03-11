@@ -173,6 +173,59 @@ export async function getCustomerById(externalId: string) {
   };
 }
 
+export async function updateCustomer(
+  externalId: string,
+  updates: {
+    name?: string;
+    businessName?: string;
+    contactName?: string;
+    contactEmail?: string;
+    contactPhone?: string;
+    siteAddress?: string;
+    notes?: string;
+    xeroContactName?: string;
+    xeroAccountNumber?: string;
+    ownershipType?: string;
+    billingPlatforms?: string[] | null;
+  },
+  updatedBy: string
+) {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+
+  const [existing] = await db.select().from(customers).where(eq(customers.externalId, externalId)).limit(1);
+  if (!existing) throw new Error('Customer not found');
+
+  const setValues: Record<string, unknown> = {};
+
+  if (updates.name !== undefined && updates.name.trim()) setValues.name = updates.name.trim();
+  if (updates.businessName !== undefined) setValues.businessName = updates.businessName;
+  if (updates.contactName !== undefined) setValues.contactName = updates.contactName;
+  if (updates.contactEmail !== undefined) setValues.contactEmail = updates.contactEmail;
+  if (updates.contactPhone !== undefined) setValues.contactPhone = updates.contactPhone;
+  if (updates.siteAddress !== undefined) setValues.siteAddress = updates.siteAddress;
+  if (updates.notes !== undefined) setValues.notes = updates.notes;
+  if (updates.xeroContactName !== undefined) setValues.xeroContactName = updates.xeroContactName;
+  if (updates.xeroAccountNumber !== undefined) setValues.xeroAccountNumber = updates.xeroAccountNumber;
+  if (updates.ownershipType !== undefined) setValues.ownershipType = updates.ownershipType;
+  if (updates.billingPlatforms !== undefined) {
+    setValues.billingPlatforms = updates.billingPlatforms ? JSON.stringify(updates.billingPlatforms) : null;
+  }
+
+  if (Object.keys(setValues).length === 0) return { success: true };
+
+  await db.update(customers).set(setValues).where(eq(customers.externalId, externalId));
+
+  // If name changed, propagate to all services and locations for this customer
+  if (updates.name && updates.name.trim() !== existing.name) {
+    const newName = updates.name.trim();
+    await db.update(services).set({ customerName: newName }).where(eq(services.customerExternalId, externalId));
+    await db.update(locations).set({ customerName: newName }).where(eq(locations.customerExternalId, externalId));
+  }
+
+  return { success: true };
+}
+
 export async function getLocationById(externalId: string) {
   const db = await getDb();
   if (!db) return null;
@@ -511,6 +564,37 @@ export async function dismissSuggestion(serviceExternalId: string, customerExter
   return { success: true };
 }
 
+// ─── Shared: Recalculate customer service counts ─────────────────────────────
+/**
+ * Recalculates serviceCount, matchedCount, unmatchedCount, and monthlyCost
+ * for one or more customers. Pass multiple IDs when a service moves between customers.
+ */
+export async function recalculateCustomerCounts(...customerExternalIds: (string | null | undefined)[]) {
+  const db = await getDb();
+  if (!db) return;
+  const uniqueIds = Array.from(new Set(customerExternalIds.filter(Boolean) as string[]));
+  for (const custId of uniqueIds) {
+    const [svcCount] = await db.select({ count: sql<number>`count(*)` })
+      .from(services)
+      .where(sql`customerExternalId = ${custId} AND status != 'terminated'`);
+    const [matchedCount] = await db.select({ count: sql<number>`count(*)` })
+      .from(services)
+      .where(sql`customerExternalId = ${custId} AND status = 'active'`);
+    const [unmatchedCount] = await db.select({ count: sql<number>`count(*)` })
+      .from(services)
+      .where(sql`customerExternalId = ${custId} AND status = 'unmatched'`);
+    const [costSum] = await db.select({ total: sql<string>`COALESCE(SUM(monthlyCost), 0)` })
+      .from(services)
+      .where(sql`customerExternalId = ${custId} AND status != 'terminated'`);
+    await db.update(customers).set({
+      serviceCount: svcCount.count,
+      matchedCount: matchedCount.count,
+      unmatchedCount: unmatchedCount.count,
+      monthlyCost: costSum.total,
+    }).where(eq(customers.externalId, custId));
+  }
+}
+
 export async function assignServiceToCustomer(
   serviceExternalId: string,
   customerExternalId: string,
@@ -531,18 +615,8 @@ export async function assignServiceToCustomer(
     locationExternalId: locationExternalId || '',
   }).where(eq(services.externalId, serviceExternalId));
 
-  // Update customer counts
-  const [svcCount] = await db.select({ count: sql<number>`count(*)` }).from(services).where(eq(services.customerExternalId, customerExternalId));
-  const [matchedCount] = await db.select({ count: sql<number>`count(*)` }).from(services).where(sql`customerExternalId = ${customerExternalId} AND status = 'active'`);
-  const [unmatchedCount] = await db.select({ count: sql<number>`count(*)` }).from(services).where(sql`customerExternalId = ${customerExternalId} AND status = 'unmatched'`);
-  const [costSum] = await db.select({ total: sql<string>`COALESCE(SUM(monthlyCost), 0)` }).from(services).where(sql`customerExternalId = ${customerExternalId} AND status != 'terminated'`);
-
-  await db.update(customers).set({
-    serviceCount: svcCount.count,
-    matchedCount: matchedCount.count,
-    unmatchedCount: unmatchedCount.count,
-    monthlyCost: costSum.total,
-  }).where(eq(customers.externalId, customerExternalId));
+  // Recalculate customer counts using shared helper
+  await recalculateCustomerCounts(customerExternalId);
 
   return { success: true };
 }
@@ -1919,6 +1993,9 @@ export async function reassignService(
     discoveryNotes: existingNotes ? `${logEntry} ${existingNotes}` : logEntry,
   }).where(eq(services.externalId, serviceExternalId));
 
+  // Recalculate service counts for both old and new customer
+  await recalculateCustomerCounts(oldCustomerId, newCustomerExternalId);
+
   return { success: true, serviceExternalId, oldCustomerId, oldCustomerName, newCustomerExternalId, newCustomerName };
 }
 
@@ -2072,6 +2149,11 @@ export async function updateServiceFields(
   }
 
   await db.update(services).set(setValues).where(eq(services.externalId, serviceExternalId));
+
+  // Recalculate customer service counts if customer assignment changed
+  if (updates.customerExternalId !== undefined && updates.customerExternalId !== old.customerExternalId) {
+    await recalculateCustomerCounts(old.customerExternalId, updates.customerExternalId);
+  }
 
   // Write audit log
   if (Object.keys(changes).length > 0) {

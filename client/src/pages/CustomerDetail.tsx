@@ -23,12 +23,174 @@ import {
   Flag,
   Ban,
   MessageSquare,
+  Settings,
 } from "lucide-react";
 import { useCustomerDetail } from "@/hooks/useData";
 import { trpc } from "@/lib/trpc";
 import { useState } from "react";
 import { toast } from "sonner";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { ProviderBadge } from "@/components/ProviderBadge";
+
+// ─── Customer Edit Dialog ────────────────────────────────────────────────────
+type CustomerEditDialogProps = {
+  customer: {
+    externalId: string;
+    name: string;
+    businessName?: string | null;
+    contactName?: string | null;
+    contactEmail?: string | null;
+    contactPhone?: string | null;
+    siteAddress?: string | null;
+    notes?: string | null;
+    xeroContactName?: string | null;
+    xeroAccountNumber?: string | null;
+    ownershipType?: string | null;
+    billingPlatforms?: string[];
+  };
+  open: boolean;
+  onClose: () => void;
+  onSaved: () => void;
+};
+
+function CustomerEditDialog({ customer, open, onClose, onSaved }: CustomerEditDialogProps) {
+  const utils = trpc.useUtils();
+  const [form, setForm] = useState({
+    name: customer.name || '',
+    businessName: customer.businessName || '',
+    contactName: customer.contactName || '',
+    contactEmail: customer.contactEmail || '',
+    contactPhone: customer.contactPhone || '',
+    siteAddress: customer.siteAddress || '',
+    notes: customer.notes || '',
+    xeroContactName: customer.xeroContactName || '',
+    xeroAccountNumber: customer.xeroAccountNumber || '',
+    ownershipType: customer.ownershipType || '',
+  });
+
+  const updateMutation = trpc.billing.customers.update.useMutation({
+    onSuccess: () => {
+      toast.success('Customer updated');
+      utils.billing.customers.byId.invalidate({ id: customer.externalId });
+      utils.billing.customers.list.invalidate();
+      onSaved();
+      onClose();
+    },
+    onError: (err) => {
+      toast.error(`Failed to update: ${err.message}`);
+    },
+  });
+
+  const handleSave = () => {
+    if (!form.name.trim()) {
+      toast.error('Customer name is required');
+      return;
+    }
+    updateMutation.mutate({
+      externalId: customer.externalId,
+      updates: {
+        name: form.name.trim(),
+        businessName: form.businessName,
+        contactName: form.contactName,
+        contactEmail: form.contactEmail,
+        contactPhone: form.contactPhone,
+        siteAddress: form.siteAddress,
+        notes: form.notes,
+        xeroContactName: form.xeroContactName,
+        xeroAccountNumber: form.xeroAccountNumber,
+        ownershipType: form.ownershipType,
+      },
+    });
+  };
+
+  const field = (key: keyof typeof form) => ({
+    value: form[key],
+    onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+      setForm(prev => ({ ...prev, [key]: e.target.value })),
+  });
+
+  return (
+    <Dialog open={open} onOpenChange={(v) => { if (!v) onClose(); }}>
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
+            <Settings className="w-4 h-4" />
+            Edit Customer
+          </DialogTitle>
+        </DialogHeader>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-2">
+          {/* Core identity */}
+          <div className="md:col-span-2">
+            <Label htmlFor="cust-name">Customer Name <span className="text-destructive">*</span></Label>
+            <Input id="cust-name" className="mt-1" {...field('name')} />
+          </div>
+          <div>
+            <Label htmlFor="cust-biz">Business / Trading Name</Label>
+            <Input id="cust-biz" className="mt-1" {...field('businessName')} />
+          </div>
+          <div>
+            <Label htmlFor="cust-ownership">Ownership Type</Label>
+            <Input id="cust-ownership" className="mt-1" placeholder="e.g. C, F, Corporate, Franchise" {...field('ownershipType')} />
+          </div>
+          {/* Contact */}
+          <div className="md:col-span-2 border-t border-border pt-3">
+            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">Contact Details</p>
+          </div>
+          <div>
+            <Label htmlFor="cust-contact">Contact Name</Label>
+            <Input id="cust-contact" className="mt-1" {...field('contactName')} />
+          </div>
+          <div>
+            <Label htmlFor="cust-email">Contact Email</Label>
+            <Input id="cust-email" type="email" className="mt-1" {...field('contactEmail')} />
+          </div>
+          <div>
+            <Label htmlFor="cust-phone">Contact Phone</Label>
+            <Input id="cust-phone" className="mt-1" {...field('contactPhone')} />
+          </div>
+          <div>
+            <Label htmlFor="cust-address">Site Address</Label>
+            <Input id="cust-address" className="mt-1" {...field('siteAddress')} />
+          </div>
+          {/* Xero */}
+          <div className="md:col-span-2 border-t border-border pt-3">
+            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">Xero / Billing</p>
+          </div>
+          <div>
+            <Label htmlFor="cust-xero-name">Xero Contact Name</Label>
+            <Input id="cust-xero-name" className="mt-1" {...field('xeroContactName')} />
+          </div>
+          <div>
+            <Label htmlFor="cust-xero-acc">Xero Account Number</Label>
+            <Input id="cust-xero-acc" className="mt-1" {...field('xeroAccountNumber')} />
+          </div>
+          {/* Notes */}
+          <div className="md:col-span-2 border-t border-border pt-3">
+            <Label htmlFor="cust-notes">Notes</Label>
+            <Textarea id="cust-notes" className="mt-1" rows={3} {...field('notes')} />
+          </div>
+        </div>
+        <DialogFooter>
+          <Button variant="outline" onClick={onClose} disabled={updateMutation.isPending}>Cancel</Button>
+          <Button onClick={handleSave} disabled={updateMutation.isPending}>
+            {updateMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-1" /> : null}
+            Save Changes
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
 
 function ServiceTypeIcon({ type }: { type: string }) {
   switch (type) {
@@ -314,6 +476,7 @@ function ServiceRow({ service, onTerminated }: { service: any; onTerminated?: ()
 
 export default function CustomerDetail() {
   const params = useParams<{ id: string }>();
+  const [showEditDialog, setShowEditDialog] = useState(false);
   const {
     customer,
     customerServices,
@@ -410,10 +573,22 @@ export default function CustomerDetail() {
 
       {/* Customer Header */}
       <div className="mb-6">
-        <h1 className="text-xl font-bold tracking-tight">{customer.name}</h1>
-        {customer.businessName && (
-          <p className="text-sm text-muted-foreground mt-0.5">{customer.businessName}</p>
-        )}
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex-1 min-w-0">
+            <h1 className="text-xl font-bold tracking-tight">{customer.name}</h1>
+            {customer.businessName && (
+              <p className="text-sm text-muted-foreground mt-0.5">{customer.businessName}</p>
+            )}
+          </div>
+          <button
+            onClick={() => setShowEditDialog(true)}
+            className="shrink-0 inline-flex items-center gap-1.5 text-xs px-3 py-1.5 border border-border rounded-md hover:bg-accent transition-colors"
+            title="Edit customer details"
+          >
+            <Pencil className="w-3 h-3" />
+            Edit
+          </button>
+        </div>
         <div className="flex flex-wrap items-center gap-3 mt-2">
           {customer.billingPlatforms.map((p: string) => (
             <span
@@ -432,46 +607,61 @@ export default function CustomerDetail() {
           )}
         </div>
       </div>
-
-      {/* Business Contact Info */}
-      {(customer.contactName || customer.contactEmail || customer.contactPhone || customer.siteAddress) && (
-        <div className="bg-card border border-border rounded-lg px-4 py-3 mb-6">
-          <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold mb-2">Contact & Site Info</p>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
-            {customer.contactName && (
-              <div>
-                <p className="text-[10px] text-muted-foreground">Contact</p>
-                <p className="text-sm font-medium">{customer.contactName}</p>
-              </div>
-            )}
-            {customer.contactEmail && (
-              <div>
-                <p className="text-[10px] text-muted-foreground">Email</p>
-                <a href={`mailto:${customer.contactEmail}`} className="text-sm font-medium text-teal hover:underline">{customer.contactEmail}</a>
-              </div>
-            )}
-            {customer.contactPhone && (
-              <div>
-                <p className="text-[10px] text-muted-foreground">Phone</p>
-                <a href={`tel:${customer.contactPhone}`} className="text-sm font-medium text-teal hover:underline">{customer.contactPhone}</a>
-              </div>
-            )}
-            {customer.siteAddress && (
-              <div>
-                <p className="text-[10px] text-muted-foreground">Site Address</p>
-                <p className="text-sm font-medium">{customer.siteAddress}</p>
-              </div>
-            )}
-          </div>
-          {customer.notes && (
-            <div className="mt-2 pt-2 border-t border-border">
-              <p className="text-[10px] text-muted-foreground">Notes</p>
-              <p className="text-xs text-muted-foreground">{customer.notes}</p>
-            </div>
-          )}
-        </div>
+      {/* Customer Edit Dialog */}
+      {showEditDialog && (
+        <CustomerEditDialog
+          customer={customer}
+          open={showEditDialog}
+          onClose={() => setShowEditDialog(false)}
+          onSaved={() => setShowEditDialog(false)}
+        />
       )}
 
+      {/* Business Contact Info - always visible so users know they can edit */}
+      <div className="bg-card border border-border rounded-lg px-4 py-3 mb-6">
+          <div className="flex items-center justify-between mb-2">
+            <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">Contact & Site Info</p>
+            <button
+              onClick={() => setShowEditDialog(true)}
+              className="text-[10px] text-muted-foreground hover:text-foreground flex items-center gap-1 transition-colors"
+            >
+              <Pencil className="w-2.5 h-2.5" />
+              Edit
+            </button>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+            <div>
+              <p className="text-[10px] text-muted-foreground">Contact</p>
+              {customer.contactName
+                ? <p className="text-sm font-medium">{customer.contactName}</p>
+                : <p className="text-sm text-muted-foreground/50 italic">Not set</p>}
+            </div>
+            <div>
+              <p className="text-[10px] text-muted-foreground">Email</p>
+              {customer.contactEmail
+                ? <a href={`mailto:${customer.contactEmail}`} className="text-sm font-medium text-teal hover:underline">{customer.contactEmail}</a>
+                : <p className="text-sm text-muted-foreground/50 italic">Not set</p>}
+            </div>
+            <div>
+              <p className="text-[10px] text-muted-foreground">Phone</p>
+              {customer.contactPhone
+                ? <a href={`tel:${customer.contactPhone}`} className="text-sm font-medium text-teal hover:underline">{customer.contactPhone}</a>
+                : <p className="text-sm text-muted-foreground/50 italic">Not set</p>}
+            </div>
+            <div>
+              <p className="text-[10px] text-muted-foreground">Site Address</p>
+              {customer.siteAddress
+                ? <p className="text-sm font-medium">{customer.siteAddress}</p>
+                : <p className="text-sm text-muted-foreground/50 italic">Not set</p>}
+            </div>
+          </div>
+          <div className="mt-2 pt-2 border-t border-border">
+            <p className="text-[10px] text-muted-foreground">Notes</p>
+            {customer.notes
+              ? <p className="text-xs text-muted-foreground">{customer.notes}</p>
+              : <p className="text-xs text-muted-foreground/50 italic">No notes</p>}
+          </div>
+        </div>
       {/* Summary Stats */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-8">
         <div className="bg-card border border-border rounded-lg px-4 py-3">

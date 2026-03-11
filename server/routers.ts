@@ -51,6 +51,7 @@ import {
   commitAliasAutoMatch,
   terminateService,
   restoreTerminatedService,
+  updateCustomer,
 } from "./db";
 
 export const appRouter = router({
@@ -99,6 +100,28 @@ export const appRouter = router({
         .input(z.object({ customerId: z.string() }))
         .query(async ({ input }) => {
           return await getServicesByCustomer(input.customerId);
+        }),
+
+      update: protectedProcedure
+        .input(z.object({
+          externalId: z.string(),
+          updates: z.object({
+            name: z.string().optional(),
+            businessName: z.string().optional(),
+            contactName: z.string().optional(),
+            contactEmail: z.string().optional(),
+            contactPhone: z.string().optional(),
+            siteAddress: z.string().optional(),
+            notes: z.string().optional(),
+            xeroContactName: z.string().optional(),
+            xeroAccountNumber: z.string().optional(),
+            ownershipType: z.string().optional(),
+            billingPlatforms: z.array(z.string()).nullable().optional(),
+          }),
+        }))
+        .mutation(async ({ input, ctx }) => {
+          const updatedBy = ctx.user?.name || ctx.user?.email || 'Unknown';
+          return await updateCustomer(input.externalId, input.updates, updatedBy);
         }),
     }),
 

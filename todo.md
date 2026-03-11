@@ -329,3 +329,12 @@
 - [x] No Data Use count: investigated — 145 is correct (all-time zero-usage SIMs, 17 with usage already excluded)
 - [x] Fix Review page: financial totals now refresh dynamically as items are reviewed/actioned
 - [x] Add Flag for Review button to Services page (UnmatchedServices)
+
+# Service Count Fix
+- [x] Fix customer service count not updating when services are removed or reassigned
+
+# Customer Edit Feature
+- [x] Add updateCustomer server function (name, address, contact details, billing platform, notes)
+- [x] Add updateCustomer tRPC procedure to routers.ts
+- [x] Build customer edit dialog on CustomerDetail page (all fields: name, business name, contact, email, phone, address, notes, Xero details)
+- [x] Contact & Site Info section always visible with empty-state placeholders
