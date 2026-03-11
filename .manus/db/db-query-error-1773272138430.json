@@ -1,0 +1,8 @@
+{
+  "query": "SELECT id, externalId, name, xeroContactName, isActive FROM customers WHERE name LIKE '%BT%' OR name LIKE '%Lawyers%' OR xeroContactName LIKE '%BT%' OR xeroContactName LIKE '%Lawyers%' LIMIT 20;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3M17pEiktKAmnzx.5240b4750712 --database 4LVfr96qhVoYSkLinpTZkt --execute SELECT id, externalId, name, xeroContactName, isActive FROM customers WHERE name LIKE '%BT%' OR name LIKE '%Lawyers%' OR xeroContactName LIKE '%BT%' OR xeroContactName LIKE '%Lawyers%' LIMIT 20;",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1054 (42S22) at line 1: Unknown column 'isactive' in 'field list'"
+  ]
+}
