@@ -111,23 +111,39 @@ function ContactGroup({
                 />
                 {searchResults && searchResults.length > 0 && (
                   <div className="absolute z-10 top-full mt-1 w-full bg-card border border-border rounded-md shadow-lg max-h-48 overflow-y-auto">
-                    {searchResults.map((c: any) => (
-                      <button
-                        key={c.externalId}
-                        onClick={() => {
-                          items.filter(i => i.matchStatus === "unmatched").forEach(i => {
-                            onMatchToCustomer(i.id, c.externalId);
-                          });
-                          setShowSearch(false);
-                          setSearchQuery("");
-                          toast.success(`Matched ${unmatchedCount} items to ${c.name}`);
-                        }}
-                        className="w-full text-left px-3 py-2 text-sm hover:bg-accent transition-colors flex items-center justify-between"
-                      >
-                        <span>{c.name}</span>
-                        <span className="text-xs text-muted-foreground">{c.serviceCount} svc</span>
-                      </button>
-                    ))}
+                    {searchResults.map((c: any) => {
+                      const isStub = !c.externalId;
+                      return (
+                        <button
+                          key={c.externalId || c.name}
+                          onClick={() => {
+                            if (isStub) {
+                              toast.error(`"${c.name}" has no customer record yet. Please create the customer first, then match.`);
+                              return;
+                            }
+                            items.filter((i: any) => i.matchStatus === "unmatched").forEach((i: any) => {
+                              onMatchToCustomer(i.id, c.externalId);
+                            });
+                            setShowSearch(false);
+                            setSearchQuery("");
+                            toast.success(`Matched ${unmatchedCount} items to ${c.name}`);
+                          }}
+                          className={`w-full text-left px-3 py-2 text-sm hover:bg-accent transition-colors flex items-center justify-between ${
+                            isStub ? 'opacity-60' : ''
+                          }`}
+                        >
+                          <div className="flex items-center gap-2 min-w-0">
+                            <span className="truncate">{c.name}</span>
+                            {isStub && (
+                              <span className="text-xs bg-amber-100 text-amber-700 border border-amber-200 px-1.5 py-0.5 rounded shrink-0">
+                                No record
+                              </span>
+                            )}
+                          </div>
+                          <span className="text-xs text-muted-foreground shrink-0 ml-2">{isStub ? 'billing only' : `${c.serviceCount} svc`}</span>
+                        </button>
+                      );
+                    })}
                   </div>
                 )}
               </div>

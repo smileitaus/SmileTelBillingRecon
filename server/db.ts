@@ -1047,6 +1047,8 @@ export async function getCustomersForMerge(search: string) {
   if (!db) return [];
 
   const term = `%${search.trim()}%`;
+
+  // Search customers table (name, xeroContactName, contactName)
   const result = await db.select().from(customers)
     .where(or(
       like(customers.name, term),
@@ -1056,12 +1058,76 @@ export async function getCustomersForMerge(search: string) {
     .orderBy(asc(customers.name))
     .limit(20);
 
-  return result.map(c => ({
+  const customerResults = result.map(c => ({
     ...c,
     billingPlatforms: c.billingPlatforms ? JSON.parse(c.billingPlatforms) : [],
-    monthlyCost: parseFloat(c.monthlyCost),
-    monthlyRevenue: parseFloat(c.monthlyRevenue),
+    monthlyCost: parseFloat(c.monthlyCost as unknown as string),
+    monthlyRevenue: parseFloat(c.monthlyRevenue as unknown as string),
   }));
+
+  // Also search billing_items.contactName for names not yet in customers table
+  // This covers cases where a billing contact exists but no customer record has been created
+  const billingContacts = await db
+    .selectDistinct({ contactName: billingItems.contactName })
+    .from(billingItems)
+    .where(like(billingItems.contactName, term))
+    .limit(10);
+
+  // Find contactNames from billing that are NOT already in the customer results
+  const existingNames = new Set([
+    ...customerResults.map(c => c.name?.toLowerCase()),
+    ...customerResults.map(c => c.xeroContactName?.toLowerCase()),
+    ...customerResults.map(c => c.contactName?.toLowerCase()),
+  ]);
+
+  for (const bc of billingContacts) {
+    if (!bc.contactName) continue;
+    const lcName = bc.contactName.toLowerCase();
+    if (existingNames.has(lcName)) continue;
+
+    // Check if there's a customer whose xeroContactName matches this billing contactName
+    const [matchedCust] = await db.select().from(customers)
+      .where(or(
+        like(customers.xeroContactName, `%${bc.contactName}%`),
+        like(customers.name, `%${bc.contactName}%`),
+      ))
+      .limit(1);
+
+    if (matchedCust) {
+      // Already covered by the main search or a close match exists — skip duplicate
+      continue;
+    }
+
+    // Return a stub entry so the user can see this billing contact name
+    // The externalId will be empty string to signal "no customer record yet"
+    customerResults.push({
+      id: -1,
+      externalId: '',
+      name: bc.contactName,
+      billingPlatforms: [],
+      serviceCount: 0,
+      monthlyCost: 0,
+      unmatchedCount: 0,
+      matchedCount: 0,
+      status: 'active',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      businessName: null,
+      contactName: bc.contactName,
+      contactEmail: null,
+      contactPhone: null,
+      ownershipType: null,
+      siteAddress: null,
+      notes: null,
+      xeroContactName: bc.contactName,
+      xeroAccountNumber: null,
+      monthlyRevenue: 0,
+      marginPercent: 0,
+    } as any);
+    existingNames.add(lcName);
+  }
+
+  return customerResults;
 }
 
 // ==================== Review Page Queries ====================
