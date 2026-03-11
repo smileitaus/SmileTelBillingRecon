@@ -14,11 +14,13 @@ import {
   Loader2,
   AlertTriangle,
   LinkIcon,
+  Download,
 } from "lucide-react";
 import { useCustomerSearch } from "@/hooks/useData";
 import { useState, useMemo } from "react";
 import { trpc } from "@/lib/trpc";
 import { ProviderBadge, ProviderLogo } from "@/components/ProviderBadge";
+import { exportToCSV } from "@/lib/exportCsv";
 
 type SortKey =
   | "name"
@@ -181,11 +183,27 @@ export default function CustomerList() {
         </div>
       </div>
 
-      {/* Results count */}
+      {/* Results count + export */}
       <div className="flex items-center justify-between mb-3">
         <p className="text-xs text-muted-foreground">
           Showing {sorted.length} of {totalActive} customers
         </p>
+        <button
+          onClick={() => exportToCSV(sorted.map(c => ({
+            "Customer ID": c.externalId,
+            "Name": c.name,
+            "Business Name": c.businessName || "",
+            "Status": c.status,
+            "Platforms": (c.billingPlatforms || []).join("; "),
+            "Services": c.serviceCount,
+            "Unmatched": c.unmatchedCount,
+            "Monthly Cost": c.monthlyCost,
+          })), "customers")}
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-card border border-border rounded-md hover:bg-muted transition-colors"
+        >
+          <Download className="w-3.5 h-3.5" />
+          Export CSV
+        </button>
       </div>
 
       {/* Table */}

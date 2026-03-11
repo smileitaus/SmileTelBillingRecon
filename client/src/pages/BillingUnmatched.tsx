@@ -16,10 +16,12 @@ import {
   ChevronDown,
   ChevronRight,
   XCircle,
+  Download,
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { useState, useMemo } from "react";
 import { toast } from "sonner";
+import { exportToCSV } from "@/lib/exportCsv";
 
 function formatCurrency(val: number) {
   return `$${val.toLocaleString("en-AU", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
@@ -200,11 +202,34 @@ export default function BillingUnmatched() {
   return (
     <div className="p-6 lg:p-8">
       {/* Header */}
-      <div className="mb-6">
-        <h1 className="text-xl font-bold tracking-tight">Billing / Service Matching</h1>
-        <p className="text-sm text-muted-foreground mt-1">
-          Feb 2026 Xero billing items — match to customers and services, or flag for billing termination
-        </p>
+      <div className="flex items-start justify-between mb-6">
+        <div>
+          <h1 className="text-xl font-bold tracking-tight">Billing / Service Matching</h1>
+          <p className="text-sm text-muted-foreground mt-1">
+            Feb 2026 Xero billing items — match to customers and services, or flag for billing termination
+          </p>
+        </div>
+        <button
+          onClick={() => exportToCSV(
+            (items || []).map((item: any) => ({
+              "Item ID": item.id,
+              "Contact Name": item.contactName,
+              "Description": item.description,
+              "Amount": item.lineAmount,
+              "Tax": item.taxAmount,
+              "Account Code": item.accountCode,
+              "Category": item.category,
+              "Status": item.matchStatus,
+              "Customer": item.customerName || "",
+              "Service ID": item.serviceExternalId || "",
+            })),
+            "billing-items"
+          )}
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-card border border-border rounded-md hover:bg-muted transition-colors"
+        >
+          <Download className="w-3.5 h-3.5" />
+          Export CSV
+        </button>
       </div>
 
       {/* Summary Cards */}

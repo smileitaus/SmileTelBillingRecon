@@ -38,6 +38,17 @@ import {
   getManualReviewItems,
   getIgnoredIssues,
   resolveManualReview,
+  reassignService,
+  associateBillingItem,
+  getServicesByCustomerForReassign,
+  updateServiceFields,
+  getServiceEditHistory,
+  createBillingPlatformCheck,
+  getBillingPlatformChecks,
+  actionBillingPlatformCheck,
+  getBillingPlatformCheckSummary,
+  previewAliasAutoMatch,
+  commitAliasAutoMatch,
 } from "./db";
 
 export const appRouter = router({
@@ -114,6 +125,54 @@ export const appRouter = router({
           }
 
           return { service, location, customer };
+        }),
+
+      // Full edit of a service (name and cost are read-only)
+      update: protectedProcedure
+        .input(z.object({
+          serviceExternalId: z.string(),
+          updates: z.object({
+            serviceTypeDetail: z.string().optional(),
+            planName: z.string().optional(),
+            status: z.string().optional(),
+            locationAddress: z.string().optional(),
+            phoneNumber: z.string().optional(),
+            email: z.string().optional(),
+            connectionId: z.string().optional(),
+            avcId: z.string().optional(),
+            ipAddress: z.string().optional(),
+            technology: z.string().optional(),
+            speedTier: z.string().optional(),
+            billingPlatform: z.array(z.string()).nullable().optional(),
+            simSerialNumber: z.string().optional(),
+            hardwareType: z.string().optional(),
+            macAddress: z.string().optional(),
+            modemSerialNumber: z.string().optional(),
+            wifiPassword: z.string().optional(),
+            simOwner: z.string().optional(),
+            dataPlanGb: z.string().optional(),
+            userName: z.string().optional(),
+            contractEndDate: z.string().optional(),
+            serviceActivationDate: z.string().optional(),
+            serviceEndDate: z.string().optional(),
+            proposedPlan: z.string().optional(),
+            proposedCost: z.string().optional(),
+            discoveryNotes: z.string().optional(),
+            // Reassign
+            customerExternalId: z.string().nullable().optional(),
+            customerName: z.string().nullable().optional(),
+          }),
+          reason: z.string().optional(),
+        }))
+        .mutation(async ({ input, ctx }) => {
+          const editedBy = ctx.user?.name || ctx.user?.email || 'Unknown';
+          return await updateServiceFields(input.serviceExternalId, input.updates, editedBy, input.reason);
+        }),
+
+      editHistory: protectedProcedure
+        .input(z.object({ serviceExternalId: z.string() }))
+        .query(async ({ input }) => {
+          return await getServiceEditHistory(input.serviceExternalId);
         }),
     }),
 
@@ -293,12 +352,45 @@ export const appRouter = router({
           targetId: z.string(),
           targetName: z.string(),
           note: z.string().min(1, 'Note is required'),
+          // Optional: auto-create a platform check
+          createPlatformCheck: z.boolean().optional(),
+          platform: z.string().optional(),
+          issueType: z.string().optional(),
+          issueDescription: z.string().optional(),
+          customerName: z.string().optional(),
+          customerExternalId: z.string().optional(),
+          monthlyAmount: z.number().optional(),
+          priority: z.enum(['critical', 'high', 'medium', 'low']).optional(),
         }))
         .mutation(async ({ input, ctx }) => {
-          return await submitForReview({
-            ...input,
-            submittedBy: ctx.user?.name || ctx.user?.email || 'Unknown',
+          const submittedBy = ctx.user?.name || ctx.user?.email || 'Unknown';
+          const reviewResult = await submitForReview({
+            targetType: input.targetType,
+            targetId: input.targetId,
+            targetName: input.targetName,
+            note: input.note,
+            submittedBy,
           });
+
+          // Auto-create a billing platform check if requested
+          if (input.createPlatformCheck && input.platform && input.issueType) {
+            await createBillingPlatformCheck({
+              reviewItemId: (reviewResult as any).id,
+              targetType: input.targetType === 'billing-item' ? 'billing-item' : 'service',
+              targetId: input.targetId,
+              targetName: input.targetName,
+              platform: input.platform,
+              issueType: input.issueType,
+              issueDescription: input.issueDescription || input.note,
+              customerName: input.customerName || '',
+              customerExternalId: input.customerExternalId || '',
+              monthlyAmount: input.monthlyAmount || 0,
+              priority: input.priority || 'medium',
+              createdBy: submittedBy,
+            });
+          }
+
+          return reviewResult;
         }),
 
       ignore: protectedProcedure
@@ -331,6 +423,132 @@ export const appRouter = router({
         }))
         .mutation(async ({ input, ctx }) => {
           return await resolveManualReview(input.id, ctx.user?.name || ctx.user?.email || 'Unknown', input.resolvedNote);
+        }),
+    }),
+
+    // Billing Platform Checks
+    platformChecks: router({
+      list: protectedProcedure
+        .input(z.object({
+          status: z.string().optional(),
+          platform: z.string().optional(),
+          priority: z.string().optional(),
+          search: z.string().optional(),
+        }).optional())
+        .query(async ({ input }) => {
+          return await getBillingPlatformChecks(input);
+        }),
+
+      summary: protectedProcedure.query(async () => {
+        return await getBillingPlatformCheckSummary();
+      }),
+
+      create: protectedProcedure
+        .input(z.object({
+          targetType: z.enum(['service', 'billing-item']),
+          targetId: z.string(),
+          targetName: z.string(),
+          platform: z.string(),
+          issueType: z.string(),
+          issueDescription: z.string().optional(),
+          customerName: z.string().optional(),
+          customerExternalId: z.string().optional(),
+          monthlyAmount: z.number().optional(),
+          priority: z.enum(['critical', 'high', 'medium', 'low']).optional(),
+        }))
+        .mutation(async ({ input, ctx }) => {
+          const createdBy = ctx.user?.name || ctx.user?.email || 'Unknown';
+          return await createBillingPlatformCheck({
+            targetType: input.targetType,
+            targetId: input.targetId,
+            targetName: input.targetName,
+            platform: input.platform,
+            issueType: input.issueType,
+            issueDescription: input.issueDescription || '',
+            customerName: input.customerName || '',
+            customerExternalId: input.customerExternalId || '',
+            monthlyAmount: input.monthlyAmount || 0,
+            priority: input.priority || 'medium',
+            createdBy,
+          });
+        }),
+
+      action: protectedProcedure
+        .input(z.object({
+          id: z.number(),
+          actionedNote: z.string().min(1, 'Note is required'),
+          newStatus: z.enum(['actioned', 'dismissed', 'in-progress']),
+        }))
+        .mutation(async ({ input, ctx }) => {
+          const actionedBy = ctx.user?.name || ctx.user?.email || 'Unknown';
+          return await actionBillingPlatformCheck(input.id, actionedBy, input.actionedNote, input.newStatus);
+        }),
+    }),
+
+    // Service reassignment
+    reassignService: protectedProcedure
+      .input(z.object({
+        serviceExternalId: z.string(),
+        newCustomerExternalId: z.string().nullable(),
+        newCustomerName: z.string().nullable(),
+        reason: z.string().min(1, 'Reason is required'),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        const reassignedBy = ctx.user?.name || ctx.user?.email || 'Unknown';
+        return await reassignService(
+          input.serviceExternalId,
+          input.newCustomerExternalId,
+          input.newCustomerName,
+          reassignedBy,
+          input.reason
+        );
+      }),
+
+    // Associate billing item to customer/service
+    associateBillingItem: protectedProcedure
+      .input(z.object({
+        billingItemId: z.number(),
+        customerExternalId: z.string().nullable(),
+        customerName: z.string().nullable(),
+        serviceExternalId: z.string().nullable(),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        const associatedBy = ctx.user?.name || ctx.user?.email || 'Unknown';
+        return await associateBillingItem(
+          input.billingItemId,
+          input.customerExternalId,
+          input.customerName,
+          input.serviceExternalId,
+          associatedBy
+        );
+      }),
+
+    // Get services for a customer (for reassignment target lookup)
+    servicesByCustomer: protectedProcedure
+      .input(z.object({ customerExternalId: z.string() }))
+      .query(async ({ input }) => {
+        return await getServicesByCustomerForReassign(input.customerExternalId);
+      }),
+
+    // Auto-match via Carbon alias
+    autoMatch: router({
+      preview: protectedProcedure
+        .input(z.object({ minConfidence: z.number().min(0).max(100).optional() }).optional())
+        .query(async ({ input }) => {
+          return await previewAliasAutoMatch(input?.minConfidence ?? 60);
+        }),
+
+      commit: protectedProcedure
+        .input(z.object({
+          approvedMatches: z.array(z.object({
+            serviceExternalId: z.string(),
+            customerExternalId: z.string(),
+            customerName: z.string(),
+          })),
+        }))
+        .mutation(async ({ input, ctx }) => {
+          const committedBy = ctx.user?.name || ctx.user?.email || 'Unknown';
+          return await commitAliasAutoMatch(input.approvedMatches, committedBy);
         }),
     }),
 

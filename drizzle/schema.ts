@@ -233,3 +233,59 @@ export const reviewItems = mysqlTable("review_items", {
 
 export type ReviewItem = typeof reviewItems.$inferSelect;
 export type InsertReviewItem = typeof reviewItems.$inferInsert;
+
+/**
+ * Billing Platform Checks - action items automatically created when a review item is submitted.
+ * Each check represents a manual verification task on a specific billing platform.
+ * Users mark checks as 'actioned' once they have completed the manual verification.
+ */
+export const billingPlatformChecks = mysqlTable("billing_platform_checks", {
+  id: int("id").autoincrement().primaryKey(),
+  // Source review item
+  reviewItemId: int("reviewItemId"),
+  // The service or billing item being checked
+  targetType: varchar("targetType", { length: 16 }).notNull(), // 'service' | 'billing-item'
+  targetId: varchar("targetId", { length: 64 }).notNull(),
+  targetName: varchar("targetName", { length: 512 }).default(""),
+  // The billing platform that needs to be checked
+  platform: varchar("platform", { length: 64 }).notNull(), // OneBill | SasBoss | ECN | Halo | DataGate | Manual
+  // The issue type that triggered this check
+  issueType: varchar("issueType", { length: 64 }).notNull(),
+  issueDescription: text("issueDescription"),
+  // Customer context
+  customerName: varchar("customerName", { length: 512 }).default(""),
+  customerExternalId: varchar("customerExternalId", { length: 32 }).default(""),
+  // Financial context
+  monthlyAmount: decimal("monthlyAmount", { precision: 10, scale: 2 }).default("0.00"),
+  // Priority: critical | high | medium | low
+  priority: varchar("priority", { length: 16 }).default("medium").notNull(),
+  // Status: open | in-progress | actioned | dismissed
+  status: varchar("status", { length: 16 }).default("open").notNull(),
+  // Action tracking
+  actionedBy: varchar("actionedBy", { length: 256 }),
+  actionedNote: text("actionedNote"),
+  actionedAt: timestamp("actionedAt"),
+  // Who created this check
+  createdBy: varchar("createdBy", { length: 256 }).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type BillingPlatformCheck = typeof billingPlatformChecks.$inferSelect;
+export type InsertBillingPlatformCheck = typeof billingPlatformChecks.$inferInsert;
+
+/**
+ * Service Edit History - audit trail for all manual edits to service records.
+ */
+export const serviceEditHistory = mysqlTable("service_edit_history", {
+  id: int("id").autoincrement().primaryKey(),
+  serviceExternalId: varchar("serviceExternalId", { length: 32 }).notNull(),
+  editedBy: varchar("editedBy", { length: 256 }).notNull(),
+  // JSON object of changed fields: { fieldName: { from: old, to: new } }
+  changes: text("changes").notNull(),
+  reason: text("reason"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type ServiceEditHistory = typeof serviceEditHistory.$inferSelect;
+export type InsertServiceEditHistory = typeof serviceEditHistory.$inferInsert;

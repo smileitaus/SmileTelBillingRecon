@@ -18,6 +18,8 @@ import RevenueMargin from "./pages/RevenueMargin";
 import BillingUnmatched from "./pages/BillingUnmatched";
 import CustomerMerge from "./pages/CustomerMerge";
 import Review from "./pages/Review";
+import AutoMatch from "./pages/AutoMatch";
+import BillingPlatformChecks from "./pages/BillingPlatformChecks";
 import { useState } from "react";
 import { trpc } from "@/lib/trpc";
 
@@ -228,6 +230,8 @@ function Router() {
           <Route path="/billing" component={BillingUnmatched} />
           <Route path="/review" component={Review} />
           <Route path="/merge" component={CustomerMerge} />
+          <Route path="/auto-match" component={AutoMatch} />
+          <Route path="/platform-checks" component={BillingPlatformChecks} />
           <Route path="/404" component={NotFound} />
           <Route component={NotFound} />
         </Switch>

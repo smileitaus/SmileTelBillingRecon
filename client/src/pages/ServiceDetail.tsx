@@ -44,6 +44,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { ProviderBadge } from "@/components/ProviderBadge";
+import ServiceEditPanel from "@/components/ServiceEditPanel";
 
 function ServiceTypeIcon({ type }: { type: string }) {
   switch (type) {
@@ -566,6 +567,8 @@ export default function ServiceDetail() {
   const { service, location, customer, isLoading } = useServiceDetail(
     params.id || ""
   );
+  const [editPanelOpen, setEditPanelOpen] = useState(false);
+  const utils = trpc.useUtils();
 
   if (isLoading) {
     return (
@@ -645,6 +648,17 @@ export default function ServiceDetail() {
         </div>
       )}
 
+      {editPanelOpen && (
+        <ServiceEditPanel
+          serviceExternalId={service.externalId}
+          onClose={() => setEditPanelOpen(false)}
+          onSaved={() => {
+            setEditPanelOpen(false);
+            utils.billing.services.byId.invalidate({ id: service.externalId });
+          }}
+        />
+      )}
+
       {/* Service Header */}
       <div className="flex items-start gap-4 mb-6">
         <div className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 ${
@@ -653,9 +667,18 @@ export default function ServiceDetail() {
           <ServiceTypeIcon type={service.serviceType} />
         </div>
         <div className="flex-1 min-w-0">
-          <h1 className={`text-xl font-bold tracking-tight ${isTerminated ? "line-through text-muted-foreground" : ""}`}>
-            {service.serviceType} — {service.planName || "Unknown Plan"}
-          </h1>
+          <div className="flex items-start justify-between gap-3">
+            <h1 className={`text-xl font-bold tracking-tight ${isTerminated ? "line-through text-muted-foreground" : ""}`}>
+              {service.serviceType} — {service.planName || "Unknown Plan"}
+            </h1>
+            <button
+              onClick={() => setEditPanelOpen(true)}
+              className="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
+            >
+              <Pencil className="w-3 h-3" />
+              Edit / Reassign
+            </button>
+          </div>
           <div className="flex items-center gap-3 mt-1.5">
             <StatusBadge status={service.status} />
             <ProviderBadge provider={service.provider} />

@@ -16,10 +16,12 @@ import {
   Wifi,
   Phone,
   Globe,
+  Download,
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { useState, useMemo } from "react";
 import { ProviderBadge } from "@/components/ProviderBadge";
+import { exportToCSV } from "@/lib/exportCsv";
 
 function ServiceTypeIcon({ type }: { type: string }) {
   switch (type) {
@@ -194,10 +196,31 @@ export default function RevenueMargin() {
         </select>
       </div>
 
-      {/* Results count */}
-      <p className="text-xs text-muted-foreground mb-3">
-        Showing {sorted.length} services with matched revenue
-      </p>
+      {/* Results count + export */}
+      <div className="flex items-center justify-between mb-3">
+        <p className="text-xs text-muted-foreground">
+          Showing {sorted.length} services with matched revenue
+        </p>
+        <button
+          onClick={() => exportToCSV(
+            sorted.map((s: any) => ({
+              "Service ID": s.externalId,
+              "Customer": s.customerName || "",
+              "Service Type": s.serviceType,
+              "Provider": s.provider,
+              "Plan": s.planName,
+              "Monthly Cost": s.monthlyCost,
+              "Monthly Revenue": s.monthlyRevenue,
+              "Margin %": s.marginPercent !== null ? s.marginPercent.toFixed(1) : "",
+            })),
+            "revenue-margin"
+          )}
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-card border border-border rounded-md hover:bg-muted transition-colors"
+        >
+          <Download className="w-3.5 h-3.5" />
+          Export CSV
+        </button>
+      </div>
 
       {/* Table */}
       {isLoading ? (

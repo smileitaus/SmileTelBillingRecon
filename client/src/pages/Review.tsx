@@ -28,6 +28,9 @@ import {
   Search,
   X,
   Loader2,
+  ArrowRightLeft,
+  UserX,
+  Link2,
 } from "lucide-react";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -291,6 +294,302 @@ function SubmitForReviewDialog({
           >
             {submitMutation.isPending && <Loader2 className="w-3 h-3 animate-spin mr-1" />}
             Submit for Review
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── Reassign Service Dialog ─────────────────────────────────────────────────
+
+function ReassignServiceDialog({
+  open,
+  onClose,
+  serviceExternalId,
+  currentCustomerName,
+}: {
+  open: boolean;
+  onClose: () => void;
+  serviceExternalId: string;
+  currentCustomerName?: string;
+}) {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCustomer, setSelectedCustomer] = useState<{ externalId: string; name: string } | null>(null);
+  const [markUnknown, setMarkUnknown] = useState(false);
+  const [reason, setReason] = useState("");
+  const utils = trpc.useUtils();
+
+  const reassignMutation = trpc.billing.reassignService.useMutation({
+    onSuccess: (result) => {
+      toast.success(`Service ${result.serviceExternalId} reassigned to ${result.newCustomerName || 'Unknown'}`);
+      utils.billing.review.issues.invalidate();
+      setSearchQuery("");
+      setSelectedCustomer(null);
+      setMarkUnknown(false);
+      setReason("");
+      onClose();
+    },
+    onError: (err) => toast.error(err.message),
+  });
+
+  const customerSearch = trpc.billing.customers.list.useQuery(
+    { search: searchQuery },
+    { enabled: searchQuery.length >= 2 && !markUnknown }
+  );
+
+  if (!open) return null;
+
+  const customerResults = (customerSearch.data as any)?.customers || customerSearch.data || [];
+
+  const canSubmit = reason.trim().length > 0 && (markUnknown || selectedCustomer !== null);
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center" onClick={onClose}>
+      <div className="fixed inset-0 bg-black/40 backdrop-blur-sm" />
+      <div
+        className="relative bg-card border border-border rounded-lg shadow-2xl w-full max-w-lg p-6"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-base font-semibold flex items-center gap-2">
+            <ArrowRightLeft className="w-4 h-4" />
+            Reassign Service
+          </h3>
+          <button onClick={onClose} className="text-muted-foreground hover:text-foreground">
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+
+        <div className="text-xs text-muted-foreground mb-4 px-3 py-2 bg-muted/50 rounded-md">
+          Service: <span className="font-mono font-medium">{serviceExternalId}</span>
+          {currentCustomerName && (
+            <span className="ml-2">· Currently: <span className="font-medium">{currentCustomerName}</span></span>
+          )}
+        </div>
+
+        {/* Mark as Unknown toggle */}
+        <div className="flex items-center gap-3 mb-4">
+          <button
+            onClick={() => { setMarkUnknown(false); setSelectedCustomer(null); }}
+            className={`flex-1 flex items-center justify-center gap-2 text-sm py-2 rounded-md border transition-colors ${
+              !markUnknown ? "bg-primary text-primary-foreground border-primary" : "border-border hover:bg-muted"
+            }`}
+          >
+            <Search className="w-3.5 h-3.5" />
+            Reassign to Customer
+          </button>
+          <button
+            onClick={() => { setMarkUnknown(true); setSelectedCustomer(null); setSearchQuery(""); }}
+            className={`flex-1 flex items-center justify-center gap-2 text-sm py-2 rounded-md border transition-colors ${
+              markUnknown ? "bg-amber-500 text-white border-amber-500" : "border-border hover:bg-muted"
+            }`}
+          >
+            <UserX className="w-3.5 h-3.5" />
+            Mark as Unknown
+          </button>
+        </div>
+
+        {/* Customer search */}
+        {!markUnknown && (
+          <>
+            {!selectedCustomer ? (
+              <>
+                <div className="relative mb-2">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                  <input
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search customers by name..."
+                    className="w-full pl-10 pr-4 py-2 text-sm bg-muted/50 border border-border rounded-md outline-none focus:ring-2 focus:ring-ring"
+                    autoFocus
+                  />
+                </div>
+                {searchQuery.length >= 2 && (
+                  <div className="max-h-40 overflow-y-auto border border-border rounded-md mb-4">
+                    {customerResults.map((c: any) => (
+                      <button
+                        key={c.externalId}
+                        onClick={() => { setSelectedCustomer({ externalId: c.externalId, name: c.name }); setSearchQuery(""); }}
+                        className="w-full text-left px-3 py-2 text-sm hover:bg-muted transition-colors border-b border-border last:border-0"
+                      >
+                        <span className="font-medium">{c.name}</span>
+                        <span className="text-muted-foreground ml-2 text-xs">{c.externalId}</span>
+                      </button>
+                    ))}
+                    {customerResults.length === 0 && (
+                      <p className="px-3 py-3 text-sm text-muted-foreground text-center">No customers found</p>
+                    )}
+                  </div>
+                )}
+              </>
+            ) : (
+              <div className="flex items-center gap-2 px-3 py-2 bg-primary/10 border border-primary/20 rounded-md mb-4">
+                <Users className="w-4 h-4 text-primary" />
+                <span className="text-sm font-medium flex-1">{selectedCustomer.name}</span>
+                <span className="text-xs text-muted-foreground">{selectedCustomer.externalId}</span>
+                <button onClick={() => setSelectedCustomer(null)} className="text-muted-foreground hover:text-foreground">
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+            )}
+          </>
+        )}
+
+        {markUnknown && (
+          <div className="flex items-center gap-2 px-3 py-2 bg-amber-50 border border-amber-200 rounded-md mb-4">
+            <UserX className="w-4 h-4 text-amber-600" />
+            <span className="text-sm text-amber-700">Service will be marked as unassigned/unknown</span>
+          </div>
+        )}
+
+        {/* Reason */}
+        <textarea
+          value={reason}
+          onChange={(e) => setReason(e.target.value)}
+          placeholder="Reason for reassignment (required)..."
+          rows={3}
+          className="w-full px-3 py-2 text-sm bg-muted/50 border border-border rounded-md outline-none focus:ring-2 focus:ring-ring resize-none mb-4"
+        />
+
+        <div className="flex justify-end gap-2">
+          <Button variant="outline" size="sm" onClick={onClose}>Cancel</Button>
+          <Button
+            size="sm"
+            disabled={!canSubmit || reassignMutation.isPending}
+            onClick={() => reassignMutation.mutate({
+              serviceExternalId,
+              newCustomerExternalId: markUnknown ? null : selectedCustomer?.externalId ?? null,
+              newCustomerName: markUnknown ? null : selectedCustomer?.name ?? null,
+              reason: reason.trim(),
+            })}
+          >
+            {reassignMutation.isPending && <Loader2 className="w-3 h-3 animate-spin mr-1" />}
+            {markUnknown ? 'Mark as Unknown' : 'Reassign Service'}
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── Associate Billing Item Dialog ────────────────────────────────────────────
+
+function AssociateBillingDialog({
+  open,
+  onClose,
+  billingItemId,
+  billingContactName,
+  billingDescription,
+}: {
+  open: boolean;
+  onClose: () => void;
+  billingItemId: number;
+  billingContactName: string;
+  billingDescription: string;
+}) {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCustomer, setSelectedCustomer] = useState<{ externalId: string; name: string } | null>(null);
+  const utils = trpc.useUtils();
+
+  const associateMutation = trpc.billing.associateBillingItem.useMutation({
+    onSuccess: () => {
+      toast.success('Billing item associated with customer');
+      utils.billing.review.issues.invalidate();
+      setSearchQuery("");
+      setSelectedCustomer(null);
+      onClose();
+    },
+    onError: (err) => toast.error(err.message),
+  });
+
+  const customerSearch = trpc.billing.customers.list.useQuery(
+    { search: searchQuery },
+    { enabled: searchQuery.length >= 2 }
+  );
+
+  if (!open) return null;
+
+  const customerResults = (customerSearch.data as any)?.customers || customerSearch.data || [];
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center" onClick={onClose}>
+      <div className="fixed inset-0 bg-black/40 backdrop-blur-sm" />
+      <div
+        className="relative bg-card border border-border rounded-lg shadow-2xl w-full max-w-lg p-6"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-base font-semibold flex items-center gap-2">
+            <Link2 className="w-4 h-4" />
+            Associate Billing Item
+          </h3>
+          <button onClick={onClose} className="text-muted-foreground hover:text-foreground">
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+
+        <div className="text-xs text-muted-foreground mb-4 px-3 py-2 bg-muted/50 rounded-md space-y-1">
+          <p><span className="font-medium">Contact:</span> {billingContactName}</p>
+          <p className="truncate"><span className="font-medium">Item:</span> {billingDescription}</p>
+        </div>
+
+        {/* Customer search */}
+        {!selectedCustomer ? (
+          <>
+            <div className="relative mb-2">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <input
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search customers by name..."
+                className="w-full pl-10 pr-4 py-2 text-sm bg-muted/50 border border-border rounded-md outline-none focus:ring-2 focus:ring-ring"
+                autoFocus
+              />
+            </div>
+            {searchQuery.length >= 2 && (
+              <div className="max-h-40 overflow-y-auto border border-border rounded-md mb-4">
+                {customerResults.map((c: any) => (
+                  <button
+                    key={c.externalId}
+                    onClick={() => { setSelectedCustomer({ externalId: c.externalId, name: c.name }); setSearchQuery(""); }}
+                    className="w-full text-left px-3 py-2 text-sm hover:bg-muted transition-colors border-b border-border last:border-0"
+                  >
+                    <span className="font-medium">{c.name}</span>
+                    <span className="text-muted-foreground ml-2 text-xs">{c.externalId}</span>
+                  </button>
+                ))}
+                {customerResults.length === 0 && (
+                  <p className="px-3 py-3 text-sm text-muted-foreground text-center">No customers found</p>
+                )}
+              </div>
+            )}
+          </>
+        ) : (
+          <div className="flex items-center gap-2 px-3 py-2 bg-primary/10 border border-primary/20 rounded-md mb-4">
+            <Users className="w-4 h-4 text-primary" />
+            <span className="text-sm font-medium flex-1">{selectedCustomer.name}</span>
+            <span className="text-xs text-muted-foreground">{selectedCustomer.externalId}</span>
+            <button onClick={() => setSelectedCustomer(null)} className="text-muted-foreground hover:text-foreground">
+              <X className="w-3 h-3" />
+            </button>
+          </div>
+        )}
+
+        <div className="flex justify-end gap-2">
+          <Button variant="outline" size="sm" onClick={onClose}>Cancel</Button>
+          <Button
+            size="sm"
+            disabled={!selectedCustomer || associateMutation.isPending}
+            onClick={() => associateMutation.mutate({
+              billingItemId,
+              customerExternalId: selectedCustomer?.externalId ?? null,
+              customerName: selectedCustomer?.name ?? null,
+              serviceExternalId: null,
+            })}
+          >
+            {associateMutation.isPending && <Loader2 className="w-3 h-3 animate-spin mr-1" />}
+            Associate with Customer
           </Button>
         </div>
       </div>

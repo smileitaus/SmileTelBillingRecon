@@ -16,6 +16,8 @@ import {
   FileWarning,
   Merge,
   ClipboardCheck,
+  Sparkles,
+  ShieldCheck,
 } from "lucide-react";
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useGlobalSearch } from "@/hooks/useData";
@@ -30,6 +32,8 @@ const navItems = [
   { path: "/billing", label: "Billing Match", icon: FileWarning },
   { path: "/review", label: "Review", icon: ClipboardCheck },
   { path: "/merge", label: "Merge Customers", icon: Merge },
+  { path: "/auto-match", label: "Auto-Match", icon: Sparkles },
+  { path: "/platform-checks", label: "Platform Checks", icon: ShieldCheck },
 ];
 
 interface SearchCustomer {

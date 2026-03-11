@@ -25,7 +25,9 @@ import {
   StickyNote,
   Save,
   ZapOff,
+  Download,
 } from "lucide-react";
+import { exportToCSV } from "@/lib/exportCsv";
 import { useState, useCallback, useRef, useEffect, useMemo } from "react";
 import { toast } from "sonner";
 import { useAuth } from "@/_core/hooks/useAuth";
@@ -892,14 +894,35 @@ export default function UnmatchedServices() {
   return (
     <div className="p-6 max-w-5xl">
       {/* Header */}
-      <div className="mb-6">
-        <h1 className="text-lg font-bold tracking-tight">
-          Unmatched Services
-        </h1>
-        <p className="text-sm text-muted-foreground mt-1">
-          {allServices.length} services not yet linked to a customer. Expand
-          each to see suggested matches, add notes, or flag for termination.
-        </p>
+      <div className="flex items-start justify-between mb-6">
+        <div>
+          <h1 className="text-lg font-bold tracking-tight">
+            Unmatched Services
+          </h1>
+          <p className="text-sm text-muted-foreground mt-1">
+            {allServices.length} services not yet linked to a customer. Expand
+            each to see suggested matches, add notes, or flag for termination.
+          </p>
+        </div>
+        <button
+          onClick={() => exportToCSV(
+            sorted.map((s: any) => ({
+              "Service ID": s.externalId,
+              "Service Type": s.serviceType,
+              "Provider": s.provider,
+              "Plan": s.planName,
+              "Phone/Connection": s.phoneNumber || s.connectionId || "",
+              "Monthly Cost": s.monthlyCost,
+              "Status": s.status,
+              "Discovery Notes": s.discoveryNotes || "",
+            })),
+            "unmatched-services"
+          )}
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-card border border-border rounded-md hover:bg-muted transition-colors"
+        >
+          <Download className="w-3.5 h-3.5" />
+          Export CSV
+        </button>
       </div>
 
       {/* Summary Cards */}

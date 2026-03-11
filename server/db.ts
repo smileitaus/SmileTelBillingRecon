@@ -1,6 +1,6 @@
 import { eq, like, or, sql, desc, asc } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, customers, locations, services, supplierAccounts } from "../drizzle/schema";
+import { InsertUser, users, customers, locations, services, supplierAccounts, billingItems, reviewItems, billingPlatformChecks, serviceEditHistory } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -722,9 +722,7 @@ export async function searchAll(query: string) {
   };
 }
 
-// ==================== Billing Items Queries ====================
-
-import { billingItems } from "../drizzle/schema";
+/// ==================== Billing Items Queries ====================
 
 export async function getBillingItems(filters?: {
   matchStatus?: string;
@@ -1647,9 +1645,7 @@ export async function resolveReviewIssue(issueType: string, itemId: string, acti
   return { success: true };
 }
 
-// ==================== Review Items (Manual Submissions & Ignored) ====================
-
-import { reviewItems } from "../drizzle/schema";
+// ==================== Review Items (Manual Submissions & Ignored) ====================;
 
 export async function submitForReview(input: {
   targetType: 'service' | 'customer' | 'billing-item';
@@ -1744,4 +1740,591 @@ export async function isIssueIgnored(issueType: string, targetId: string): Promi
     .limit(1);
 
   return result.length > 0;
+}
+
+// ─── Service Reassignment ────────────────────────────────────────────────────
+
+export async function reassignService(
+  serviceExternalId: string,
+  newCustomerExternalId: string | null,
+  newCustomerName: string | null,
+  reassignedBy: string,
+  reason: string
+) {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+
+  const current = await db.select().from(services).where(eq(services.externalId, serviceExternalId)).limit(1);
+  if (!current.length) throw new Error('Service not found');
+
+  const oldCustomerId = current[0].customerExternalId;
+  const oldCustomerName = current[0].customerName;
+  const existingNotes = current[0].discoveryNotes || '';
+  const logEntry = `[Reassigned by ${reassignedBy} on ${new Date().toLocaleDateString()}: ${reason}]`;
+
+  await db.update(services).set({
+    customerExternalId: newCustomerExternalId,
+    customerName: newCustomerName,
+    status: newCustomerExternalId ? 'active' : 'unmatched',
+    discoveryNotes: existingNotes ? `${logEntry} ${existingNotes}` : logEntry,
+  }).where(eq(services.externalId, serviceExternalId));
+
+  return { success: true, serviceExternalId, oldCustomerId, oldCustomerName, newCustomerExternalId, newCustomerName };
+}
+
+// ─── Billing Item Association ─────────────────────────────────────────────────
+
+export async function associateBillingItem(
+  billingItemId: number,
+  customerExternalId: string | null,
+  customerName: string | null,
+  serviceExternalId: string | null,
+  associatedBy: string
+) {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+
+  let matchStatus = 'unmatched';
+  if (customerExternalId && serviceExternalId) matchStatus = 'service-matched';
+  else if (customerExternalId) matchStatus = 'customer-matched';
+
+  await db.update(billingItems).set({
+    customerExternalId,
+    serviceExternalId,
+    matchStatus,
+  }).where(eq(billingItems.id, billingItemId));
+
+  return { success: true, billingItemId, matchStatus };
+}
+
+// ─── Get services for a customer (for reassignment target lookup) ─────────────
+
+export async function getServicesByCustomerForReassign(customerExternalId: string) {
+  const db = await getDb();
+  if (!db) return [];
+  return await db.select({
+    externalId: services.externalId,
+    serviceType: services.serviceType,
+    planName: services.planName,
+    avcId: services.avcId,
+    monthlyCost: services.monthlyCost,
+  }).from(services)
+    .where(eq(services.customerExternalId, customerExternalId))
+    .orderBy(services.serviceType)
+    .limit(50);
+}
+
+// ─── Service Full Edit ────────────────────────────────────────────────────────
+
+export async function updateServiceFields(
+  serviceExternalId: string,
+  updates: {
+    serviceTypeDetail?: string;
+    planName?: string;
+    status?: string;
+    locationAddress?: string;
+    phoneNumber?: string;
+    email?: string;
+    connectionId?: string;
+    avcId?: string;
+    ipAddress?: string;
+    technology?: string;
+    speedTier?: string;
+    billingPlatform?: string[] | null;
+    simSerialNumber?: string;
+    hardwareType?: string;
+    macAddress?: string;
+    modemSerialNumber?: string;
+    wifiPassword?: string;
+    simOwner?: string;
+    dataPlanGb?: string;
+    userName?: string;
+    contractEndDate?: string;
+    serviceActivationDate?: string;
+    serviceEndDate?: string;
+    proposedPlan?: string;
+    proposedCost?: string;
+    discoveryNotes?: string;
+    // Reassign
+    customerExternalId?: string | null;
+    customerName?: string | null;
+  },
+  editedBy: string,
+  reason?: string
+) {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+
+  const current = await db.select().from(services).where(eq(services.externalId, serviceExternalId)).limit(1);
+  if (!current.length) throw new Error('Service not found');
+  const old = current[0];
+
+  // Track changes for audit log
+  const changes: Record<string, { from: unknown; to: unknown }> = {};
+  const setValues: Record<string, unknown> = {};
+
+  const trackField = (field: string, newVal: unknown, oldVal: unknown) => {
+    const newStr = newVal === null || newVal === undefined ? '' : String(newVal);
+    const oldStr = oldVal === null || oldVal === undefined ? '' : String(oldVal);
+    if (newStr !== oldStr) {
+      changes[field] = { from: oldVal, to: newVal };
+      setValues[field] = newVal;
+    }
+  };
+
+  if (updates.serviceTypeDetail !== undefined) trackField('serviceTypeDetail', updates.serviceTypeDetail, old.serviceTypeDetail);
+  if (updates.planName !== undefined) trackField('planName', updates.planName, old.planName);
+  if (updates.status !== undefined) trackField('status', updates.status, old.status);
+  if (updates.locationAddress !== undefined) trackField('locationAddress', updates.locationAddress, old.locationAddress);
+  if (updates.phoneNumber !== undefined) trackField('phoneNumber', updates.phoneNumber, old.phoneNumber);
+  if (updates.email !== undefined) trackField('email', updates.email, old.email);
+  if (updates.connectionId !== undefined) trackField('connectionId', updates.connectionId, old.connectionId);
+  if (updates.avcId !== undefined) trackField('avcId', updates.avcId, old.avcId);
+  if (updates.ipAddress !== undefined) trackField('ipAddress', updates.ipAddress, old.ipAddress);
+  if (updates.technology !== undefined) trackField('technology', updates.technology, old.technology);
+  if (updates.speedTier !== undefined) trackField('speedTier', updates.speedTier, old.speedTier);
+  if (updates.simSerialNumber !== undefined) trackField('simSerialNumber', updates.simSerialNumber, old.simSerialNumber);
+  if (updates.hardwareType !== undefined) trackField('hardwareType', updates.hardwareType, old.hardwareType);
+  if (updates.macAddress !== undefined) trackField('macAddress', updates.macAddress, old.macAddress);
+  if (updates.modemSerialNumber !== undefined) trackField('modemSerialNumber', updates.modemSerialNumber, old.modemSerialNumber);
+  if (updates.wifiPassword !== undefined) trackField('wifiPassword', updates.wifiPassword, old.wifiPassword);
+  if (updates.simOwner !== undefined) trackField('simOwner', updates.simOwner, old.simOwner);
+  if (updates.dataPlanGb !== undefined) trackField('dataPlanGb', updates.dataPlanGb, old.dataPlanGb);
+  if (updates.userName !== undefined) trackField('userName', updates.userName, old.userName);
+  if (updates.contractEndDate !== undefined) trackField('contractEndDate', updates.contractEndDate, old.contractEndDate);
+  if (updates.serviceActivationDate !== undefined) trackField('serviceActivationDate', updates.serviceActivationDate, old.serviceActivationDate);
+  if (updates.serviceEndDate !== undefined) trackField('serviceEndDate', updates.serviceEndDate, old.serviceEndDate);
+  if (updates.proposedPlan !== undefined) trackField('proposedPlan', updates.proposedPlan, old.proposedPlan);
+  if (updates.proposedCost !== undefined) trackField('proposedCost', updates.proposedCost, old.proposedCost);
+  if (updates.discoveryNotes !== undefined) trackField('discoveryNotes', updates.discoveryNotes, old.discoveryNotes);
+
+  if (updates.billingPlatform !== undefined) {
+    const newPlatform = updates.billingPlatform ? JSON.stringify(updates.billingPlatform) : null;
+    const oldPlatform = old.billingPlatform;
+    if (newPlatform !== oldPlatform) {
+      changes['billingPlatform'] = { from: oldPlatform, to: newPlatform };
+      setValues['billingPlatform'] = newPlatform;
+    }
+  }
+
+  // Handle customer reassignment
+  if (updates.customerExternalId !== undefined) {
+    trackField('customerExternalId', updates.customerExternalId, old.customerExternalId);
+    trackField('customerName', updates.customerName ?? '', old.customerName);
+    if (updates.customerExternalId !== old.customerExternalId) {
+      setValues['status'] = updates.customerExternalId ? 'active' : 'unmatched';
+      changes['status'] = { from: old.status, to: setValues['status'] };
+    }
+  }
+
+  if (Object.keys(setValues).length === 0) {
+    return { success: true, serviceExternalId, changes: {} };
+  }
+
+  await db.update(services).set(setValues).where(eq(services.externalId, serviceExternalId));
+
+  // Write audit log
+  if (Object.keys(changes).length > 0) {
+    await db.insert(serviceEditHistory).values({
+      serviceExternalId,
+      editedBy,
+      changes: JSON.stringify(changes),
+      reason: reason || null,
+    });
+  }
+
+  return { success: true, serviceExternalId, changes };
+}
+
+export async function getServiceEditHistory(serviceExternalId: string) {
+  const db = await getDb();
+  if (!db) return [];
+  return await db.select().from(serviceEditHistory)
+    .where(eq(serviceEditHistory.serviceExternalId, serviceExternalId))
+    .orderBy(desc(serviceEditHistory.createdAt))
+    .limit(50);
+}
+
+// ─── Billing Platform Checks ──────────────────────────────────────────────────
+
+export async function createBillingPlatformCheck(input: {
+  reviewItemId?: number;
+  targetType: 'service' | 'billing-item';
+  targetId: string;
+  targetName: string;
+  platform: string;
+  issueType: string;
+  issueDescription: string;
+  customerName: string;
+  customerExternalId: string;
+  monthlyAmount: number;
+  priority: 'critical' | 'high' | 'medium' | 'low';
+  createdBy: string;
+}) {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+  const result = await db.insert(billingPlatformChecks).values({
+    reviewItemId: input.reviewItemId ?? null,
+    targetType: input.targetType,
+    targetId: input.targetId,
+    targetName: input.targetName,
+    platform: input.platform,
+    issueType: input.issueType,
+    issueDescription: input.issueDescription,
+    customerName: input.customerName,
+    customerExternalId: input.customerExternalId,
+    monthlyAmount: String(input.monthlyAmount),
+    priority: input.priority,
+    status: 'open',
+    createdBy: input.createdBy,
+  });
+  return { id: Number((result as any).insertId), ...input };
+}
+
+export async function getBillingPlatformChecks(filters?: {
+  status?: string;
+  platform?: string;
+  priority?: string;
+  search?: string;
+}) {
+  const db = await getDb();
+  if (!db) return [];
+
+  const conditions = [];
+  if (filters?.status && filters.status !== 'all') {
+    conditions.push(eq(billingPlatformChecks.status, filters.status));
+  }
+  if (filters?.platform && filters.platform !== 'all') {
+    conditions.push(eq(billingPlatformChecks.platform, filters.platform));
+  }
+  if (filters?.priority && filters.priority !== 'all') {
+    conditions.push(eq(billingPlatformChecks.priority, filters.priority));
+  }
+  if (filters?.search && filters.search.trim()) {
+    const term = `%${filters.search.trim()}%`;
+    conditions.push(
+      or(
+        like(billingPlatformChecks.targetName, term),
+        like(billingPlatformChecks.customerName, term),
+        like(billingPlatformChecks.issueType, term),
+        like(billingPlatformChecks.platform, term)
+      )
+    );
+  }
+
+  const whereClause = conditions.length > 0
+    ? conditions.reduce((acc, c) => sql`${acc} AND ${c}`)
+    : undefined;
+
+  const result = await db.select().from(billingPlatformChecks)
+    .where(whereClause)
+    .orderBy(
+      sql`FIELD(${billingPlatformChecks.priority}, 'critical', 'high', 'medium', 'low')`,
+      desc(billingPlatformChecks.createdAt)
+    );
+
+  return result.map(c => ({
+    ...c,
+    monthlyAmount: parseFloat(String(c.monthlyAmount ?? '0')),
+  }));
+}
+
+export async function actionBillingPlatformCheck(
+  id: number,
+  actionedBy: string,
+  actionedNote: string,
+  newStatus: 'actioned' | 'dismissed' | 'in-progress'
+) {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+  await db.update(billingPlatformChecks).set({
+    status: newStatus,
+    actionedBy,
+    actionedNote,
+    actionedAt: newStatus === 'actioned' || newStatus === 'dismissed' ? new Date() : null,
+  }).where(eq(billingPlatformChecks.id, id));
+  return { success: true, id, status: newStatus };
+}
+
+export async function getBillingPlatformCheckSummary() {
+  const db = await getDb();
+  if (!db) return { total: 0, open: 0, inProgress: 0, actioned: 0, dismissed: 0, byPlatform: {} };
+
+  const counts = await db.select({
+    status: billingPlatformChecks.status,
+    count: sql<number>`count(*)`,
+  }).from(billingPlatformChecks).groupBy(billingPlatformChecks.status);
+
+  const byPlatform = await db.select({
+    platform: billingPlatformChecks.platform,
+    count: sql<number>`count(*)`,
+    open: sql<number>`SUM(CASE WHEN status = 'open' THEN 1 ELSE 0 END)`,
+  }).from(billingPlatformChecks).groupBy(billingPlatformChecks.platform);
+
+  const statusMap: Record<string, number> = {};
+  let total = 0;
+  for (const c of counts) {
+    statusMap[c.status] = Number(c.count);
+    total += Number(c.count);
+  }
+
+  return {
+    total,
+    open: statusMap['open'] || 0,
+    inProgress: statusMap['in-progress'] || 0,
+    actioned: statusMap['actioned'] || 0,
+    dismissed: statusMap['dismissed'] || 0,
+    byPlatform: Object.fromEntries(byPlatform.map(p => [p.platform, { total: Number(p.count), open: Number(p.open) }])),
+  };
+}
+
+// ─── Auto-Match: Alias → Customer ────────────────────────────────────────────
+
+/**
+ * Levenshtein distance for fuzzy string comparison.
+ */
+function levenshtein(a: string, b: string): number {
+  const m = a.length, n = b.length;
+  const dp: number[][] = Array.from({ length: m + 1 }, (_, i) =>
+    Array.from({ length: n + 1 }, (_, j) => (i === 0 ? j : j === 0 ? i : 0))
+  );
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      dp[i][j] = a[i - 1] === b[j - 1]
+        ? dp[i - 1][j - 1]
+        : 1 + Math.min(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1]);
+    }
+  }
+  return dp[m][n];
+}
+
+/**
+ * Normalise a string for comparison: lowercase, remove punctuation/extra spaces.
+ */
+function normalise(s: string): string {
+  return s
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, ' ')
+    .replace(/\b(pty|ltd|pty ltd|limited|the|and|&|of|for|at|in|on)\b/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+/**
+ * Token overlap score (Jaccard similarity on word sets).
+ */
+function tokenOverlap(a: string, b: string): number {
+  const setA = new Set(normalise(a).split(' ').filter(Boolean));
+  const setB = new Set(normalise(b).split(' ').filter(Boolean));
+  if (setA.size === 0 || setB.size === 0) return 0;
+  const arrA = Array.from(setA);
+  const arrB = Array.from(setB);
+  const intersection = arrA.filter(t => setB.has(t)).length;
+  const union = new Set(arrA.concat(arrB)).size;
+  return intersection / union;
+}
+
+/**
+ * Score an alias against a customer name.
+ * Returns 0–100 confidence score and a match tier label.
+ */
+function scoreMatch(alias: string, customerName: string): { score: number; tier: string } {
+  const aliasN = normalise(alias);
+  const custN = normalise(customerName);
+
+  // Skip address-style aliases (NBN/NBNEE prefix) — they shouldn't match customer names
+  if (/^nbn(ee)?:/i.test(alias.trim())) {
+    return { score: 0, tier: 'skip' };
+  }
+
+  // Exact normalised match
+  if (aliasN === custN) return { score: 100, tier: 'exact' };
+
+  // One contains the other
+  if (aliasN.includes(custN) || custN.includes(aliasN)) {
+    const shorter = Math.min(aliasN.length, custN.length);
+    const longer = Math.max(aliasN.length, custN.length);
+    const ratio = shorter / longer;
+    return { score: Math.round(85 * ratio + 10), tier: 'contains' };
+  }
+
+  // Token overlap (Jaccard)
+  const jaccard = tokenOverlap(alias, customerName);
+  if (jaccard >= 0.7) return { score: Math.round(jaccard * 80), tier: 'token-high' };
+  if (jaccard >= 0.4) return { score: Math.round(jaccard * 65), tier: 'token-medium' };
+
+  // Levenshtein on normalised strings (only if short enough to be meaningful)
+  if (aliasN.length < 60 && custN.length < 60) {
+    const dist = levenshtein(aliasN, custN);
+    const maxLen = Math.max(aliasN.length, custN.length);
+    const similarity = 1 - dist / maxLen;
+    if (similarity >= 0.85) return { score: Math.round(similarity * 75), tier: 'fuzzy-high' };
+    if (similarity >= 0.65) return { score: Math.round(similarity * 55), tier: 'fuzzy-medium' };
+  }
+
+  return { score: 0, tier: 'no-match' };
+}
+
+export interface AliasMatchCandidate {
+  serviceExternalId: string;
+  serviceType: string;
+  provider: string;
+  carbonAlias: string;
+  currentCustomerExternalId: string | null;
+  currentCustomerName: string;
+  suggestedCustomerExternalId: string;
+  suggestedCustomerName: string;
+  confidence: number;
+  tier: string;
+  isReassignment: boolean; // true = changing from one customer to another; false = new assignment
+}
+
+export async function previewAliasAutoMatch(minConfidence = 60): Promise<{
+  candidates: AliasMatchCandidate[];
+  stats: { total: number; exact: number; high: number; medium: number; skipped: number };
+}> {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+
+  // Fetch all ABB/Carbon services with a non-empty alias
+  const allServices = await db.select({
+    externalId: services.externalId,
+    serviceType: services.serviceType,
+    provider: services.provider,
+    carbonAlias: services.carbonAlias,
+    customerExternalId: services.customerExternalId,
+    customerName: services.customerName,
+    status: services.status,
+  }).from(services)
+    .where(
+      sql`${services.carbonAlias} IS NOT NULL AND ${services.carbonAlias} != '' AND ${services.provider} IN ('ABB', 'Carbon')`
+    );
+
+  // Fetch all customers
+  const allCustomers = await db.select({
+    externalId: customers.externalId,
+    name: customers.name,
+  }).from(customers);
+
+  const candidates: AliasMatchCandidate[] = [];
+  let skipped = 0;
+
+  for (const svc of allServices) {
+    if (!svc.carbonAlias) continue;
+
+    // Skip address-style aliases
+    if (/^nbn(ee)?:/i.test(svc.carbonAlias.trim())) {
+      skipped++;
+      continue;
+    }
+
+    let bestScore = 0;
+    let bestCustomer: { externalId: string; name: string } | null = null;
+    let bestTier = 'no-match';
+
+    for (const cust of allCustomers) {
+      // Skip if already assigned to this customer and alias matches
+      if (cust.externalId === svc.customerExternalId && normalise(svc.carbonAlias) === normalise(cust.name)) {
+        continue;
+      }
+
+      const { score, tier } = scoreMatch(svc.carbonAlias, cust.name);
+      if (score > bestScore) {
+        bestScore = score;
+        bestCustomer = cust;
+        bestTier = tier;
+      }
+    }
+
+    if (!bestCustomer || bestScore < minConfidence) continue;
+
+    // Skip if the best match IS the current customer (already correct)
+    if (bestCustomer.externalId === svc.customerExternalId) continue;
+
+    candidates.push({
+      serviceExternalId: svc.externalId,
+      serviceType: svc.serviceType,
+      provider: svc.provider || 'ABB',
+      carbonAlias: svc.carbonAlias,
+      currentCustomerExternalId: svc.customerExternalId || null,
+      currentCustomerName: svc.customerName || '',
+      suggestedCustomerExternalId: bestCustomer.externalId,
+      suggestedCustomerName: bestCustomer.name,
+      confidence: bestScore,
+      tier: bestTier,
+      isReassignment: !!(svc.customerExternalId && svc.customerExternalId.trim()),
+    });
+  }
+
+  // Sort by confidence desc
+  candidates.sort((a, b) => b.confidence - a.confidence);
+
+  const stats = {
+    total: candidates.length,
+    exact: candidates.filter(c => c.tier === 'exact').length,
+    high: candidates.filter(c => c.confidence >= 80 && c.tier !== 'exact').length,
+    medium: candidates.filter(c => c.confidence >= 60 && c.confidence < 80).length,
+    skipped,
+  };
+
+  return { candidates, stats };
+}
+
+export async function commitAliasAutoMatch(
+  approvedMatches: Array<{ serviceExternalId: string; customerExternalId: string; customerName: string }>,
+  committedBy: string
+): Promise<{ applied: number; errors: string[] }> {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+
+  let applied = 0;
+  const errors: string[] = [];
+
+  for (const match of approvedMatches) {
+    try {
+      const current = await db.select({
+        customerExternalId: services.customerExternalId,
+        customerName: services.customerName,
+        discoveryNotes: services.discoveryNotes,
+      }).from(services)
+        .where(eq(services.externalId, match.serviceExternalId))
+        .limit(1);
+
+      if (!current.length) {
+        errors.push(`Service ${match.serviceExternalId} not found`);
+        continue;
+      }
+
+      const old = current[0];
+      const logEntry = `[Auto-matched by alias by ${committedBy} on ${new Date().toLocaleDateString('en-AU')}: "${old.customerName}" → "${match.customerName}"]`;
+      const newNotes = old.discoveryNotes
+        ? `${logEntry}\n${old.discoveryNotes}`
+        : logEntry;
+
+      await db.update(services).set({
+        customerExternalId: match.customerExternalId,
+        customerName: match.customerName,
+        status: 'active',
+        discoveryNotes: newNotes,
+      }).where(eq(services.externalId, match.serviceExternalId));
+
+      // Audit log
+      await db.insert(serviceEditHistory).values({
+        serviceExternalId: match.serviceExternalId,
+        editedBy: committedBy,
+        changes: JSON.stringify({
+          customerExternalId: { from: old.customerExternalId, to: match.customerExternalId },
+          customerName: { from: old.customerName, to: match.customerName },
+          status: { from: 'unmatched', to: 'active' },
+        }),
+        reason: 'Auto-matched via Carbon alias field',
+      });
+
+      applied++;
+    } catch (err: any) {
+      errors.push(`${match.serviceExternalId}: ${err.message}`);
+    }
+  }
+
+  return { applied, errors };
 }

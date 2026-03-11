@@ -276,3 +276,44 @@
 # UI & Branding
 - [x] Updated sidebar subtitle from 'Telstra Service Audit' to 'SmileTel Service Audit'
 - [x] Team access: TEAM_ACCESS_PASSWORD configured, Peter and Tony can log in with email + team password
+
+# Service Reassignment & Billing Association Workflows
+- [ ] Add backend: reassign service to different customer (or mark as unknown/unassigned)
+- [ ] Add backend: associate unmatched billing item to a customer and/or service
+- [ ] Add Reassign Service dialog on Review page service rows (search customer, or mark unknown)
+- [ ] Build billing item association workflow for 53 unmatched billing items
+- [ ] Allow searching customers by name when associating billing items
+- [ ] Allow linking billing item to existing service after customer is selected
+- [ ] Show updated match status after association
+
+# Service Edit / Reassign Panel
+- [x] Build ServiceEditPanel slide-out component for editing service details
+- [x] Read-only fields: Name (service type), Cost Price (monthlyCost)
+- [x] Editable fields: Plan, AVC/Connection ID, Phone, Address, Billing Platform, Notes, Status
+- [x] Reassign to different customer via search (or mark as unassigned)
+- [x] Edit button added to ServiceDetail page header
+- [x] Service edit history tracked in serviceEditHistory table
+
+# Billing Platform Checks
+- [x] Add billingPlatformChecks table to schema (linked to reviewItems)
+- [x] Auto-create platform check when a review item is submitted
+- [x] Build Platform Checks page with filter by status (pending/actioned) and platform
+- [x] Mark checks as Actioned by user with timestamp
+- [x] CSV export on Platform Checks page
+- [x] Platform Checks added to sidebar nav
+
+# Auto-Match (Alias-Based Customer Reassignment)
+- [x] Build fuzzy-match engine: exact, normalised, token-overlap, Levenshtein tiers
+- [x] Preview mode: show matches with confidence scores before committing
+- [x] Commit mode: bulk reassign services to matched customers
+- [x] Reject individual matches before committing
+- [x] Auto-Match page added to sidebar nav
+
+# CSV Export Across All Pages
+- [x] Create shared exportToCSV utility (client/src/lib/exportCsv.ts)
+- [x] Export button on Customers page
+- [x] Export button on Billing / Service Matching page
+- [x] Export button on Unmatched Services page
+- [x] Export button on Revenue & Margin page
+- [x] Export button on Billing Platform Checks page
+- [x] Export button on Auto-Match page
