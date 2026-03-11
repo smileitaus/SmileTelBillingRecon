@@ -225,7 +225,7 @@ export default function CustomerList() {
                 <SortHeader label="Services" field="serviceCount" />
               </th>
               <th className="text-right px-4 py-3 font-semibold hidden sm:table-cell">
-                <SortHeader label="Monthly Cost" field="monthlyCost" />
+                <SortHeader label="Monthly Cost (ex GST)" field="monthlyCost" />
               </th>
               <th className="text-right px-4 py-3 font-semibold hidden lg:table-cell">
                 <SortHeader label="Unmatched" field="unmatchedCount" />

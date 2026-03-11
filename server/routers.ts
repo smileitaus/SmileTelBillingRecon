@@ -344,6 +344,7 @@ export const appRouter = router({
           customerExternalId: z.string().optional(),
           serviceType: z.string().optional(),
           provider: z.string().optional(),
+          costReviewNeeded: z.boolean().optional(),
         }).optional())
         .query(async ({ input }) => {
           return await getServicesWithMargin(input);
@@ -363,8 +364,9 @@ export const appRouter = router({
           action: z.enum(['resolve', 'ignore', 'flag']),
           notes: z.string().optional(),
         }))
-        .mutation(async ({ input }) => {
-          return await resolveReviewIssue(input.issueType, input.itemId, input.action, input.notes);
+        .mutation(async ({ input, ctx }) => {
+          const submittedBy = ctx.user?.name || ctx.user?.email || 'Unknown';
+          return await resolveReviewIssue(input.issueType, input.itemId, input.action, input.notes, submittedBy);
         }),
 
       submitForReview: protectedProcedure

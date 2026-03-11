@@ -69,7 +69,7 @@ function ContactGroup({
   );
 
   return (
-    <div className="bg-card border border-border rounded-lg overflow-hidden">
+    <div className="bg-card border border-border rounded-lg overflow-visible">
       <button
         onClick={() => setExpanded(!expanded)}
         className="w-full flex items-center gap-3 px-4 py-3 hover:bg-accent/30 transition-colors text-left"
@@ -110,7 +110,7 @@ function ContactGroup({
                   autoFocus
                 />
                 {searchResults && searchResults.length > 0 && (
-                  <div className="absolute z-10 top-full mt-1 w-full bg-card border border-border rounded-md shadow-lg max-h-48 overflow-y-auto">
+                  <div className="absolute z-[200] top-full mt-1 w-full bg-card border border-border rounded-md shadow-xl max-h-60 overflow-y-auto">
                     {searchResults.map((c: any) => {
                       const isStub = !c.externalId;
                       return (
@@ -254,7 +254,7 @@ export default function BillingUnmatched() {
           <div className="bg-card border border-border rounded-lg p-4">
             <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">Total Items</p>
             <p className="text-lg font-bold mt-1">{summary.totalItems}</p>
-            <p className="text-xs text-muted-foreground">{formatCurrency(summary.totalRevenue)} revenue</p>
+            <p className="text-xs text-muted-foreground">{formatCurrency(summary.totalRevenue)} revenue (ex GST)</p>
           </div>
           {summary.statusBreakdown.map((s: any) => {
             const statusLabels: Record<string, string> = {

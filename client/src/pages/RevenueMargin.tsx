@@ -65,6 +65,7 @@ export default function RevenueMargin() {
   const [marginFilter, setMarginFilter] = useState("all");
   const [serviceTypeFilter, setServiceTypeFilter] = useState("all");
   const [providerFilter, setProviderFilter] = useState("all");
+  const [costReviewNeeded, setCostReviewNeeded] = useState(false);
   const [sortField, setSortField] = useState<"margin" | "revenue" | "cost">("margin");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
 
@@ -72,6 +73,7 @@ export default function RevenueMargin() {
     marginFilter,
     serviceType: serviceTypeFilter,
     provider: providerFilter,
+    costReviewNeeded: costReviewNeeded || undefined,
   });
 
   const { data: billingSummary } = trpc.billing.billingItems.summary.useQuery();
@@ -118,11 +120,11 @@ export default function RevenueMargin() {
       {stats && (
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3 mb-6">
           <div className="bg-card border border-border rounded-lg p-4">
-            <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">Total Cost</p>
+            <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">Total Cost (ex GST)</p>
             <p className="text-lg font-bold data-value mt-1">{formatCurrency(stats.totalCost)}</p>
           </div>
           <div className="bg-card border border-border rounded-lg p-4">
-            <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">Total Revenue</p>
+            <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">Total Revenue (ex GST)</p>
             <p className="text-lg font-bold data-value mt-1 text-emerald-700">{formatCurrency(stats.totalRevenue)}</p>
           </div>
           <div className="bg-card border border-border rounded-lg p-4">
@@ -194,12 +196,29 @@ export default function RevenueMargin() {
           <option value="Telstra">Telstra</option>
           <option value="ABB">ABB</option>
         </select>
+
+        <div className="w-px h-5 bg-border mx-1" />
+
+        <button
+          onClick={() => setCostReviewNeeded(v => !v)}
+          className={`px-3 py-1.5 text-xs rounded-md border transition-colors flex items-center gap-1.5 ${
+            costReviewNeeded
+              ? "bg-amber-500 text-white border-amber-500 font-semibold"
+              : "bg-card border-amber-300 text-amber-700 hover:bg-amber-50"
+          }`}
+        >
+          <AlertTriangle className="w-3 h-3" />
+          Cost Review Needed
+        </button>
       </div>
 
       {/* Results count + export */}
       <div className="flex items-center justify-between mb-3">
         <p className="text-xs text-muted-foreground">
-          Showing {sorted.length} services with matched revenue
+          {costReviewNeeded
+            ? `Showing ${sorted.length} services flagged for cost review`
+            : `Showing ${sorted.length} services with matched revenue`
+          }
         </p>
         <button
           onClick={() => exportToCSV(
@@ -246,7 +265,7 @@ export default function RevenueMargin() {
                     onClick={() => toggleSort("cost")}
                   >
                     <span className="inline-flex items-center gap-1">
-                      Cost <ArrowUpDown className="w-3 h-3" />
+                      Cost (ex GST) <ArrowUpDown className="w-3 h-3" />
                     </span>
                   </th>
                   <th
@@ -254,7 +273,7 @@ export default function RevenueMargin() {
                     onClick={() => toggleSort("revenue")}
                   >
                     <span className="inline-flex items-center gap-1">
-                      Revenue <ArrowUpDown className="w-3 h-3" />
+                      Revenue (ex GST) <ArrowUpDown className="w-3 h-3" />
                     </span>
                   </th>
                   <th
@@ -280,6 +299,12 @@ export default function RevenueMargin() {
                           <div>
                             <p className="text-sm font-medium">{s.planName || s.serviceType}</p>
                             <p className="data-value text-[11px] text-muted-foreground">{s.phoneNumber || s.connectionId || s.serviceId}</p>
+                            {s.discoveryNotes?.includes('COST REVIEW NEEDED') && (
+                              <span className="inline-flex items-center gap-0.5 mt-0.5 px-1.5 py-0.5 text-[10px] rounded bg-amber-100 text-amber-700 border border-amber-200">
+                                <AlertTriangle className="w-2.5 h-2.5" />
+                                Cost Review Needed
+                              </span>
+                            )}
                           </div>
                         </Link>
                       </td>

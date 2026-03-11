@@ -809,13 +809,13 @@ export default function ServiceDetail() {
         <DetailRow label="Location ID" value={service.locId} mono />
         <DetailRow label="IP Address" value={service.ipAddress} mono />
         <DetailRow
-          label="Monthly Cost"
+          label="Monthly Cost (ex GST)"
           value={`$${Number(service.monthlyCost).toLocaleString("en-AU", { minimumFractionDigits: 2 })}`}
           mono
         />
         {Number(service.monthlyRevenue) > 0 && (
           <DetailRow
-            label="Monthly Revenue"
+            label="Monthly Revenue (ex GST)"
             value={`$${Number(service.monthlyRevenue).toLocaleString("en-AU", { minimumFractionDigits: 2 })}`}
             mono
           />

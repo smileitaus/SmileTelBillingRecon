@@ -762,16 +762,24 @@ function IssueItemRow({
             <ItemActions itemId={item.serviceExternalId} itemName={itemName} serviceExternalId={item.serviceExternalId} currentCustomerName={item.service?.customerName} onIgnore={onIgnore} onResolve={onResolve} onFlag={onFlag} />
           </div>
         </div>
+        {item.affectedInvoices?.length > 0 && (
+          <p className="text-xs text-amber-600 ml-4 mb-1">
+            Duplicate on invoice{item.affectedInvoices.length > 1 ? 's' : ''}: {item.affectedInvoices.join(', ')}
+          </p>
+        )}
         <div className="space-y-1 ml-4">
-          {item.billingItems?.slice(0, 5).map((bi: any, idx: number) => (
+          {item.billingItems?.slice(0, 6).map((bi: any, idx: number) => (
             <div key={idx} className="flex items-center gap-2 text-xs text-muted-foreground">
               <span className="w-1 h-1 rounded-full bg-muted-foreground shrink-0" />
               <span className="flex-1 truncate">{bi.description}</span>
-              <span className="font-mono">{fmt(bi.lineAmount)}</span>
+              {bi.invoiceNumber && (
+                <span className="text-[10px] px-1 py-0.5 rounded bg-muted font-mono shrink-0">{bi.invoiceNumber}</span>
+              )}
+              <span className="font-mono shrink-0">{fmt(bi.lineAmount)}</span>
             </div>
           ))}
-          {item.billingItems?.length > 5 && (
-            <p className="text-xs text-muted-foreground ml-3">+{item.billingItems.length - 5} more</p>
+          {item.billingItems?.length > 6 && (
+            <p className="text-xs text-muted-foreground ml-3">+{item.billingItems.length - 6} more</p>
           )}
         </div>
       </div>
@@ -874,9 +882,9 @@ function IssueItemRow({
         </div>
         <div className="text-right shrink-0">
           <div className="flex items-center gap-3 text-xs">
-            <span className="text-muted-foreground">Cost: <span className="font-mono">{fmt(item.monthlyCost)}</span></span>
+            <span className="text-muted-foreground">Cost (ex GST): <span className="font-mono">{fmt(item.monthlyCost)}</span></span>
             {item.monthlyRevenue != null && (
-              <span className="text-muted-foreground">Rev: <span className="font-mono">{fmt(item.monthlyRevenue)}</span></span>
+              <span className="text-muted-foreground">Rev (ex GST): <span className="font-mono">{fmt(item.monthlyRevenue)}</span></span>
             )}
             {item.marginPercent != null && (
               <span className={`font-mono font-semibold ${marginColor}`}>{item.marginPercent.toFixed(1)}%</span>
@@ -1188,6 +1196,7 @@ function ManualReviewSection() {
 
 export default function Review() {
   const { data, isLoading, error } = trpc.billing.review.issues.useQuery();
+  const utils = trpc.useUtils();
   const ignoreMutation = trpc.billing.review.ignore.useMutation({
     onSuccess: () => {
       toast.success("Issue ignored");
@@ -1196,14 +1205,19 @@ export default function Review() {
     onError: (err) => toast.error(err.message),
   });
   const resolveMutation = trpc.billing.review.resolve.useMutation({
-    onSuccess: () => toast.success("Item marked as reviewed"),
+    onSuccess: () => {
+      toast.success("Item marked as reviewed");
+      utils.billing.review.ignoredItems.invalidate();
+    },
     onError: (err) => toast.error(err.message),
   });
   const flagMutation = trpc.billing.review.resolve.useMutation({
-    onSuccess: () => toast.success("Service flagged for termination"),
+    onSuccess: () => {
+      toast.success("Service flagged for termination");
+      utils.billing.review.ignoredItems.invalidate();
+    },
     onError: (err) => toast.error(err.message),
   });
-  const utils = trpc.useUtils();
 
   const { data: ignoredItems } = trpc.billing.review.ignoredItems.useQuery();
 

@@ -146,7 +146,7 @@ function CustomerSearch({
         />
       </div>
       {query.length >= 2 && (
-        <div className="absolute z-10 w-full mt-1 max-h-40 overflow-y-auto bg-card border border-border rounded-md shadow-lg">
+        <div className="absolute z-[200] w-full mt-1 max-h-60 overflow-y-auto bg-card border border-border rounded-md shadow-xl">
           {results.map((c: any) => (
             <button
               key={c.externalId}
@@ -312,7 +312,7 @@ export default function ServiceEditPanel({ serviceExternalId, onClose, onSaved }
             Service not found
           </div>
         ) : (
-          <div className="flex-1 overflow-y-auto">
+          <div className="flex-1 overflow-y-auto overflow-x-visible">
             <div className="p-6 space-y-6">
 
               {/* Read-only identity fields */}
@@ -323,7 +323,7 @@ export default function ServiceEditPanel({ serviceExternalId, onClose, onSaved }
                 </p>
                 <div className="grid grid-cols-2 gap-3">
                   <ReadOnlyField label="Service Name / ID" value={service.serviceId || service.externalId} />
-                  <ReadOnlyField label="Monthly Cost" value={`$${parseFloat(String(service.monthlyCost)).toFixed(2)}`} />
+                  <ReadOnlyField label="Monthly Cost (ex GST)" value={`$${parseFloat(String(service.monthlyCost)).toFixed(2)}`} />
                   <ReadOnlyField label="Service Type" value={service.serviceType} />
                   <ReadOnlyField label="Provider" value={service.supplierName || service.provider || "—"} />
                 </div>
@@ -459,8 +459,8 @@ export default function ServiceEditPanel({ serviceExternalId, onClose, onSaved }
               </FieldGroup>
 
               {/* Reassign Customer */}
-              <div className="border border-border rounded-lg overflow-hidden">
-                <div className="px-4 py-3 bg-muted/30 border-b border-border">
+              <div className="border border-border rounded-lg overflow-visible">
+                <div className="px-4 py-3 bg-muted/30 border-b border-border rounded-t-lg">
                   <p className="text-sm font-semibold flex items-center gap-2">
                     <ArrowRightLeft className="w-4 h-4" />
                     Customer Assignment

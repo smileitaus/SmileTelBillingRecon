@@ -484,7 +484,7 @@ export default function CustomerDetail() {
         </div>
         <div className="bg-card border border-border rounded-lg px-4 py-3">
           <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">
-            Monthly Cost
+            Monthly Cost (ex GST)
           </p>
           <p className="text-2xl font-bold mt-1 data-value">
             $

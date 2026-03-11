@@ -937,7 +937,7 @@ export default function UnmatchedServices() {
         </div>
         <div className="bg-card border border-border rounded-lg p-4">
           <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">
-            Monthly Cost
+            Monthly Cost (ex GST)
           </p>
           <p className="text-2xl font-bold font-mono mt-1">
             ${totalCost.toFixed(2)}

@@ -213,14 +213,18 @@ export async function getServicesByCustomer(customerExternalId: string) {
 export async function getServiceById(externalId: string) {
   const db = await getDb();
   if (!db) return null;
-
   const result = await db.select().from(services).where(eq(services.externalId, externalId)).limit(1);
   if (result.length === 0) return null;
-
   const s = result[0];
+  const cost = parseFloat(String(s.monthlyCost));
+  const revenue = parseFloat(String(s.monthlyRevenue));
+  const computedMargin = revenue > 0 ? ((revenue - cost) / revenue * 100) : null;
   return {
     ...s,
-    monthlyCost: parseFloat(s.monthlyCost),
+    monthlyCost: cost,
+    monthlyRevenue: revenue,
+    // Always return freshly computed margin so the UI reflects current cost/revenue
+    marginPercent: computedMargin !== null ? computedMargin.toFixed(2) : s.marginPercent,
     billingHistory: s.billingHistory ? JSON.parse(s.billingHistory) : [],
   };
 }
@@ -832,12 +836,12 @@ export async function getBillingSummary() {
     revenue: sql<string>`COALESCE(SUM(lineAmount), 0)`,
   }).from(billingItems).groupBy(billingItems.category).orderBy(sql`SUM(lineAmount) DESC`);
 
-  // Margin stats from services with revenue
+  // Margin stats from services with revenue — compute on-the-fly so they reflect current cost/revenue
   const [marginStats] = await db.select({
     servicesWithRevenue: sql<number>`count(*)`,
-    avgMargin: sql<string>`COALESCE(AVG(marginPercent), 0)`,
-    negativeMarginCount: sql<number>`SUM(CASE WHEN marginPercent < 0 THEN 1 ELSE 0 END)`,
-    lowMarginCount: sql<number>`SUM(CASE WHEN marginPercent >= 0 AND marginPercent < 20 THEN 1 ELSE 0 END)`,
+    avgMargin: sql<string>`COALESCE(AVG(CASE WHEN monthlyRevenue > 0 THEN (monthlyRevenue - monthlyCost) / monthlyRevenue * 100 ELSE 0 END), 0)`,
+    negativeMarginCount: sql<number>`SUM(CASE WHEN (monthlyRevenue - monthlyCost) / monthlyRevenue * 100 < 0 THEN 1 ELSE 0 END)`,
+    lowMarginCount: sql<number>`SUM(CASE WHEN (monthlyRevenue - monthlyCost) / monthlyRevenue * 100 >= 0 AND (monthlyRevenue - monthlyCost) / monthlyRevenue * 100 < 20 THEN 1 ELSE 0 END)`,
     totalCost: sql<string>`COALESCE(SUM(monthlyCost), 0)`,
     totalRevenue: sql<string>`COALESCE(SUM(monthlyRevenue), 0)`,
   }).from(services).where(sql`monthlyRevenue > 0`);
@@ -886,25 +890,30 @@ export async function getServicesWithMargin(filters?: {
   customerExternalId?: string;
   serviceType?: string;
   provider?: string;
+  costReviewNeeded?: boolean;
 }) {
   const db = await getDb();
   if (!db) return [];
 
-  const conditions = [sql`monthlyRevenue > 0`];
+  // Compute margin on-the-fly from current monthlyCost and monthlyRevenue so it is always fresh
+  // even if the stored marginPercent column is stale.
+  const computedMargin = sql<string>`CASE WHEN monthlyRevenue > 0 THEN ROUND((monthlyRevenue - monthlyCost) / monthlyRevenue * 100, 2) ELSE 0 END`;
+  // For cost review mode, include services regardless of revenue (they may have $0 cost needing review)
+  const conditions: ReturnType<typeof sql>[] = filters?.costReviewNeeded ? [] : [sql`monthlyRevenue > 0`];
 
   if (filters?.marginFilter && filters.marginFilter !== 'all') {
     switch (filters.marginFilter) {
       case 'negative':
-        conditions.push(sql`marginPercent < 0`);
+        conditions.push(sql`(monthlyRevenue - monthlyCost) / monthlyRevenue * 100 < 0`);
         break;
       case 'low':
-        conditions.push(sql`marginPercent >= 0 AND marginPercent < 20`);
+        conditions.push(sql`(monthlyRevenue - monthlyCost) / monthlyRevenue * 100 >= 0 AND (monthlyRevenue - monthlyCost) / monthlyRevenue * 100 < 20`);
         break;
       case 'healthy':
-        conditions.push(sql`marginPercent >= 20 AND marginPercent < 50`);
+        conditions.push(sql`(monthlyRevenue - monthlyCost) / monthlyRevenue * 100 >= 20 AND (monthlyRevenue - monthlyCost) / monthlyRevenue * 100 < 50`);
         break;
       case 'high':
-        conditions.push(sql`marginPercent >= 50`);
+        conditions.push(sql`(monthlyRevenue - monthlyCost) / monthlyRevenue * 100 >= 50`);
         break;
     }
   }
@@ -919,17 +928,46 @@ export async function getServicesWithMargin(filters?: {
     conditions.push(eq(services.provider, filters.provider));
   }
 
-  const whereClause = conditions.reduce((acc, c) => sql`${acc} AND ${c}`);
+  // Filter to only services flagged for cost review
+  if (filters?.costReviewNeeded) {
+    conditions.push(like(services.discoveryNotes, '%COST REVIEW NEEDED%'));
+  }
 
-  const result = await db.select().from(services)
+  const whereClause = conditions.length > 0 ? conditions.reduce((acc, c) => sql`${acc} AND ${c}`) : sql`1=1`;
+  const result = await db.select({
+    id: services.id,
+    externalId: services.externalId,
+    serviceType: services.serviceType,
+    serviceTypeDetail: services.serviceTypeDetail,
+    planName: services.planName,
+    phoneNumber: services.phoneNumber,
+    connectionId: services.connectionId,
+    customerExternalId: services.customerExternalId,
+    customerName: services.customerName,
+    locationExternalId: services.locationExternalId,
+    locationAddress: services.locationAddress,
+    provider: services.provider,
+    status: services.status,
+    monthlyCost: services.monthlyCost,
+    monthlyRevenue: services.monthlyRevenue,
+    // Always compute fresh margin from current cost and revenue
+    computedMarginPercent: computedMargin,
+    billingHistory: services.billingHistory,
+    billingPlatform: services.billingPlatform,
+    technology: services.technology,
+    speedTier: services.speedTier,
+    discoveryNotes: services.discoveryNotes,
+    createdAt: services.createdAt,
+    updatedAt: services.updatedAt,
+  }).from(services)
     .where(whereClause)
-    .orderBy(asc(sql`marginPercent`));
+    .orderBy(asc(computedMargin));
 
   return result.map(s => ({
     ...s,
-    monthlyCost: parseFloat(s.monthlyCost),
-    monthlyRevenue: parseFloat(s.monthlyRevenue),
-    marginPercent: s.marginPercent ? parseFloat(s.marginPercent) : null,
+    monthlyCost: parseFloat(String(s.monthlyCost)),
+    monthlyRevenue: parseFloat(String(s.monthlyRevenue)),
+    marginPercent: s.computedMarginPercent ? parseFloat(String(s.computedMarginPercent)) : null,
     billingHistory: s.billingHistory ? JSON.parse(s.billingHistory) : [],
   }));
 }
@@ -1165,29 +1203,47 @@ export async function getReviewIssues() {
 
   // ============ BILLING REVIEW ============
 
-  // 1. Services Double Billed (same service has multiple billing items)
-  const doubleBilled = await db.select({
+  // 1. Services Billed in Duplicate — same individual service appears more than once on the SAME invoice.
+  //    A customer having multiple different services on one invoice is normal and NOT flagged here.
+  const doubleBilledPerInvoice = await db.select({
     serviceExternalId: billingItems.serviceExternalId,
+    invoiceNumber: billingItems.invoiceNumber,
     count: sql<number>`count(*)`,
     totalBilled: sql<string>`COALESCE(SUM(lineAmount), 0)`,
   }).from(billingItems)
     .where(sql`serviceExternalId IS NOT NULL AND serviceExternalId != ''`)
-    .groupBy(billingItems.serviceExternalId)
+    .groupBy(billingItems.serviceExternalId, billingItems.invoiceNumber)
     .having(sql`count(*) > 1`)
     .orderBy(sql`count(*) DESC`);
 
-  if (doubleBilled.length > 0) {
-    // Get details for each double-billed service
+  // Collapse per-invoice rows to unique services (one service may be duplicated across several invoices)
+  const doubleBilledMap = new Map<string, { totalCount: number; totalBilled: number; invoices: string[] }>();
+  for (const row of doubleBilledPerInvoice) {
+    const key = row.serviceExternalId!;
+    if (!doubleBilledMap.has(key)) {
+      doubleBilledMap.set(key, { totalCount: 0, totalBilled: 0, invoices: [] });
+    }
+    const entry = doubleBilledMap.get(key)!;
+    entry.totalCount += Number(row.count);
+    entry.totalBilled += parseFloat(String(row.totalBilled));
+    entry.invoices.push(row.invoiceNumber);
+  }
+
+  if (doubleBilledMap.size > 0) {
     const doubleBilledDetails = [];
-    for (const db_item of doubleBilled.slice(0, 50)) {
+    for (const [svcId, meta] of Array.from(doubleBilledMap.entries()).slice(0, 50)) {
+      // Fetch only the billing items on the affected invoices for this service
+      const invoicePlaceholders = meta.invoices.map(inv => sql`${inv}`);
       const items = await db.select({
         id: billingItems.id,
         description: billingItems.description,
         lineAmount: billingItems.lineAmount,
         contactName: billingItems.contactName,
         category: billingItems.category,
+        invoiceNumber: billingItems.invoiceNumber,
+        invoiceDate: billingItems.invoiceDate,
       }).from(billingItems)
-        .where(eq(billingItems.serviceExternalId, db_item.serviceExternalId!));
+        .where(sql`${billingItems.serviceExternalId} = ${svcId} AND ${billingItems.invoiceNumber} IN (${sql.join(invoicePlaceholders, sql`, `)})`);
 
       const svc = await db.select({
         planName: services.planName,
@@ -1198,13 +1254,14 @@ export async function getReviewIssues() {
         customerName: services.customerName,
         monthlyCost: services.monthlyCost,
       }).from(services)
-        .where(eq(services.externalId, db_item.serviceExternalId!))
+        .where(eq(services.externalId, svcId))
         .limit(1);
 
       doubleBilledDetails.push({
-        serviceExternalId: db_item.serviceExternalId,
-        billingItemCount: db_item.count,
-        totalBilled: parseFloat(db_item.totalBilled),
+        serviceExternalId: svcId,
+        billingItemCount: meta.totalCount,
+        totalBilled: meta.totalBilled,
+        affectedInvoices: meta.invoices,
         service: svc[0] || null,
         billingItems: items.map(i => ({
           id: i.id,
@@ -1212,6 +1269,8 @@ export async function getReviewIssues() {
           lineAmount: parseFloat(String(i.lineAmount)),
           contactName: i.contactName,
           category: i.category,
+          invoiceNumber: i.invoiceNumber,
+          invoiceDate: i.invoiceDate,
         })),
       });
     }
@@ -1220,10 +1279,10 @@ export async function getReviewIssues() {
       id: 'double-billed',
       type: 'double-billed',
       severity: 'critical',
-      title: 'Services Double Billed',
-      description: 'These services have multiple billing line items. Review to ensure charges are correct and not duplicated.',
-      count: Number(doubleBilled.length),
-      financialImpact: doubleBilled.reduce((s, d) => s + parseFloat(String(d.totalBilled)), 0),
+      title: 'Services Billed in Duplicate',
+      description: 'These individual services appear more than once on the same invoice. This likely indicates a duplicate charge — review and correct in the billing platform.',
+      count: doubleBilledMap.size,
+      financialImpact: Array.from(doubleBilledMap.values()).reduce((s, d) => s + d.totalBilled, 0),
       items: doubleBilledDetails,
     });
   }
@@ -1436,7 +1495,7 @@ export async function getReviewIssues() {
 
   // ============ ACCOUNT MANAGEMENT ============
 
-  // 7. Negative/Low Margin Services
+  // 7. Negative/Low Margin Services — compute margin on-the-fly so stale stored values don't hide real issues
   const negativeMarginServices = await db.select({
     externalId: services.externalId,
     serviceType: services.serviceType,
@@ -1447,11 +1506,11 @@ export async function getReviewIssues() {
     customerName: services.customerName,
     monthlyCost: services.monthlyCost,
     monthlyRevenue: services.monthlyRevenue,
-    marginPercent: services.marginPercent,
+    marginPercent: sql<string>`CASE WHEN monthlyRevenue > 0 THEN ROUND((monthlyRevenue - monthlyCost) / monthlyRevenue * 100, 2) ELSE 0 END`,
     provider: services.provider,
   }).from(services)
-    .where(sql`${services.monthlyRevenue} > 0 AND ${services.marginPercent} < 0`)
-    .orderBy(asc(services.marginPercent))
+    .where(sql`${services.monthlyRevenue} > 0 AND (${services.monthlyRevenue} - ${services.monthlyCost}) / ${services.monthlyRevenue} * 100 < 0`)
+    .orderBy(asc(sql`(monthlyRevenue - monthlyCost) / monthlyRevenue * 100`))
     .limit(50);
 
   if (negativeMarginServices.length > 0) {
@@ -1479,7 +1538,7 @@ export async function getReviewIssues() {
     });
   }
 
-  // 8. Low Margin Services (0-20%)
+  // 8. Low Margin Services (0-20%) — compute on-the-fly
   const lowMarginServices = await db.select({
     externalId: services.externalId,
     serviceType: services.serviceType,
@@ -1490,11 +1549,11 @@ export async function getReviewIssues() {
     customerName: services.customerName,
     monthlyCost: services.monthlyCost,
     monthlyRevenue: services.monthlyRevenue,
-    marginPercent: services.marginPercent,
+    marginPercent: sql<string>`CASE WHEN monthlyRevenue > 0 THEN ROUND((monthlyRevenue - monthlyCost) / monthlyRevenue * 100, 2) ELSE 0 END`,
     provider: services.provider,
   }).from(services)
-    .where(sql`${services.monthlyRevenue} > 0 AND ${services.marginPercent} >= 0 AND ${services.marginPercent} < 20`)
-    .orderBy(asc(services.marginPercent))
+    .where(sql`${services.monthlyRevenue} > 0 AND (${services.monthlyRevenue} - ${services.monthlyCost}) / ${services.monthlyRevenue} * 100 >= 0 AND (${services.monthlyRevenue} - ${services.monthlyCost}) / ${services.monthlyRevenue} * 100 < 20`)
+    .orderBy(asc(sql`(monthlyRevenue - monthlyCost) / monthlyRevenue * 100`))
     .limit(50);
 
   if (lowMarginServices.length > 0) {
@@ -1514,7 +1573,7 @@ export async function getReviewIssues() {
     });
   }
 
-  // 9. High Margin Services (>50%)
+  // 9. High Margin Services (>50%) — compute on-the-fly
   const highMarginServices = await db.select({
     externalId: services.externalId,
     serviceType: services.serviceType,
@@ -1525,11 +1584,11 @@ export async function getReviewIssues() {
     customerName: services.customerName,
     monthlyCost: services.monthlyCost,
     monthlyRevenue: services.monthlyRevenue,
-    marginPercent: services.marginPercent,
+    marginPercent: sql<string>`CASE WHEN monthlyRevenue > 0 THEN ROUND((monthlyRevenue - monthlyCost) / monthlyRevenue * 100, 2) ELSE 0 END`,
     provider: services.provider,
   }).from(services)
-    .where(sql`${services.monthlyRevenue} > 0 AND ${services.marginPercent} >= 50`)
-    .orderBy(desc(services.marginPercent))
+    .where(sql`${services.monthlyRevenue} > 0 AND (${services.monthlyRevenue} - ${services.monthlyCost}) / ${services.monthlyRevenue} * 100 >= 50`)
+    .orderBy(desc(sql`(monthlyRevenue - monthlyCost) / monthlyRevenue * 100`))
     .limit(50);
 
   if (highMarginServices.length > 0) {
@@ -1675,14 +1734,41 @@ export async function getReviewIssues() {
   return { billingReview, accountManagement };
 }
 
-// Mark a review issue item as resolved/ignored
-export async function resolveReviewIssue(issueType: string, itemId: string, action: 'resolve' | 'ignore' | 'flag', notes?: string) {
+// Internal helper: insert an 'ignored' record only if one doesn't already exist for this issue+item
+async function _persistIgnored(db: ReturnType<typeof drizzle>, issueType: string, targetId: string, targetName: string, note: string, submittedBy: string) {
+  const existing = await db.select({ id: reviewItems.id }).from(reviewItems)
+    .where(sql`${reviewItems.type} = 'ignored' AND ${reviewItems.issueType} = ${issueType} AND ${reviewItems.targetId} = ${targetId}`)
+    .limit(1);
+  if (existing.length === 0) {
+    await db.insert(reviewItems).values({
+      type: 'ignored',
+      targetType: 'service',
+      targetId,
+      targetName,
+      issueType,
+      note,
+      submittedBy,
+      status: 'open',
+    });
+  }
+}
+
+// Mark a review issue item as resolved/ignored — always persists to DB so the item is filtered from the list
+export async function resolveReviewIssue(issueType: string, itemId: string, action: 'resolve' | 'ignore' | 'flag', notes?: string, submittedBy = 'system') {
   const db = await getDb();
   if (!db) throw new Error('Database not available');
 
-  // For service-related issues, update the service notes
-  if (issueType === 'multi-service-site' && action === 'ignore') {
-    // Add a note that multiple services at this site have been reviewed and accepted
+  // For flag action: update service status then persist
+  if (action === 'flag') {
+    await db.update(services).set({
+      status: 'flagged_for_termination',
+    }).where(eq(services.externalId, itemId));
+    await _persistIgnored(db, issueType, itemId, itemId, notes || 'Flagged for termination', submittedBy);
+    return { success: true };
+  }
+
+  // For resolve/ignore actions: optionally update service notes for specific issue types
+  if (issueType === 'multi-service-site') {
     const existing = await db.select({ discoveryNotes: services.discoveryNotes }).from(services)
       .where(eq(services.customerExternalId, itemId)).limit(1);
     const currentNotes = existing[0]?.discoveryNotes || '';
@@ -1692,32 +1778,20 @@ export async function resolveReviewIssue(issueType: string, itemId: string, acti
         discoveryNotes: currentNotes ? `${currentNotes}\n${newNote}` : newNote,
       }).where(eq(services.customerExternalId, itemId));
     }
-    return { success: true };
-  }
-
-  if (issueType === 'double-billed' && action === 'resolve') {
-    // User confirms the billing is correct (e.g., bundled services)
-    // Add note to the service
+  } else if (issueType === 'double-billed') {
     const svc = await db.select({ discoveryNotes: services.discoveryNotes }).from(services)
       .where(eq(services.externalId, itemId)).limit(1);
     const currentNotes = svc[0]?.discoveryNotes || '';
-    const newNote = `[BILLING REVIEWED] Multiple billing items confirmed correct. ${notes || ''}`;
+    const newNote = `[BILLING REVIEWED] Duplicate billing items confirmed correct. ${notes || ''}`;
     if (!currentNotes.includes('[BILLING REVIEWED]')) {
       await db.update(services).set({
         discoveryNotes: currentNotes ? `${currentNotes}\n${newNote}` : newNote,
       }).where(eq(services.externalId, itemId));
     }
-    return { success: true };
   }
 
-  if (action === 'flag') {
-    // Flag the service for termination
-    await db.update(services).set({
-      status: 'flagged_for_termination',
-    }).where(eq(services.externalId, itemId));
-    return { success: true };
-  }
-
+  // Always persist as 'ignored' so the item disappears from the review list
+  await _persistIgnored(db, issueType, itemId, itemId, notes || 'Marked as reviewed', submittedBy);
   return { success: true };
 }
 

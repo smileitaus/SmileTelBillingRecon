@@ -317,3 +317,10 @@
 - [x] Export button on Revenue & Margin page
 - [x] Export button on Billing Platform Checks page
 - [x] Export button on Auto-Match page
+
+# Review Page Fixes
+- [x] Fix double-billing detection: only flag individual services billed in duplicate (not customers with multiple services)
+- [x] Fix Review page: Reviewed/Ignored items not removed from list after actioning
+- [x] Add ex GST labels to all pricing columns across all pages
+- [x] Add Cost Review Needed filter for 135 flagged services
+- [x] Fix margin auto-recalculation: margins should refresh automatically when costs or revenue change

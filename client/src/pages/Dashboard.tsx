@@ -167,10 +167,10 @@ export default function Dashboard() {
           subtext={`Across ${summary.totalLocations} locations`}
         />
         <StatCard
-          label="Monthly Spend"
+          label="Monthly Spend (ex GST)"
           value={`$${Number(summary.totalMonthlyCost).toLocaleString("en-AU", { minimumFractionDigits: 2 })}`}
           icon={DollarSign}
-          subtext="Estimated from invoices"
+          subtext="Supplier cost, ex GST"
         />
         <StatCard
           label="Matched"
