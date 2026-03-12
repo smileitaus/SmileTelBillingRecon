@@ -411,7 +411,7 @@ function ServiceRow({ service, onTerminated }: { service: any; onTerminated?: ()
                   {service.phoneNumber}
                 </span>
               )}
-              <AvcInlineEditor service={service} />
+              {service.serviceType === "Internet" && <AvcInlineEditor service={service} />}
               {!service.phoneNumber && !hasAvc && (
                 <span className="data-value text-muted-foreground">
                   {service.serviceId}
@@ -524,11 +524,12 @@ export default function CustomerDetail() {
     (s) => s.status === "terminated"
   ).length;
 
-  // AVC tracking
-  const servicesWithAvc = customerServices.filter(
+  // AVC tracking — Internet services only
+  const internetServices = customerServices.filter((s) => s.serviceType === "Internet");
+  const servicesWithAvc = internetServices.filter(
     (s) => s.connectionId && s.connectionId.trim() !== ""
   ).length;
-  const servicesMissingAvc = customerServices.length - servicesWithAvc;
+  const servicesMissingAvc = internetServices.length - servicesWithAvc;
 
   // Provider breakdown for this customer
   const providerBreakdown = customerServices.reduce((acc: Record<string, { count: number; cost: number }>, s) => {
@@ -730,7 +731,7 @@ export default function CustomerDetail() {
             <p className="text-2xl font-bold data-value">
               {servicesWithAvc}
               <span className="text-sm text-muted-foreground font-normal">
-                /{customerServices.length}
+                /{internetServices.length}
               </span>
             </p>
             {servicesMissingAvc > 0 && (
@@ -831,8 +832,8 @@ export default function CustomerDetail() {
             (s: { status: string }) => s.status === "unmatched"
           ).length;
           const locMissingAvc = locServices.filter(
-            (s: { connectionId?: string | null }) =>
-              !s.connectionId || s.connectionId.trim() === ""
+            (s: { serviceType?: string; connectionId?: string | null }) =>
+              s.serviceType === "Internet" && (!s.connectionId || s.connectionId.trim() === "")
           ).length;
           const borderColor =
             locUnmatched > 0 ? "border-l-amber" : "border-l-teal";
