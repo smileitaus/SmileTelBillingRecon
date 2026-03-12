@@ -68,6 +68,7 @@ import {
   previewAddressAutoMatch,
   commitAddressAutoMatch,
   bulkActivateLinkedServices,
+  recalculateAll,
   type AddressMatchCandidate,
 } from "./db";
 
@@ -684,8 +685,11 @@ export const appRouter = router({
           return await bulkActivateLinkedServices(false);
         }),
     }),
-
-    // Xero contact import workflow
+    recalculateAll: protectedProcedure
+      .mutation(async () => {
+        return await recalculateAll();
+      }),
+    // Xero contact import workfloww
     xeroContacts: router({
       // Get fuzzy customer suggestions for a given Xero contact name
       suggestions: protectedProcedure

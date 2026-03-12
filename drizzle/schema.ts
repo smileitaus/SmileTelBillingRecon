@@ -45,7 +45,7 @@ export const customers = mysqlTable("customers", {
   xeroAccountNumber: varchar("xeroAccountNumber", { length: 64 }).default(""),
   // Revenue tracking
   monthlyRevenue: decimal("monthlyRevenue", { precision: 10, scale: 2 }).default("0.00").notNull(),
-  marginPercent: decimal("marginPercent", { precision: 5, scale: 2 }),
+  marginPercent: decimal("marginPercent", { precision: 10, scale: 2 }),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });
@@ -146,7 +146,7 @@ export const services = mysqlTable("services", {
   noDataUse: int("noDataUse").default(0).notNull(),
   // Revenue tracking
   monthlyRevenue: decimal("monthlyRevenue", { precision: 10, scale: 2 }).default("0.00").notNull(),
-  marginPercent: decimal("marginPercent", { precision: 5, scale: 2 }),
+  marginPercent: decimal("marginPercent", { precision: 10, scale: 2 }),
   billingItemId: varchar("billingItemId", { length: 32 }).default(""),
   // Billing platform(s) - JSON array of: OneBill, SasBoss, ECN, Halo, DataGate
   billingPlatform: text("billingPlatform"),

@@ -587,9 +587,87 @@ export async function recalculateCustomerCounts(...customerExternalIds: (string 
       matchedCount   = (SELECT COUNT(*)                              FROM services s WHERE s.customerExternalId = c.externalId AND s.status = 'active'),
       unmatchedCount = (SELECT COUNT(*)                              FROM services s WHERE s.customerExternalId = c.externalId AND s.status = 'unmatched'),
       monthlyCost    = (SELECT COALESCE(SUM(s.monthlyCost), 0)       FROM services s WHERE s.customerExternalId = c.externalId AND s.status != 'terminated'),
-      updatedAt      = NOW()
+       updatedAt      = NOW()
     WHERE c.externalId IN (${idList})
   `);
+}
+
+/**
+ * Full database recalculation: promotes customer-matched billing items to service-matched,
+ * recalculates monthlyRevenue + marginPercent on all services, then recalculates all customer stats.
+ * Safe to run at any time — idempotent.
+ */
+export async function recalculateAll() {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+
+  // Step 1: Promote customer-matched billing items that already have serviceExternalId → service-matched
+  await db.execute(sql`
+    UPDATE billing_items
+    SET matchStatus = 'service-matched', matchConfidence = 'auto'
+    WHERE matchStatus = 'customer-matched'
+      AND serviceExternalId IS NOT NULL
+      AND serviceExternalId != ''
+  `);
+
+  // Step 2: Recalculate monthlyRevenue + marginPercent on all services with billing items
+  await db.execute(sql`
+    UPDATE services s
+    SET
+      monthlyRevenue = (
+        SELECT COALESCE(SUM(bi.lineAmount), 0)
+        FROM billing_items bi
+        WHERE bi.serviceExternalId = s.externalId
+          AND bi.matchStatus = 'service-matched'
+      ),
+      marginPercent = CASE
+        WHEN (
+          SELECT COALESCE(SUM(bi.lineAmount), 0)
+          FROM billing_items bi
+          WHERE bi.serviceExternalId = s.externalId AND bi.matchStatus = 'service-matched'
+        ) > 0
+        THEN ROUND(
+          (
+            (SELECT COALESCE(SUM(bi.lineAmount), 0) FROM billing_items bi WHERE bi.serviceExternalId = s.externalId AND bi.matchStatus = 'service-matched')
+            - CAST(s.monthlyCost AS DECIMAL(10,2))
+          ) /
+          (SELECT COALESCE(SUM(bi.lineAmount), 0) FROM billing_items bi WHERE bi.serviceExternalId = s.externalId AND bi.matchStatus = 'service-matched')
+          * 100, 2
+        )
+        ELSE 0
+      END,
+      updatedAt = NOW()
+    WHERE EXISTS (
+      SELECT 1 FROM billing_items bi
+      WHERE bi.serviceExternalId = s.externalId AND bi.matchStatus = 'service-matched'
+    )
+  `);
+
+  // Step 3: Recalculate all customer stats
+  await db.execute(sql`
+    UPDATE customers c
+    SET
+      serviceCount   = (SELECT COUNT(*)                             FROM services s WHERE s.customerExternalId = c.externalId AND s.status != 'terminated'),
+      matchedCount   = (SELECT COUNT(*)                             FROM services s WHERE s.customerExternalId = c.externalId AND s.status = 'active'),
+      unmatchedCount = (SELECT COUNT(*)                             FROM services s WHERE s.customerExternalId = c.externalId AND s.status = 'unmatched'),
+      monthlyCost    = (SELECT COALESCE(SUM(s.monthlyCost), 0)      FROM services s WHERE s.customerExternalId = c.externalId AND s.status != 'terminated'),
+      monthlyRevenue = (SELECT COALESCE(SUM(s.monthlyRevenue), 0)   FROM services s WHERE s.customerExternalId = c.externalId AND s.status != 'terminated'),
+      marginPercent  = CASE
+        WHEN (SELECT COALESCE(SUM(s.monthlyRevenue), 0) FROM services s WHERE s.customerExternalId = c.externalId AND s.status != 'terminated') > 0
+        THEN ROUND(
+          (
+            (SELECT COALESCE(SUM(s.monthlyRevenue), 0) FROM services s WHERE s.customerExternalId = c.externalId AND s.status != 'terminated')
+            - (SELECT COALESCE(SUM(s.monthlyCost), 0) FROM services s WHERE s.customerExternalId = c.externalId AND s.status != 'terminated')
+          ) /
+          (SELECT COALESCE(SUM(s.monthlyRevenue), 0) FROM services s WHERE s.customerExternalId = c.externalId AND s.status != 'terminated')
+          * 100, 2
+        )
+        ELSE NULL
+      END,
+      updatedAt = NOW()
+  `);
+
+  return { success: true };
 }
 
 export async function assignServiceToCustomer(

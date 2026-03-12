@@ -3,7 +3,7 @@
  * 1. Alias Match: ABB/Carbon alias → customer name
  * 2. Address & Name Match: service address / planName → customer address / name
  */
-import { useState, useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 import {
@@ -1299,11 +1299,56 @@ function BulkActivateTab() {
           )}
         </>
       ) : null}
+
+      {/* Recalculate All */}
+      <RecalculateAllSection />
     </div>
   );
 }
 
-// ─── Root page ────────────────────────────────────────────────────────────────
+function RecalculateAllSection() {
+  const utils = trpc.useUtils();
+  const [lastRan, setLastRan] = React.useState<Date | null>(null);
+  const recalcMutation = trpc.billing.recalculateAll.useMutation({
+    onSuccess: () => {
+      setLastRan(new Date());
+      toast.success('Full recalculation complete — all costs, revenue, and margins updated');
+      utils.billing.customers.list.invalidate();
+      utils.billing.summary.invalidate();
+    },
+    onError: (err) => toast.error(`Recalculation failed: ${err.message}`),
+  });
+  return (
+    <div className="mt-6 border-t border-border pt-6">
+      <div className="flex items-start gap-3 p-4 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-lg">
+        <RefreshCw className="w-4 h-4 text-amber-600 mt-0.5 shrink-0" />
+        <div className="flex-1">
+          <p className="text-sm font-medium text-amber-900 dark:text-amber-100">Full Database Recalculation</p>
+          <p className="text-xs text-amber-700 dark:text-amber-300 mt-0.5">
+            Recalculates cost, revenue, and margin for every service and customer. Run this after bulk imports or if figures appear stale.
+          </p>
+          {lastRan && (
+            <p className="text-xs text-amber-600 mt-1">Last ran: {lastRan.toLocaleTimeString()}</p>
+          )}
+        </div>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => recalcMutation.mutate()}
+          disabled={recalcMutation.isPending}
+          className="border-amber-400 text-amber-700 hover:bg-amber-100 dark:hover:bg-amber-900/30 shrink-0"
+        >
+          {recalcMutation.isPending ? (
+            <><Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" />Recalculating…</>
+          ) : (
+            <><RefreshCw className="w-3.5 h-3.5 mr-1.5" />Recalculate All</>
+          )}
+        </Button>
+      </div>
+    </div>
+  );
+}
+// ─── Root page ─────────────────────────────────────────────────────────────────
 
 export default function AutoMatch() {
   const [activeTab, setActiveTab] = useState<"alias" | "address" | "bulk">("bulk");

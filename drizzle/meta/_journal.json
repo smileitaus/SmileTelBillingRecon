@@ -71,6 +71,13 @@
       "when": 1773196027578,
       "tag": "0009_flawless_captain_stacy",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "5",
+      "when": 1773358701003,
+      "tag": "0010_chief_kang",
+      "breakpoints": true
     }
   ]
 }

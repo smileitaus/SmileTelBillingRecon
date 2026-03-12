@@ -408,3 +408,13 @@
 - [ ] Manual review needed for 199 Telstra Unassigned SIMs (no address, no name, no alias)
 - [ ] Manual review needed for 7 named Telstra mobiles (personal names like 'Ian Mobile', 'Cindy Mobile')
 - [ ] ChannelHaus 22 services: use Address & Name Match tab to assign (34 candidates shown)
+
+# Data Integrity Fixes (Mar 13) — COMPLETED
+- [x] Fix customer monthlyCost showing $0.00 despite having matched services (stale stats after bulk activation)
+- [x] Fix Revenue & Margin capped at 120 services — promoted 1,109 customer-matched billing items to service-matched
+- [x] Propagated monthlyRevenue to 968 services (up from 115)
+- [x] Fixed DECIMAL(5,2) overflow on marginPercent — widened to DECIMAL(10,2) in schema + db:push
+- [x] Added recalculateAll() tRPC procedure + Recalculate All button in Auto-Match Bulk Activate tab
+- [x] Full recalculation run: 860 customers updated, $144,182/mo total revenue across 960 services
+- [x] Revenue & Margin page now shows 960 services (up from 120)
+- [x] Customer list: Affinage Professional $239.67, Accountant Ready Services $189.00 (both were $0.00)
