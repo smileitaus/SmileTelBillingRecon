@@ -3,6 +3,7 @@ import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import { z } from "zod";
+import { parsePdfInvoice } from "./pdfInvoiceParser";
 import {
   getAllCustomers,
   getCustomerById,
@@ -60,6 +61,8 @@ import {
   getAutoMatchCandidates,
   getSupplierServicesForCustomer,
   importExetelInvoice,
+  importGenericSupplierInvoice,
+  type GenericSupplierRow,
   getUnmatchedServicesAtAddress,
   bulkAssignByAddress,
 } from "./db";
@@ -715,6 +718,39 @@ export const appRouter = router({
       }))
       .mutation(async ({ input }) => {
         return await importExetelInvoice(input.invoiceNumber, input.rows);
+      }),
+
+    // Generic supplier invoice import (Channel Haus, Legion, Tech-e, etc.)
+    importGenericInvoice: protectedProcedure
+      .input(z.object({
+        supplier: z.string(),
+        invoiceNumber: z.string(),
+        rows: z.array(z.object({
+          friendlyName: z.string(),
+          serviceType: z.enum(['Internet', 'Voice', 'Other']),
+          amountExGst: z.number(),
+          serviceId: z.string().optional(),
+        })),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        const importedBy = ctx.user?.name || ctx.user?.email || 'Unknown';
+        return await importGenericSupplierInvoice(
+          input.supplier,
+          input.invoiceNumber,
+          input.rows as GenericSupplierRow[],
+          importedBy
+        );
+      }),
+
+    // PDF invoice parse (Channel Haus, Legion, Tech-e)
+    parsePdf: protectedProcedure
+      .input(z.object({
+        base64: z.string(),  // base64-encoded PDF buffer
+        filename: z.string(),
+      }))
+      .mutation(async ({ input }) => {
+        const buffer = Buffer.from(input.base64, 'base64');
+        return await parsePdfInvoice(buffer);
       }),
 
     // Customer merge

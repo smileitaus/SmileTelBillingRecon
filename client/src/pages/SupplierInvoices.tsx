@@ -1,14 +1,21 @@
 /**
- * Supplier Invoices — Upload and import supplier invoices (Exetel, ABB, etc.)
- * Parses CSV files client-side, shows a preview, then submits to the server for import.
+ * Supplier Invoices — Upload and import supplier invoices.
+ * Supports:
+ *   - Exetel (SmileIT): CSV files parsed client-side
+ *   - Channel Haus: PDF files parsed server-side
+ *   - Legion: PDF files parsed server-side
+ *   - Tech-e: PDF files parsed server-side
  */
 import { useState, useRef, useCallback } from "react";
-import { Upload, FileText, CheckCircle, AlertTriangle, X, ChevronDown, ChevronUp, RefreshCw } from "lucide-react";
+import {
+  Upload, FileText, CheckCircle, AlertTriangle, X,
+  ChevronDown, ChevronUp, RefreshCw, FileType,
+} from "lucide-react";
 import { ProviderBadge } from "@/components/ProviderBadge";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 
-// ── Exetel CSV Parser ─────────────────────────────────────────────────────────
+// ── Types ─────────────────────────────────────────────────────────────────────
 
 interface ExetelRow {
   serviceNumber: string;
@@ -24,7 +31,8 @@ interface ExetelRow {
   avcId: string;
 }
 
-interface ParsedInvoice {
+interface ParsedExetelInvoice {
+  type: "csv";
   supplier: "Exetel";
   invoiceNumber: string;
   rows: ExetelRow[];
@@ -33,7 +41,30 @@ interface ParsedInvoice {
   subtotal: number;
 }
 
-function parseExetelCsv(content: string): ParsedInvoice {
+interface ParsedPdfService {
+  friendlyName: string;
+  serviceId: string;
+  serviceType: "Internet" | "Voice" | "Other";
+  amountExGst: number;
+  description: string;
+  avcId?: string;
+  address?: string;
+}
+
+interface ParsedPdfInvoice {
+  type: "pdf";
+  supplier: "ChannelHaus" | "Legion" | "Tech-e";
+  invoiceNumber: string;
+  invoiceDate: string;
+  totalIncGst: number;
+  services: ParsedPdfService[];
+}
+
+type ParsedInvoice = ParsedExetelInvoice | ParsedPdfInvoice;
+
+// ── Exetel CSV Parser ─────────────────────────────────────────────────────────
+
+function parseExetelCsv(content: string): ParsedExetelInvoice {
   const lines = content.split("\n");
   let headerIdx = -1;
   let invoiceNumber = "";
@@ -66,7 +97,6 @@ function parseExetelCsv(content: string): ParsedInvoice {
     )
       break;
 
-    // Simple CSV parse (handles quoted fields)
     const fields: string[] = [];
     let current = "";
     let inQuotes = false;
@@ -90,8 +120,7 @@ function parseExetelCsv(content: string): ParsedInvoice {
       return idx >= 0 ? (fields[idx] || "").trim() : "";
     };
 
-    const parsePrice = (s: string) =>
-      parseFloat(s.replace(/[$,]/g, "")) || 0;
+    const parsePrice = (s: string) => parseFloat(s.replace(/[$,]/g, "")) || 0;
 
     rows.push({
       serviceNumber: get("Service Number"),
@@ -114,13 +143,12 @@ function parseExetelCsv(content: string): ParsedInvoice {
   const onceOffRows = rows.filter(
     (r) => !r.chargeType.toLowerCase().includes("recurring") || r.totalIncGst < 0
   );
-
   const subtotal = rows.reduce((sum, r) => sum + r.totalIncGst, 0);
 
-  return { supplier: "Exetel", invoiceNumber, rows, recurringRows, onceOffRows, subtotal };
+  return { type: "csv", supplier: "Exetel", invoiceNumber, rows, recurringRows, onceOffRows, subtotal };
 }
 
-function detectSupplier(content: string): "Exetel" | null {
+function detectCsvSupplier(content: string): "Exetel" | null {
   if (content.includes("EXETEL") || content.includes("Exetel") || content.includes("SmileIT")) {
     return "Exetel";
   }
@@ -140,12 +168,12 @@ function PriceCell({ value, incGst }: { value: number; incGst?: boolean }) {
   );
 }
 
-function InvoicePreview({
+function ExetelPreview({
   invoice,
   onConfirm,
   isImporting,
 }: {
-  invoice: ParsedInvoice;
+  invoice: ParsedExetelInvoice;
   onConfirm: () => void;
   isImporting: boolean;
 }) {
@@ -153,10 +181,9 @@ function InvoicePreview({
 
   return (
     <div className="space-y-4">
-      {/* Header */}
       <div className="flex items-center justify-between p-4 bg-card border border-border rounded-lg">
         <div className="flex items-center gap-3">
-          <ProviderBadge provider={invoice.supplier} size="md" />
+          <ProviderBadge provider="Exetel" size="md" />
           <div>
             <p className="text-sm font-semibold">{invoice.invoiceNumber}</p>
             <p className="text-xs text-muted-foreground">
@@ -171,7 +198,6 @@ function InvoicePreview({
         </div>
       </div>
 
-      {/* Recurring services */}
       <div>
         <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">
           Recurring Services ({invoice.recurringRows.length})
@@ -208,7 +234,6 @@ function InvoicePreview({
         </div>
       </div>
 
-      {/* Once-off / credits */}
       {invoice.onceOffRows.length > 0 && (
         <div>
           <button
@@ -263,7 +288,6 @@ function InvoicePreview({
         </div>
       )}
 
-      {/* Confirm */}
       <div className="flex items-center justify-between p-4 bg-primary/5 border border-primary/20 rounded-lg">
         <div>
           <p className="text-sm font-medium">Ready to import</p>
@@ -271,6 +295,102 @@ function InvoicePreview({
             This will create or update {invoice.recurringRows.length} Exetel services using{" "}
             <span className="font-mono">{invoice.invoiceNumber}</span> as the source of truth.
             Costs are stored ex-GST (÷1.1).
+          </p>
+        </div>
+        <button
+          onClick={onConfirm}
+          disabled={isImporting}
+          className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground text-sm font-medium rounded-md hover:bg-primary/90 disabled:opacity-50 transition-colors"
+        >
+          {isImporting ? (
+            <RefreshCw className="w-4 h-4 animate-spin" />
+          ) : (
+            <CheckCircle className="w-4 h-4" />
+          )}
+          {isImporting ? "Importing..." : "Confirm Import"}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function PdfInvoicePreview({
+  invoice,
+  onConfirm,
+  isImporting,
+}: {
+  invoice: ParsedPdfInvoice;
+  onConfirm: () => void;
+  isImporting: boolean;
+}) {
+  const supplierLabel: Record<string, string> = {
+    ChannelHaus: "Channel Haus",
+    Legion: "Legion",
+    "Tech-e": "Tech-e",
+  };
+
+  const typeColor: Record<string, string> = {
+    Internet: "bg-blue-50 text-blue-700 border-blue-200",
+    Voice: "bg-purple-50 text-purple-700 border-purple-200",
+    Other: "bg-muted text-muted-foreground border-border",
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between p-4 bg-card border border-border rounded-lg">
+        <div className="flex items-center gap-3">
+          <ProviderBadge provider={invoice.supplier} size="md" />
+          <div>
+            <p className="text-sm font-semibold">{invoice.invoiceNumber}</p>
+            <p className="text-xs text-muted-foreground">
+              {supplierLabel[invoice.supplier]} · {invoice.invoiceDate} · {invoice.services.length} services
+            </p>
+          </div>
+        </div>
+        <div className="text-right">
+          <p className="text-xs text-muted-foreground">Invoice total (inc-GST)</p>
+          <p className="text-lg font-bold font-mono">${invoice.totalIncGst.toFixed(2)}</p>
+        </div>
+      </div>
+
+      <div>
+        <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">
+          Services ({invoice.services.length})
+        </h3>
+        <div className="border border-border rounded-lg overflow-hidden">
+          <table className="w-full text-xs">
+            <thead className="bg-muted/50">
+              <tr>
+                <th className="text-left px-3 py-2 font-medium">Name</th>
+                <th className="text-left px-3 py-2 font-medium">Type</th>
+                <th className="text-left px-3 py-2 font-medium">Description</th>
+                <th className="text-right px-3 py-2 font-medium">Cost (ex-GST)</th>
+              </tr>
+            </thead>
+            <tbody>
+              {invoice.services.map((svc, idx) => (
+                <tr key={idx} className="border-t border-border hover:bg-muted/30">
+                  <td className="px-3 py-2 font-medium">{svc.friendlyName}</td>
+                  <td className="px-3 py-2">
+                    <span className={`text-[10px] px-1.5 py-0.5 rounded font-medium border ${typeColor[svc.serviceType]}`}>
+                      {svc.serviceType}
+                    </span>
+                  </td>
+                  <td className="px-3 py-2 text-muted-foreground max-w-xs truncate">{svc.description}</td>
+                  <td className="px-3 py-2 text-right font-mono">${svc.amountExGst.toFixed(2)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div className="flex items-center justify-between p-4 bg-primary/5 border border-primary/20 rounded-lg">
+        <div>
+          <p className="text-sm font-medium">Ready to import</p>
+          <p className="text-xs text-muted-foreground">
+            This will create or update {invoice.services.length} {supplierLabel[invoice.supplier]} services.
+            Fuzzy matching will link services to existing customers where possible.
           </p>
         </div>
         <button
@@ -299,7 +419,6 @@ interface ImportResult {
   updated: number;
   skipped: number;
   timestamp: string;
-  details: Array<{ serviceNum: string; idTag: string; customerExtId: string; cost: number; action: string }>;
 }
 
 // ── Main Page ─────────────────────────────────────────────────────────────────
@@ -308,45 +427,90 @@ export default function SupplierInvoices() {
   const [dragOver, setDragOver] = useState(false);
   const [parsedInvoice, setParsedInvoice] = useState<ParsedInvoice | null>(null);
   const [parseError, setParseError] = useState<string | null>(null);
+  const [isParsing, setIsParsing] = useState(false);
   const [importResults, setImportResults] = useState<ImportResult[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const importExetelMutation = trpc.billing.importExetelInvoice.useMutation({
     onSuccess: (result) => {
-      setImportResults((prev) => [result, ...prev]);
+      setImportResults((prev) => [
+        { invoiceNumber: result.invoiceNumber, supplier: "Exetel", created: result.created, updated: result.updated, skipped: result.skipped, timestamp: result.timestamp },
+        ...prev,
+      ]);
       setParsedInvoice(null);
-      toast.success(
-        `Import complete: ${result.created} created, ${result.updated} updated`
-      );
+      toast.success(`Import complete: ${result.created} created, ${result.updated} updated`);
+    },
+    onError: (err) => toast.error("Import failed: " + err.message),
+  });
+
+  const importGenericMutation = trpc.billing.importGenericInvoice.useMutation({
+    onSuccess: (result) => {
+      setImportResults((prev) => [
+        { invoiceNumber: result.invoiceNumber, supplier: result.supplier, created: result.created, updated: result.updated, skipped: result.skipped, timestamp: result.timestamp },
+        ...prev,
+      ]);
+      setParsedInvoice(null);
+      toast.success(`Import complete: ${result.created} created, ${result.updated} updated, ${result.skipped} skipped`);
+    },
+    onError: (err) => toast.error("Import failed: " + err.message),
+  });
+
+  const parsePdfMutation = trpc.billing.parsePdf.useMutation({
+    onSuccess: (result) => {
+      setParsedInvoice({ type: "pdf", ...result });
+      setIsParsing(false);
     },
     onError: (err) => {
-      toast.error("Import failed: " + err.message);
+      setParseError(err.message);
+      setIsParsing(false);
     },
   });
 
-  const handleFile = useCallback((file: File) => {
-    setParseError(null);
-    setParsedInvoice(null);
+  const handleFile = useCallback(
+    (file: File) => {
+      setParseError(null);
+      setParsedInvoice(null);
 
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const content = e.target?.result as string;
-      try {
-        const supplier = detectSupplier(content);
-        if (!supplier) {
-          setParseError(
-            "Could not detect supplier format. Currently supported: Exetel (SmileIT invoices)."
-          );
-          return;
-        }
-        const invoice = parseExetelCsv(content);
-        setParsedInvoice(invoice);
-      } catch (err: unknown) {
-        setParseError(err instanceof Error ? err.message : "Failed to parse file");
+      const isPdf = file.name.toLowerCase().endsWith(".pdf") || file.type === "application/pdf";
+      const isCsv = file.name.toLowerCase().endsWith(".csv") || file.type === "text/csv";
+
+      if (isPdf) {
+        setIsParsing(true);
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const base64 = (e.target?.result as string).split(",")[1];
+          parsePdfMutation.mutate({ base64, filename: file.name });
+        };
+        reader.readAsDataURL(file);
+        return;
       }
-    };
-    reader.readAsText(file);
-  }, []);
+
+      if (isCsv) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const content = e.target?.result as string;
+          try {
+            const supplier = detectCsvSupplier(content);
+            if (!supplier) {
+              setParseError(
+                "Could not detect supplier format. Supported CSV: Exetel (INV-YYYY-MM-DD-E*.csv). For Channel Haus, Legion, and Tech-e, upload the PDF invoice."
+              );
+              return;
+            }
+            const invoice = parseExetelCsv(content);
+            setParsedInvoice(invoice);
+          } catch (err: unknown) {
+            setParseError(err instanceof Error ? err.message : "Failed to parse file");
+          }
+        };
+        reader.readAsText(file);
+        return;
+      }
+
+      setParseError("Unsupported file type. Please upload a CSV (Exetel) or PDF (Channel Haus, Legion, Tech-e) invoice.");
+    },
+    [parsePdfMutation]
+  );
 
   const handleDrop = useCallback(
     (e: React.DragEvent) => {
@@ -360,21 +524,37 @@ export default function SupplierInvoices() {
 
   const handleConfirmImport = () => {
     if (!parsedInvoice) return;
-    importExetelMutation.mutate({
-      invoiceNumber: parsedInvoice.invoiceNumber,
-      rows: parsedInvoice.recurringRows.map((r) => ({
-        serviceNumber: r.serviceNumber,
-        idTag: r.idTag,
-        category: r.category,
-        description: r.description,
-        totalIncGst: r.totalIncGst,
-        billStart: r.billStart,
-        billEnd: r.billEnd,
-        chargeType: r.chargeType,
-        avcId: r.avcId,
-      })),
-    });
+
+    if (parsedInvoice.type === "csv") {
+      importExetelMutation.mutate({
+        invoiceNumber: parsedInvoice.invoiceNumber,
+        rows: parsedInvoice.recurringRows.map((r) => ({
+          serviceNumber: r.serviceNumber,
+          idTag: r.idTag,
+          category: r.category,
+          description: r.description,
+          totalIncGst: r.totalIncGst,
+          billStart: r.billStart,
+          billEnd: r.billEnd,
+          chargeType: r.chargeType,
+          avcId: r.avcId,
+        })),
+      });
+    } else {
+      importGenericMutation.mutate({
+        supplier: parsedInvoice.supplier,
+        invoiceNumber: parsedInvoice.invoiceNumber,
+        rows: parsedInvoice.services.map((s) => ({
+          friendlyName: s.friendlyName,
+          serviceType: s.serviceType,
+          amountExGst: s.amountExGst,
+          serviceId: s.serviceId,
+        })),
+      });
+    }
   };
+
+  const isImporting = importExetelMutation.isPending || importGenericMutation.isPending;
 
   return (
     <div className="p-6 max-w-5xl mx-auto">
@@ -382,12 +562,12 @@ export default function SupplierInvoices() {
       <div className="mb-6">
         <h1 className="text-xl font-bold">Supplier Invoices</h1>
         <p className="text-sm text-muted-foreground mt-1">
-          Upload supplier invoices to update service costs. Currently supports Exetel (SmileIT account) CSV format.
+          Upload supplier invoices to update service costs. Supports Exetel CSV and Channel Haus / Legion / Tech-e PDF formats.
         </p>
       </div>
 
       {/* Upload zone */}
-      {!parsedInvoice && (
+      {!parsedInvoice && !isParsing && (
         <div
           onDragOver={(e) => {
             e.preventDefault();
@@ -405,7 +585,7 @@ export default function SupplierInvoices() {
           <input
             ref={fileInputRef}
             type="file"
-            accept=".csv"
+            accept=".csv,.pdf"
             className="hidden"
             onChange={(e) => {
               const file = e.target.files?.[0];
@@ -413,11 +593,21 @@ export default function SupplierInvoices() {
               e.target.value = "";
             }}
           />
-          <Upload className="w-8 h-8 text-muted-foreground mx-auto mb-3" />
-          <p className="text-sm font-medium">Drop a supplier invoice CSV here</p>
+          <div className="flex items-center justify-center gap-3 mb-3">
+            <Upload className="w-8 h-8 text-muted-foreground" />
+          </div>
+          <p className="text-sm font-medium">Drop a supplier invoice here</p>
           <p className="text-xs text-muted-foreground mt-1">
-            or click to browse · Supported: Exetel (INV-YYYY-MM-DD-*.csv)
+            or click to browse · CSV (Exetel) or PDF (Channel Haus, Legion, Tech-e)
           </p>
+        </div>
+      )}
+
+      {/* Parsing spinner */}
+      {isParsing && (
+        <div className="flex items-center justify-center gap-3 p-12 border-2 border-dashed border-border rounded-xl">
+          <RefreshCw className="w-5 h-5 animate-spin text-primary" />
+          <p className="text-sm text-muted-foreground">Parsing PDF invoice…</p>
         </div>
       )}
 
@@ -447,11 +637,19 @@ export default function SupplierInvoices() {
               <X className="w-3 h-3" /> Clear
             </button>
           </div>
-          <InvoicePreview
-            invoice={parsedInvoice}
-            onConfirm={handleConfirmImport}
-            isImporting={importExetelMutation.isPending}
-          />
+          {parsedInvoice.type === "csv" ? (
+            <ExetelPreview
+              invoice={parsedInvoice}
+              onConfirm={handleConfirmImport}
+              isImporting={isImporting}
+            />
+          ) : (
+            <PdfInvoicePreview
+              invoice={parsedInvoice}
+              onConfirm={handleConfirmImport}
+              isImporting={isImporting}
+            />
+          )}
         </div>
       )}
 
@@ -485,39 +683,79 @@ export default function SupplierInvoices() {
         <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">
           Supported Invoice Formats
         </h3>
-        <div className="space-y-2">
-          <div className="flex items-center gap-3">
-            <ProviderBadge provider="Exetel" size="sm" />
-            <div>
-              <p className="text-xs font-medium">Exetel (SmileIT account)</p>
-              <p className="text-[11px] text-muted-foreground">
-                File pattern: <span className="font-mono">INV-YYYY-MM-DD-E*.csv</span> · Columns: Item ID, Reference No, ID Tag, Category, Service Number, Item Description, Quantity, Unit Price (inc-GST), Total (inc-GST), Bill Start Date, Bill End Date, Charge Type, AVC Id
-              </p>
+        <div className="space-y-3">
+          {[
+            {
+              provider: "Exetel",
+              label: "Exetel (SmileIT account)",
+              detail: "File pattern: INV-YYYY-MM-DD-E*.csv · CSV format",
+              fileType: "CSV",
+              status: "Supported",
+              statusClass: "bg-green-50 text-green-700 border-green-200",
+            },
+            {
+              provider: "ChannelHaus",
+              label: "Channel Haus",
+              detail: "PDF invoice · Voice (SIP trunks, PBX) and Internet services",
+              fileType: "PDF",
+              status: "Supported",
+              statusClass: "bg-green-50 text-green-700 border-green-200",
+            },
+            {
+              provider: "Legion",
+              label: "Legion Telecom",
+              detail: "PDF invoice · Fibre Internet services",
+              fileType: "PDF",
+              status: "Supported",
+              statusClass: "bg-green-50 text-green-700 border-green-200",
+            },
+            {
+              provider: "Tech-e",
+              label: "Tech-e",
+              detail: "PDF invoice · Internet services",
+              fileType: "PDF",
+              status: "Supported",
+              statusClass: "bg-green-50 text-green-700 border-green-200",
+            },
+            {
+              provider: "ABB",
+              label: "ABB / Aussie Broadband",
+              detail: "Carbon API integration (live sync)",
+              fileType: "API",
+              status: "Via API",
+              statusClass: "bg-muted text-muted-foreground border-border",
+            },
+            {
+              provider: "Telstra",
+              label: "Telstra",
+              detail: "CSV upload — coming soon",
+              fileType: "CSV",
+              status: "Coming soon",
+              statusClass: "bg-muted text-muted-foreground border-border",
+            },
+          ].map((fmt) => (
+            <div
+              key={fmt.provider}
+              className={`flex items-center gap-3 ${fmt.status === "Coming soon" ? "opacity-50" : ""}`}
+            >
+              <ProviderBadge provider={fmt.provider} size="sm" />
+              <div>
+                <div className="flex items-center gap-2">
+                  <p className="text-xs font-medium">{fmt.label}</p>
+                  <span className="text-[10px] px-1.5 py-0.5 rounded font-medium bg-muted text-muted-foreground border border-border flex items-center gap-1">
+                    <FileType className="w-2.5 h-2.5" />
+                    {fmt.fileType}
+                  </span>
+                </div>
+                <p className="text-[11px] text-muted-foreground">{fmt.detail}</p>
+              </div>
+              <span
+                className={`ml-auto text-[10px] px-2 py-0.5 rounded-full font-medium border ${fmt.statusClass}`}
+              >
+                {fmt.status}
+              </span>
             </div>
-            <span className="ml-auto text-[10px] px-2 py-0.5 bg-green-50 text-green-700 rounded-full font-medium border border-green-200">
-              Supported
-            </span>
-          </div>
-          <div className="flex items-center gap-3 opacity-50">
-            <ProviderBadge provider="ABB" size="sm" />
-            <div>
-              <p className="text-xs font-medium">ABB / Aussie Broadband</p>
-              <p className="text-[11px] text-muted-foreground">Carbon API integration (live sync)</p>
-            </div>
-            <span className="ml-auto text-[10px] px-2 py-0.5 bg-muted text-muted-foreground rounded-full font-medium border border-border">
-              Via API
-            </span>
-          </div>
-          <div className="flex items-center gap-3 opacity-50">
-            <ProviderBadge provider="Telstra" size="sm" />
-            <div>
-              <p className="text-xs font-medium">Telstra</p>
-              <p className="text-[11px] text-muted-foreground">CSV upload — coming soon</p>
-            </div>
-            <span className="ml-auto text-[10px] px-2 py-0.5 bg-muted text-muted-foreground rounded-full font-medium border border-border">
-              Coming soon
-            </span>
-          </div>
+          ))}
         </div>
       </div>
     </div>

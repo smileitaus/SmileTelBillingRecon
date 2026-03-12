@@ -1,4 +1,4 @@
-import { eq, like, or, sql, desc, asc, inArray } from "drizzle-orm";
+import { eq, like, or, sql, desc, asc, inArray, ne } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import { InsertUser, users, customers, locations, services, supplierAccounts, billingItems, reviewItems, billingPlatformChecks, serviceEditHistory } from "../drizzle/schema";
 import { ENV } from './_core/env';
@@ -3434,4 +3434,126 @@ export async function bulkAssignByAddress(
     await recalculateCustomerCounts(customerExternalId);
   }
   return { applied, errors };
+}
+
+// ── Generic Supplier Invoice Import (Channel Haus, Legion, Tech-e) ─────────────
+
+export interface GenericSupplierRow {
+  friendlyName: string;
+  serviceType: 'Internet' | 'Voice' | 'Other';
+  amountExGst: number;
+  serviceId?: string;
+}
+
+export interface GenericImportResult {
+  invoiceNumber: string;
+  supplier: string;
+  timestamp: string;
+  created: number;
+  updated: number;
+  skipped: number;
+  details: Array<{
+    friendlyName: string;
+    action: 'created' | 'updated' | 'skipped';
+    customerName?: string;
+    cost: number;
+  }>;
+}
+
+export async function importGenericSupplierInvoice(
+  supplier: string,
+  invoiceNumber: string,
+  rows: GenericSupplierRow[],
+  importedBy: string
+): Promise<GenericImportResult> {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+
+  let created = 0, updated = 0, skipped = 0;
+  const details: GenericImportResult['details'] = [];
+
+  const allCustomers = await db
+    .select({ externalId: customers.externalId, name: customers.name })
+    .from(customers)
+    .where(ne(customers.status, 'inactive'));
+
+  function normalise(s: string) {
+    return s.toLowerCase().replace(/[^a-z0-9\s]/g, ' ').replace(/\s+/g, ' ').trim();
+  }
+  function tokenScore(a: string, b: string) {
+    const ta = Array.from(new Set(normalise(a).split(' ').filter(t => t.length > 2)));
+    const tb = Array.from(new Set(normalise(b).split(' ').filter(t => t.length > 2)));
+    const tbSet = new Set(tb);
+    if (ta.length === 0 || tb.length === 0) return 0;
+    let matches = 0;
+    for (const t of ta) {
+      if (tbSet.has(t)) matches++;
+      else for (const u of tb) { if (t.includes(u) || u.includes(t)) { matches += 0.5; break; } }
+    }
+    return matches / Math.max(ta.length, tb.length);
+  }
+  function findBestCustomer(name: string) {
+    let best: (typeof allCustomers)[0] | null = null, bestScore = 0;
+    for (const c of allCustomers) {
+      const score = tokenScore(name, c.name);
+      if (score > bestScore) { bestScore = score; best = c; }
+    }
+    return bestScore >= 0.35 ? { customer: best!, score: bestScore } : null;
+  }
+
+  const existingServices = await db
+    .select({ externalId: services.externalId, planName: services.planName, customerExternalId: services.customerExternalId, customerName: services.customerName })
+    .from(services)
+    .where(eq(services.supplierName, supplier));
+  const existingByName = new Map(existingServices.map(s => [s.planName?.toLowerCase() ?? '', s]));
+
+  for (const row of rows) {
+    const key = row.friendlyName.toLowerCase();
+    const existing = existingByName.get(key);
+
+    if (existing) {
+      await db.update(services).set({
+        monthlyCost: String(row.amountExGst),
+        supplierAccount: invoiceNumber,
+        updatedAt: new Date(),
+      }).where(eq(services.externalId, existing.externalId));
+      details.push({ friendlyName: row.friendlyName, action: 'updated', customerName: existing.customerName ?? undefined, cost: row.amountExGst });
+      updated++;
+      continue;
+    }
+
+    const match = findBestCustomer(row.friendlyName);
+    const customerExtId = match ? match.customer.externalId : null;
+    const customerName = match ? match.customer.name : null;
+    const status = match && match.score >= 0.4 ? 'active' : 'unmatched';
+
+    const newId = 'S' + Math.random().toString(36).slice(2, 8).toUpperCase();
+    await db.insert(services).values({
+      externalId: newId,
+      customerExternalId: customerExtId,
+      customerName: customerName,
+      serviceType: row.serviceType,
+      planName: row.friendlyName,
+      supplierName: supplier,
+      supplierAccount: invoiceNumber,
+      monthlyCost: String(row.amountExGst),
+      status,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    } as any);
+
+    if (status === 'active' && customerExtId) {
+      await db.update(customers).set({
+        serviceCount: sql`COALESCE(${customers.serviceCount}, 0) + 1`,
+        matchedCount: sql`COALESCE(${customers.matchedCount}, 0) + 1`,
+        status: 'active',
+        updatedAt: new Date(),
+      }).where(eq(customers.externalId, customerExtId));
+    }
+
+    details.push({ friendlyName: row.friendlyName, action: 'created', customerName: customerName ?? undefined, cost: row.amountExGst });
+    created++;
+  }
+
+  return { invoiceNumber, supplier, timestamp: new Date().toLocaleString(), created, updated, skipped, details };
 }
