@@ -3350,3 +3350,88 @@ export async function importExetelInvoice(
     details,
   };
 }
+
+// ─── Address-Based Bulk Assign ────────────────────────────────────────────────
+/**
+ * Returns all unmatched services that share the same locationAddress as the
+ * given service, excluding the service itself.
+ */
+export async function getUnmatchedServicesAtAddress(
+  serviceExternalId: string,
+  address: string
+): Promise<Array<{
+  externalId: string;
+  serviceType: string;
+  provider: string;
+  planName: string;
+  monthlyCost: number;
+  phone: string | null;
+  connectionId: string | null;
+}>> {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+  if (!address || address.trim().length < 5) return [];
+  const normalised = address.trim().toLowerCase();
+  const rows = await db.select({
+    externalId: services.externalId,
+    serviceType: services.serviceType,
+    provider: services.provider,
+    planName: services.planName,
+    monthlyCost: services.monthlyCost,
+    phone: services.phoneNumber,
+    connectionId: services.connectionId,
+    locationAddress: services.locationAddress,
+  }).from(services)
+    .where(
+      sql`${services.status} = 'unmatched'
+        AND ${services.externalId} != ${serviceExternalId}
+        AND LOWER(TRIM(${services.locationAddress})) = ${normalised}`
+    );
+  return rows.map(r => ({
+    externalId: r.externalId,
+    serviceType: r.serviceType || 'Unknown',
+    provider: r.provider || 'Unknown',
+    planName: r.planName || '',
+    monthlyCost: Number(r.monthlyCost) || 0,
+    phone: r.phone || null,
+    connectionId: r.connectionId || null,
+  }));
+}
+
+/**
+ * Bulk-assigns a list of services to a customer, using the same logic as
+ * assignServiceToCustomer. Returns counts of applied and failed.
+ */
+export async function bulkAssignByAddress(
+  serviceExternalIds: string[],
+  customerExternalId: string,
+  assignedBy: string
+): Promise<{ applied: number; errors: string[] }> {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+  const [cust] = await db.select({ name: customers.name })
+    .from(customers)
+    .where(eq(customers.externalId, customerExternalId))
+    .limit(1);
+  if (!cust) throw new Error('Customer not found');
+  let applied = 0;
+  const errors: string[] = [];
+  for (const svcId of serviceExternalIds) {
+    try {
+      await db.update(services).set({
+        customerExternalId,
+        customerName: cust.name,
+        status: 'active',
+        discoveryNotes: sql`CONCAT('[Address bulk-matched by ${assignedBy} on ${new Date().toLocaleDateString('en-AU')}]\n', COALESCE(${services.discoveryNotes}, ''))`,
+      }).where(eq(services.externalId, svcId));
+      applied++;
+    } catch (err: any) {
+      errors.push(`${svcId}: ${err.message}`);
+    }
+  }
+  // Recalculate customer counts once after all updates
+  if (applied > 0) {
+    await recalculateCustomerCounts(customerExternalId);
+  }
+  return { applied, errors };
+}

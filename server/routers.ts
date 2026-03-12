@@ -60,6 +60,8 @@ import {
   getAutoMatchCandidates,
   getSupplierServicesForCustomer,
   importExetelInvoice,
+  getUnmatchedServicesAtAddress,
+  bulkAssignByAddress,
 } from "./db";
 
 export const appRouter = router({
@@ -251,6 +253,31 @@ export const appRouter = router({
         }))
         .mutation(async ({ input }) => {
           return await dismissSuggestion(input.serviceExternalId, input.customerExternalId);
+        }),
+
+      // Returns all unmatched services sharing the same address (for bulk-assign prompt)
+      sameAddress: protectedProcedure
+        .input(z.object({
+          serviceExternalId: z.string(),
+          address: z.string(),
+        }))
+        .query(async ({ input }) => {
+          return await getUnmatchedServicesAtAddress(input.serviceExternalId, input.address);
+        }),
+
+      // Bulk-assigns a list of services to a customer by address match
+      bulkAssignByAddress: protectedProcedure
+        .input(z.object({
+          serviceExternalIds: z.array(z.string()),
+          customerExternalId: z.string(),
+        }))
+        .mutation(async ({ input, ctx }) => {
+          const assignedBy = ctx.user?.name || ctx.user?.email || 'Unknown';
+          return await bulkAssignByAddress(
+            input.serviceExternalIds,
+            input.customerExternalId,
+            assignedBy
+          );
         }),
     }),
 

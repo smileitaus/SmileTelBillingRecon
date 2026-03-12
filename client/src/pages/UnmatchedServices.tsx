@@ -27,7 +27,18 @@ import {
   ZapOff,
   Download,
   ClipboardList,
+  MapPin,
+  Users,
 } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 import { exportToCSV } from "@/lib/exportCsv";
 import { useState, useCallback, useRef, useEffect, useMemo } from "react";
 import { useDebounce } from "@/hooks/useDebounce";
@@ -485,8 +496,17 @@ function ExpandedPanel({ service }: { service: any }) {
   );
   const assignMutation = trpc.billing.unmatched.assign.useMutation();
   const dismissMutation = trpc.billing.unmatched.dismiss.useMutation();
+  const bulkAssignMutation = trpc.billing.unmatched.bulkAssignByAddress.useMutation();
   const [assigningCustomerId, setAssigningCustomerId] = useState<string | null>(null);
   const [dismissingCustomerId, setDismissingCustomerId] = useState<string | null>(null);
+  // Same-address bulk assign state
+  const [bulkPrompt, setBulkPrompt] = useState<{
+    customerExternalId: string;
+    customerName: string;
+    services: Array<{ externalId: string; serviceType: string; provider: string; planName: string; monthlyCost: number }>;
+  } | null>(null);
+  const [bulkSelected, setBulkSelected] = useState<Set<string>>(new Set());
+  const [bulkApplying, setBulkApplying] = useState(false);
   const utils = trpc.useUtils();
 
   useEffect(() => {
@@ -495,7 +515,14 @@ function ExpandedPanel({ service }: { service: any }) {
     }
   }, [showManualSearch]);
 
-  const handleAssign = async (customerExternalId: string) => {
+  const invalidateAfterAssign = () => {
+    utils.billing.unmatched.list.invalidate();
+    utils.billing.summary.invalidate();
+    utils.billing.customers.list.invalidate();
+    utils.billing.margin.list.invalidate();
+  };
+
+  const handleAssign = async (customerExternalId: string, customerName?: string) => {
     setAssigningCustomerId(customerExternalId);
     try {
       await assignMutation.mutateAsync({
@@ -503,13 +530,49 @@ function ExpandedPanel({ service }: { service: any }) {
         customerExternalId,
       });
       toast.success("Service assigned to customer");
-      utils.billing.unmatched.list.invalidate();
-      utils.billing.summary.invalidate();
-      utils.billing.customers.list.invalidate();
+      invalidateAfterAssign();
+      // Check for other unmatched services at the same address
+      if (service.locationAddress && service.locationAddress.trim().length >= 5) {
+        try {
+          const sameAddr = await utils.billing.unmatched.sameAddress.fetch({
+            serviceExternalId: service.externalId,
+            address: service.locationAddress,
+          });
+          if (sameAddr && sameAddr.length > 0) {
+            setBulkSelected(new Set(sameAddr.map((s: any) => s.externalId)));
+            setBulkPrompt({
+              customerExternalId,
+              customerName: customerName || customerExternalId,
+              services: sameAddr,
+            });
+          }
+        } catch {
+          // Silently ignore — bulk prompt is a convenience, not critical
+        }
+      }
     } catch {
       toast.error("Failed to assign service");
     } finally {
       setAssigningCustomerId(null);
+    }
+  };
+
+  const handleBulkApply = async () => {
+    if (!bulkPrompt || bulkSelected.size === 0) return;
+    setBulkApplying(true);
+    try {
+      const result = await bulkAssignMutation.mutateAsync({
+        serviceExternalIds: Array.from(bulkSelected),
+        customerExternalId: bulkPrompt.customerExternalId,
+      });
+      toast.success(`${result.applied} additional service${result.applied !== 1 ? 's' : ''} assigned to ${bulkPrompt.customerName}`);
+      if (result.errors.length > 0) toast.error(`${result.errors.length} failed to assign`);
+      invalidateAfterAssign();
+    } catch {
+      toast.error("Bulk assign failed");
+    } finally {
+      setBulkApplying(false);
+      setBulkPrompt(null);
     }
   };
 
@@ -534,6 +597,49 @@ function ExpandedPanel({ service }: { service: any }) {
 
   return (
     <div className="border-t border-border px-4 py-4 space-y-4">
+      {/* Same-address bulk assign dialog */}
+      <Dialog open={!!bulkPrompt} onOpenChange={(open) => !open && setBulkPrompt(null)}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <MapPin className="w-4 h-4 text-primary" />
+              Match other services at this address?
+            </DialogTitle>
+            <DialogDescription>
+              {bulkPrompt?.services.length} other unmatched service{bulkPrompt?.services.length !== 1 ? 's' : ''} share the same address. Assign them all to <strong>{bulkPrompt?.customerName}</strong>?
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-2 max-h-64 overflow-y-auto">
+            {bulkPrompt?.services.map((s) => (
+              <label key={s.externalId} className="flex items-center gap-3 p-2.5 rounded-lg border border-border hover:bg-muted/40 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={bulkSelected.has(s.externalId)}
+                  onChange={(e) => {
+                    const next = new Set(bulkSelected);
+                    if (e.target.checked) next.add(s.externalId); else next.delete(s.externalId);
+                    setBulkSelected(next);
+                  }}
+                  className="rounded"
+                />
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium">{s.serviceType} — {s.planName || s.provider}</p>
+                  <p className="text-xs text-muted-foreground">${s.monthlyCost.toFixed(2)}/month · {s.provider}</p>
+                </div>
+              </label>
+            ))}
+          </div>
+          <DialogFooter className="gap-2">
+            <Button variant="outline" onClick={() => setBulkPrompt(null)} disabled={bulkApplying}>
+              Skip
+            </Button>
+            <Button onClick={handleBulkApply} disabled={bulkApplying || bulkSelected.size === 0}>
+              {bulkApplying ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Users className="w-4 h-4 mr-2" />}
+              Assign {bulkSelected.size} service{bulkSelected.size !== 1 ? 's' : ''}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
       {/* Service Details */}
       <div className="grid grid-cols-2 gap-x-6 gap-y-2 text-xs">
         <div>
@@ -644,7 +750,7 @@ function ExpandedPanel({ service }: { service: any }) {
                         Dismiss
                       </button>
                       <button
-                        onClick={() => handleAssign(s.customer.externalId)}
+                        onClick={() => handleAssign(s.customer.externalId, s.customer.name)}
                         disabled={assignMutation.isPending}
                         className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors disabled:opacity-50"
                       >
@@ -772,7 +878,7 @@ function ExpandedPanel({ service }: { service: any }) {
                             </div>
                           </div>
                           <button
-                            onClick={() => handleAssign(c.externalId)}
+                            onClick={() => handleAssign(c.externalId, c.name)}
                             disabled={assignMutation.isPending}
                             className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors disabled:opacity-50 opacity-80 group-hover:opacity-100"
                           >

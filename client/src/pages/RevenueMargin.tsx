@@ -170,11 +170,13 @@ export default function RevenueMargin() {
 
   const { data: services, isLoading: listLoading } = trpc.billing.margin.list.useQuery(queryInput, {
     enabled: !groupByCustomer,
+    refetchOnWindowFocus: true,
+    staleTime: 0,
   });
 
   const { data: grouped, isLoading: groupedLoading } = trpc.billing.margin.grouped.useQuery(
     { marginFilter, serviceType: serviceTypeFilter, provider: providerFilter, search: search || undefined },
-    { enabled: groupByCustomer }
+    { enabled: groupByCustomer, refetchOnWindowFocus: true, staleTime: 0 }
   );
 
   const isLoading = groupByCustomer ? groupedLoading : listLoading;
@@ -366,7 +368,7 @@ export default function RevenueMargin() {
               ? `Showing ${displayCount} customer${displayCount !== 1 ? 's' : ''} (${services?.length ?? 0} services)`
               : costReviewNeeded
                 ? `Showing ${sorted.length} services flagged for cost review`
-                : `Showing ${sorted.length} services with matched revenue`
+                : `Showing ${sorted.length} service${sorted.length !== 1 ? 's' : ''} with matched revenue — grows as more services are matched`
           }
         </p>
         <button
