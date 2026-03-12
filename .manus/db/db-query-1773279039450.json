@@ -1,0 +1,18 @@
+{
+  "query": "\nSELECT id, externalId, name, businessName, status, serviceCount\nFROM customers\nWHERE name LIKE '%BLACKBEAUTY%' OR name LIKE '%BLACK BEAUTY%' OR name LIKE '%KENSINGTON%'\n   OR businessName LIKE '%BLACKBEAUTY%' OR businessName LIKE '%BLACK BEAUTY%' OR businessName LIKE '%KENSINGTON%'\nLIMIT 10;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3M17pEiktKAmnzx.5240b4750712 --database 4LVfr96qhVoYSkLinpTZkt --execute \nSELECT id, externalId, name, businessName, status, serviceCount\nFROM customers\nWHERE name LIKE '%BLACKBEAUTY%' OR name LIKE '%BLACK BEAUTY%' OR name LIKE '%KENSINGTON%'\n   OR businessName LIKE '%BLACKBEAUTY%' OR businessName LIKE '%BLACK BEAUTY%' OR businessName LIKE '%KENSINGTON%'\nLIMIT 10;\n",
+  "rows": [
+    {
+      "id": "29",
+      "externalId": "C2498",
+      "name": "31 BLACKBEAUTY CT, KENSINGTON QLD",
+      "businessName": "",
+      "status": "active",
+      "serviceCount": "1"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\texternalId\tname\tbusinessName\tstatus\tserviceCount\n29\tC2498\t31 BLACKBEAUTY CT, KENSINGTON QLD\t\tactive\t1\n",
+  "stderr": "",
+  "execution_time_ms": 1621
+}

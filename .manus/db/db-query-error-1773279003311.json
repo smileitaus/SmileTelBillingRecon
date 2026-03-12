@@ -1,0 +1,8 @@
+{
+  "query": "\nSELECT c.id, c.name, c.businessName, c.isActive, c.serviceCount,\n       COUNT(s.id) as actual_service_count,\n       COUNT(CASE WHEN s.isTerminated = 0 OR s.isTerminated IS NULL THEN 1 END) as active_service_count\nFROM customers c\nLEFT JOIN services s ON s.customerId = c.id\nWHERE c.name LIKE '%BLACKBEAUTY%' OR c.businessName LIKE '%BLACKBEAUTY%'\n   OR c.name LIKE '%KENSINGTON%' OR c.businessName LIKE '%KENSINGTON%'\nGROUP BY c.id, c.name, c.businessName, c.isActive, c.serviceCount;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3M17pEiktKAmnzx.5240b4750712 --database 4LVfr96qhVoYSkLinpTZkt --execute \nSELECT c.id, c.name, c.businessName, c.isActive, c.serviceCount,\n       COUNT(s.id) as actual_service_count,\n       COUNT(CASE WHEN s.isTerminated = 0 OR s.isTerminated IS NULL THEN 1 END) as active_service_count\nFROM customers c\nLEFT JOIN services s ON s.customerId = c.id\nWHERE c.name LIKE '%BLACKBEAUTY%' OR c.businessName LIKE '%BLACKBEAUTY%'\n   OR c.name LIKE '%KENSINGTON%' OR c.businessName LIKE '%KENSINGTON%'\nGROUP BY c.id, c.name, c.businessName, c.isActive, c.serviceCount;\n",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1054 (42S22) at line 2: Unknown column 's.customerid' in 'on clause'"
+  ]
+}
