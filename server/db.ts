@@ -1,4 +1,4 @@
-import { eq, like, or, sql, desc, asc } from "drizzle-orm";
+import { eq, like, or, sql, desc, asc, inArray } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import { InsertUser, users, customers, locations, services, supplierAccounts, billingItems, reviewItems, billingPlatformChecks, serviceEditHistory } from "../drizzle/schema";
 import { ENV } from './_core/env';
@@ -3139,4 +3139,197 @@ export async function getSupplierServicesForCustomer(customerExternalId: string)
     locationAddress: s.locationAddress || '',
     monthlyRevenue: parseFloat(s.monthlyRevenue),
   }));
+}
+
+// ── Exetel Invoice Import ─────────────────────────────────────────────────────
+
+export interface ExetelInvoiceRow {
+  serviceNumber: string;
+  idTag: string;
+  category: string;
+  description: string;
+  totalIncGst: number;
+  billStart: string;
+  billEnd: string;
+  chargeType: string;
+  avcId: string;
+}
+
+export interface ExetelImportResult {
+  invoiceNumber: string;
+  supplier: string;
+  created: number;
+  updated: number;
+  skipped: number;
+  timestamp: string;
+  details: Array<{
+    serviceNum: string;
+    idTag: string;
+    customerExtId: string;
+    cost: number;
+    action: string;
+  }>;
+}
+
+// Canonical Exetel service number → customer externalId mapping
+const EXETEL_CUSTOMER_MAP: Record<string, string | null> = {
+  '0701561050': null,
+  '0403182994': 'C0015',
+  '0731731992': 'C2661',
+  '0749850000': 'C0157',
+  '0734334112': null,
+  '0734334114': 'C2659',
+  '0755045018': null,
+  '0755045019': 'C2664',
+  '0755045020': 'C2486',
+  '0730541945': 'C0168',
+  '0755045021': null,
+  '0755045022': 'C0037',
+  '0755045023': 'C0037',
+};
+
+function nowIsoForDb(): string {
+  return new Date().toISOString().slice(0, 19).replace('T', ' ');
+}
+
+function exGstFromIncGst(incGst: number): number {
+  return Math.round((incGst / 1.1) * 100) / 100;
+}
+
+function shortRandom(): string {
+  return Math.random().toString(36).substring(2, 6).toUpperCase();
+}
+
+export async function importExetelInvoice(
+  invoiceNumber: string,
+  rows: ExetelInvoiceRow[]
+): Promise<ExetelImportResult> {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+
+  const details: ExetelImportResult['details'] = [];
+  let created = 0;
+  let updated = 0;
+  let skipped = 0;
+
+  const serviceNums = rows.map(r => r.serviceNumber).filter(Boolean);
+  const existingServices = serviceNums.length > 0
+    ? await db.select({
+        externalId: services.externalId,
+        phoneNumber: services.phoneNumber,
+        customerExternalId: services.customerExternalId,
+      })
+      .from(services)
+      .where(inArray(services.phoneNumber, serviceNums))
+    : [];
+
+  const existingByPhone = new Map(existingServices.map(s => [s.phoneNumber, s]));
+
+  const allCustomers = await db.select({ externalId: customers.externalId }).from(customers);
+  const customerExtIds = new Set(allCustomers.map(c => c.externalId));
+
+  for (const row of rows) {
+    const costExGst = exGstFromIncGst(row.totalIncGst);
+    const svcNum = row.serviceNumber;
+    const existing = existingByPhone.get(svcNum);
+
+    if (existing) {
+      // Update cost and supplier info on existing service
+      await db.update(services)
+        .set({
+          monthlyCost: String(costExGst),
+          provider: 'Exetel',
+          supplierName: 'Exetel',
+          supplierAccount: invoiceNumber,
+          ...(row.avcId && row.avcId !== '-' ? { avcId: row.avcId } : {}),
+          ...(row.idTag ? { carbonAlias: row.idTag } : {}),
+          updatedAt: new Date(),
+        })
+        .where(eq(services.externalId, existing.externalId));
+
+      details.push({
+        serviceNum: svcNum,
+        idTag: row.idTag,
+        customerExtId: existing.customerExternalId || '',
+        cost: costExGst,
+        action: 'updated',
+      });
+      updated++;
+    } else {
+      // Determine customer for new service
+      let customerExtId: string | null = EXETEL_CUSTOMER_MAP[svcNum] ?? null;
+
+      if (!customerExtId) {
+        // Create a new customer for this unmapped service
+        const newCustId = 'C' + shortRandom();
+        const custName = row.idTag || `Exetel Service (${svcNum})`;
+        await db.insert(customers).values({
+          externalId: newCustId,
+          name: custName,
+          businessName: '',
+          status: 'active',
+          serviceCount: 0,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        });
+        customerExtId = newCustId;
+        customerExtIds.add(newCustId);
+      }
+
+      if (!customerExtIds.has(customerExtId)) {
+        skipped++;
+        continue;
+      }
+
+      const newSvcId = 'S' + shortRandom();
+      const isCancelled = costExGst === 0 || row.chargeType?.toLowerCase().includes('cancel');
+      const serviceType = row.category === 'Hosting' ? 'Other' : 'Internet';
+
+      await db.insert(services).values({
+        externalId: newSvcId,
+        serviceType,
+        serviceTypeDetail: row.category,
+        planName: row.description.substring(0, 100),
+        status: isCancelled ? 'terminated' : 'active',
+        customerExternalId: customerExtId,
+        customerName: row.idTag,
+        phoneNumber: svcNum,
+        provider: 'Exetel',
+        supplierName: 'Exetel',
+        supplierAccount: invoiceNumber,
+        avcId: row.avcId && row.avcId !== '-' ? row.avcId : '',
+        carbonAlias: row.idTag,
+        monthlyCost: String(costExGst),
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
+
+      await db.update(customers)
+        .set({
+          serviceCount: sql`${customers.serviceCount} + 1`,
+          status: 'active',
+          updatedAt: new Date(),
+        })
+        .where(eq(customers.externalId, customerExtId));
+
+      details.push({
+        serviceNum: svcNum,
+        idTag: row.idTag,
+        customerExtId,
+        cost: costExGst,
+        action: 'created',
+      });
+      created++;
+    }
+  }
+
+  return {
+    invoiceNumber,
+    supplier: 'Exetel',
+    created,
+    updated,
+    skipped,
+    timestamp: new Date().toLocaleString(),
+    details,
+  };
 }

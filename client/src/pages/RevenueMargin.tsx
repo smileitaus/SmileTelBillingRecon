@@ -322,6 +322,9 @@ export default function RevenueMargin() {
           <option value="all">All Providers</option>
           <option value="Telstra">Telstra</option>
           <option value="ABB">ABB</option>
+          <option value="Exetel">Exetel</option>
+          <option value="Vocus">Vocus</option>
+          <option value="SmileTel">SmileTel</option>
         </select>
 
         <div className="w-px h-5 bg-border mx-1" />

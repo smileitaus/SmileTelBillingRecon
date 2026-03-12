@@ -59,6 +59,7 @@ import {
   mergeBillingToSupplierService,
   getAutoMatchCandidates,
   getSupplierServicesForCustomer,
+  importExetelInvoice,
 } from "./db";
 
 export const appRouter = router({
@@ -668,6 +669,26 @@ export const appRouter = router({
           );
         }),
     }),
+
+    // Supplier invoice import
+    importExetelInvoice: protectedProcedure
+      .input(z.object({
+        invoiceNumber: z.string(),
+        rows: z.array(z.object({
+          serviceNumber: z.string(),
+          idTag: z.string(),
+          category: z.string(),
+          description: z.string(),
+          totalIncGst: z.number(),
+          billStart: z.string(),
+          billEnd: z.string(),
+          chargeType: z.string(),
+          avcId: z.string(),
+        })),
+      }))
+      .mutation(async ({ input }) => {
+        return await importExetelInvoice(input.invoiceNumber, input.rows);
+      }),
 
     // Customer merge
     merge: router({

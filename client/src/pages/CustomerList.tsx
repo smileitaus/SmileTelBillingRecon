@@ -180,6 +180,9 @@ export default function CustomerList() {
             <option value="all">All Suppliers</option>
             <option value="Telstra">Telstra</option>
             <option value="ABB">ABB / Aussie Broadband</option>
+            <option value="Exetel">Exetel</option>
+            <option value="Vocus">Vocus</option>
+            <option value="SmileTel">SmileTel</option>
           </select>
         </div>
       </div>

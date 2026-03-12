@@ -21,6 +21,7 @@ import Review from "./pages/Review";
 import AutoMatch from "./pages/AutoMatch";
 import BillingPlatformChecks from "./pages/BillingPlatformChecks";
 import ServiceBillingMatch from "./pages/ServiceBillingMatch";
+import SupplierInvoices from "./pages/SupplierInvoices";
 import { useState } from "react";
 import { trpc } from "@/lib/trpc";
 
@@ -234,6 +235,7 @@ function Router() {
           <Route path="/auto-match" component={AutoMatch} />
           <Route path="/platform-checks" component={BillingPlatformChecks} />
           <Route path="/service-billing-match" component={ServiceBillingMatch} />
+          <Route path="/supplier-invoices" component={SupplierInvoices} />
           <Route path="/404" component={NotFound} />
           <Route component={NotFound} />
         </Switch>
