@@ -323,10 +323,19 @@ export default function RevenueMargin() {
         >
           <option value="all">All Providers</option>
           <option value="Telstra">Telstra</option>
-          <option value="ABB">ABB</option>
+          <option value="ABB">ABB / Aussie Broadband</option>
           <option value="Exetel">Exetel</option>
           <option value="Vocus">Vocus</option>
           <option value="SmileTel">SmileTel</option>
+          <option value="ChannelHaus">Channel Haus</option>
+          <option value="Legion">Legion Telecom</option>
+          <option value="Tech-e">Tech-e</option>
+          <option value="VineDirect">Vine Direct</option>
+          <option value="Infinet">Infinet</option>
+          <option value="Blitznet">Blitznet</option>
+          <option value="AAPT">AAPT</option>
+          <option value="Optus">Optus</option>
+          <option value="OptiComm">OptiComm</option>
         </select>
 
         <div className="w-px h-5 bg-border mx-1" />

@@ -367,3 +367,8 @@
 - [x] Update supplier label mapping in PDF invoice preview component
 - [x] Update all descriptive text in upload UI to include new suppliers
 - [x] Write and pass vitest tests for all four parsers
+
+# Provider Filter Touch Points (Mar 12)
+- [x] Audit all pages/components for provider filter lists
+- [x] Update every provider filter/dropdown to include VineDirect, Infinet, Blitznet, ChannelHaus, Legion, Tech-e
+- [x] Verify supplier field values stored in DB match the filter keys
