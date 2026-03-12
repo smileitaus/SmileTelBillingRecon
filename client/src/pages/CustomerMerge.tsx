@@ -24,6 +24,7 @@ import {
 import { trpc } from "@/lib/trpc";
 import { useState } from "react";
 import { toast } from "sonner";
+import { useDebounce } from "@/hooks/useDebounce";
 import { Button } from "@/components/ui/button";
 
 function formatCurrency(val: number) {
@@ -94,16 +95,16 @@ export default function CustomerMerge() {
   const [customerB, setCustomerB] = useState<any>(null);
   const [primarySide, setPrimarySide] = useState<"a" | "b">("a");
   const [confirming, setConfirming] = useState(false);
-
+  const debouncedSearchA = useDebounce(searchA, 350);
+  const debouncedSearchB = useDebounce(searchB, 350);
   const { data: resultsA } = trpc.billing.merge.search.useQuery(
-    { search: searchA },
-    { enabled: searchA.length >= 2 }
+    { search: debouncedSearchA },
+    { enabled: debouncedSearchA.length >= 2 }
   );
   const { data: resultsB } = trpc.billing.merge.search.useQuery(
-    { search: searchB },
-    { enabled: searchB.length >= 2 }
-  );
-
+    { search: debouncedSearchB },
+    { enabled: debouncedSearchB.length >= 2 }
+   );
   const mergeMutation = trpc.billing.merge.execute.useMutation();
   const utils = trpc.useUtils();
 

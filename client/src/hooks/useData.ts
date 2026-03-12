@@ -1,5 +1,6 @@
 import { trpc } from "@/lib/trpc";
 import { useState, useMemo, useCallback } from "react";
+import { useDebounce } from "@/hooks/useDebounce";
 
 // ==================== Dashboard / Summary ====================
 export function useSummary() {
@@ -14,8 +15,11 @@ export function useCustomerSearch() {
   const [platformFilter, setPlatformFilter] = useState<string>("all");
   const [supplierFilter, setSupplierFilter] = useState<string>("all");
 
+  // Debounce the search query so API calls only fire after 350ms of inactivity
+  const debouncedQuery = useDebounce(query, 350);
+
   const { data: customers, isLoading } = trpc.billing.customers.list.useQuery({
-    search: query || undefined,
+    search: debouncedQuery || undefined,
     status: statusFilter !== "all" ? statusFilter : undefined,
     platform: platformFilter !== "all" ? platformFilter : undefined,
     supplier: supplierFilter !== "all" ? supplierFilter : undefined,

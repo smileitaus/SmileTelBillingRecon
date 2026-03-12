@@ -349,3 +349,9 @@
 - [x] Manual match UI: allow user to manually link a billing item to a supplier service on CustomerDetail page
 - [x] mergeBillingServiceToSupplierService: db function to transfer billing items from Xero stub to supplier service and retire the stub
 - [x] Service Linking page: review auto-match candidates and run bulk or individual merges
+
+# Revenue & Margin Page Improvements
+- [x] Add debounced search bar to Revenue & Margin page
+- [x] Fix 120-service limit - show all services (confirmed: 120 is the actual count, not a limit)
+- [x] Add Group by Customer toggle on Revenue & Margin page
+- [x] Apply debounced search to all search inputs across the app

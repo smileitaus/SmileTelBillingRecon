@@ -31,6 +31,7 @@ import { trpc } from "@/lib/trpc";
 import { useState, useMemo } from "react";
 import { toast } from "sonner";
 import { exportToCSV } from "@/lib/exportCsv";
+import { useDebounce } from "@/hooks/useDebounce";
 
 function formatCurrency(val: number) {
   return `$${val.toLocaleString("en-AU", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
@@ -96,10 +97,11 @@ function ContactGroup({
     { enabled: expanded && unmatchedCount > 0 }
   );
 
-  // Manual search using the existing merge search
+  // Manual search using the existing merge search (debounced to avoid per-keystroke API calls)
+  const debouncedSearchQuery = useDebounce(searchQuery, 350);
   const { data: searchResults } = trpc.billing.merge.search.useQuery(
-    { search: searchQuery },
-    { enabled: searchQuery.length >= 2 }
+    { search: debouncedSearchQuery },
+    { enabled: debouncedSearchQuery.length >= 2 }
   );
 
   const handleImport = async () => {

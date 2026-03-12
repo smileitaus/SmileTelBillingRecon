@@ -26,6 +26,7 @@ import {
   getBillingItemsByCustomer,
   getBillingSummary,
   getServicesWithMargin,
+  getServicesGroupedByCustomer,
   mergeCustomers,
   updateServiceBillingPlatform,
   updateBillingItemMatch,
@@ -374,9 +375,20 @@ export const appRouter = router({
           serviceType: z.string().optional(),
           provider: z.string().optional(),
           costReviewNeeded: z.boolean().optional(),
+          search: z.string().optional(),
         }).optional())
         .query(async ({ input }) => {
           return await getServicesWithMargin(input);
+        }),
+      grouped: protectedProcedure
+        .input(z.object({
+          marginFilter: z.string().optional(),
+          serviceType: z.string().optional(),
+          provider: z.string().optional(),
+          search: z.string().optional(),
+        }).optional())
+        .query(async ({ input }) => {
+          return await getServicesGroupedByCustomer(input);
         }),
     }),
 

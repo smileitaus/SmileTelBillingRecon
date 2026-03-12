@@ -1,5 +1,6 @@
 import { trpc } from "@/lib/trpc";
 import { useState } from "react";
+import { useDebounce } from "@/hooks/useDebounce";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -170,14 +171,16 @@ function SubmitForReviewDialog({
     onError: (err) => toast.error(err.message),
   });
 
+  // Debounce search so API calls only fire after 350ms of inactivity
+  const debouncedSearchQuery = useDebounce(searchQuery, 350);
   // Search for customers or services
   const customerSearch = trpc.billing.customers.list.useQuery(
-    { search: searchQuery },
-    { enabled: targetType === "customer" && searchQuery.length >= 2 }
+    { search: debouncedSearchQuery },
+    { enabled: targetType === "customer" && debouncedSearchQuery.length >= 2 }
   );
   const serviceSearch = trpc.billing.search.useQuery(
-    { query: searchQuery },
-    { enabled: targetType === "service" && searchQuery.length >= 2 }
+    { query: debouncedSearchQuery },
+    { enabled: targetType === "service" && debouncedSearchQuery.length >= 2 }
   );
 
   if (!open) return null;
@@ -334,9 +337,10 @@ function ReassignServiceDialog({
     onError: (err) => toast.error(err.message),
   });
 
+  const debouncedSearchQuery = useDebounce(searchQuery, 350);
   const customerSearch = trpc.billing.customers.list.useQuery(
-    { search: searchQuery },
-    { enabled: searchQuery.length >= 2 && !markUnknown }
+    { search: debouncedSearchQuery },
+    { enabled: debouncedSearchQuery.length >= 2 && !markUnknown }
   );
 
   if (!open) return null;
@@ -504,9 +508,10 @@ function AssociateBillingDialog({
     onError: (err) => toast.error(err.message),
   });
 
+  const debouncedSearchQuery = useDebounce(searchQuery, 350);
   const customerSearch = trpc.billing.customers.list.useQuery(
-    { search: searchQuery },
-    { enabled: searchQuery.length >= 2 }
+    { search: debouncedSearchQuery },
+    { enabled: debouncedSearchQuery.length >= 2 }
   );
 
   if (!open) return null;
@@ -979,9 +984,10 @@ function AssignToCustomerButton({
   const [reason, setReason] = useState("");
   const utils = trpc.useUtils();
 
+  const debouncedSearchQuery = useDebounce(searchQuery, 350);
   const customerSearch = trpc.billing.customers.list.useQuery(
-    { search: searchQuery },
-    { enabled: searchQuery.length >= 2 }
+    { search: debouncedSearchQuery },
+    { enabled: debouncedSearchQuery.length >= 2 }
   );
   const customerResults = (customerSearch.data as any)?.customers || customerSearch.data || [];
 

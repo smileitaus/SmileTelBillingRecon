@@ -967,6 +967,7 @@ export async function getServicesWithMargin(filters?: {
   serviceType?: string;
   provider?: string;
   costReviewNeeded?: boolean;
+  search?: string;
 }) {
   const db = await getDb();
   if (!db) return [];
@@ -1009,6 +1010,11 @@ export async function getServicesWithMargin(filters?: {
     conditions.push(like(services.discoveryNotes, '%COST REVIEW NEEDED%'));
   }
 
+  if (filters?.search && filters.search.trim()) {
+    const term = `%${filters.search.trim()}%`;
+    conditions.push(sql`(${services.customerName} LIKE ${term} OR ${services.planName} LIKE ${term} OR ${services.phoneNumber} LIKE ${term} OR ${services.connectionId} LIKE ${term} OR ${services.locationAddress} LIKE ${term} OR ${services.serviceTypeDetail} LIKE ${term})`);
+  }
+
   const whereClause = conditions.length > 0 ? conditions.reduce((acc, c) => sql`${acc} AND ${c}`) : sql`1=1`;
   const result = await db.select({
     id: services.id,
@@ -1046,6 +1052,68 @@ export async function getServicesWithMargin(filters?: {
     marginPercent: s.computedMarginPercent ? parseFloat(String(s.computedMarginPercent)) : null,
     billingHistory: s.billingHistory ? JSON.parse(s.billingHistory) : [],
   }));
+}
+
+/**
+ * Aggregate services with revenue by customer for the Group by Customer view.
+ */
+export async function getServicesGroupedByCustomer(filters?: {
+  marginFilter?: string;
+  serviceType?: string;
+  provider?: string;
+  search?: string;
+}) {
+  const db = await getDb();
+  if (!db) return [];
+
+  // Get all services with revenue using the same filters
+  const allServices = await getServicesWithMargin(filters);
+
+  // Group by customerExternalId
+  const grouped = new Map<string, {
+    customerExternalId: string;
+    customerName: string;
+    serviceCount: number;
+    totalCost: number;
+    totalRevenue: number;
+    marginPercent: number | null;
+    services: typeof allServices;
+    worstMargin: number | null;
+  }>();
+
+  for (const svc of allServices) {
+    const key = svc.customerExternalId || '__unmatched__';
+    const name = svc.customerName || 'Unmatched';
+    if (!grouped.has(key)) {
+      grouped.set(key, {
+        customerExternalId: key,
+        customerName: name,
+        serviceCount: 0,
+        totalCost: 0,
+        totalRevenue: 0,
+        marginPercent: null,
+        services: [],
+        worstMargin: null,
+      });
+    }
+    const group = grouped.get(key)!;
+    group.serviceCount++;
+    group.totalCost += svc.monthlyCost;
+    group.totalRevenue += svc.monthlyRevenue;
+    group.services.push(svc);
+    const m = svc.marginPercent ?? 0;
+    if (group.worstMargin === null || m < group.worstMargin) group.worstMargin = m;
+  }
+
+  // Compute group margin
+  const result = Array.from(grouped.values()).map(g => ({
+    ...g,
+    marginPercent: g.totalRevenue > 0 ? ((g.totalRevenue - g.totalCost) / g.totalRevenue * 100) : null,
+  }));
+
+  // Sort by margin ascending (worst first)
+  result.sort((a, b) => (a.marginPercent ?? 0) - (b.marginPercent ?? 0));
+  return result;
 }
 
 // ==================== Customer Merge ====================

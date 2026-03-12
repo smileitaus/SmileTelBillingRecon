@@ -30,6 +30,7 @@ import {
 } from "lucide-react";
 import { exportToCSV } from "@/lib/exportCsv";
 import { useState, useCallback, useRef, useEffect, useMemo } from "react";
+import { useDebounce } from "@/hooks/useDebounce";
 import { toast } from "sonner";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { ProviderBadge } from "@/components/ProviderBadge";
@@ -477,9 +478,10 @@ function ExpandedPanel({ service }: { service: any }) {
   const [customerSearch, setCustomerSearch] = useState("");
   const [showManualSearch, setShowManualSearch] = useState(false);
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const debouncedCustomerSearch = useDebounce(customerSearch, 350);
   const { data: searchResults } = trpc.billing.search.useQuery(
-    { query: customerSearch },
-    { enabled: customerSearch.length >= 2 }
+    { query: debouncedCustomerSearch },
+    { enabled: debouncedCustomerSearch.length >= 2 }
   );
   const assignMutation = trpc.billing.unmatched.assign.useMutation();
   const dismissMutation = trpc.billing.unmatched.dismiss.useMutation();
