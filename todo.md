@@ -395,3 +395,16 @@
 - [ ] Add tRPC procedures: previewBillingItemMatch + commitBillingItemMatch
 - [ ] Build Billing Match fuzzy preview UI with confidence scores and bulk apply
 - [ ] Write vitest tests for billing item match logic
+
+# Batch Address Auto-Match (Mar 13 - 900+ unmatched services)
+- [x] Analysed 981 unmatched services: 748 had valid customerExternalId but wrong status, 233 had no customerExternalId
+- [x] Built bulkActivateLinkedServices() in server/db.ts (preview + commit)
+- [x] Added tRPC procedures: billing.bulkActivate.preview and billing.bulkActivate.commit
+- [x] Built Bulk Activate tab in AutoMatch.tsx with preview table (first 50 of 748) and activate button
+- [x] Replaced recalculateCustomerCounts() N×4 loop with single bulk SQL UPDATE (correlated subqueries)
+- [x] Activated 748 services across 230 customers in one operation
+- [x] All customer stats recalculated: serviceCount, matchedCount, unmatchedCount, monthlyCost
+- [x] Remaining 233 unmatched: 199 Telstra Unassigned SIMs (no matching signals), 22 ChannelHaus (Address & Name Match tab), 7 Telstra named mobiles, 4 ABB, 1 Tech-e
+- [ ] Manual review needed for 199 Telstra Unassigned SIMs (no address, no name, no alias)
+- [ ] Manual review needed for 7 named Telstra mobiles (personal names like 'Ian Mobile', 'Cindy Mobile')
+- [ ] ChannelHaus 22 services: use Address & Name Match tab to assign (34 candidates shown)

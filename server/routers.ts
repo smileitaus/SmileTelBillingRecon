@@ -67,6 +67,7 @@ import {
   bulkAssignByAddress,
   previewAddressAutoMatch,
   commitAddressAutoMatch,
+  bulkActivateLinkedServices,
   type AddressMatchCandidate,
 } from "./db";
 
@@ -669,6 +670,18 @@ export const appRouter = router({
         .mutation(async ({ input, ctx }) => {
           const committedBy = ctx.user?.name || ctx.user?.email || 'Unknown';
           return await commitAddressAutoMatch(input.approvedMatches, committedBy);
+        }),
+    }),
+
+    // Bulk-activate services that already have a customerExternalId but are stuck as 'unmatched'
+    bulkActivate: router({
+      preview: protectedProcedure
+        .query(async () => {
+          return await bulkActivateLinkedServices(true);
+        }),
+      commit: protectedProcedure
+        .mutation(async () => {
+          return await bulkActivateLinkedServices(false);
         }),
     }),
 

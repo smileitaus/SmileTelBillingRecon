@@ -1159,10 +1159,154 @@ function AddressMatchTab() {
   );
 }
 
+// ─── Bulk Activate Tab ────────────────────────────────────────────────────────────────
+
+function BulkActivateTab() {
+  const utils = trpc.useUtils();
+  const previewQuery = trpc.billing.bulkActivate.preview.useQuery(undefined, { staleTime: 30_000 });
+  const commitMutation = trpc.billing.bulkActivate.commit.useMutation({
+    onSuccess: (data) => {
+      toast.success(`Activated ${data.count} services across ${data.affectedCustomers} customers`);
+      previewQuery.refetch();
+      utils.billing.customers.list.invalidate();
+      utils.billing.services.list.invalidate();
+      utils.billing.unmatched.list.invalidate();
+      utils.billing.summary.invalidate();
+    },
+    onError: (err) => toast.error(`Failed: ${err.message}`),
+  });
+
+  const preview = previewQuery.data;
+  const totalMonthly = preview?.preview.reduce((s, p) => s + p.monthlyCost, 0) ?? 0;
+
+  return (
+    <div className="space-y-4">
+      {/* Info banner */}
+      <div className="flex items-start gap-3 p-4 bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg text-sm">
+        <Info className="w-4 h-4 text-blue-600 mt-0.5 shrink-0" />
+        <div>
+          <p className="font-medium text-blue-900 dark:text-blue-100">Services already linked to customers</p>
+          <p className="text-blue-700 dark:text-blue-300 mt-0.5">
+            These services have a valid customer assignment but their status is still{" "}
+            <code className="bg-blue-100 dark:bg-blue-900 px-1 rounded">unmatched</code>.
+            Activating them updates their status to{" "}
+            <code className="bg-blue-100 dark:bg-blue-900 px-1 rounded">active</code> and
+            recalculates all customer cost, revenue, and margin figures.
+          </p>
+        </div>
+      </div>
+
+      {previewQuery.isLoading ? (
+        <div className="flex items-center gap-2 text-muted-foreground py-8 justify-center">
+          <Loader2 className="w-5 h-5 animate-spin" />
+          Loading preview…
+        </div>
+      ) : preview ? (
+        <>
+          {/* Stats cards */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="bg-card border border-border rounded-lg p-4">
+              <p className="text-xs text-muted-foreground uppercase tracking-wide">Services to Activate</p>
+              <p className="text-3xl font-bold text-green-600 mt-1">{preview.count.toLocaleString()}</p>
+            </div>
+            <div className="bg-card border border-border rounded-lg p-4">
+              <p className="text-xs text-muted-foreground uppercase tracking-wide">Customers Affected</p>
+              <p className="text-3xl font-bold text-primary mt-1">{preview.affectedCustomers.toLocaleString()}</p>
+            </div>
+            <div className="bg-card border border-border rounded-lg p-4">
+              <p className="text-xs text-muted-foreground uppercase tracking-wide">Validation Errors</p>
+              <p className={`text-3xl font-bold mt-1 ${preview.errors.length > 0 ? 'text-red-600' : 'text-muted-foreground'}`}>
+                {preview.errors.length}
+              </p>
+            </div>
+            <div className="bg-card border border-border rounded-lg p-4">
+              <p className="text-xs text-muted-foreground uppercase tracking-wide">Monthly Cost (preview)</p>
+              <p className="text-3xl font-bold text-amber-600 mt-1">
+                ${totalMonthly.toLocaleString('en-AU', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+              </p>
+            </div>
+          </div>
+
+          {/* Action button */}
+          {preview.count > 0 && (
+            <div className="flex items-center gap-3">
+              <Button
+                onClick={() => commitMutation.mutate()}
+                disabled={commitMutation.isPending}
+                className="bg-green-600 hover:bg-green-700 text-white"
+              >
+                {commitMutation.isPending ? (
+                  <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Activating…</>
+                ) : (
+                  <><CheckCircle2 className="w-4 h-4 mr-2" />Activate All {preview.count.toLocaleString()} Services</>
+                )}
+              </Button>
+              <span className="text-sm text-muted-foreground">
+                Updates status to <strong>active</strong> and recalculates all customer stats.
+              </span>
+            </div>
+          )}
+
+          {preview.count === 0 && (
+            <div className="flex items-center gap-2 text-green-600 py-4">
+              <CheckCircle2 className="w-5 h-5" />
+              <span className="font-medium">All linked services are already active. Nothing to do.</span>
+            </div>
+          )}
+
+          {/* Preview table */}
+          {preview.preview.length > 0 && (
+            <div className="border border-border rounded-lg overflow-hidden">
+              <div className="bg-muted/40 px-4 py-2 text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                Preview (first {preview.preview.length} of {preview.count})
+              </div>
+              <div className="overflow-x-auto max-h-96 overflow-y-auto">
+                <table className="w-full text-sm">
+                  <thead className="sticky top-0 bg-muted/90 backdrop-blur-sm">
+                    <tr className="border-b border-border">
+                      <th className="text-left px-4 py-2 font-medium">Service ID</th>
+                      <th className="text-left px-4 py-2 font-medium">Customer</th>
+                      <th className="text-left px-4 py-2 font-medium">Address</th>
+                      <th className="text-right px-4 py-2 font-medium">Monthly Cost</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {preview.preview.map((row, i) => (
+                      <tr key={row.serviceExternalId} className={`border-b border-border/50 ${i % 2 === 0 ? '' : 'bg-muted/10'}`}>
+                        <td className="px-4 py-2 font-mono text-xs text-muted-foreground">{row.serviceExternalId}</td>
+                        <td className="px-4 py-2">
+                          <span className="font-medium">{row.customerName}</span>
+                          <span className="ml-2 text-xs text-muted-foreground">{row.customerExternalId}</span>
+                        </td>
+                        <td className="px-4 py-2 text-muted-foreground text-xs max-w-xs truncate">{row.locationAddress || '—'}</td>
+                        <td className="px-4 py-2 text-right font-mono">${row.monthlyCost.toFixed(2)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {/* Errors */}
+          {preview.errors.length > 0 && (
+            <div className="border border-red-200 rounded-lg p-4 bg-red-50 dark:bg-red-950/20">
+              <p className="text-sm font-medium text-red-700 mb-2">Validation errors ({preview.errors.length}):</p>
+              <ul className="text-xs text-red-600 space-y-1">
+                {preview.errors.map((e, i) => <li key={i}>{e}</li>)}
+              </ul>
+            </div>
+          )}
+        </>
+      ) : null}
+    </div>
+  );
+}
+
 // ─── Root page ────────────────────────────────────────────────────────────────
 
 export default function AutoMatch() {
-  const [activeTab, setActiveTab] = useState<"alias" | "address">("address");
+  const [activeTab, setActiveTab] = useState<"alias" | "address" | "bulk">("bulk");
 
   return (
     <div className="p-6 lg:p-8">
@@ -1182,6 +1326,17 @@ export default function AutoMatch() {
 
       {/* Tabs */}
       <div className="flex gap-1 mb-6 bg-muted/40 border border-border rounded-lg p-1 w-fit">
+        <button
+          onClick={() => setActiveTab("bulk")}
+          className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+            activeTab === "bulk"
+              ? "bg-card shadow-sm text-foreground"
+              : "text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          <CheckCircle2 className="w-4 h-4" />
+          Bulk Activate
+        </button>
         <button
           onClick={() => setActiveTab("address")}
           className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors ${
@@ -1207,7 +1362,7 @@ export default function AutoMatch() {
       </div>
 
       {/* Tab content */}
-      {activeTab === "address" ? <AddressMatchTab /> : <AliasMatchTab />}
+      {activeTab === "bulk" ? <BulkActivateTab /> : activeTab === "address" ? <AddressMatchTab /> : <AliasMatchTab />}
     </div>
   );
 }

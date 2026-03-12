@@ -575,26 +575,21 @@ export async function recalculateCustomerCounts(...customerExternalIds: (string 
   const db = await getDb();
   if (!db) return;
   const uniqueIds = Array.from(new Set(customerExternalIds.filter(Boolean) as string[]));
-  for (const custId of uniqueIds) {
-    const [svcCount] = await db.select({ count: sql<number>`count(*)` })
-      .from(services)
-      .where(sql`customerExternalId = ${custId} AND status != 'terminated'`);
-    const [matchedCount] = await db.select({ count: sql<number>`count(*)` })
-      .from(services)
-      .where(sql`customerExternalId = ${custId} AND status = 'active'`);
-    const [unmatchedCount] = await db.select({ count: sql<number>`count(*)` })
-      .from(services)
-      .where(sql`customerExternalId = ${custId} AND status = 'unmatched'`);
-    const [costSum] = await db.select({ total: sql<string>`COALESCE(SUM(monthlyCost), 0)` })
-      .from(services)
-      .where(sql`customerExternalId = ${custId} AND status != 'terminated'`);
-    await db.update(customers).set({
-      serviceCount: svcCount.count,
-      matchedCount: matchedCount.count,
-      unmatchedCount: unmatchedCount.count,
-      monthlyCost: costSum.total,
-    }).where(eq(customers.externalId, custId));
-  }
+  if (uniqueIds.length === 0) return;
+
+  // Use a single bulk UPDATE with correlated subqueries — much faster than N×4 round-trips
+  // Works for both small sets (single customer) and large sets (200+ customers)
+  const idList = sql.join(uniqueIds.map(id => sql`${id}`), sql`, `);
+  await db.execute(sql`
+    UPDATE customers c
+    SET
+      serviceCount   = (SELECT COUNT(*)                              FROM services s WHERE s.customerExternalId = c.externalId AND s.status != 'terminated'),
+      matchedCount   = (SELECT COUNT(*)                              FROM services s WHERE s.customerExternalId = c.externalId AND s.status = 'active'),
+      unmatchedCount = (SELECT COUNT(*)                              FROM services s WHERE s.customerExternalId = c.externalId AND s.status = 'unmatched'),
+      monthlyCost    = (SELECT COALESCE(SUM(s.monthlyCost), 0)       FROM services s WHERE s.customerExternalId = c.externalId AND s.status != 'terminated'),
+      updatedAt      = NOW()
+    WHERE c.externalId IN (${idList})
+  `);
 }
 
 export async function assignServiceToCustomer(
@@ -4024,4 +4019,90 @@ export async function commitAddressAutoMatch(
   }
 
   return { applied, errors };
+}
+
+/**
+ * Bulk-activates services that are stuck in 'unmatched' status but already have
+ * a valid customerExternalId pointing to an existing customer.
+ * Returns a preview (dry-run=true) or applies the changes (dry-run=false).
+ */
+export async function bulkActivateLinkedServices(dryRun = true): Promise<{
+  count: number;
+  affectedCustomers: number;
+  preview: Array<{ serviceExternalId: string; customerExternalId: string; customerName: string; locationAddress: string; monthlyCost: number }>;
+  errors: string[];
+}> {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+
+  // Find all unmatched services that already have a valid customerExternalId
+  const candidates = await db.select({
+    externalId: services.externalId,
+    customerExternalId: services.customerExternalId,
+    customerName: services.customerName,
+    locationAddress: services.locationAddress,
+    monthlyCost: services.monthlyCost,
+  }).from(services)
+    .where(
+      and(
+        eq(services.status, 'unmatched'),
+        sql`${services.customerExternalId} IS NOT NULL AND ${services.customerExternalId} != ''`
+      )
+    );
+
+  // Verify each customerExternalId actually exists in the customers table
+  const allCustomerIds = new Set(
+    (await db.select({ externalId: customers.externalId }).from(customers)).map(c => c.externalId)
+  );
+
+  const valid = candidates.filter(c => allCustomerIds.has(c.customerExternalId!));
+  const invalid = candidates.filter(c => !allCustomerIds.has(c.customerExternalId!));
+
+  const preview = valid.map(s => ({
+    serviceExternalId: s.externalId,
+    customerExternalId: s.customerExternalId!,
+    customerName: s.customerName || '',
+    locationAddress: s.locationAddress || '',
+    monthlyCost: parseFloat(String(s.monthlyCost) || '0'),
+  }));
+
+  if (dryRun) {
+    const uniqueCustomers = new Set(valid.map(s => s.customerExternalId));
+    return {
+      count: valid.length,
+      affectedCustomers: uniqueCustomers.size,
+      preview: preview.slice(0, 50), // Return first 50 for preview
+      errors: invalid.map(s => `${s.externalId}: customer ${s.customerExternalId} not found`),
+    };
+  }
+
+  // Apply: bulk update status to 'active'
+  const errors: string[] = [];
+  let applied = 0;
+
+  // Process in batches of 100
+  const batchSize = 100;
+  for (let i = 0; i < valid.length; i += batchSize) {
+    const batch = valid.slice(i, i + batchSize);
+    const ids = batch.map(s => s.externalId);
+    try {
+      await db.update(services)
+        .set({ status: 'active', updatedAt: new Date() })
+        .where(sql`externalId IN (${sql.join(ids.map(id => sql`${id}`), sql`, `)})`);
+      applied += batch.length;
+    } catch (err: any) {
+      errors.push(`Batch ${i}-${i + batchSize}: ${err.message}`);
+    }
+  }
+
+  // Recalculate stats for all affected customers
+  const affectedCustomerIds = Array.from(new Set(valid.map(s => s.customerExternalId!)));
+  await recalculateCustomerCounts(...affectedCustomerIds);
+
+  return {
+    count: applied,
+    affectedCustomers: affectedCustomerIds.length,
+    preview: preview.slice(0, 50),
+    errors,
+  };
 }
