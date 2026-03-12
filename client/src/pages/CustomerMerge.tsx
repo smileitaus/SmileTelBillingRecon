@@ -10,6 +10,7 @@ import {
   Search,
   Loader2,
   ArrowRight,
+  ArrowLeftRight,
   Merge,
   Users,
   AlertTriangle,
@@ -255,7 +256,14 @@ export default function CustomerMerge() {
                 {primarySide === "a" ? customerB.name : customerA.name}
               </p>
             </div>
-            <ArrowRight className="w-5 h-5 text-muted-foreground shrink-0" />
+            <button
+              onClick={() => { setPrimarySide(primarySide === "a" ? "b" : "a"); setConfirming(false); }}
+              className="flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-md hover:bg-muted transition-colors group shrink-0"
+              title="Swap primary and secondary"
+            >
+              <ArrowLeftRight className="w-4 h-4 text-muted-foreground group-hover:text-foreground transition-colors" />
+              <span className="text-[9px] text-muted-foreground group-hover:text-foreground uppercase tracking-wider font-medium">Swap</span>
+            </button>
             <div className="text-center flex-1">
               <p className="text-xs text-muted-foreground">Primary (keep)</p>
               <p className="text-sm font-medium text-emerald-700 mt-0.5">
