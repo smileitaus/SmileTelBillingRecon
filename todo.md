@@ -343,3 +343,9 @@
 - [ ] Investigate why valid Xero customers appear as Unmatched (matching logic gap)
 - [ ] Build Match to Existing Customer workflow on Billing Match screen
 - [ ] Add Import as New Customer option for genuinely new Xero contacts
+
+# Service-to-Billing Matching Improvements
+- [x] Auto-match: link Xero billing items to supplier services for same-customer same-type 1:1 cases
+- [x] Manual match UI: allow user to manually link a billing item to a supplier service on CustomerDetail page
+- [x] mergeBillingServiceToSupplierService: db function to transfer billing items from Xero stub to supplier service and retire the stub
+- [x] Service Linking page: review auto-match candidates and run bulk or individual merges

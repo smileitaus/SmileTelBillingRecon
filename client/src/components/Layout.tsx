@@ -18,6 +18,7 @@ import {
   ClipboardCheck,
   Sparkles,
   ShieldCheck,
+  Link2,
 } from "lucide-react";
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useGlobalSearch } from "@/hooks/useData";
@@ -34,6 +35,7 @@ const navItems = [
   { path: "/merge", label: "Merge Customers", icon: Merge },
   { path: "/auto-match", label: "Auto-Match", icon: Sparkles },
   { path: "/platform-checks", label: "Platform Checks", icon: ShieldCheck },
+  { path: "/service-billing-match", label: "Service Linking", icon: Link2 },
 ];
 
 interface SearchCustomer {

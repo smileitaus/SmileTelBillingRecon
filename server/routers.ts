@@ -55,6 +55,9 @@ import {
   getFuzzyCustomerSuggestions,
   importXeroContactAsCustomer,
   matchXeroContactToCustomer,
+  mergeBillingToSupplierService,
+  getAutoMatchCandidates,
+  getSupplierServicesForCustomer,
 } from "./db";
 
 export const appRouter = router({
@@ -623,6 +626,34 @@ export const appRouter = router({
         }))
         .mutation(async ({ input }) => {
           return await matchXeroContactToCustomer(input.contactName, input.customerExternalId);
+        }),
+    }),
+
+    // Service-to-billing matching
+    serviceBillingMatch: router({
+      // Get auto-match candidates (1:1 same-type same-customer)
+      candidates: protectedProcedure.query(async () => {
+        return await getAutoMatchCandidates();
+      }),
+      // Get supplier services for a customer (for manual match picker)
+      supplierServices: protectedProcedure
+        .input(z.object({ customerExternalId: z.string() }))
+        .query(async ({ input }) => {
+          return await getSupplierServicesForCustomer(input.customerExternalId);
+        }),
+      // Merge a Xero stub service into a supplier service
+      merge: protectedProcedure
+        .input(z.object({
+          xeroServiceExternalId: z.string(),
+          supplierServiceExternalId: z.string(),
+        }))
+        .mutation(async ({ input, ctx }) => {
+          const mergedBy = ctx.user?.name || ctx.user?.email || 'Unknown';
+          return await mergeBillingToSupplierService(
+            input.xeroServiceExternalId,
+            input.supplierServiceExternalId,
+            mergedBy
+          );
         }),
     }),
 

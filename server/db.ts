@@ -2881,3 +2881,194 @@ export async function matchXeroContactToCustomer(contactName: string, customerEx
     assignedItemCount: countRow?.count || 0,
   };
 }
+
+// ==================== Service-to-Billing Matching ====================
+
+/**
+ * Merge a Xero stub service into a supplier service.
+ * - Moves all billing items from xeroServiceId to supplierServiceId
+ * - Recalculates revenue and margin on the supplier service
+ * - Marks the Xero stub as terminated (it becomes redundant)
+ * - Updates customer service counts
+ */
+export async function mergeBillingToSupplierService(
+  xeroServiceExternalId: string,
+  supplierServiceExternalId: string,
+  mergedBy: string
+): Promise<{ success: boolean; billingItemsMoved: number; newRevenue: number }> {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+
+  // Validate both services exist and belong to the same customer
+  const [xeroSvc] = await db.select().from(services)
+    .where(eq(services.externalId, xeroServiceExternalId)).limit(1);
+  const [supplierSvc] = await db.select().from(services)
+    .where(eq(services.externalId, supplierServiceExternalId)).limit(1);
+
+  if (!xeroSvc) throw new Error(`Xero service ${xeroServiceExternalId} not found`);
+  if (!supplierSvc) throw new Error(`Supplier service ${supplierServiceExternalId} not found`);
+  if (xeroSvc.customerExternalId !== supplierSvc.customerExternalId) {
+    throw new Error('Services must belong to the same customer');
+  }
+
+  // Move all billing items from xero stub to supplier service
+  const updateResult = await db.update(billingItems).set({
+    serviceExternalId: supplierServiceExternalId,
+    matchStatus: 'service-matched',
+    matchConfidence: 'manual',
+  }).where(eq(billingItems.serviceExternalId, xeroServiceExternalId));
+
+  // Count moved items
+  const [countRow] = await db.select({ count: sql<number>`count(*)` })
+    .from(billingItems)
+    .where(eq(billingItems.serviceExternalId, supplierServiceExternalId));
+  const billingItemsMoved = countRow?.count || 0;
+
+  // Recalculate revenue on supplier service
+  const [revSum] = await db.select({
+    total: sql<string>`COALESCE(SUM(lineAmount), 0)`,
+  }).from(billingItems).where(eq(billingItems.serviceExternalId, supplierServiceExternalId));
+  const revenue = parseFloat(revSum.total);
+  const cost = parseFloat(supplierSvc.monthlyCost);
+  const margin = revenue > 0 ? ((revenue - cost) / revenue * 100) : 0;
+
+  await db.update(services).set({
+    monthlyRevenue: revSum.total,
+    marginPercent: margin.toFixed(2),
+    status: 'active',
+    billingItemId: supplierServiceExternalId,
+  }).where(eq(services.externalId, supplierServiceExternalId));
+
+  // Terminate the Xero stub (it's now redundant)
+  await db.update(services).set({
+    status: 'terminated',
+    monthlyCost: '0.00',
+    monthlyRevenue: '0.00',
+    discoveryNotes: (xeroSvc.discoveryNotes ? xeroSvc.discoveryNotes + '\n' : '') +
+      `[MERGED] Billing items moved to supplier service ${supplierServiceExternalId} by ${mergedBy}`,
+  }).where(eq(services.externalId, xeroServiceExternalId));
+
+  // Recalculate customer service count
+  const custId = supplierSvc.customerExternalId;
+  if (custId) {
+    const [svcCount] = await db.select({ count: sql<number>`count(*)` })
+      .from(services)
+      .where(sql`${services.customerExternalId} = ${custId} AND ${services.status} != 'terminated'`);
+    const [revTotal] = await db.select({ total: sql<string>`COALESCE(SUM(monthlyCost), 0)` })
+      .from(services)
+      .where(sql`${services.customerExternalId} = ${custId} AND ${services.status} != 'terminated'`);
+    await db.update(customers).set({
+      serviceCount: svcCount.count,
+      monthlyCost: revTotal.total,
+    }).where(eq(customers.externalId, custId));
+  }
+
+  return { success: true, billingItemsMoved, newRevenue: revenue };
+}
+
+/**
+ * Get auto-match candidates: customers with exactly 1 supplier service and 1 Xero stub
+ * of the same type, where the Xero stub has billing items.
+ */
+export async function getAutoMatchCandidates(): Promise<Array<{
+  customerExternalId: string;
+  customerName: string;
+  serviceType: string;
+  xeroServiceId: string;
+  xeroServiceDetail: string;
+  xeroRevenue: number;
+  supplierServiceId: string;
+  supplierServiceDetail: string;
+  supplierCost: number;
+  supplierProvider: string;
+  billingItemCount: number;
+}>> {
+  const db = await getDb();
+  if (!db) return [];
+
+  // Find Xero stub services (unmatched, Unknown provider) that have billing items
+  const xeroStubs = await db.select({
+    externalId: services.externalId,
+    serviceType: services.serviceType,
+    serviceTypeDetail: services.serviceTypeDetail,
+    customerExternalId: services.customerExternalId,
+    customerName: services.customerName,
+    monthlyRevenue: services.monthlyRevenue,
+  }).from(services)
+    .where(sql`${services.status} = 'unmatched' AND ${services.provider} = 'Unknown' AND ${services.customerExternalId} != '' AND ${services.customerExternalId} IS NOT NULL`);
+
+  const candidates = [];
+
+  for (const stub of xeroStubs) {
+    if (!stub.customerExternalId) continue;
+
+    // Check this stub has billing items
+    const [biCount] = await db.select({ count: sql<number>`count(*)` })
+      .from(billingItems)
+      .where(eq(billingItems.serviceExternalId, stub.externalId));
+    if (!biCount || biCount.count === 0) continue;
+
+    // Find supplier services of the same type for this customer
+    const supplierSvcs = await db.select({
+      externalId: services.externalId,
+      serviceTypeDetail: services.serviceTypeDetail,
+      monthlyCost: services.monthlyCost,
+      provider: services.provider,
+    }).from(services)
+      .where(sql`${services.customerExternalId} = ${stub.customerExternalId} AND ${services.serviceType} = ${stub.serviceType} AND ${services.status} = 'active' AND ${services.provider} != 'Unknown'`);
+
+    if (supplierSvcs.length === 1) {
+      // Exactly one supplier service of this type — confident auto-match candidate
+      candidates.push({
+        customerExternalId: stub.customerExternalId,
+        customerName: stub.customerName || '',
+        serviceType: stub.serviceType,
+        xeroServiceId: stub.externalId,
+        xeroServiceDetail: stub.serviceTypeDetail || '',
+        xeroRevenue: parseFloat(stub.monthlyRevenue),
+        supplierServiceId: supplierSvcs[0].externalId,
+        supplierServiceDetail: supplierSvcs[0].serviceTypeDetail || '',
+        supplierCost: parseFloat(supplierSvcs[0].monthlyCost),
+        supplierProvider: supplierSvcs[0].provider || 'Unknown',
+        billingItemCount: biCount.count,
+      });
+    }
+  }
+
+  return candidates;
+}
+
+/**
+ * Get supplier services for a customer that could accept billing items
+ * (used for manual matching UI)
+ */
+export async function getSupplierServicesForCustomer(customerExternalId: string): Promise<Array<{
+  externalId: string;
+  serviceType: string;
+  serviceTypeDetail: string;
+  provider: string;
+  monthlyCost: number;
+  avcId: string;
+  phoneNumber: string;
+  locationAddress: string;
+  monthlyRevenue: number;
+}>> {
+  const db = await getDb();
+  if (!db) return [];
+
+  const result = await db.select().from(services)
+    .where(sql`${services.customerExternalId} = ${customerExternalId} AND ${services.status} = 'active' AND ${services.provider} != 'Unknown'`)
+    .orderBy(asc(services.serviceType));
+
+  return result.map(s => ({
+    externalId: s.externalId,
+    serviceType: s.serviceType,
+    serviceTypeDetail: s.serviceTypeDetail || '',
+    provider: s.provider || 'Unknown',
+    monthlyCost: parseFloat(s.monthlyCost),
+    avcId: s.avcId || '',
+    phoneNumber: s.phoneNumber || '',
+    locationAddress: s.locationAddress || '',
+    monthlyRevenue: parseFloat(s.monthlyRevenue),
+  }));
+}

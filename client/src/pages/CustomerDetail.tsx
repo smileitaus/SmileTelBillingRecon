@@ -41,6 +41,133 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { ProviderBadge } from "@/components/ProviderBadge";
+import { Badge } from "@/components/ui/badge";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { useMemo } from "react";
+
+// ─── Manual Match Dialog ─────────────────────────────────────────────────────
+function ManualMatchDialog({
+  xeroService,
+  customerExternalId,
+  open,
+  onClose,
+  onMatched,
+}: {
+  xeroService: any;
+  customerExternalId: string;
+  open: boolean;
+  onClose: () => void;
+  onMatched: () => void;
+}) {
+  const utils = trpc.useUtils();
+  const { data: supplierServices = [], isLoading } = trpc.billing.serviceBillingMatch.supplierServices.useQuery(
+    { customerExternalId },
+    { enabled: open }
+  );
+  const mergeMutation = trpc.billing.serviceBillingMatch.merge.useMutation({
+    onSuccess: (result) => {
+      toast.success(`Linked — ${result.billingItemsMoved} billing item(s) moved, revenue now $${result.newRevenue.toFixed(2)}/mo`);
+      utils.billing.customers.byId.invalidate();
+      utils.billing.summary.invalidate();
+      onMatched();
+      onClose();
+    },
+    onError: (err) => toast.error(`Failed to link: ${err.message}`),
+  });
+
+  // Filter to same service type as the xero stub
+  const sameTypeServices = useMemo(
+    () => supplierServices.filter((s: any) => s.serviceType === xeroService?.serviceType),
+    [supplierServices, xeroService]
+  );
+  const otherServices = useMemo(
+    () => supplierServices.filter((s: any) => s.serviceType !== xeroService?.serviceType),
+    [supplierServices, xeroService]
+  );
+
+  return (
+    <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
+      <DialogContent className="max-w-lg">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
+            <LinkIcon className="w-4 h-4" />
+            Link Billing to Supplier Service
+          </DialogTitle>
+        </DialogHeader>
+        <div className="space-y-3">
+          {/* Xero stub summary */}
+          <div className="rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-sm">
+            <p className="font-medium text-amber-900">Billing item to link:</p>
+            <p className="text-amber-800">{xeroService?.serviceType} — {xeroService?.serviceTypeDetail}</p>
+            <p className="text-amber-700">${Number(xeroService?.monthlyCost).toFixed(2)}/mo billed</p>
+          </div>
+          {isLoading ? (
+            <div className="flex items-center justify-center py-6">
+              <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
+            </div>
+          ) : supplierServices.length === 0 ? (
+            <p className="text-sm text-muted-foreground text-center py-4">No supplier services found for this customer.</p>
+          ) : (
+            <ScrollArea className="max-h-72">
+              <div className="space-y-1">
+                {sameTypeServices.length > 0 && (
+                  <p className="text-xs font-medium text-muted-foreground px-1 pt-1">Same type ({xeroService?.serviceType})</p>
+                )}
+                {sameTypeServices.map((svc: any) => (
+                  <button
+                    key={svc.externalId}
+                    disabled={mergeMutation.isPending}
+                    onClick={() => mergeMutation.mutate({
+                      xeroServiceExternalId: xeroService.externalId,
+                      supplierServiceExternalId: svc.externalId,
+                    })}
+                    className="w-full text-left rounded-md border border-border px-3 py-2 hover:bg-accent transition-colors disabled:opacity-50 group"
+                  >
+                    <div className="flex items-center gap-2">
+                      <ProviderBadge provider={svc.provider} size="xs" />
+                      <span className="text-sm font-medium flex-1">{svc.serviceTypeDetail || svc.serviceType}</span>
+                      <span className="text-xs text-muted-foreground">${svc.monthlyCost.toFixed(2)}/mo cost</span>
+                      {mergeMutation.isPending && <Loader2 className="w-3 h-3 animate-spin" />}
+                    </div>
+                    {(svc.avcId || svc.phoneNumber) && (
+                      <p className="text-xs text-muted-foreground mt-0.5">{svc.avcId || svc.phoneNumber}</p>
+                    )}
+                    {svc.locationAddress && (
+                      <p className="text-xs text-muted-foreground truncate">{svc.locationAddress}</p>
+                    )}
+                  </button>
+                ))}
+                {otherServices.length > 0 && (
+                  <p className="text-xs font-medium text-muted-foreground px-1 pt-2">Other types</p>
+                )}
+                {otherServices.map((svc: any) => (
+                  <button
+                    key={svc.externalId}
+                    disabled={mergeMutation.isPending}
+                    onClick={() => mergeMutation.mutate({
+                      xeroServiceExternalId: xeroService.externalId,
+                      supplierServiceExternalId: svc.externalId,
+                    })}
+                    className="w-full text-left rounded-md border border-border px-3 py-2 hover:bg-accent transition-colors disabled:opacity-50 opacity-70"
+                  >
+                    <div className="flex items-center gap-2">
+                      <ProviderBadge provider={svc.provider} size="xs" />
+                      <span className="text-sm font-medium flex-1">{svc.serviceType} — {svc.serviceTypeDetail}</span>
+                      <span className="text-xs text-muted-foreground">${svc.monthlyCost.toFixed(2)}/mo</span>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </ScrollArea>
+          )}
+        </div>
+        <DialogFooter>
+          <Button variant="outline" onClick={onClose}>Cancel</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
 
 // ─── Customer Edit Dialog ────────────────────────────────────────────────────
 type CustomerEditDialogProps = {
@@ -348,12 +475,14 @@ function AvcInlineEditor({
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function ServiceRow({ service, onTerminated }: { service: any; onTerminated?: () => void }) {
+function ServiceRow({ service, customerExternalId, onTerminated }: { service: any; customerExternalId?: string; onTerminated?: () => void }) {
   const hasAvc = service.connectionId && service.connectionId.trim() !== "";
   const isTerminated = service.status === "terminated";
   const isFlagged = service.status === "flagged_for_termination";
+  const isUnmatched = service.status === "unmatched" && service.provider === "Unknown";
   const hasNotes = service.discoveryNotes && service.discoveryNotes.trim() !== "";
   const [showConfirm, setShowConfirm] = useState(false);
+  const [showMatchDialog, setShowMatchDialog] = useState(false);
   const terminateMutation = trpc.billing.terminate.useMutation();
   const restoreMutation = trpc.billing.restore.useMutation();
   const utils = trpc.useUtils();
@@ -428,6 +557,16 @@ function ServiceRow({ service, onTerminated }: { service: any; onTerminated?: ()
           <div className="shrink-0 hidden md:block">
             <StatusPill status={service.status} />
           </div>
+          {/* Link to supplier service button — only for unmatched Xero stubs */}
+          {isUnmatched && customerExternalId && (
+            <button
+              onClick={(e) => { e.preventDefault(); e.stopPropagation(); setShowMatchDialog(true); }}
+              title="Link to supplier service"
+              className="shrink-0 p-1.5 rounded text-amber-600 opacity-0 group-hover:opacity-100 hover:bg-amber-50 transition-all"
+            >
+              <LinkIcon className="w-3.5 h-3.5" />
+            </button>
+          )}
           {/* Quick terminate / restore button */}
           {!isTerminated ? (
             <button
@@ -469,6 +608,16 @@ function ServiceRow({ service, onTerminated }: { service: any; onTerminated?: ()
             Cancel
           </button>
         </div>
+      )}
+      {/* Manual match dialog for unmatched Xero stubs */}
+      {showMatchDialog && customerExternalId && (
+        <ManualMatchDialog
+          xeroService={service}
+          customerExternalId={customerExternalId}
+          open={showMatchDialog}
+          onClose={() => setShowMatchDialog(false)}
+          onMatched={() => { utils.billing.customers.byId.invalidate(); onTerminated?.(); }}
+        />
       )}
     </>
   );
@@ -786,7 +935,7 @@ export default function CustomerDetail() {
                 {customerServices
                   .filter((s) => s.status === "flagged_for_termination")
                   .map((svc) => (
-                    <ServiceRow key={svc.id} service={svc} />
+                    <ServiceRow key={svc.id} service={svc} customerExternalId={customer?.externalId} />
                   ))}
               </div>
             </div>
@@ -811,7 +960,7 @@ export default function CustomerDetail() {
                 {customerServices
                   .filter((s) => s.status === "terminated")
                   .map((svc) => (
-                    <ServiceRow key={svc.id} service={svc} />
+                    <ServiceRow key={svc.id} service={svc} customerExternalId={customer?.externalId} />
                   ))}
               </div>
             </div>
@@ -867,7 +1016,7 @@ export default function CustomerDetail() {
               <div>
                 {locServices.map(
                   (svc: { id: number; externalId?: string }) => (
-                    <ServiceRow key={svc.id} service={svc} />
+                    <ServiceRow key={svc.id} service={svc} customerExternalId={customer?.externalId} />
                   )
                 )}
               </div>
@@ -900,7 +1049,7 @@ export default function CustomerDetail() {
               </div>
               <div>
                 {svcs.map((svc) => (
-                  <ServiceRow key={svc.id} service={svc} />
+                  <ServiceRow key={svc.id} service={svc} customerExternalId={customer?.externalId} />
                 ))}
               </div>
             </div>
@@ -925,7 +1074,7 @@ export default function CustomerDetail() {
             </div>
             <div>
               {unlocatedServices.map((svc) => (
-                <ServiceRow key={svc.id} service={svc} />
+                <ServiceRow key={svc.id} service={svc} customerExternalId={customer?.externalId} />
               ))}
             </div>
           </div>
