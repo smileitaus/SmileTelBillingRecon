@@ -1,4 +1,4 @@
-import { eq, like, or, sql, desc, asc, inArray, ne } from "drizzle-orm";
+import { eq, like, or, and, sql, desc, asc, inArray, ne } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import { InsertUser, users, customers, locations, services, supplierAccounts, billingItems, reviewItems, billingPlatformChecks, serviceEditHistory } from "../drizzle/schema";
 import { ENV } from './_core/env';
@@ -3660,12 +3660,131 @@ function scoreAddressMatch(serviceAddr: string, customerAddr: string): { score: 
   return { score, tier };
 }
 
+// Common abbreviation expansions for camelCase service names (e.g. ShailerPkMed)
+const ABBREV_MAP: Record<string, string> = {
+  'mc': 'medical centre',
+  'med': 'medical',
+  'pk': 'park',
+  'mt': 'mount',
+  'nth': 'north',
+  'sth': 'south',
+  'hb': 'hervey bay',
+  'hbay': 'hervey bay',
+  'br': 'broadbeach',
+  'sc': 'specialist centre',
+  'fc': 'family clinic',
+  'cl': 'clinic',
+  'hosp': 'hospital',
+  'doc': 'doctor',
+  'docs': 'doctors',
+  'pharm': 'pharmacy',
+  'chem': 'chemist',
+  'ctr': 'centre',
+  'out': '',
+  'in': '',
+  'outbound': '',
+  'inbound': '',
+  'admin': 'admin',
+  // Geographic abbreviations
+  'warwk': 'warwick',
+  'mchy': 'maroochydore',
+  'mchyd': 'maroochydore',
+  'aspley': 'aspley',
+  'geebung': 'geebung',
+  'gumdale': 'gumdale',
+  'kawana': 'kawana',
+  'logan': 'logan',
+  'shailer': 'shailer',
+  'stafford': 'stafford',
+  'beenleigh': 'beenleigh',
+  'cottn': 'cotton',
+  'cott': 'cotton',
+  'enogg': 'enoggera',
+  'eno': 'enoggera',
+  'bellb': 'bellbowrie',
+  'bellbow': 'bellbowrie',
+  // Business type abbreviations
+  'dent': 'dental',
+  'surg': 'surgery',
+  'prac': 'practice',
+  'spec': 'specialist',
+  'cent': 'centre',
+  'cntr': 'centre',
+  'grp': 'group',
+  'pty': '',
+  'ltd': '',
+  'ata': '',
+  'compl': 'complete',
+  'compc': 'complete care',
+  'firstc': 'firstcare',
+  'waterfrd': 'waterford',
+  'waterfd': 'waterford',
+  'waterford': 'waterford',
+  // Compound abbreviations (e.g. MCIN = MC + IN = medical centre inbound)
+  'mcin': 'medical centre',
+  'mcout': 'medical centre',
+  'mcinbound': 'medical centre',
+  'mcoutbound': 'medical centre',
+  // Northwest abbreviation
+  'nw': 'north west',
+};
+
+/** Split a camelCase/PascalCase abbreviated name into tokens. */
+function splitCamelCase(s: string): string[] {
+  return s
+    .replace(/([a-z])([A-Z])/g, '$1 $2')
+    .replace(/([A-Z]+)([A-Z][a-z])/g, '$1 $2')
+    .replace(/[_\-]+/g, ' ')
+    .toLowerCase()
+    .split(/\s+/)
+    .filter(t => t.length > 0);
+}
+
+/** Expand abbreviated tokens using ABBREV_MAP. */
+function expandTokens(tokens: string[]): string[] {
+  const expanded: string[] = [];
+  for (const t of tokens) {
+    const exp = ABBREV_MAP[t];
+    if (exp === '') continue; // skip noise tokens like 'out', 'in'
+    if (exp !== undefined) {
+      expanded.push(...exp.split(' ').filter(Boolean));
+    } else {
+      expanded.push(t);
+    }
+  }
+  return expanded;
+}
+
+/** Score prefix token overlap between abbreviated planName and full customer name. Returns 0-100. */
+function scorePrefixMatch(abbrev: string, fullName: string): number {
+  const abbrevTokens = expandTokens(splitCamelCase(abbrev));
+  const fullTokens = splitCamelCase(fullName);
+  if (abbrevTokens.length === 0) return 0;
+  let matchedCount = 0;
+  for (const at of abbrevTokens) {
+    if (at.length < 2) continue;
+    const matched = fullTokens.some(ft =>
+      ft.startsWith(at) || at.startsWith(ft.slice(0, Math.min(ft.length, at.length + 2)))
+    );
+    if (matched) matchedCount++;
+  }
+  const significant = abbrevTokens.filter(t => t.length >= 2).length;
+  return significant > 0 ? Math.round((matchedCount / significant) * 100) : 0;
+}
+
 /**
- * Score a planName/customerName against a customer name using the existing scoreMatch logic.
- * Re-exported here for address-match context.
+ * Score a planName/customerName against a customer name.
+ * Uses both the existing scoreMatch logic AND camelCase prefix matching.
+ * Returns the higher of the two scores.
  */
 function scoreNameMatch(alias: string, customerName: string): { score: number; tier: string } {
-  return scoreMatch(alias, customerName);
+  const original = scoreMatch(alias, customerName);
+  const prefixScore = scorePrefixMatch(alias, customerName);
+  if (prefixScore > original.score) {
+    const tier = prefixScore >= 80 ? 'prefix-high' : prefixScore >= 60 ? 'prefix-medium' : 'prefix-low';
+    return { score: prefixScore, tier };
+  }
+  return original;
 }
 
 export interface AddressMatchCandidate {
@@ -3715,7 +3834,10 @@ export async function previewAddressAutoMatch(minConfidence = 55): Promise<{
     supplierName: services.supplierName,
   }).from(services)
     .where(
-      sql`(${services.customerExternalId} IS NULL OR ${services.customerExternalId} = '')`
+      and(
+        sql`(${services.customerExternalId} IS NULL OR ${services.customerExternalId} = '')`,
+        eq(services.status, 'unmatched')
+      )
     );
 
   // Fetch all customers with address data
@@ -3759,9 +3881,9 @@ export async function previewAddressAutoMatch(minConfidence = 55): Promise<{
     // Strategy 2: planName → customer name (for ChannelHaus voice/internet services)
     // Only try if address match didn't find a good result
     const planName = svc.planName || '';
-    const isChannelHausOrVoice = (svc.supplierName === 'ChannelHaus' || svc.serviceType === 'Voice') &&
-      planName.length > 3 &&
-      !planName.match(/^\$|^SBDP|^DBHRO|^DVBB|^SBBUN|^TBDP|^DBB/);
+    // Try planName matching for any service with an abbreviated/non-generic planName
+    const isChannelHausOrVoice = planName.length > 3 &&
+      !planName.match(/^\$|^SBDP|^DBHRO|^DVBB|^SBBUN|^TBDP|^DBB|^Business Internet$|^NBN|^ADSL|^Wholesale|^TBB_|^Unlimited|^Data -|^Internet$|^Voice$|^Mobile$/);
 
     if (bestScore < minConfidence && isChannelHausOrVoice) {
       for (const cust of allCustomers) {

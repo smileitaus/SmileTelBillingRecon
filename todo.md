@@ -380,3 +380,18 @@
 - [x] Add tRPC procedures: previewAddressAutoMatch + commitAddressAutoMatch
 - [x] Build Address & Name Match tab in AutoMatch page (alongside existing Alias Match tab)
 - [x] Write vitest tests for address match procedures
+
+# ABBREV_MAP Improvements (Mar 12)
+- [x] Add warwk→warwick, cottn→cotton, mcin/mcout→medical centre to ABBREV_MAP
+- [x] WarwkMCIn/Out now correctly matches Warwick Medical Centre at 100%
+- [x] MtCottnMCIN/OUT now correctly matches Mount Cotton Medical Centre at 100%
+- [x] Added geographic abbreviations: mchy, enogg, bellb, etc.
+- [x] Added business type abbreviations: compl, firstc, waterfrd, etc.
+- [x] All 7 addressMatch.test.ts tests still passing
+
+# Billing Item Fuzzy Match (Mar 12 - 1080 unmatched)
+- [ ] Diagnose 1,080 unmatched billing items - what fields are available (contactName, description, address)
+- [ ] Build server-side fuzzy match: billingItem.contactName → customer.name (Levenshtein + token overlap)
+- [ ] Add tRPC procedures: previewBillingItemMatch + commitBillingItemMatch
+- [ ] Build Billing Match fuzzy preview UI with confidence scores and bulk apply
+- [ ] Write vitest tests for billing item match logic
