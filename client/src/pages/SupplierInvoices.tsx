@@ -53,7 +53,7 @@ interface ParsedPdfService {
 
 interface ParsedPdfInvoice {
   type: "pdf";
-  supplier: "ChannelHaus" | "Legion" | "Tech-e";
+  supplier: "ChannelHaus" | "Legion" | "Tech-e" | "VineDirect" | "Infinet" | "Blitznet" | "Exetel";
   invoiceNumber: string;
   invoiceDate: string;
   totalIncGst: number;
@@ -327,6 +327,10 @@ function PdfInvoicePreview({
     ChannelHaus: "Channel Haus",
     Legion: "Legion",
     "Tech-e": "Tech-e",
+    VineDirect: "Vine Direct",
+    Infinet: "Infinet",
+    Blitznet: "Blitznet",
+    Exetel: "Exetel",
   };
 
   const typeColor: Record<string, string> = {
@@ -507,7 +511,7 @@ export default function SupplierInvoices() {
         return;
       }
 
-      setParseError("Unsupported file type. Please upload a CSV (Exetel) or PDF (Channel Haus, Legion, Tech-e) invoice.");
+      setParseError("Unsupported file type. Please upload a CSV (Exetel) or PDF (Channel Haus, Legion, Tech-e, Vine Direct, Infinet, Blitznet) invoice.");
     },
     [parsePdfMutation]
   );
@@ -562,7 +566,7 @@ export default function SupplierInvoices() {
       <div className="mb-6">
         <h1 className="text-xl font-bold">Supplier Invoices</h1>
         <p className="text-sm text-muted-foreground mt-1">
-          Upload supplier invoices to update service costs. Supports Exetel CSV and Channel Haus / Legion / Tech-e PDF formats.
+          Upload supplier invoices to update service costs. Supports Exetel CSV and Channel Haus / Legion / Tech-e / Vine Direct / Infinet / Blitznet PDF formats.
         </p>
       </div>
 
@@ -598,7 +602,7 @@ export default function SupplierInvoices() {
           </div>
           <p className="text-sm font-medium">Drop a supplier invoice here</p>
           <p className="text-xs text-muted-foreground mt-1">
-            or click to browse · CSV (Exetel) or PDF (Channel Haus, Legion, Tech-e)
+            or click to browse · CSV (Exetel) or PDF (Channel Haus, Legion, Tech-e, Vine Direct, Infinet, Blitznet)
           </p>
         </div>
       )}
@@ -713,6 +717,30 @@ export default function SupplierInvoices() {
               provider: "Tech-e",
               label: "Tech-e",
               detail: "PDF invoice · Internet services",
+              fileType: "PDF",
+              status: "Supported",
+              statusClass: "bg-green-50 text-green-700 border-green-200",
+            },
+            {
+              provider: "VineDirect",
+              label: "Vine Direct",
+              detail: "PDF invoice · Business Internet (NBN/Fibre)",
+              fileType: "PDF",
+              status: "Supported",
+              statusClass: "bg-green-50 text-green-700 border-green-200",
+            },
+            {
+              provider: "Infinet",
+              label: "Infinet",
+              detail: "PDF invoice · NBN SkyMuster & VOIP services",
+              fileType: "PDF",
+              status: "Supported",
+              statusClass: "bg-green-50 text-green-700 border-green-200",
+            },
+            {
+              provider: "Blitznet",
+              label: "Blitznet",
+              detail: "PDF invoice · Internet & Static IP services",
               fileType: "PDF",
               status: "Supported",
               statusClass: "bg-green-50 text-green-700 border-green-200",

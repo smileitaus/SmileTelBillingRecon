@@ -58,6 +58,42 @@ const providerConfig: Record<string, {
     border: "border-lime-200",
     label: "OptiComm",
   },
+  ChannelHaus: {
+    bg: "bg-violet-50",
+    text: "text-violet-700",
+    border: "border-violet-200",
+    label: "Channel Haus",
+  },
+  Legion: {
+    bg: "bg-rose-50",
+    text: "text-rose-700",
+    border: "border-rose-200",
+    label: "Legion",
+  },
+  "Tech-e": {
+    bg: "bg-orange-50",
+    text: "text-orange-700",
+    border: "border-orange-200",
+    label: "Tech-e",
+  },
+  VineDirect: {
+    bg: "bg-green-50",
+    text: "text-green-800",
+    border: "border-green-300",
+    label: "Vine Direct",
+  },
+  Infinet: {
+    bg: "bg-sky-50",
+    text: "text-sky-700",
+    border: "border-sky-200",
+    label: "Infinet",
+  },
+  Blitznet: {
+    bg: "bg-yellow-50",
+    text: "text-yellow-800",
+    border: "border-yellow-300",
+    label: "Blitznet",
+  },
   Unknown: {
     bg: "bg-gray-50",
     text: "text-gray-500",
@@ -157,6 +193,12 @@ export function ProviderDot({
     AAPT: "bg-teal-500",
     Optus: "bg-emerald-500",
     OptiComm: "bg-lime-500",
+    ChannelHaus: "bg-violet-500",
+    Legion: "bg-rose-500",
+    "Tech-e": "bg-orange-500",
+    VineDirect: "bg-green-600",
+    Infinet: "bg-sky-500",
+    Blitznet: "bg-yellow-500",
     Unknown: "bg-gray-400",
   };
   const color = dotColors[name] || dotColors.Unknown;
@@ -177,6 +219,12 @@ export const PROVIDER_COLORS: Record<string, string> = {
   AAPT: "oklch(0.55 0.15 170)",
   Optus: "oklch(0.55 0.15 150)",
   OptiComm: "oklch(0.55 0.15 130)",
+  ChannelHaus: "oklch(0.55 0.15 310)",
+  Legion: "oklch(0.55 0.15 20)",
+  "Tech-e": "oklch(0.55 0.15 60)",
+  VineDirect: "oklch(0.5 0.15 145)",
+  Infinet: "oklch(0.55 0.15 225)",
+  Blitznet: "oklch(0.6 0.15 90)",
   Unknown: "oklch(0.6 0.01 56)",
 };
 

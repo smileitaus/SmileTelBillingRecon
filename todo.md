@@ -355,3 +355,15 @@
 - [x] Fix 120-service limit - show all services (confirmed: 120 is the actual count, not a limit)
 - [x] Add Group by Customer toggle on Revenue & Margin page
 - [x] Apply debounced search to all search inputs across the app
+
+# New Supplier PDF Invoice Parsers (Mar 12)
+- [x] Extract and analyse Exetel Feb, Vine Direct Feb, Infinet Mar, Blitznet Mar invoices
+- [x] Write Vine Direct PDF parser (2 services: Smile IT, Suncoast Building Approvals)
+- [x] Write Infinet PDF parser (NBN SkyMuster + VOIP services)
+- [x] Write Blitznet PDF parser (Internet + Static IP services)
+- [x] Fix Exetel PDF parser to use PDFParse inline Sub Total format (13 services)
+- [x] Add VineDirect, Infinet, Blitznet to ProviderBadge component with colour-coded badges
+- [x] Add all three new suppliers to Supplier Invoices upload page (supported formats section)
+- [x] Update supplier label mapping in PDF invoice preview component
+- [x] Update all descriptive text in upload UI to include new suppliers
+- [x] Write and pass vitest tests for all four parsers
