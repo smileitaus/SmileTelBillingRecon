@@ -65,6 +65,9 @@ import {
   type GenericSupplierRow,
   getUnmatchedServicesAtAddress,
   bulkAssignByAddress,
+  previewAddressAutoMatch,
+  commitAddressAutoMatch,
+  type AddressMatchCandidate,
 } from "./db";
 
 export const appRouter = router({
@@ -644,6 +647,28 @@ export const appRouter = router({
         .mutation(async ({ input, ctx }) => {
           const committedBy = ctx.user?.name || ctx.user?.email || 'Unknown';
           return await commitAliasAutoMatch(input.approvedMatches, committedBy);
+        }),
+    }),
+
+    // Address-based fuzzy auto-match
+    addressMatch: router({
+      preview: protectedProcedure
+        .input(z.object({ minConfidence: z.number().min(0).max(100).optional() }).optional())
+        .query(async ({ input }) => {
+          return await previewAddressAutoMatch(input?.minConfidence ?? 55);
+        }),
+
+      commit: protectedProcedure
+        .input(z.object({
+          approvedMatches: z.array(z.object({
+            serviceExternalId: z.string(),
+            customerExternalId: z.string(),
+            customerName: z.string(),
+          })),
+        }))
+        .mutation(async ({ input, ctx }) => {
+          const committedBy = ctx.user?.name || ctx.user?.email || 'Unknown';
+          return await commitAddressAutoMatch(input.approvedMatches, committedBy);
         }),
     }),
 

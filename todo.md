@@ -372,3 +372,11 @@
 - [x] Audit all pages/components for provider filter lists
 - [x] Update every provider filter/dropdown to include VineDirect, Infinet, Blitznet, ChannelHaus, Legion, Tech-e
 - [x] Verify supplier field values stored in DB match the filter keys
+
+# Address-Based Fuzzy Auto-Match (Mar 12)
+- [x] Analyse Xero contacts extract address fields
+- [x] Import/update Xero customer addresses into DB from contacts extract
+- [x] Build server-side fuzzy address matching logic (normalise + token overlap + Levenshtein)
+- [x] Add tRPC procedures: previewAddressAutoMatch + commitAddressAutoMatch
+- [x] Build Address & Name Match tab in AutoMatch page (alongside existing Alias Match tab)
+- [x] Write vitest tests for address match procedures

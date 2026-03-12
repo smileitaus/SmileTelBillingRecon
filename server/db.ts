@@ -3557,3 +3557,349 @@ export async function importGenericSupplierInvoice(
 
   return { invoiceNumber, supplier, timestamp: new Date().toLocaleString(), created, updated, skipped, details };
 }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// ADDRESS-BASED FUZZY AUTO-MATCH
+// ─────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Normalise an address string for comparison:
+ * lowercase, expand abbreviations, strip punctuation/extra spaces.
+ */
+function normaliseAddress(s: string): string {
+  return s
+    .toLowerCase()
+    // Expand common street type abbreviations
+    .replace(/\bst\b/g, 'street')
+    .replace(/\brd\b/g, 'road')
+    .replace(/\bave?\b/g, 'avenue')
+    .replace(/\bdr\b/g, 'drive')
+    .replace(/\bct\b/g, 'court')
+    .replace(/\bcl\b/g, 'close')
+    .replace(/\bpl\b/g, 'place')
+    .replace(/\bhwy\b/g, 'highway')
+    .replace(/\bblvd\b/g, 'boulevard')
+    .replace(/\bcres\b/g, 'crescent')
+    .replace(/\bpde\b/g, 'parade')
+    .replace(/\btce\b/g, 'terrace')
+    .replace(/\blane\b/g, 'lane')
+    // Expand state abbreviations
+    .replace(/\bqld\b/g, 'queensland')
+    .replace(/\bnsw\b/g, 'new south wales')
+    .replace(/\bvic\b/g, 'victoria')
+    .replace(/\bsa\b/g, 'south australia')
+    .replace(/\bwa\b/g, 'western australia')
+    .replace(/\bact\b/g, 'australian capital territory')
+    .replace(/\bnt\b/g, 'northern territory')
+    .replace(/\btas\b/g, 'tasmania')
+    // Remove noise words
+    .replace(/\b(unit|u|shop|level|l|floor|f|suite|ste|bg|bldg|building|ground|g|tenancy|tncy|lot)\b/g, ' ')
+    .replace(/\b(australia|au)\b/g, ' ')
+    // Remove punctuation
+    .replace(/[^a-z0-9\s]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+/**
+ * Score an address match. Returns 0–100.
+ * Strategy: extract street number + street name + suburb + postcode tokens,
+ * then score by token overlap with bonus for postcode/street-number match.
+ */
+function scoreAddressMatch(serviceAddr: string, customerAddr: string): { score: number; tier: string } {
+  const sN = normaliseAddress(serviceAddr);
+  const cN = normaliseAddress(customerAddr);
+
+  if (!sN || !cN) return { score: 0, tier: 'no-data' };
+
+  // Exact normalised match
+  if (sN === cN) return { score: 100, tier: 'exact' };
+
+  const sTokens = new Set(sN.split(' ').filter(t => t.length > 1));
+  const cTokens = new Set(cN.split(' ').filter(t => t.length > 1));
+
+  if (sTokens.size === 0 || cTokens.size === 0) return { score: 0, tier: 'no-data' };
+
+  // Extract postcode (4-digit number)
+  const sPostcode = sN.match(/\b(\d{4})\b/)?.[1];
+  const cPostcode = cN.match(/\b(\d{4})\b/)?.[1];
+
+  // Extract street number (leading number)
+  const sStreetNum = sN.match(/^\s*(\d+)/)?.[1];
+  const cStreetNum = cN.match(/^\s*(\d+)/)?.[1];
+
+  // Jaccard token overlap
+  const sArr = Array.from(sTokens);
+  const cArr = Array.from(cTokens);
+  const intersection = sArr.filter(t => cTokens.has(t)).length;
+  const union = new Set(sArr.concat(cArr)).size;
+  const jaccard = intersection / union;
+
+  // Postcode match is a strong signal
+  const postcodeMatch = sPostcode && cPostcode && sPostcode === cPostcode;
+  // Street number match is a strong signal
+  const streetNumMatch = sStreetNum && cStreetNum && sStreetNum === cStreetNum;
+
+  let score = Math.round(jaccard * 70);
+
+  // Bonus for postcode match
+  if (postcodeMatch) score = Math.min(100, score + 20);
+  // Bonus for street number match
+  if (streetNumMatch) score = Math.min(100, score + 15);
+  // Penalty if postcodes exist but don't match
+  if (sPostcode && cPostcode && sPostcode !== cPostcode) score = Math.max(0, score - 30);
+  // Penalty if street numbers exist but don't match
+  if (sStreetNum && cStreetNum && sStreetNum !== cStreetNum) score = Math.max(0, score - 20);
+
+  let tier: string;
+  if (score >= 90) tier = 'exact';
+  else if (score >= 75) tier = 'high';
+  else if (score >= 55) tier = 'medium';
+  else tier = 'low';
+
+  return { score, tier };
+}
+
+/**
+ * Score a planName/customerName against a customer name using the existing scoreMatch logic.
+ * Re-exported here for address-match context.
+ */
+function scoreNameMatch(alias: string, customerName: string): { score: number; tier: string } {
+  return scoreMatch(alias, customerName);
+}
+
+export interface AddressMatchCandidate {
+  serviceExternalId: string;
+  serviceId: string;
+  serviceType: string;
+  provider: string;
+  planName: string;
+  locationAddress: string;
+  matchSource: 'address' | 'planName' | 'customerName';
+  matchedText: string;
+  currentCustomerExternalId: string | null;
+  currentCustomerName: string;
+  suggestedCustomerExternalId: string;
+  suggestedCustomerName: string;
+  suggestedCustomerAddress: string;
+  confidence: number;
+  tier: string;
+  isReassignment: boolean;
+}
+
+/**
+ * Preview address-based fuzzy auto-match for unmatched services.
+ * Matches using three strategies:
+ * 1. Service locationAddress → customer siteAddress
+ * 2. Service planName → customer name (for ChannelHaus/voice services)
+ * 3. Service customerName → customer name (for services with a non-generic customerName)
+ */
+export async function previewAddressAutoMatch(minConfidence = 55): Promise<{
+  candidates: AddressMatchCandidate[];
+  stats: { total: number; byAddress: number; byPlanName: number; byCustomerName: number; skipped: number };
+}> {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+
+  // Fetch all unmatched services
+  const unmatchedServices = await db.select({
+    externalId: services.externalId,
+    serviceId: services.serviceId,
+    serviceType: services.serviceType,
+    provider: services.provider,
+    planName: services.planName,
+    locationAddress: services.locationAddress,
+    customerExternalId: services.customerExternalId,
+    customerName: services.customerName,
+    status: services.status,
+    supplierName: services.supplierName,
+  }).from(services)
+    .where(
+      sql`(${services.customerExternalId} IS NULL OR ${services.customerExternalId} = '')`
+    );
+
+  // Fetch all customers with address data
+  const allCustomers = await db.select({
+    externalId: customers.externalId,
+    name: customers.name,
+    siteAddress: customers.siteAddress,
+    status: customers.status,
+  }).from(customers)
+    .where(sql`${customers.status} != 'inactive'`);
+
+  const candidates: AddressMatchCandidate[] = [];
+  let byAddress = 0, byPlanName = 0, byCustomerName = 0, skipped = 0;
+
+  for (const svc of unmatchedServices) {
+    let bestScore = 0;
+    let bestCustomer: typeof allCustomers[0] | null = null;
+    let bestTier = 'no-match';
+    let bestMatchSource: 'address' | 'planName' | 'customerName' = 'address';
+    let bestMatchedText = '';
+
+    // Strategy 1: Address matching
+    const hasRealAddress = svc.locationAddress &&
+      svc.locationAddress !== '' &&
+      svc.locationAddress !== 'Unknown Location';
+
+    if (hasRealAddress) {
+      for (const cust of allCustomers) {
+        if (!cust.siteAddress || cust.siteAddress === '' || cust.siteAddress === '-, -, -, -, -') continue;
+        const { score, tier } = scoreAddressMatch(svc.locationAddress!, cust.siteAddress);
+        if (score > bestScore) {
+          bestScore = score;
+          bestCustomer = cust;
+          bestTier = tier;
+          bestMatchSource = 'address';
+          bestMatchedText = svc.locationAddress!;
+        }
+      }
+    }
+
+    // Strategy 2: planName → customer name (for ChannelHaus voice/internet services)
+    // Only try if address match didn't find a good result
+    const planName = svc.planName || '';
+    const isChannelHausOrVoice = (svc.supplierName === 'ChannelHaus' || svc.serviceType === 'Voice') &&
+      planName.length > 3 &&
+      !planName.match(/^\$|^SBDP|^DBHRO|^DVBB|^SBBUN|^TBDP|^DBB/);
+
+    if (bestScore < minConfidence && isChannelHausOrVoice) {
+      for (const cust of allCustomers) {
+        const { score, tier } = scoreNameMatch(planName, cust.name);
+        if (score > bestScore) {
+          bestScore = score;
+          bestCustomer = cust;
+          bestTier = tier;
+          bestMatchSource = 'planName';
+          bestMatchedText = planName;
+        }
+      }
+    }
+
+    // Strategy 3: customerName → customer name (for services with a meaningful customerName)
+    const custNameField = svc.customerName || '';
+    const hasMeaningfulCustName = custNameField &&
+      custNameField !== 'Unassigned' &&
+      custNameField !== '' &&
+      custNameField.length > 3;
+
+    if (bestScore < minConfidence && hasMeaningfulCustName) {
+      for (const cust of allCustomers) {
+        const { score, tier } = scoreNameMatch(custNameField, cust.name);
+        if (score > bestScore) {
+          bestScore = score;
+          bestCustomer = cust;
+          bestTier = tier;
+          bestMatchSource = 'customerName';
+          bestMatchedText = custNameField;
+        }
+      }
+    }
+
+    if (!bestCustomer || bestScore < minConfidence) {
+      skipped++;
+      continue;
+    }
+
+    // Track source stats
+    if (bestMatchSource === 'address') byAddress++;
+    else if (bestMatchSource === 'planName') byPlanName++;
+    else byCustomerName++;
+
+    candidates.push({
+      serviceExternalId: svc.externalId,
+      serviceId: svc.serviceId || '',
+      serviceType: svc.serviceType,
+      provider: svc.provider || 'Unknown',
+      planName: svc.planName || '',
+      locationAddress: svc.locationAddress || '',
+      matchSource: bestMatchSource,
+      matchedText: bestMatchedText,
+      currentCustomerExternalId: svc.customerExternalId || null,
+      currentCustomerName: svc.customerName || '',
+      suggestedCustomerExternalId: bestCustomer.externalId,
+      suggestedCustomerName: bestCustomer.name,
+      suggestedCustomerAddress: bestCustomer.siteAddress || '',
+      confidence: bestScore,
+      tier: bestTier,
+      isReassignment: false,
+    });
+  }
+
+  // Sort by confidence desc
+  candidates.sort((a, b) => b.confidence - a.confidence);
+
+  return {
+    candidates,
+    stats: {
+      total: candidates.length,
+      byAddress,
+      byPlanName,
+      byCustomerName,
+      skipped,
+    },
+  };
+}
+
+/**
+ * Commit approved address-based auto-matches.
+ */
+export async function commitAddressAutoMatch(
+  approvedMatches: Array<{ serviceExternalId: string; customerExternalId: string; customerName: string }>,
+  committedBy: string
+): Promise<{ applied: number; errors: string[] }> {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+
+  let applied = 0;
+  const errors: string[] = [];
+
+  for (const match of approvedMatches) {
+    try {
+      // Assign service to customer
+      await db.update(services).set({
+        customerExternalId: match.customerExternalId,
+        customerName: match.customerName,
+        status: 'active',
+        updatedAt: new Date(),
+      }).where(eq(services.externalId, match.serviceExternalId));
+
+      // Update customer service counts
+      const [svcRows] = await db.select({
+        monthlyCost: services.monthlyCost,
+        status: services.status,
+      }).from(services)
+        .where(eq(services.customerExternalId, match.customerExternalId));
+
+      applied++;
+    } catch (err: any) {
+      errors.push(`${match.serviceExternalId}: ${err.message}`);
+    }
+  }
+
+  // Refresh customer stats for all affected customers
+  const affectedCustomers = Array.from(new Set(approvedMatches.map(m => m.customerExternalId)));
+  for (const custExtId of affectedCustomers) {
+    try {
+      const svcRows = await db.select({
+        monthlyCost: services.monthlyCost,
+        status: services.status,
+      }).from(services)
+        .where(sql`${services.customerExternalId} = ${custExtId} AND ${services.status} != 'terminated'`);
+
+      const matchedCount = svcRows.length;
+      const totalCost = svcRows.reduce((sum, s) => sum + parseFloat(String(s.monthlyCost) || '0'), 0);
+
+      await db.update(customers).set({
+        matchedCount,
+        unmatchedCount: 0,
+        monthlyCost: String(totalCost.toFixed(2)),
+        updatedAt: new Date(),
+      }).where(eq(customers.externalId, custExtId));
+    } catch (_) {
+      // Non-fatal
+    }
+  }
+
+  return { applied, errors };
+}
