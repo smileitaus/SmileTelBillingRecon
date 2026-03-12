@@ -123,8 +123,9 @@ export default function CustomerMerge() {
       setSearchA("");
       setSearchB("");
       setConfirming(false);
-      utils.billing.customers.list.invalidate();
-      utils.billing.summary.invalidate();
+      // Invalidate all billing-related queries so the customer list, summary,
+      // and any cached customer detail pages all refresh immediately.
+      utils.billing.invalidate();
     } catch (e: any) {
       toast.error(e.message || "Merge failed");
     }

@@ -125,6 +125,8 @@ export async function getAllCustomers(search?: string, statusFilter?: string, pl
   } else {
     // Default: hide inactive customers unless explicitly requested
     conditions.push(sql`${customers.status} != 'inactive'`);
+    // Default: hide customers with no services (e.g. merged-away stubs)
+    conditions.push(sql`${customers.serviceCount} > 0`);
   }
 
   if (platformFilter && platformFilter !== 'all') {

@@ -19,6 +19,9 @@ export function useCustomerSearch() {
     status: statusFilter !== "all" ? statusFilter : undefined,
     platform: platformFilter !== "all" ? platformFilter : undefined,
     supplier: supplierFilter !== "all" ? supplierFilter : undefined,
+  }, {
+    // Always re-fetch on mount so the list is fresh after a merge or navigation
+    staleTime: 0,
   });
 
   const allCustomers = useMemo(
