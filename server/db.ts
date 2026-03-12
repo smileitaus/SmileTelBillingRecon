@@ -2542,6 +2542,8 @@ export async function previewAliasAutoMatch(minConfidence = 60): Promise<{
 
     // Skip if the best match IS the current customer (already correct)
     if (bestCustomer.externalId === svc.customerExternalId) continue;
+    // Skip if the service is already active and assigned to a customer (already matched)
+    if (svc.status === 'active' && svc.customerExternalId) continue;
 
     candidates.push({
       serviceExternalId: svc.externalId,
@@ -2609,7 +2611,22 @@ export async function commitAliasAutoMatch(
         status: 'active',
         discoveryNotes: newNotes,
       }).where(eq(services.externalId, match.serviceExternalId));
-
+      // Update service counts on old and new customers
+      if (old.customerExternalId && old.customerExternalId !== match.customerExternalId) {
+        // Decrement old customer's unmatched count and service count
+        await db.update(customers).set({
+          serviceCount: sql`GREATEST(0, COALESCE(${customers.serviceCount}, 0) - 1)`,
+          unmatchedCount: sql`GREATEST(0, COALESCE(${customers.unmatchedCount}, 0) - 1)`,
+          updatedAt: new Date(),
+        }).where(eq(customers.externalId, old.customerExternalId));
+      }
+      // Increment new customer's matched count and service count
+      await db.update(customers).set({
+        serviceCount: sql`COALESCE(${customers.serviceCount}, 0) + 1`,
+        matchedCount: sql`COALESCE(${customers.matchedCount}, 0) + 1`,
+        status: 'active',
+        updatedAt: new Date(),
+      }).where(eq(customers.externalId, match.customerExternalId));
       // Audit log
       await db.insert(serviceEditHistory).values({
         serviceExternalId: match.serviceExternalId,

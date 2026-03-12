@@ -95,8 +95,11 @@ export default function AutoMatch() {
       if (result.errors.length > 0) {
         toast.error(`${result.errors.length} errors occurred`);
       }
+      // Invalidate the preview query so the next run fetches fresh candidates
+      utils.billing.autoMatch.preview.invalidate();
       utils.billing.customers.list.invalidate();
       utils.billing.services.list.invalidate();
+      utils.billing.unmatched.list.invalidate();
       utils.billing.summary.invalidate();
     },
     onError: (err) => toast.error(err.message),
@@ -206,7 +209,7 @@ export default function AutoMatch() {
             </div>
           )}
           <div className="flex gap-3 justify-center pt-2">
-            <Button onClick={() => { setCommitted(false); setApproved(new Set()); setRejected(new Set()); refetch(); }}>
+            <Button onClick={() => { setCommitted(false); setApproved(new Set()); setRejected(new Set()); setCommitResult(null); }}>
               <RefreshCw className="w-4 h-4 mr-1.5" />
               Run Again
             </Button>
