@@ -433,3 +433,25 @@
 - [x] Summary cards: Known Cost ($5,170 / 78 services), Total Revenue ($144,182 / 960 services), Overall Margin 63.8% (from 78 known-cost services)
 - [x] Write 6 vitest tests for cost integrity invariants (all passing)
 - [x] recalculateAll() confirmed safe: never modifies monthlyCost, only monthlyRevenue and marginPercent
+
+# Supplier Invoice Cost Audit (Mar 13)
+- [x] Audit all supplier invoice items in DB: count by provider, total cost, matched vs unmatched
+- [x] Fix provider field mismatches: ChannelHaus (67), Legion (1), Tech-e (1) had provider='Unknown' — fixed to match supplierName
+- [x] Fix 89 ABB-Carbon API services that had supplierName='Telstra' — reverted to provider='ABB', supplierName='ABB'
+- [x] Fix SmileTel goodwill adjustment credit — now shows under SmileTel not Unknown
+- [x] Run recalculateAll after all provider fixes
+- [x] Dashboard now shows correct provider breakdown: Telstra/ABB/ChannelHaus/SmileTel/Exetel/Legion/Tech-e
+- [x] Telstra: 466 services, $19,497/mo cost (268 with cost, 197 no cost — need invoice matching for account 192549800)
+- [x] ABB: 273 services, $9,150/mo cost (140 with cost, 134 no cost — need ABB API cost refresh)
+- [x] ChannelHaus: 67 services, $7,387/mo cost, revenue=$0 (billing items customer-matched but not service-linked)
+- [x] Exetel: 12 services, $6,340/mo cost (11 with cost, 1 no cost)
+- [x] Legion: 1 service, $799/mo cost
+- [x] Tech-e: 1 service, $250/mo cost
+- [x] SmileTel: 65 services, -$18.18 cost (goodwill credit), $9,833/mo revenue — awaiting SmileTel supplier invoice
+- [x] Blitznet: 199 services in '2025 Blitz Report' dataSource — all provider=Telstra (correct, Blitz IS Telstra portal)
+- [ ] ChannelHaus: 67 services need Service Linking step to connect billing items → service revenue
+- [ ] Telstra account 192549800: 64 services with $0 cost — need Telstra invoice matching
+- [ ] ABB: 134 services with $0 cost — need ABB API cost refresh
+- [ ] SmileTel: 63 services with revenue but no cost — awaiting SmileTel supplier invoice
+- [ ] VineDirect, Infinet: no services found in DB — invoices not yet imported
+- [ ] Pending suppliers: SasBoss (Voice), AAPT (Data), Vocus (Voice and Data) — not yet imported
