@@ -610,7 +610,9 @@ export async function recalculateAll() {
       AND serviceExternalId != ''
   `);
 
-  // Step 2: Recalculate monthlyRevenue + marginPercent on all services with billing items
+  // Step 2: Recalculate monthlyRevenue + marginPercent on all services with billing items.
+  // IMPORTANT: monthlyCost is NEVER touched here — it comes from supplier invoices only.
+  // marginPercent is only set when BOTH cost and revenue are known (> 0).
   await db.execute(sql`
     UPDATE services s
     SET
@@ -626,6 +628,7 @@ export async function recalculateAll() {
           FROM billing_items bi
           WHERE bi.serviceExternalId = s.externalId AND bi.matchStatus = 'service-matched'
         ) > 0
+          AND CAST(s.monthlyCost AS DECIMAL(10,2)) > 0
         THEN ROUND(
           (
             (SELECT COALESCE(SUM(bi.lineAmount), 0) FROM billing_items bi WHERE bi.serviceExternalId = s.externalId AND bi.matchStatus = 'service-matched')
@@ -634,7 +637,7 @@ export async function recalculateAll() {
           (SELECT COALESCE(SUM(bi.lineAmount), 0) FROM billing_items bi WHERE bi.serviceExternalId = s.externalId AND bi.matchStatus = 'service-matched')
           * 100, 2
         )
-        ELSE 0
+        ELSE NULL
       END,
       updatedAt = NOW()
     WHERE EXISTS (
@@ -654,6 +657,7 @@ export async function recalculateAll() {
       monthlyRevenue = (SELECT COALESCE(SUM(s.monthlyRevenue), 0)   FROM services s WHERE s.customerExternalId = c.externalId AND s.status != 'terminated'),
       marginPercent  = CASE
         WHEN (SELECT COALESCE(SUM(s.monthlyRevenue), 0) FROM services s WHERE s.customerExternalId = c.externalId AND s.status != 'terminated') > 0
+          AND (SELECT COALESCE(SUM(s.monthlyCost), 0) FROM services s WHERE s.customerExternalId = c.externalId AND s.status != 'terminated') > 0
         THEN ROUND(
           (
             (SELECT COALESCE(SUM(s.monthlyRevenue), 0) FROM services s WHERE s.customerExternalId = c.externalId AND s.status != 'terminated')
@@ -1047,23 +1051,26 @@ export async function getServicesWithMargin(filters?: {
 
   // Compute margin on-the-fly from current monthlyCost and monthlyRevenue so it is always fresh
   // even if the stored marginPercent column is stale.
-  const computedMargin = sql<string>`CASE WHEN monthlyRevenue > 0 THEN ROUND((monthlyRevenue - monthlyCost) / monthlyRevenue * 100, 2) ELSE 0 END`;
+  // IMPORTANT: margin is only computed when BOTH cost AND revenue are known (> 0).
+  // When cost = 0 (unknown), margin is NULL so the UI shows '—' rather than a misleading 100%.
+  const computedMargin = sql<string>`CASE WHEN monthlyRevenue > 0 AND monthlyCost > 0 THEN ROUND((monthlyRevenue - monthlyCost) / monthlyRevenue * 100, 2) ELSE NULL END`;
   // For cost review mode, include services regardless of revenue (they may have $0 cost needing review)
   const conditions: ReturnType<typeof sql>[] = filters?.costReviewNeeded ? [] : [sql`monthlyRevenue > 0`];
 
   if (filters?.marginFilter && filters.marginFilter !== 'all') {
+    // All margin filters require both cost and revenue to be known
     switch (filters.marginFilter) {
       case 'negative':
-        conditions.push(sql`(monthlyRevenue - monthlyCost) / monthlyRevenue * 100 < 0`);
+        conditions.push(sql`monthlyCost > 0 AND monthlyRevenue > 0 AND (monthlyRevenue - monthlyCost) / monthlyRevenue * 100 < 0`);
         break;
       case 'low':
-        conditions.push(sql`(monthlyRevenue - monthlyCost) / monthlyRevenue * 100 >= 0 AND (monthlyRevenue - monthlyCost) / monthlyRevenue * 100 < 20`);
+        conditions.push(sql`monthlyCost > 0 AND monthlyRevenue > 0 AND (monthlyRevenue - monthlyCost) / monthlyRevenue * 100 >= 0 AND (monthlyRevenue - monthlyCost) / monthlyRevenue * 100 < 20`);
         break;
       case 'healthy':
-        conditions.push(sql`(monthlyRevenue - monthlyCost) / monthlyRevenue * 100 >= 20 AND (monthlyRevenue - monthlyCost) / monthlyRevenue * 100 < 50`);
+        conditions.push(sql`monthlyCost > 0 AND monthlyRevenue > 0 AND (monthlyRevenue - monthlyCost) / monthlyRevenue * 100 >= 20 AND (monthlyRevenue - monthlyCost) / monthlyRevenue * 100 < 50`);
         break;
       case 'high':
-        conditions.push(sql`(monthlyRevenue - monthlyCost) / monthlyRevenue * 100 >= 50`);
+        conditions.push(sql`monthlyCost > 0 AND monthlyRevenue > 0 AND (monthlyRevenue - monthlyCost) / monthlyRevenue * 100 >= 50`);
         break;
     }
   }
@@ -1178,14 +1185,21 @@ export async function getServicesGroupedByCustomer(filters?: {
     if (group.worstMargin === null || m < group.worstMargin) group.worstMargin = m;
   }
 
-  // Compute group margin
+  // Compute group margin — only when both totalCost and totalRevenue are known (> 0)
   const result = Array.from(grouped.values()).map(g => ({
     ...g,
-    marginPercent: g.totalRevenue > 0 ? ((g.totalRevenue - g.totalCost) / g.totalRevenue * 100) : null,
+    marginPercent: g.totalRevenue > 0 && g.totalCost > 0
+      ? ((g.totalRevenue - g.totalCost) / g.totalRevenue * 100)
+      : null,
   }));
 
-  // Sort by margin ascending (worst first)
-  result.sort((a, b) => (a.marginPercent ?? 0) - (b.marginPercent ?? 0));
+  // Sort by margin ascending (worst first), nulls last
+  result.sort((a, b) => {
+    if (a.marginPercent === null && b.marginPercent === null) return 0;
+    if (a.marginPercent === null) return 1; // nulls go to end
+    if (b.marginPercent === null) return -1;
+    return a.marginPercent - b.marginPercent;
+  });
   return result;
 }
 

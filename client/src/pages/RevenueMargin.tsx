@@ -2,6 +2,10 @@
  * Revenue & Margin Analysis — shows services with billing revenue matched,
  * cost vs revenue, margin %. Filterable by margin band. Debounced search.
  * Group by Customer toggle for aggregated view.
+ *
+ * Cost data comes from supplier invoices (ABB, Telstra, ChannelHaus, etc.).
+ * When cost = $0, it means no supplier invoice has been matched yet (cost unknown).
+ * Margin is only shown when BOTH cost and revenue are known.
  */
 
 import { Link } from "wouter";
@@ -23,6 +27,7 @@ import {
   List,
   ChevronDown,
   ChevronRight,
+  HelpCircle,
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { useState, useMemo } from "react";
@@ -40,7 +45,12 @@ function ServiceTypeIcon({ type }: { type: string }) {
 }
 
 function MarginBadge({ margin }: { margin: number | null }) {
-  if (margin === null) return <span className="text-xs text-muted-foreground">—</span>;
+  if (margin === null) return (
+    <span className="inline-flex items-center gap-1 px-2 py-0.5 text-xs rounded-full border bg-muted/50 text-muted-foreground border-border">
+      <HelpCircle className="w-3 h-3" />
+      Unknown
+    </span>
+  );
 
   let bg = "bg-emerald-50 text-emerald-700 border-emerald-200";
   let icon = <TrendingUp className="w-3 h-3" />;
@@ -64,6 +74,18 @@ function MarginBadge({ margin }: { margin: number | null }) {
   );
 }
 
+function CostCell({ cost }: { cost: number }) {
+  if (cost === 0) {
+    return (
+      <span className="inline-flex items-center gap-1 text-xs text-muted-foreground italic">
+        <HelpCircle className="w-3 h-3" />
+        Unknown
+      </span>
+    );
+  }
+  return <span className="data-value text-sm">${cost.toLocaleString("en-AU", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>;
+}
+
 function formatCurrency(val: number) {
   return `$${val.toLocaleString("en-AU", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 }
@@ -71,8 +93,8 @@ function formatCurrency(val: number) {
 // ── Grouped by Customer Row ──────────────────────────────────────────────────
 function CustomerGroupRow({ group }: { group: any }) {
   const [expanded, setExpanded] = useState(false);
-  const isNegative = (group.marginPercent ?? 0) < 0;
-  const isLow = (group.marginPercent ?? 0) >= 0 && (group.marginPercent ?? 0) < 20;
+  const isNegative = group.marginPercent !== null && group.marginPercent < 0;
+  const isLow = group.marginPercent !== null && group.marginPercent >= 0 && group.marginPercent < 20;
   const rowBg = isNegative ? "bg-red-50/60" : isLow ? "bg-red-50/30" : "";
 
   return (
@@ -105,7 +127,7 @@ function CustomerGroupRow({ group }: { group: any }) {
           </div>
         </td>
         <td className="px-4 py-3 text-right">
-          <span className="data-value text-sm">{formatCurrency(group.totalCost)}</span>
+          <CostCell cost={group.totalCost} />
         </td>
         <td className="px-4 py-3 text-right">
           <span className="data-value text-sm text-emerald-700">{formatCurrency(group.totalRevenue)}</span>
@@ -115,8 +137,8 @@ function CustomerGroupRow({ group }: { group: any }) {
         </td>
       </tr>
       {expanded && group.services.map((s: any) => {
-        const sNeg = (s.marginPercent ?? 0) < 0;
-        const sLow = (s.marginPercent ?? 0) >= 0 && (s.marginPercent ?? 0) < 20;
+        const sNeg = s.marginPercent !== null && s.marginPercent < 0;
+        const sLow = s.marginPercent !== null && s.marginPercent >= 0 && s.marginPercent < 20;
         const sBg = sNeg ? "bg-red-50/40" : sLow ? "bg-red-50/20" : "bg-muted/20";
         return (
           <tr key={s.id} className={`border-b border-border/30 ${sBg}`}>
@@ -131,7 +153,7 @@ function CustomerGroupRow({ group }: { group: any }) {
               </Link>
             </td>
             <td className="px-4 py-2.5 text-right">
-              <span className="data-value text-xs">{formatCurrency(s.monthlyCost)}</span>
+              <CostCell cost={s.monthlyCost} />
             </td>
             <td className="px-4 py-2.5 text-right">
               <span className="data-value text-xs text-emerald-700">{formatCurrency(s.monthlyRevenue)}</span>
@@ -181,16 +203,24 @@ export default function RevenueMargin() {
 
   const isLoading = groupByCustomer ? groupedLoading : listLoading;
 
-  const { data: billingSummary } = trpc.billing.billingItems.summary.useQuery();
-
   const sorted = useMemo(() => {
     if (!services) return [];
     return [...services].sort((a, b) => {
-      let aVal = 0, bVal = 0;
-      if (sortField === "margin") { aVal = a.marginPercent ?? 0; bVal = b.marginPercent ?? 0; }
-      else if (sortField === "revenue") { aVal = a.monthlyRevenue; bVal = b.monthlyRevenue; }
-      else { aVal = a.monthlyCost; bVal = b.monthlyCost; }
-      return sortDir === "asc" ? aVal - bVal : bVal - aVal;
+      if (sortField === "margin") {
+        // Nulls (unknown cost) go to the end regardless of sort direction
+        if (a.marginPercent === null && b.marginPercent === null) return 0;
+        if (a.marginPercent === null) return 1;
+        if (b.marginPercent === null) return -1;
+        return sortDir === "asc" ? a.marginPercent - b.marginPercent : b.marginPercent - a.marginPercent;
+      } else if (sortField === "revenue") {
+        return sortDir === "asc" ? a.monthlyRevenue - b.monthlyRevenue : b.monthlyRevenue - a.monthlyRevenue;
+      } else {
+        // cost sort: unknown ($0) goes to end
+        if (a.monthlyCost === 0 && b.monthlyCost === 0) return 0;
+        if (a.monthlyCost === 0) return 1;
+        if (b.monthlyCost === 0) return -1;
+        return sortDir === "asc" ? a.monthlyCost - b.monthlyCost : b.monthlyCost - a.monthlyCost;
+      }
     });
   }, [services, sortField, sortDir]);
 
@@ -198,14 +228,23 @@ export default function RevenueMargin() {
   const stats = useMemo(() => {
     const src = services;
     if (!src || src.length === 0) return null;
-    const totalCost = src.reduce((s, v) => s + v.monthlyCost, 0);
+    const knownCostServices = src.filter(s => s.monthlyCost > 0);
+    const totalKnownCost = knownCostServices.reduce((s, v) => s + v.monthlyCost, 0);
     const totalRevenue = src.reduce((s, v) => s + v.monthlyRevenue, 0);
-    const negative = src.filter(s => (s.marginPercent ?? 0) < 0).length;
-    const low = src.filter(s => (s.marginPercent ?? 0) >= 0 && (s.marginPercent ?? 0) < 20).length;
-    const healthy = src.filter(s => (s.marginPercent ?? 0) >= 20 && (s.marginPercent ?? 0) < 50).length;
-    const high = src.filter(s => (s.marginPercent ?? 0) >= 50).length;
-    const overallMargin = totalRevenue > 0 ? ((totalRevenue - totalCost) / totalRevenue * 100) : 0;
-    return { totalCost, totalRevenue, negative, low, healthy, high, overallMargin, total: src.length };
+    // Revenue for services where cost is also known (for fair margin calculation)
+    const revenueWhereKnown = knownCostServices.reduce((s, v) => s + v.monthlyRevenue, 0);
+    const withKnownCost = knownCostServices.length;
+    const withUnknownCost = src.filter(s => s.monthlyCost === 0).length;
+    const negative = src.filter(s => s.marginPercent !== null && s.marginPercent < 0).length;
+    const low = src.filter(s => s.marginPercent !== null && s.marginPercent >= 0 && s.marginPercent < 20).length;
+    const healthy = src.filter(s => s.marginPercent !== null && s.marginPercent >= 20 && s.marginPercent < 50).length;
+    const high = src.filter(s => s.marginPercent !== null && s.marginPercent >= 50).length;
+    const unknownMargin = src.filter(s => s.marginPercent === null).length;
+    // Overall margin only computed from services where BOTH cost and revenue are known
+    const overallMargin = totalKnownCost > 0 && revenueWhereKnown > 0
+      ? ((revenueWhereKnown - totalKnownCost) / revenueWhereKnown * 100)
+      : null;
+    return { totalKnownCost, totalRevenue, withKnownCost, withUnknownCost, negative, low, healthy, high, unknownMargin, overallMargin, total: src.length };
   }, [services]);
 
   const toggleSort = (field: "margin" | "revenue" | "cost") => {
@@ -221,26 +260,38 @@ export default function RevenueMargin() {
       <div className="mb-6">
         <h1 className="text-xl font-bold tracking-tight">Revenue & Margin Analysis</h1>
         <p className="text-sm text-muted-foreground mt-1">
-          Feb 2026 Xero billing matched to supplier costs — filter by margin to find underperforming services
+          Feb 2026 Xero billing matched to supplier costs — filter by margin to find underperforming services.
+          Costs come from supplier invoices; services without a matched supplier invoice show cost as "Unknown".
         </p>
       </div>
 
       {/* Summary Cards */}
       {stats && (
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3 mb-6">
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3 mb-6">
           <div className="bg-card border border-border rounded-lg p-4">
-            <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">Total Cost (ex GST)</p>
-            <p className="text-lg font-bold data-value mt-1">{formatCurrency(stats.totalCost)}</p>
+            <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">Known Cost (ex GST)</p>
+            <p className="text-lg font-bold data-value mt-1">{formatCurrency(stats.totalKnownCost)}</p>
+            <p className="text-[10px] text-muted-foreground mt-0.5">{stats.withKnownCost} services</p>
           </div>
           <div className="bg-card border border-border rounded-lg p-4">
             <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">Total Revenue (ex GST)</p>
             <p className="text-lg font-bold data-value mt-1 text-emerald-700">{formatCurrency(stats.totalRevenue)}</p>
+            <p className="text-[10px] text-muted-foreground mt-0.5">{stats.total} services</p>
           </div>
           <div className="bg-card border border-border rounded-lg p-4">
             <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">Overall Margin</p>
-            <p className={`text-lg font-bold data-value mt-1 ${stats.overallMargin < 20 ? "text-red-700" : "text-emerald-700"}`}>
-              {stats.overallMargin.toFixed(1)}%
-            </p>
+            {stats.overallMargin !== null ? (
+              <p className={`text-lg font-bold data-value mt-1 ${stats.overallMargin < 20 ? "text-red-700" : "text-emerald-700"}`}>
+                {stats.overallMargin.toFixed(1)}%
+              </p>
+            ) : (
+              <p className="text-lg font-bold text-muted-foreground mt-1">—</p>
+            )}
+            <p className="text-[10px] text-muted-foreground mt-0.5">where cost known</p>
+          </div>
+          <div className="bg-card border border-muted rounded-lg p-4 cursor-pointer hover:bg-muted/30 transition-colors" onClick={() => { setMarginFilter("all"); setCostReviewNeeded(false); setGroupByCustomer(false); }}>
+            <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">Cost Unknown</p>
+            <p className="text-lg font-bold text-muted-foreground mt-1">{stats.withUnknownCost}</p>
           </div>
           <div className="bg-card border border-red-200 rounded-lg p-4 cursor-pointer hover:bg-red-50/50 transition-colors" onClick={() => { setMarginFilter("negative"); setGroupByCustomer(false); }}>
             <p className="text-[10px] uppercase tracking-wider text-red-700 font-semibold">Negative</p>
@@ -390,9 +441,9 @@ export default function RevenueMargin() {
                   "Service Type": s.serviceType,
                   "Provider": s.provider,
                   "Plan": s.planName,
-                  "Monthly Cost": s.monthlyCost,
+                  "Monthly Cost": s.monthlyCost > 0 ? s.monthlyCost : "Unknown",
                   "Monthly Revenue": s.monthlyRevenue,
-                  "Margin %": s.marginPercent !== null ? s.marginPercent.toFixed(1) : "",
+                  "Margin %": s.marginPercent !== null ? s.marginPercent.toFixed(1) : "Unknown",
                 }))),
                 "revenue-margin-grouped"
               );
@@ -404,9 +455,9 @@ export default function RevenueMargin() {
                   "Service Type": s.serviceType,
                   "Provider": s.provider,
                   "Plan": s.planName,
-                  "Monthly Cost": s.monthlyCost,
+                  "Monthly Cost": s.monthlyCost > 0 ? s.monthlyCost : "Unknown",
                   "Monthly Revenue": s.monthlyRevenue,
-                  "Margin %": s.marginPercent !== null ? s.marginPercent.toFixed(1) : "",
+                  "Margin %": s.marginPercent !== null ? s.marginPercent.toFixed(1) : "Unknown",
                 })),
                 "revenue-margin"
               );
@@ -496,8 +547,8 @@ export default function RevenueMargin() {
                 </thead>
                 <tbody>
                   {sorted.map((s: any) => {
-                    const isNegative = (s.marginPercent ?? 0) < 0;
-                    const isLow = (s.marginPercent ?? 0) >= 0 && (s.marginPercent ?? 0) < 20;
+                    const isNegative = s.marginPercent !== null && s.marginPercent < 0;
+                    const isLow = s.marginPercent !== null && s.marginPercent >= 0 && s.marginPercent < 20;
                     const rowBg = isNegative ? "bg-red-50/60" : isLow ? "bg-red-50/30" : "";
                     return (
                       <tr key={s.id} className={`border-b border-border/50 hover:bg-accent/30 transition-colors ${rowBg}`}>
@@ -529,7 +580,7 @@ export default function RevenueMargin() {
                           <ProviderBadge provider={s.provider} size="xs" />
                         </td>
                         <td className="px-4 py-3 text-right">
-                          <span className="data-value text-sm">{formatCurrency(s.monthlyCost)}</span>
+                          <CostCell cost={s.monthlyCost} />
                         </td>
                         <td className="px-4 py-3 text-right">
                           <span className="data-value text-sm text-emerald-700">{formatCurrency(s.monthlyRevenue)}</span>

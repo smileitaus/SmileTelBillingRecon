@@ -418,3 +418,18 @@
 - [x] Full recalculation run: 860 customers updated, $144,182/mo total revenue across 960 services
 - [x] Revenue & Margin page now shows 960 services (up from 120)
 - [x] Customer list: Affinage Professional $239.67, Accountant Ready Services $189.00 (both were $0.00)
+
+# Revenue & Margin Cost Field Fix (Mar 13)
+- [x] Diagnose: monthlyCost was incorrectly set to Xero lineAmount for 840 services imported from Xero Feb 2026 Invoice
+- [x] Fix: Reset monthlyCost to $0 for all 840 Xero-sourced services (cost unknown until supplier invoice matched)
+- [x] Fix getServicesWithMargin: computedMargin returns NULL when monthlyCost = 0 (shows 'Unknown' not 100%)
+- [x] Fix margin filter conditions: all margin filters now require monthlyCost > 0 guard
+- [x] Fix getServicesGroupedByCustomer: group margin only computed when both totalCost and totalRevenue > 0
+- [x] Fix overall margin stat: computed from services where BOTH cost and revenue are known (not all services)
+- [x] Recalculate all customer stats after cost reset
+- [x] Revenue & Margin page: Cost column shows 'Unknown' (with ? icon) for services without supplier invoice
+- [x] Revenue & Margin page: Margin column shows 'Unknown' badge for services without supplier cost
+- [x] Revenue & Margin page: Services with unknown cost sorted to end of list
+- [x] Summary cards: Known Cost ($5,170 / 78 services), Total Revenue ($144,182 / 960 services), Overall Margin 63.8% (from 78 known-cost services)
+- [x] Write 6 vitest tests for cost integrity invariants (all passing)
+- [x] recalculateAll() confirmed safe: never modifies monthlyCost, only monthlyRevenue and marginPercent
