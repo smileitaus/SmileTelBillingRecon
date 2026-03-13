@@ -455,3 +455,18 @@
 - [ ] SmileTel: 63 services with revenue but no cost — awaiting SmileTel supplier invoice
 - [ ] VineDirect, Infinet: no services found in DB — invoices not yet imported
 - [ ] Pending suppliers: SasBoss (Voice), AAPT (Data), Vocus (Voice and Data) — not yet imported
+
+# SM.xlsx SIM Import — Ella's Upload (Mar 13)
+- [x] Analyse SM.xlsx: 428 rows, 4 providers (Telstra 200, TIAB 119, Vocus/Optus 92, ABB 17)
+- [x] Match against existing DB by SIM serial (164 matches) and phone number (53 matches)
+- [x] Apply correct provider per SM row (Telstra, TIAB, Vocus, ABB)
+- [x] Update serviceActivationDate, planName, serviceType from SM data
+- [x] Unassign all 165 RVC ICT Consulting SIM services → status='unmatched' (pending verification)
+- [x] Add discovery notes to unmatched services with SM customer name suggestion
+- [x] 17 ABB Zambrero 4G Backup SIMs correctly matched and remain assigned to Zambrero customers
+- [x] 211 new unmatched services created for SIMs not in existing DB
+- [x] Run recalculateAll after import
+- [ ] 31 Telstra "Dot Voice and Broadband Backup" services still show customer=Unassigned — need customer matching
+- [ ] 374 unmatched SM services (163 Telstra + 119 TIAB + 92 Vocus) need individual verification and customer assignment
+- [ ] TIAB: 119 services — new provider not previously in DB, needs supplier account setup
+- [ ] Vocus (Optus): 92 services — new provider, needs supplier account setup
