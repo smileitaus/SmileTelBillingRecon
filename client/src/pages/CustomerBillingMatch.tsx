@@ -614,10 +614,14 @@ export default function CustomerBillingMatch() {
     });
   }, []);
 
-  // Summary stats (based on all billing items, not filtered)
-  const totalRevenue = (billingItemsRaw as BillingItemWithAssignments[]).reduce((s, i) => s + i.lineAmount, 0);
-  const totalCost = (billingItemsRaw as BillingItemWithAssignments[]).reduce((s, i) => s + i.totalCost, 0);
-  const totalMargin = totalRevenue - totalCost;
+  // Summary stats
+  // Revenue = sum of all Xero billing line items (what the customer is charged)
+  // Assigned cost = sum of monthlyCost of services that have been linked to billing items
+  // Total supplier cost = sum of ALL active services (whether assigned or not)
+  const totalRevenue = (billingItemsRaw as BillingItemWithAssignments[]).reduce((s, i) => s + Math.max(0, i.lineAmount), 0);
+  const assignedCost = (billingItemsRaw as BillingItemWithAssignments[]).reduce((s, i) => s + i.totalCost, 0);
+  const totalSupplierCost = (unassignedServicesRaw as UnassignedService[]).reduce((s, u) => s + u.monthlyCost, 0) + assignedCost;
+  const totalMargin = totalRevenue - totalSupplierCost;
   const totalMarginPct = totalRevenue > 0 ? (totalMargin / totalRevenue) * 100 : null;
 
   const isLoading = loadingItems || loadingServices;
@@ -648,15 +652,15 @@ export default function CustomerBillingMatch() {
           {/* Summary stats */}
           <div className="hidden md:flex items-center gap-4 text-sm">
             <div className="text-center">
-              <p className="text-xs text-muted-foreground">Revenue</p>
+              <p className="text-xs text-muted-foreground">Xero Revenue</p>
               <p className="font-bold text-emerald-700">{fmt(totalRevenue)}</p>
             </div>
             <div className="text-center">
-              <p className="text-xs text-muted-foreground">Cost</p>
-              <p className="font-bold text-orange-600">{fmt(totalCost)}</p>
+              <p className="text-xs text-muted-foreground">Supplier Cost</p>
+              <p className="font-bold text-orange-600">{fmt(totalSupplierCost)}</p>
             </div>
             <div className="text-center">
-              <p className="text-xs text-muted-foreground">Margin</p>
+              <p className="text-xs text-muted-foreground">Net Margin</p>
               <p className={`font-bold ${totalMargin >= 0 ? "text-emerald-700" : "text-red-600"}`}>
                 {fmt(totalMargin)}
                 {totalMarginPct !== null && ` (${Math.round(totalMarginPct)}%)`}
@@ -710,13 +714,13 @@ export default function CustomerBillingMatch() {
             className="max-w-[1600px] mx-auto px-4 py-4 grid grid-cols-1 lg:grid-cols-2 gap-6"
             style={{ height: 'calc(100vh - 72px)' }}
           >
-            {/* LEFT: Unassigned Services */}
+            {/* LEFT: Unassigned Services (COSTS) */}
             <div className="flex flex-col overflow-hidden">
-              <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center justify-between mb-1">
                 <h2 className="font-semibold text-sm flex items-center gap-2">
                   <AlertTriangle className="w-4 h-4 text-amber-500" />
-                  Unassigned Services
-                  <Badge variant="secondary">{(unassignedServicesRaw as UnassignedService[]).length}</Badge>
+                  Supplier Services
+                  <Badge variant="secondary">{(unassignedServicesRaw as UnassignedService[]).length} unassigned</Badge>
                   {unassignedServices.length !== (unassignedServicesRaw as UnassignedService[]).length && (
                     <Badge variant="outline" className="text-xs">
                       {unassignedServices.length} shown
@@ -725,6 +729,9 @@ export default function CustomerBillingMatch() {
                 </h2>
                 <p className="text-xs text-muted-foreground">Drag onto a billing item →</p>
               </div>
+              <p className="text-xs text-orange-600/80 mb-2">
+                These are <strong>supplier costs</strong> — what SmileTel pays ABB, SasBoss, Telstra, etc.
+              </p>
 
               {/* Search + filter bar */}
               <div className="flex gap-2 mb-3">
@@ -849,9 +856,9 @@ export default function CustomerBillingMatch() {
               </div>
             </div>
 
-            {/* RIGHT: Billing Items */}
+            {/* RIGHT: Billing Items (REVENUE) */}
             <div className="flex flex-col overflow-hidden">
-              <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center justify-between mb-1">
                 <h2 className="font-semibold text-sm flex items-center gap-2">
                   <TrendingUp className="w-4 h-4 text-emerald-600" />
                   Xero Billing Items
@@ -864,6 +871,9 @@ export default function CustomerBillingMatch() {
                 </h2>
                 <p className="text-xs text-muted-foreground">← Drop services here</p>
               </div>
+              <p className="text-xs text-emerald-700/80 mb-2">
+                These are <strong>customer revenue</strong> — what SmileTel charges this customer via Xero.
+              </p>
 
               {/* Billing search */}
               <div className="relative mb-3">
@@ -1062,9 +1072,10 @@ export default function CustomerBillingMatch() {
               Auto-Match Proposals
             </DialogTitle>
           </DialogHeader>
-          <p className="text-sm text-muted-foreground">
-            Review fuzzy-matched proposals below. Accept individually or accept all at once.
-          </p>
+          <div className="text-sm text-muted-foreground space-y-1">
+            <p>Review category-aware match proposals below. Each service (supplier cost) is proposed to be linked to the Xero billing item (customer revenue) it most likely contributes to.</p>
+            <p className="text-xs">Matching uses service category (Voice/Internet/Mobile), provider alignment, and plan name similarity. Dollar values are <strong>not</strong> used as a matching signal — they are the output (margin), not the input.</p>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-2">
             {(fuzzyProposals as FuzzyProposal[])
               .filter(p => !acceptedProposals.has(p.serviceExternalId))
@@ -1102,18 +1113,21 @@ export default function CustomerBillingMatch() {
                     </Badge>
                   </div>
                   {/* Service → Billing item */}
-                  <div className="space-y-1">
-                    <div className="flex items-start gap-1.5">
-                      <span className="text-xs text-muted-foreground shrink-0 mt-0.5">Service:</span>
-                      <span className="text-sm font-medium leading-snug">
+                  <div className="space-y-2">
+                    <div className="bg-orange-50 dark:bg-orange-950/20 border border-orange-200 dark:border-orange-900 rounded px-2 py-1.5">
+                      <p className="text-xs text-orange-600 font-semibold uppercase tracking-wide mb-0.5">Supplier Cost</p>
+                      <p className="text-sm font-medium leading-snug">
                         {proposal.servicePlanName || proposal.serviceType}
-                      </span>
+                      </p>
                     </div>
-                    <div className="flex items-start gap-1.5">
-                      <span className="text-xs text-muted-foreground shrink-0 mt-0.5">→ Billing:</span>
-                      <span className="text-xs text-muted-foreground leading-snug">
+                    <div className="flex items-center justify-center text-muted-foreground">
+                      <span className="text-xs">↓ link to</span>
+                    </div>
+                    <div className="bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-900 rounded px-2 py-1.5">
+                      <p className="text-xs text-emerald-700 font-semibold uppercase tracking-wide mb-0.5">Xero Revenue</p>
+                      <p className="text-xs text-foreground leading-snug">
                         {proposal.billingDescription}
-                      </span>
+                      </p>
                     </div>
                   </div>
                   <Button

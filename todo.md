@@ -774,3 +774,15 @@
 - [x] Add Billing Queue nav item to Layout.tsx sidebar
 - [x] Register /billing-queue route in App.tsx
 - [x] Write 12 vitest tests for escalation workflow (all passing)
+
+# Cost/Revenue Model Fix & Matching Algorithm Overhaul (2026-03-14)
+- [x] Audit Back2Health data: confirmed services = supplier COSTS, billing items = customer REVENUE
+- [x] Rewrite fuzzyMatchServicesAgainstBillingItems: category-aware scoring (Voice/Internet/Mobile) with provider alignment bonus; dollar values never used as matching signal
+- [x] Fix unmatchedBillingCount to use service_billing_assignments (new system) instead of legacy billing_items.serviceExternalId
+- [x] Fix recalculateAllUnmatchedBilling bulk SQL to use service_billing_assignments + unbillable_services
+- [x] Fix inline unmatchedBillingCount in full recalculation function
+- [x] Run bulk recalculation: Back2Health now shows 0 unmatched (was 6); 461 customers with 1965 total unmatched
+- [x] Improve CustomerBillingMatch header stats: show 'Xero Revenue', 'Supplier Cost', 'Net Margin' with correct total supplier cost (assigned + unassigned)
+- [x] Add cost/revenue legend text under each column header
+- [x] Improve auto-match dialog: explain category-based matching, show orange 'Supplier Cost' and green 'Xero Revenue' cards per proposal
+- [x] Filter credit notes (negative lineAmount) from fuzzy match candidates

@@ -671,15 +671,23 @@ export async function recalculateAll() {
       unmatchedBillingCount = (
         SELECT COUNT(*)
         FROM services s
-        LEFT JOIN billing_items bi
-          ON bi.serviceExternalId = s.externalId AND bi.matchStatus = 'service-matched'
         WHERE s.customerExternalId = c.externalId
-          AND s.status NOT IN ('terminated', 'unmatched')
-          AND bi.id IS NULL
+          AND s.status NOT IN ('terminated', 'unmatched', 'flagged_for_termination')
           AND s.externalId NOT IN (
-            SELECT serviceExternalId FROM service_billing_match_log
-            WHERE customerExternalId = c.externalId
-              AND resolution = 'intentionally-unbilled'
+            SELECT sba.serviceExternalId
+            FROM service_billing_assignments sba
+            WHERE sba.customerExternalId = c.externalId
+          )
+          AND s.externalId NOT IN (
+            SELECT us.serviceExternalId
+            FROM unbillable_services us
+            WHERE us.customerExternalId = c.externalId
+          )
+          AND s.externalId NOT IN (
+            SELECT sml.serviceExternalId
+            FROM service_billing_match_log sml
+            WHERE sml.customerExternalId = c.externalId
+              AND sml.resolution = 'intentionally-unbilled'
           )
       ),
       updatedAt = NOW()
@@ -5997,27 +6005,36 @@ export async function getUnmatchedBillingCount(customerExternalId: string): Prom
   const db = await getDb();
   if (!db) return 0;
 
-  const [row] = await db
-    .select({ count: sql<number>`count(*)` })
-    .from(services)
-    .leftJoin(
-      billingItems,
-      sql`${billingItems.serviceExternalId} = ${services.externalId} AND ${billingItems.matchStatus} = 'service-matched'`
-    )
-    .where(
-      and(
-        eq(services.customerExternalId, customerExternalId),
-        sql`${services.status} NOT IN ('terminated', 'unmatched')`,
-        sql`${billingItems.id} IS NULL`,
-        sql`${services.externalId} NOT IN (
-          SELECT serviceExternalId FROM service_billing_match_log
-          WHERE customerExternalId = ${customerExternalId}
-            AND resolution = 'intentionally-unbilled'
-        )`
+  // A service is considered "matched" if:
+  //   (a) it has an entry in service_billing_assignments (new many-to-one system), OR
+  //   (b) it is marked as intentionally unbilled in unbillable_services, OR
+  //   (c) it is marked as intentionally-unbilled in service_billing_match_log (legacy)
+  // Services with status 'terminated' or 'unmatched' are excluded.
+  const [row] = await db.execute<{ cnt: number }>(sql`
+    SELECT COUNT(*) AS cnt
+    FROM services s
+    WHERE s.customerExternalId = ${customerExternalId}
+      AND s.status NOT IN ('terminated', 'unmatched', 'flagged_for_termination')
+      AND s.externalId NOT IN (
+        SELECT sba.serviceExternalId
+        FROM service_billing_assignments sba
+        WHERE sba.customerExternalId = ${customerExternalId}
       )
-    );
+      AND s.externalId NOT IN (
+        SELECT us.serviceExternalId
+        FROM unbillable_services us
+        WHERE us.customerExternalId = ${customerExternalId}
+      )
+      AND s.externalId NOT IN (
+        SELECT sml.serviceExternalId
+        FROM service_billing_match_log sml
+        WHERE sml.customerExternalId = ${customerExternalId}
+          AND sml.resolution = 'intentionally-unbilled'
+      )
+  `);
 
-  return Number(row?.count ?? 0);
+  const rows = row as unknown as Array<{ cnt: number }>;
+  return Number(rows[0]?.cnt ?? 0);
 }
 
 /**
@@ -6174,15 +6191,23 @@ export async function recalculateAllUnmatchedBilling() {
     SET unmatchedBillingCount = (
       SELECT COUNT(*)
       FROM services s
-      LEFT JOIN billing_items bi
-        ON bi.serviceExternalId = s.externalId AND bi.matchStatus = 'service-matched'
       WHERE s.customerExternalId = c.externalId
-        AND s.status NOT IN ('terminated', 'unmatched')
-        AND bi.id IS NULL
+        AND s.status NOT IN ('terminated', 'unmatched', 'flagged_for_termination')
         AND s.externalId NOT IN (
-          SELECT serviceExternalId FROM service_billing_match_log
-          WHERE customerExternalId = c.externalId
-            AND resolution = 'intentionally-unbilled'
+          SELECT sba.serviceExternalId
+          FROM service_billing_assignments sba
+          WHERE sba.customerExternalId = c.externalId
+        )
+        AND s.externalId NOT IN (
+          SELECT us.serviceExternalId
+          FROM unbillable_services us
+          WHERE us.customerExternalId = c.externalId
+        )
+        AND s.externalId NOT IN (
+          SELECT sml.serviceExternalId
+          FROM service_billing_match_log sml
+          WHERE sml.customerExternalId = c.externalId
+            AND sml.resolution = 'intentionally-unbilled'
         )
     ),
     updatedAt = NOW()
@@ -6819,20 +6844,106 @@ export async function fuzzyMatchServicesAgainstBillingItems(customerExternalId: 
   const unassigned = await getUnassignedServicesForCustomer(customerExternalId);
   const billingItemsWithAssign = await getBillingItemsWithAssignments(customerExternalId);
 
+  /**
+   * Normalise a string into a set of lowercase tokens, stripping punctuation
+   * and common stop-words that add noise to Jaccard scoring.
+   */
   function tokenize(str: string): Set<string> {
+    const STOP_WORDS = new Set(['the', 'and', 'for', 'with', 'from', 'this', 'that', 'per', 'inc', 'gst', 'month', 'monthly']);
     return new Set(
       str.toLowerCase()
         .replace(/[^a-z0-9\s]/g, ' ')
         .split(/\s+/)
-        .filter(t => t.length > 2)
+        .filter(t => t.length > 2 && !STOP_WORDS.has(t))
     );
   }
 
+  /**
+   * Jaccard similarity between two token sets.
+   */
   function jaccardScore(a: Set<string>, b: Set<string>): number {
     if (a.size === 0 || b.size === 0) return 0;
-    const intersection = new Set(Array.from(a).filter(x => b.has(x)));
-    const union = new Set([...Array.from(a), ...Array.from(b)]);
-    return intersection.size / union.size;
+    const intersection = Array.from(a).filter(x => b.has(x)).length;
+    const union = new Set([...Array.from(a), ...Array.from(b)]).size;
+    return intersection / union;
+  }
+
+  /**
+   * Map a service type string to a canonical category.
+   * Services and billing items are matched first by category — dollar amounts
+   * are NEVER used as a matching signal (they are the output, not the input).
+   *
+   * Categories: 'voice' | 'internet' | 'mobile' | 'other'
+   */
+  function serviceCategory(serviceType: string, planName: string): string {
+    const t = (serviceType + ' ' + planName).toLowerCase();
+    if (t.match(/voice|phone|sip|did|pbx|fax|voicemail|telephone|premium.*user|user.*license|license/)) return 'voice';
+    if (t.match(/internet|nbn|broadband|data|fibre|fiber|adsl|vdsl|opticomm|ethernet|wan|ipwan/)) return 'internet';
+    if (t.match(/mobile|sim|4g|5g|lte|handset|smartphone/)) return 'mobile';
+    return 'other';
+  }
+
+  /**
+   * Map a billing item description to a canonical category.
+   */
+  function billingCategory(description: string): string {
+    const d = description.toLowerCase();
+    if (d.match(/voice|phone|sip|did|pbx|fax|voicemail|telephone|call|user.*license|license.*user|premium.*user/)) return 'voice';
+    if (d.match(/internet|nbn|broadband|data|fibre|fiber|adsl|vdsl|opticomm|ethernet|wan/)) return 'internet';
+    if (d.match(/mobile|sim|4g|5g|lte|handset/)) return 'mobile';
+    return 'other';
+  }
+
+  /**
+   * Score a service against a billing item.
+   *
+   * Scoring breakdown (max 1.0):
+   *   0.50 — category match (voice→voice, internet→internet, etc.)
+   *   0.30 — Jaccard token overlap between planName/serviceType and billing description
+   *   0.20 — provider/platform alignment bonus (SasBoss services → Voice billing items, ABB → Internet)
+   *
+   * A score of 0 means the categories are incompatible — never propose cross-category matches.
+   */
+  function scoreServiceAgainstItem(
+    svc: typeof unassigned[0],
+    item: typeof billingItemsWithAssign[0]
+  ): number {
+    const svcCat = serviceCategory(svc.serviceType, svc.planName);
+    const itemCat = billingCategory(item.description);
+
+    // Hard block: never match across incompatible categories
+    if (svcCat !== itemCat && !(svcCat === 'other' || itemCat === 'other')) return 0;
+
+    let score = 0;
+
+    // 1. Category match (50% of score)
+    if (svcCat === itemCat) {
+      score += 0.50;
+    } else {
+      // Partial credit if one side is 'other'
+      score += 0.15;
+    }
+
+    // 2. Token overlap between service plan name and billing description (30%)
+    const svcTokens = tokenize(`${svc.planName} ${svc.serviceType} ${svc.serviceTypeDetail}`);
+    const itemTokens = tokenize(item.description);
+    const jaccard = jaccardScore(svcTokens, itemTokens);
+    score += jaccard * 0.30;
+
+    // 3. Provider/platform alignment bonus (20%)
+    // SasBoss services are billed via SasBoss → Xero as Voice/Data line items
+    // ABB services are billed as Internet/Data line items
+    // Telstra services are billed as Mobile/Voice line items
+    const provider = (svc.provider || '').toLowerCase();
+    const descLower = item.description.toLowerCase();
+    if (provider === 'sasboss' && itemCat === 'voice') score += 0.20;
+    else if (provider === 'sasboss' && itemCat === 'internet') score += 0.10;
+    else if ((provider === 'abb' || provider === 'aussie broadband') && itemCat === 'internet') score += 0.20;
+    else if (provider === 'telstra' && itemCat === 'mobile') score += 0.20;
+    else if (provider === 'exetel' && itemCat === 'internet') score += 0.15;
+    else if (provider === 'channelhaus' && (itemCat === 'voice' || itemCat === 'internet')) score += 0.10;
+
+    return Math.min(score, 1.0);
   }
 
   const proposals: Array<{
@@ -6845,21 +6956,24 @@ export async function fuzzyMatchServicesAgainstBillingItems(customerExternalId: 
     scorePercent: number;
   }> = [];
 
+  // Filter out credit notes and negative billing items — they should not receive service assignments
+  const positiveItems = billingItemsWithAssign.filter(item => item.lineAmount > 0);
+
   for (const svc of unassigned) {
-    const svcTokens = tokenize(`${svc.planName} ${svc.serviceType} ${svc.serviceTypeDetail}`);
     let bestScore = 0;
     let bestItem: typeof billingItemsWithAssign[0] | null = null;
 
-    for (const item of billingItemsWithAssign) {
-      const itemTokens = tokenize(item.description);
-      const score = jaccardScore(svcTokens, itemTokens);
+    for (const item of positiveItems) {
+      const score = scoreServiceAgainstItem(svc, item);
       if (score > bestScore) {
         bestScore = score;
         bestItem = item;
       }
     }
 
-    if (bestItem && bestScore >= 0.15) {
+    // Minimum threshold: must have at least a category match (score >= 0.50)
+    // to avoid spurious cross-category proposals
+    if (bestItem && bestScore >= 0.50) {
       proposals.push({
         serviceExternalId: svc.externalId,
         servicePlanName: svc.planName,
@@ -6872,6 +6986,8 @@ export async function fuzzyMatchServicesAgainstBillingItems(customerExternalId: 
     }
   }
 
+  // Sort by score descending, then group by billing item so operators see
+  // all services proposed for the same billing item together
   return proposals.sort((a, b) => b.score - a.score);
 }
 
