@@ -4198,3 +4198,128 @@ export async function bulkActivateLinkedServices(dryRun = true): Promise<{
     errors,
   };
 }
+
+/**
+ * Create a new customer record manually.
+ * Generates the next available externalId (C####).
+ * Optionally creates a Platform Check entry for the new customer.
+ * Returns the new customer's externalId.
+ */
+export async function createCustomer(input: {
+  name: string;
+  businessName?: string;
+  contactName?: string;
+  contactEmail?: string;
+  contactPhone?: string;
+  siteAddress?: string;
+  notes?: string;
+  billingPlatforms?: string[] | null;
+  createdBy?: string;
+}): Promise<{
+  success: boolean;
+  externalId: string;
+  alreadyExists: boolean;
+}> {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+  const trimmedName = input.name.trim();
+  if (!trimmedName) throw new Error('Customer name is required');
+
+  // Check if a customer with this name already exists
+  const existing = await db.select({ externalId: customers.externalId })
+    .from(customers)
+    .where(sql`LOWER(${customers.name}) = LOWER(${trimmedName})`)
+    .limit(1);
+  if (existing.length > 0) {
+    return { success: false, externalId: existing[0].externalId, alreadyExists: true };
+  }
+
+  // Generate next externalId: find MAX(CAST(SUBSTRING(externalId, 2) AS UNSIGNED))
+  const [maxRow] = await db.select({
+    maxNum: sql<number>`MAX(CAST(SUBSTRING(externalId, 2) AS UNSIGNED))`,
+  }).from(customers);
+  const nextNum = (maxRow?.maxNum || 0) + 1;
+  const newExternalId = `C${nextNum}`;
+
+  const noteText = [
+    input.notes,
+    input.createdBy ? `Created manually by ${input.createdBy}` : null,
+  ].filter(Boolean).join('\n');
+
+  // Insert the new customer
+  await db.insert(customers).values({
+    externalId: newExternalId,
+    name: trimmedName,
+    businessName: input.businessName || '',
+    contactName: input.contactName || '',
+    contactEmail: input.contactEmail || '',
+    contactPhone: input.contactPhone || '',
+    siteAddress: input.siteAddress || '',
+    notes: noteText,
+    billingPlatforms: input.billingPlatforms ? JSON.stringify(input.billingPlatforms) : null,
+    serviceCount: 0,
+    monthlyCost: '0.00' as any,
+    unmatchedCount: 0,
+    matchedCount: 0,
+    status: 'active',
+    xeroContactName: '',
+    xeroAccountNumber: '',
+    monthlyRevenue: '0.00' as any,
+  });
+
+  return { success: true, externalId: newExternalId, alreadyExists: false };
+}
+
+/**
+ * Get fuzzy customer suggestions for an unmatched service based on its discoveryNotes / customerName hint.
+ * Returns top 5 candidates with confidence scores.
+ */
+export async function getSuggestedCustomersForService(serviceExternalId: string): Promise<Array<{
+  externalId: string;
+  name: string;
+  businessName: string;
+  siteAddress: string;
+  serviceCount: number;
+  confidence: number;
+  matchReason: string;
+}>> {
+  const db = await getDb();
+  if (!db) return [];
+
+  // Get the service's discovery notes and customer name hint
+  const [svc] = await db.select({
+    discoveryNotes: services.discoveryNotes,
+    customerName: services.customerName,
+    locationAddress: services.locationAddress,
+    serviceType: services.serviceType,
+  }).from(services)
+    .where(eq(services.externalId, serviceExternalId))
+    .limit(1);
+
+  if (!svc) return [];
+
+  // Extract the suggested customer name from discoveryNotes
+  // Format: "SM Import: Zambrero Albury | ..."
+  let hintName = '';
+  if (svc.discoveryNotes) {
+    const smMatch = svc.discoveryNotes.match(/SM Import[^:]*:\s*([^\|]+)/i);
+    if (smMatch) hintName = smMatch[1].trim();
+  }
+  if (!hintName && svc.customerName && svc.customerName !== 'Unassigned') {
+    hintName = svc.customerName;
+  }
+
+  if (!hintName) return [];
+
+  // Use the existing fuzzy suggestions function
+  const suggestions = await getFuzzyCustomerSuggestions(hintName);
+  return suggestions.map(s => ({
+    externalId: s.externalId,
+    name: s.name,
+    businessName: '',
+    siteAddress: '',
+    serviceCount: s.serviceCount,
+    confidence: s.confidence,
+    matchReason: `Name match: "${hintName}" → "${s.name}"`,
+  }));
+}

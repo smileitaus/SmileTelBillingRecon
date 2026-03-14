@@ -470,3 +470,22 @@
 - [ ] 374 unmatched SM services (163 Telstra + 119 TIAB + 92 Vocus) need individual verification and customer assignment
 - [ ] TIAB: 119 services — new provider not previously in DB, needs supplier account setup
 - [ ] Vocus (Optus): 92 services — new provider, needs supplier account setup
+
+# SM Import Re-analysis + Create New Customer (Mar 14)
+- [x] Re-analyse SM.xlsx: all 8 columns including customer name (Col A), service type (B), provider (C), SIM serial (D), MSN/phone (E), activation date (F), port-out CID (G), notes (H)
+- [x] Build fuzzy customer name matching with chain-aware logic (Zambrero/Nodo/Yiros location word must match)
+- [x] Apply 188 high-confidence customer assignments from SM import
+- [x] Store port-out CID, activation date, and notes (e.g. "Transferred to Yiros Beenleigh") in discoveryNotes
+- [x] 51 named-but-unmatched services left pending (new locations not yet in DB)
+- [x] Add createCustomer function to db.ts (with duplicate detection, Platform Check creation)
+- [x] Add customers.create tRPC procedure
+- [x] Add customers.suggestionsForService tRPC procedure (fuzzy match from discoveryNotes SM suggestion)
+- [x] Build CreateCustomerDialog component (name, notes, platform check checkbox, auto-assign option)
+- [x] Add SM Import Suggestion panel to UnmatchedServices ExpandedPanel (shows fuzzy matches, Create New Customer button)
+- [x] Add "Create New Customer" button to "No customers found" state in UnmatchedServices manual search
+- [x] Add "New Customer" button to CustomerList page header
+- [x] Platform Check records auto-created when "Create Platform Check entry" is checked in CreateCustomerDialog
+- [x] discoveryNotes already included in global search (confirmed at db.ts lines 782, 871)
+- [x] 8 vitest tests for createCustomer and getSuggestedCustomersForService (all passing)
+- [ ] Match 51 named-but-unmatched SM services (new Zambrero/Nodo/Yiros locations) — use Create New Customer flow
+- [ ] Match 197 blank-name Telstra SIMs ("Dot Voice and Broadband Backup") — need manual review

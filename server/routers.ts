@@ -69,6 +69,8 @@ import {
   commitAddressAutoMatch,
   bulkActivateLinkedServices,
   recalculateAll,
+  createCustomer,
+  getSuggestedCustomersForService,
   type AddressMatchCandidate,
 } from "./db";
 
@@ -118,6 +120,46 @@ export const appRouter = router({
         .input(z.object({ customerId: z.string() }))
         .query(async ({ input }) => {
           return await getServicesByCustomer(input.customerId);
+        }),
+
+      create: protectedProcedure
+        .input(z.object({
+          name: z.string().min(1, 'Customer name is required'),
+          businessName: z.string().optional(),
+          contactName: z.string().optional(),
+          contactEmail: z.string().optional(),
+          contactPhone: z.string().optional(),
+          siteAddress: z.string().optional(),
+          notes: z.string().optional(),
+          billingPlatforms: z.array(z.string()).nullable().optional(),
+          createPlatformCheck: z.boolean().optional(),
+        }))
+        .mutation(async ({ input, ctx }) => {
+          const createdBy = ctx.user?.name || ctx.user?.email || 'Unknown';
+          const result = await createCustomer({ ...input, createdBy });
+          // Optionally create a Platform Check entry for the new customer
+          if (result.success && input.createPlatformCheck) {
+            await createBillingPlatformCheck({
+              targetType: 'service',
+              targetId: result.externalId,
+              targetName: input.name,
+              platform: (input.billingPlatforms?.[0]) || 'Unknown',
+              issueType: 'new-customer',
+              issueDescription: `New customer created manually by ${createdBy}. Verify billing platform setup.`,
+              customerName: input.name,
+              customerExternalId: result.externalId,
+              monthlyAmount: 0,
+              priority: 'medium',
+              createdBy,
+            });
+          }
+          return result;
+        }),
+
+      suggestionsForService: protectedProcedure
+        .input(z.object({ serviceExternalId: z.string() }))
+        .query(async ({ input }) => {
+          return await getSuggestedCustomersForService(input.serviceExternalId);
         }),
 
       update: protectedProcedure

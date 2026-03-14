@@ -15,12 +15,14 @@ import {
   AlertTriangle,
   LinkIcon,
   Download,
+  UserPlus,
 } from "lucide-react";
 import { useCustomerSearch } from "@/hooks/useData";
 import { useState, useMemo } from "react";
 import { trpc } from "@/lib/trpc";
 import { ProviderBadge, ProviderLogo } from "@/components/ProviderBadge";
 import { exportToCSV } from "@/lib/exportCsv";
+import { CreateCustomerDialog } from "@/components/CreateCustomerDialog";
 
 type SortKey =
   | "name"
@@ -67,6 +69,7 @@ export default function CustomerList() {
 
   const [sortKey, setSortKey] = useState<SortKey>("name");
   const [sortDir, setSortDir] = useState<SortDir>("asc");
+  const [showCreateCustomer, setShowCreateCustomer] = useState(false);
 
   const sorted = useMemo(() => {
     const arr = [...filtered];
@@ -122,12 +125,30 @@ export default function CustomerList() {
   return (
     <div className="p-6 lg:p-8">
       {/* Header */}
-      <div className="mb-6">
-        <h1 className="text-xl font-bold tracking-tight">Customers</h1>
-        <p className="text-sm text-muted-foreground mt-1">
-          {totalActive} customers total &middot; {totalWithServices} with active services
-        </p>
+      <div className="mb-6 flex items-start justify-between gap-4">
+        <div>
+          <h1 className="text-xl font-bold tracking-tight">Customers</h1>
+          <p className="text-sm text-muted-foreground mt-1">
+            {totalActive} customers total &middot; {totalWithServices} with active services
+          </p>
+        </div>
+        <button
+          onClick={() => setShowCreateCustomer(true)}
+          className="shrink-0 flex items-center gap-2 px-4 py-2 text-sm font-medium bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
+        >
+          <UserPlus className="w-4 h-4" />
+          New Customer
+        </button>
       </div>
+
+      {/* Create Customer Dialog */}
+      <CreateCustomerDialog
+        open={showCreateCustomer}
+        onOpenChange={setShowCreateCustomer}
+        onCreated={(_externalId, name) => {
+          setQuery(name);
+        }}
+      />
 
       {/* Search & Filters */}
       <div className="flex flex-wrap items-center gap-3 mb-6">
