@@ -2559,6 +2559,7 @@ export interface AliasMatchCandidate {
   serviceType: string;
   provider: string;
   carbonAlias: string;
+  aliasSource: 'carbon_alias' | 'sm_customer_name'; // where the alias came from
   currentCustomerExternalId: string | null;
   currentCustomerName: string;
   suggestedCustomerExternalId: string;
@@ -2637,6 +2638,67 @@ export async function previewAliasAutoMatch(minConfidence = 60): Promise<{
       serviceType: svc.serviceType,
       provider: svc.provider || 'ABB',
       carbonAlias: svc.carbonAlias,
+      aliasSource: 'carbon_alias',
+      currentCustomerExternalId: svc.customerExternalId || null,
+      currentCustomerName: svc.customerName || '',
+      suggestedCustomerExternalId: bestCustomer.externalId,
+      suggestedCustomerName: bestCustomer.name,
+      confidence: bestScore,
+      tier: bestTier,
+      isReassignment: !!(svc.customerExternalId && svc.customerExternalId.trim()),
+    });
+  }
+
+  // ── Second pass: unmatched services with SM Customer: names in discoveryNotes ──
+  const seenServiceIds = new Set(candidates.map(c => c.serviceExternalId));
+
+  const smServices = await db.select({
+    externalId: services.externalId,
+    serviceType: services.serviceType,
+    provider: services.provider,
+    discoveryNotes: services.discoveryNotes,
+    customerExternalId: services.customerExternalId,
+    customerName: services.customerName,
+    status: services.status,
+  }).from(services)
+    .where(
+      sql`${services.status} = 'unmatched' AND ${services.discoveryNotes} LIKE '%SM Customer:%'`
+    );
+
+  for (const svc of smServices) {
+    if (seenServiceIds.has(svc.externalId)) continue;
+    if (!svc.discoveryNotes) continue;
+
+    // Extract the SM customer name
+    const m = svc.discoveryNotes.match(/SM Customer:\s*([^\n\[|]+)/i);
+    if (!m) continue;
+    const smName = m[1].trim();
+    if (!smName) continue;
+
+    let bestScore = 0;
+    let bestCustomer: { externalId: string; name: string } | null = null;
+    let bestTier = 'no-match';
+
+    for (const cust of allCustomers) {
+      const { score, tier } = scoreMatch(smName, cust.name);
+      if (score > bestScore) {
+        bestScore = score;
+        bestCustomer = cust;
+        bestTier = tier;
+      }
+    }
+
+    if (!bestCustomer || bestScore < minConfidence) continue;
+    // Skip if already assigned to this customer
+    if (bestCustomer.externalId === svc.customerExternalId) continue;
+
+    seenServiceIds.add(svc.externalId);
+    candidates.push({
+      serviceExternalId: svc.externalId,
+      serviceType: svc.serviceType || 'Unknown',
+      provider: svc.provider || 'Unknown',
+      carbonAlias: smName, // display the SM name as the alias
+      aliasSource: 'sm_customer_name',
       currentCustomerExternalId: svc.customerExternalId || null,
       currentCustomerName: svc.customerName || '',
       suggestedCustomerExternalId: bestCustomer.externalId,

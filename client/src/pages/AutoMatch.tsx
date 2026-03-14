@@ -37,6 +37,7 @@ type AliasCandidate = {
   serviceType: string;
   provider: string;
   carbonAlias: string;
+  aliasSource?: 'carbon_alias' | 'sm_customer_name';
   currentCustomerExternalId: string | null;
   currentCustomerName: string;
   suggestedCustomerExternalId: string;
@@ -445,10 +446,11 @@ function AliasMatchTab() {
       <div className="flex items-start gap-2 bg-blue-50 border border-blue-200 rounded-lg px-4 py-3 mb-4 text-sm text-blue-800">
         <Info className="w-4 h-4 shrink-0 mt-0.5" />
         <span>
-          Fuzzy-matches the Carbon/ABB{" "}
+          Fuzzy-matches two sources against existing customer names: the Carbon/ABB{" "}
           <span className="font-mono bg-blue-100 px-1 rounded">alias</span>{" "}
-          field against customer names. Address-style aliases (NBN: …) are
-          automatically excluded.
+          field, and{" "}
+          <span className="inline-flex items-center gap-0.5 bg-violet-100 text-violet-700 px-1 rounded text-xs font-medium">SM Name</span>{" "}
+          customer names extracted from unmatched service notes. Address-style aliases (NBN: …) are automatically excluded.
         </span>
       </div>
 
@@ -549,6 +551,13 @@ function AliasMatchTab() {
                       <span className="font-medium text-sm">
                         {c.carbonAlias}
                       </span>
+                      {c.aliasSource === 'sm_customer_name' && (
+                        <div className="mt-0.5">
+                          <span className="inline-flex items-center gap-0.5 text-[10px] bg-violet-100 text-violet-700 px-1.5 py-0.5 rounded">
+                            SM Name
+                          </span>
+                        </div>
+                      )}
                     </td>
                     <td className="px-4 py-3">
                       {c.currentCustomerName ? (

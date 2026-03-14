@@ -570,3 +570,19 @@
 - [x] Fix ProviderBar: sort order now by cost descending (ABB $24k first, not Unknown 782 services first)
 - [x] Fix ProviderBar: negative costs shown in red text with minus sign
 - [x] Add refetchInterval: 60_000 to useSummary hook for automatic dashboard refresh every 60 seconds
+
+# Auto-Proposal Generation for SM Pending Customers (Mar 14)
+- [ ] Understand new customer proposal schema (customer_proposals table or similar)
+- [ ] Build autoGenerateSMProposals() in db.ts: extract SM Customer names, create pending proposals grouped by name
+- [ ] Add tRPC procedure billing.autoGenerateSMProposals
+- [ ] Auto-run on page load of New Customers tab OR add "Generate Proposals" button
+- [ ] Verify proposals appear in the New Customers pending queue
+
+# Alias Match: Surface SM Customer Names (Mar 14)
+- [x] Read previewAliasAutoMatch in db.ts - confirmed it only used carbonAlias on ABB/Carbon services
+- [x] Extended previewAliasAutoMatch with second pass: extracts SM Customer: names from unmatched service discoveryNotes
+- [x] Fuzzy-matches extracted SM names against all existing customers (same scoreMatch logic)
+- [x] Added aliasSource field to AliasMatchCandidate: 'carbon_alias' | 'sm_customer_name'
+- [x] SM Name candidates show violet 'SM Name' badge in the Alias column
+- [x] Updated Alias Match info banner to explain both sources
+- [x] TypeScript: 0 errors
