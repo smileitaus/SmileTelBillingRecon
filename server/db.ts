@@ -258,10 +258,27 @@ export async function getServicesByCustomer(customerExternalId: string) {
   if (!db) return [];
 
   const result = await db.select().from(services).where(eq(services.customerExternalId, customerExternalId));
+
+  // Determine which services are truly linked to a billing item via service_billing_assignments
+  const assignments = await db
+    .select({ serviceExternalId: serviceBillingAssignments.serviceExternalId })
+    .from(serviceBillingAssignments)
+    .where(eq(serviceBillingAssignments.customerExternalId, customerExternalId));
+  const linkedIds = new Set(assignments.map(a => a.serviceExternalId));
+
+  // Also check unbillable_services — intentionally unbilled counts as "resolved"
+  const unbillable = await db
+    .select({ serviceExternalId: unbillableServices.serviceExternalId })
+    .from(unbillableServices)
+    .where(eq(unbillableServices.customerExternalId, customerExternalId));
+  const unbillableIds = new Set(unbillable.map(u => u.serviceExternalId));
+
   return result.map(s => ({
     ...s,
     monthlyCost: parseFloat(s.monthlyCost),
     billingHistory: s.billingHistory ? JSON.parse(s.billingHistory) : [],
+    // True only if service has an entry in service_billing_assignments OR is intentionally unbilled
+    billingLinked: linkedIds.has(s.externalId) || unbillableIds.has(s.externalId),
   }));
 }
 
@@ -6059,10 +6076,9 @@ export async function getAvailableBillingItemsForCustomer(customerExternalId: st
     })
     .from(billingItems)
     .where(
-      and(
-        eq(billingItems.customerExternalId, customerExternalId),
-        sql`${billingItems.matchStatus} IN ('customer-matched', 'unmatched')`
-      )
+      // Return ALL billing items for this customer — multiple services can link to one billing item,
+      // so we never filter by matchStatus here. The UI uses drag-and-drop as the primary workflow.
+      eq(billingItems.customerExternalId, customerExternalId)
     )
     .orderBy(desc(billingItems.lineAmount));
 

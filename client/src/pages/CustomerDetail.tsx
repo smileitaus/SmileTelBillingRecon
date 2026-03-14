@@ -341,9 +341,14 @@ function ServiceTypeIcon({ type }: { type: string }) {
   }
 }
 
-function StatusPill({ status }: { status: string }) {
+function StatusPill({ status, billingLinked }: { status: string; billingLinked?: boolean }) {
+  // For active services, only show "Matched" if they are genuinely linked to a billing item
+  // via service_billing_assignments. Otherwise show "Unlinked" in amber.
+  const effectiveStatus = status === 'active' && billingLinked === false ? 'unlinked' : status;
+
   const styles: Record<string, string> = {
     active: "status-active",
+    unlinked: "inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-semibold rounded-full border bg-amber-50 text-amber-700 border-amber-300",
     unmatched: "status-unmatched",
     flagged_for_termination: "inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-semibold rounded-full border bg-rose-50 text-rose-700 border-rose-200",
     terminated: "inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-semibold rounded-full border bg-gray-100 text-gray-500 border-gray-200",
@@ -352,18 +357,20 @@ function StatusPill({ status }: { status: string }) {
   };
   const labels: Record<string, string> = {
     active: "Matched",
+    unlinked: "Unlinked",
     unmatched: "Unmatched",
     flagged_for_termination: "Flagged",
     terminated: "Terminated",
     flagged: "Flagged",
     review: "Review",
   };
-  const cls = styles[status] || "status-review";
-  const label = labels[status] || status;
+  const cls = styles[effectiveStatus] || "status-review";
+  const label = labels[effectiveStatus] || status;
   return (
     <span className={cls}>
-      {status === "flagged_for_termination" && <Flag className="w-2.5 h-2.5" />}
-      {status === "terminated" && <Ban className="w-2.5 h-2.5" />}
+      {effectiveStatus === "flagged_for_termination" && <Flag className="w-2.5 h-2.5" />}
+      {effectiveStatus === "terminated" && <Ban className="w-2.5 h-2.5" />}
+      {effectiveStatus === "unlinked" && <AlertTriangle className="w-2.5 h-2.5" />}
       {label}
     </span>
   );
@@ -568,7 +575,7 @@ function ServiceRow({ service, customerExternalId, onTerminated }: { service: an
             <span className="text-[10px] text-muted-foreground block">supplier cost/mo</span>
           </div>
           <div className="shrink-0 hidden md:block">
-            <StatusPill status={service.status} />
+            <StatusPill status={service.status} billingLinked={service.billingLinked} />
           </div>
           {/* Link to supplier service button — only for unmatched Xero stubs */}
           {isUnmatched && customerExternalId && (
@@ -640,10 +647,12 @@ function ServiceRow({ service, customerExternalId, onTerminated }: { service: an
 function UnmatchedBillingRow({
   service,
   availableBillingItems,
+  customerExternalId,
   onResolve,
 }: {
   service: any;
   availableBillingItems: any[];
+  customerExternalId?: string;
   onResolve: (serviceExternalId: string, billingItemExternalId: string | null, resolution: 'linked' | 'intentionally-unbilled', notes?: string) => Promise<void>;
 }) {
   const [expanded, setExpanded] = useState(false);
@@ -713,52 +722,40 @@ function UnmatchedBillingRow({
       {/* Expanded resolution panel */}
       {expanded && (
         <div className="px-4 pb-4 pt-1 bg-orange-50/20 border-t border-orange-100">
-          <p className="text-xs font-semibold text-muted-foreground mb-3">Assign a billing item or mark as intentionally unbilled:</p>
+          <p className="text-xs font-semibold text-muted-foreground mb-3">Link this service to a Xero billing item, or mark as intentionally unbilled:</p>
 
-          {/* Billing item picker */}
-          <div className="mb-3">
-            <label className="text-xs text-muted-foreground mb-1 block">Available billing items for this customer</label>
-            {availableBillingItems.length === 0 ? (
-              <p className="text-xs text-muted-foreground italic">No unmatched billing items available for this customer.</p>
-            ) : (
-              <select
-                value={selectedBillingItem}
-                onChange={e => setSelectedBillingItem(e.target.value)}
-                className="w-full text-sm bg-background border border-border rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-ring/20"
-              >
-                <option value="">— Select a billing item —</option>
-                {availableBillingItems.map((bi: any) => (
-                  <option key={bi.externalId} value={bi.externalId}>
-                    {bi.description.substring(0, 60)}{bi.description.length > 60 ? '…' : ''} · ${Number(bi.lineAmount).toFixed(2)} · {bi.invoiceDate}
-                  </option>
-                ))}
-              </select>
-            )}
+          {/* Primary action: go to Billing Match drag-and-drop workbench */}
+          <div className="mb-3 p-3 rounded-md bg-orange-50 border border-orange-200 flex items-start gap-3">
+            <Link2 className="w-4 h-4 text-orange-600 mt-0.5 shrink-0" />
+            <div className="flex-1 min-w-0">
+              <p className="text-xs font-medium text-orange-800 mb-1">Use the Billing Match workbench to link this service</p>
+              <p className="text-[11px] text-orange-700/80 mb-2">Drag this service from the left column onto the correct Xero billing item on the right. Multiple services can share one billing item.</p>
+              {customerExternalId && (
+                <a
+                  href={`/customers/${customerExternalId}/billing-match`}
+                  className="inline-flex items-center gap-1.5 text-[11px] font-medium text-orange-700 underline underline-offset-2 hover:text-orange-900"
+                >
+                  <Link2 className="w-3 h-3" />
+                  Open Billing Match workbench
+                </a>
+              )}
+            </div>
           </div>
 
-          {/* Notes */}
+          {/* Notes for unbilled action */}
           <div className="mb-3">
-            <label className="text-xs text-muted-foreground mb-1 block">Notes (optional)</label>
+            <label className="text-xs text-muted-foreground mb-1 block">Notes (optional — for intentionally unbilled)</label>
             <input
               type="text"
               value={notes}
               onChange={e => setNotes(e.target.value)}
-              placeholder="e.g. Matched by invoice description..."
+              placeholder="e.g. Included in bundle, no separate charge..."
               className="w-full text-sm bg-background border border-border rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-ring/20"
             />
           </div>
 
           {/* Actions */}
           <div className="flex items-center gap-2">
-            <Button
-              size="sm"
-              onClick={handleLink}
-              disabled={!selectedBillingItem || resolving}
-              className="gap-1.5"
-            >
-              {resolving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Link2 className="w-3.5 h-3.5" />}
-              Link Billing Item
-            </Button>
             <Button
               size="sm"
               variant="outline"
@@ -1203,6 +1200,7 @@ export default function CustomerDetail() {
                       key={svc.externalId}
                       service={svc}
                       availableBillingItems={availableBillingItems}
+                      customerExternalId={customer?.externalId}
                       onResolve={async (serviceExternalId: string, billingItemExternalId: string | null, resolution: 'linked' | 'intentionally-unbilled', notes?: string) => {
                         try {
                           await resolveServiceBilling.mutateAsync({

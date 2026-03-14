@@ -786,3 +786,12 @@
 - [x] Add cost/revenue legend text under each column header
 - [x] Improve auto-match dialog: explain category-based matching, show orange 'Supplier Cost' and green 'Xero Revenue' cards per proposal
 - [x] Filter credit notes (negative lineAmount) from fuzzy match candidates
+
+# Bug Fixes - Billing Match Page (2026-03-14 session 2)
+- [x] Fix: legacy-matched services (in service_billing_match_log but not service_billing_assignments) show as "Matched" but are invisible in drag-drop left column
+- [x] Fix: getUnassignedServicesForCustomer excludes services that are only in legacy match log — they should appear as unassigned if not in service_billing_assignments
+- [x] Fix: billing item picker (expand-row dropdown) shows "No unmatched billing items" because matchStatus filter is too restrictive
+- [x] Remove/replace broken expand-row dropdown picker with drag-and-drop only; all billing items should be droppable targets
+- [x] Fix: getAvailableBillingItemsForCustomer should return ALL billing items for the customer, not just unmatched ones
+- [x] Rule: a service is only "Matched" if it has BOTH a customer assignment AND a service_billing_assignments entry. Legacy match_log entries alone must NOT mark a service as matched.
+- [x] Remove legacy match_log "linked" entries from the matched/unmatched display logic — only service_billing_assignments counts
