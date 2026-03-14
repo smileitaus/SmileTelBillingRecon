@@ -76,6 +76,9 @@ import {
   approveCustomerProposal,
   rejectCustomerProposal,
   countPendingProposals,
+  syncCarbonCostsToServices,
+  backfillCostSources,
+  getServiceCostHistory,
   type AddressMatchCandidate,
 } from "./db";
 
@@ -885,6 +888,23 @@ export const appRouter = router({
       .mutation(async ({ input }) => {
         const buffer = Buffer.from(input.base64, 'base64');
         return await parsePdfInvoice(buffer);
+      }),
+
+    // Carbon API cost sync
+    syncCarbonCosts: protectedProcedure
+      .mutation(async ({ ctx }) => {
+        const syncedBy = ctx.user?.name || ctx.user?.email || 'Unknown';
+        const result = await syncCarbonCostsToServices(syncedBy);
+        // Also backfill costSource for non-ABB services
+        await backfillCostSources();
+        return result;
+      }),
+
+    // Get cost history for a service
+    serviceCostHistory: protectedProcedure
+      .input(z.object({ serviceExternalId: z.string() }))
+      .query(async ({ input }) => {
+        return await getServiceCostHistory(input.serviceExternalId);
       }),
 
     // Customer merge

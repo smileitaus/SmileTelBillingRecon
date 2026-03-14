@@ -425,9 +425,62 @@ interface ImportResult {
   timestamp: string;
 }
 
-// ── Main Page ─────────────────────────────────────────────────────────────────
+// ── ABB Carbon API Sync ─────────────────────────────────────────────────────────────────────────────────
+
+function AbbCarbonSyncSection() {
+  const utils = trpc.useUtils();
+  const [syncResult, setSyncResult] = useState<{ updated: number; skipped: number; errors: number } | null>(null);
+  const syncMutation = trpc.billing.syncCarbonCosts.useMutation({
+    onSuccess: (result) => {
+      setSyncResult(result);
+      toast.success(`Carbon sync complete: ${result.updated} services updated`);
+      // Refresh all data that depends on service costs
+      utils.billing.summary.invalidate();
+      utils.billing.services.list.invalidate();
+      utils.billing.margin.list.invalidate();
+      utils.billing.margin.grouped.invalidate();
+      utils.billing.customers.list.invalidate();
+    },
+    onError: (err) => toast.error('Carbon sync failed: ' + err.message),
+  });
+
+  return (
+    <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <ProviderBadge provider="ABB" size="md" />
+          <div>
+            <p className="text-sm font-semibold text-green-900">ABB / Carbon API Cost Sync</p>
+            <p className="text-xs text-green-700">Overrides ABB service costs with live Carbon API data (source of truth)</p>
+          </div>
+        </div>
+        <button
+          onClick={() => syncMutation.mutate()}
+          disabled={syncMutation.isPending}
+          className="inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold bg-green-700 text-white rounded-md hover:bg-green-800 disabled:opacity-50 transition-colors"
+        >
+          {syncMutation.isPending ? (
+            <><RefreshCw className="w-3.5 h-3.5 animate-spin" /> Syncing...</>
+          ) : (
+            <><RefreshCw className="w-3.5 h-3.5" /> Sync Carbon Costs Now</>
+          )}
+        </button>
+      </div>
+      {syncResult && (
+        <div className="mt-3 flex items-center gap-4 text-xs text-green-800">
+          <span className="font-semibold">{syncResult.updated} updated</span>
+          <span>{syncResult.skipped} unchanged</span>
+          {syncResult.errors > 0 && <span className="text-red-600">{syncResult.errors} errors</span>}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── Main Page ─────────────────────────────────────────────────────────────────────────────────
 
 export default function SupplierInvoices() {
+  const utils = trpc.useUtils();
   const [dragOver, setDragOver] = useState(false);
   const [parsedInvoice, setParsedInvoice] = useState<ParsedInvoice | null>(null);
   const [parseError, setParseError] = useState<string | null>(null);
@@ -443,6 +496,12 @@ export default function SupplierInvoices() {
       ]);
       setParsedInvoice(null);
       toast.success(`Import complete: ${result.created} created, ${result.updated} updated`);
+      // Refresh all panels that depend on service costs
+      utils.billing.summary.invalidate();
+      utils.billing.services.list.invalidate();
+      utils.billing.margin.list.invalidate();
+      utils.billing.margin.grouped.invalidate();
+      utils.billing.customers.list.invalidate();
     },
     onError: (err) => toast.error("Import failed: " + err.message),
   });
@@ -455,6 +514,12 @@ export default function SupplierInvoices() {
       ]);
       setParsedInvoice(null);
       toast.success(`Import complete: ${result.created} created, ${result.updated} updated, ${result.skipped} skipped`);
+      // Refresh all panels that depend on service costs
+      utils.billing.summary.invalidate();
+      utils.billing.services.list.invalidate();
+      utils.billing.margin.list.invalidate();
+      utils.billing.margin.grouped.invalidate();
+      utils.billing.customers.list.invalidate();
     },
     onError: (err) => toast.error("Import failed: " + err.message),
   });
@@ -681,6 +746,9 @@ export default function SupplierInvoices() {
           </div>
         </div>
       )}
+
+      {/* ABB Carbon API Sync */}
+      <AbbCarbonSyncSection />
 
       {/* Supported formats */}
       <div className="mt-8 p-4 bg-muted/30 rounded-lg">

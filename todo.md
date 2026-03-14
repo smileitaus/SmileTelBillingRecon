@@ -513,3 +513,24 @@
 - [x] Show "Suggested: [Name]" chip in collapsed service card when name is known but unmatched
 - [x] "Propose as New Customer" button pre-fills proposal form with suggested name + service ID
 - [x] Wire CreateCustomerDialog to submit proposal (not immediate creation) from unmatched panel
+
+# Carbon API Source of Truth + Real-time Refresh (Mar 14)
+- [x] Add service_cost_history table (id, serviceExternalId, oldCost, newCost, oldSource, newSource, changedBy, reason, changedAt)
+- [x] Add costSource field to services table (carbon_api / invoice / manual / unknown)
+- [x] Run pnpm db:push to migrate schema
+- [x] Build syncCarbonCostsToServices() helper: snapshots old cost to history, sets monthlyCost = carbonMonthlyCost, sets costSource = 'carbon_api'
+- [x] Build getServiceCostHistory() helper: returns cost change history for a service
+- [x] Add tRPC procedure: billing.syncCarbonCosts (protected, triggers full ABB cost sync)
+- [x] Add tRPC procedure: billing.serviceCostHistory (returns cost history for a service)
+- [x] Run Carbon cost sync on all 240 ABB services — 134 costs updated, $24,622/mo total ABB cost
+- [x] Add ABB Carbon API Sync button to Supplier Invoices page with full query invalidation
+- [x] Fix TIAB and SmileTel provider badges (were showing as Unknown in dashboard)
+- [x] Fix React query invalidation: terminate/restore mutations now invalidate margin + customers list
+- [x] Fix ServiceEditPanel: now invalidates margin + summary after service update
+- [x] Fix SupplierInvoices import mutations: now invalidate summary + margin after import
+- [x] Fix dashboard stats: useSummary now has staleTime: 0 + refetchOnWindowFocus: true
+- [x] Revenue & Margin page already had staleTime: 0 + refetchOnWindowFocus: true (confirmed)
+- [x] Customer Detail terminate/restore: now invalidates margin + customers list
+- [x] Show cost history on Service Detail page (Cost History section with old/new cost + source badge)
+- [x] Show costSource badge on Service Detail (Carbon API / Invoice / Manual)
+- [ ] Write vitest tests for Carbon cost sync and history snapshot

@@ -237,6 +237,12 @@ export default function ServiceEditPanel({ serviceExternalId, onClose, onSaved }
       utils.billing.services.byId.invalidate({ id: serviceExternalId! });
       utils.billing.services.editHistory.invalidate({ serviceExternalId: serviceExternalId! });
       utils.billing.review.issues.invalidate();
+      // Refresh summary, margin, and customer panels so cost/revenue changes propagate everywhere
+      utils.billing.summary.invalidate();
+      utils.billing.margin.list.invalidate();
+      utils.billing.margin.grouped.invalidate();
+      utils.billing.customers.list.invalidate();
+      utils.billing.customers.byId.invalidate();
       onSaved?.();
     },
     onError: (err) => toast.error(err.message),

@@ -4,7 +4,11 @@ import { useDebounce } from "@/hooks/useDebounce";
 
 // ==================== Dashboard / Summary ====================
 export function useSummary() {
-  const { data, isLoading, error } = trpc.billing.summary.useQuery();
+  const { data, isLoading, error } = trpc.billing.summary.useQuery(undefined, {
+    // Always re-fetch on mount and window focus so the dashboard stays current
+    staleTime: 0,
+    refetchOnWindowFocus: true,
+  });
   return { summary: data ?? null, isLoading, error };
 }
 

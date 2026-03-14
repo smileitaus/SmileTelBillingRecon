@@ -144,6 +144,8 @@ export const services = mysqlTable("services", {
   proposedCost: varchar("proposedCost", { length: 32 }).default(""),
   proposedDataGb: varchar("proposedDataGb", { length: 32 }).default(""),
   noDataUse: int("noDataUse").default(0).notNull(),
+  // Cost source tracking: 'carbon_api' | 'supplier_invoice' | 'manual' | 'unknown'
+  costSource: varchar("costSource", { length: 32 }).default("unknown"),
   // Revenue tracking
   monthlyRevenue: decimal("monthlyRevenue", { precision: 10, scale: 2 }).default("0.00").notNull(),
   marginPercent: decimal("marginPercent", { precision: 10, scale: 2 }),
@@ -321,3 +323,25 @@ export const customerProposals = mysqlTable("customer_proposals", {
 });
 export type CustomerProposal = typeof customerProposals.$inferSelect;
 export type InsertCustomerProposal = typeof customerProposals.$inferInsert;
+
+/**
+ * Service Cost History - audit trail for all cost changes to services.
+ * Snapshots are taken before any cost override (e.g. Carbon API sync, invoice import).
+ */
+export const serviceCostHistory = mysqlTable("service_cost_history", {
+  id: int("id").autoincrement().primaryKey(),
+  serviceExternalId: varchar("serviceExternalId", { length: 32 }).notNull(),
+  // The cost value at the time of snapshot
+  monthlyCost: decimal("monthlyCost", { precision: 10, scale: 2 }).notNull(),
+  // Where this cost came from: 'carbon_api' | 'supplier_invoice' | 'manual' | 'unknown'
+  costSource: varchar("costSource", { length: 32 }).notNull(),
+  // Why the snapshot was taken: 'carbon_sync' | 'invoice_import' | 'manual_edit'
+  snapshotReason: varchar("snapshotReason", { length: 64 }).notNull(),
+  // Who triggered the snapshot
+  snapshotBy: varchar("snapshotBy", { length: 256 }).notNull(),
+  // Optional notes
+  notes: text("notes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type ServiceCostHistory = typeof serviceCostHistory.$inferSelect;
+export type InsertServiceCostHistory = typeof serviceCostHistory.$inferInsert;

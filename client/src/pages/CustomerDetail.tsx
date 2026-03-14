@@ -495,6 +495,9 @@ function ServiceRow({ service, customerExternalId, onTerminated }: { service: an
       toast.success(`Terminated — $${result.originalCost?.toFixed(2) || '0.00'}/mo removed`);
       utils.billing.customers.byId.invalidate();
       utils.billing.summary.invalidate();
+      utils.billing.margin.list.invalidate();
+      utils.billing.margin.grouped.invalidate();
+      utils.billing.customers.list.invalidate();
       setShowConfirm(false);
       onTerminated?.();
     } catch { toast.error("Failed to terminate"); }
@@ -508,6 +511,9 @@ function ServiceRow({ service, customerExternalId, onTerminated }: { service: an
       toast.success("Service restored");
       utils.billing.customers.byId.invalidate();
       utils.billing.summary.invalidate();
+      utils.billing.margin.list.invalidate();
+      utils.billing.margin.grouped.invalidate();
+      utils.billing.customers.list.invalidate();
       onTerminated?.();
     } catch { toast.error("Failed to restore"); }
   };

@@ -1,6 +1,6 @@
 import { eq, like, or, and, sql, desc, asc, inArray, ne } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, customers, locations, services, supplierAccounts, billingItems, reviewItems, billingPlatformChecks, serviceEditHistory, customerProposals } from "../drizzle/schema";
+import { InsertUser, users, customers, locations, services, supplierAccounts, billingItems, reviewItems, billingPlatformChecks, serviceEditHistory, customerProposals, serviceCostHistory } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -4485,4 +4485,177 @@ export async function countPendingProposals(): Promise<number> {
     .from(customerProposals)
     .where(eq(customerProposals.status, 'pending'));
   return Number(row?.count ?? 0);
+}
+
+// ==================== Carbon API Cost Sync ====================
+
+/**
+ * Snapshot the current monthlyCost of a service to service_cost_history before overwriting.
+ * Only snapshots if the current cost is non-zero (nothing to snapshot for unknown costs).
+ */
+export async function snapshotServiceCost(
+  db: ReturnType<typeof drizzle>,
+  serviceExternalId: string,
+  currentCost: number,
+  currentCostSource: string,
+  snapshotReason: string,
+  snapshotBy: string,
+  notes?: string
+): Promise<void> {
+  if (currentCost <= 0) return; // Nothing meaningful to snapshot
+  await db.insert(serviceCostHistory).values({
+    serviceExternalId,
+    monthlyCost: currentCost.toFixed(2),
+    costSource: currentCostSource || 'unknown',
+    snapshotReason,
+    snapshotBy,
+    notes: notes || null,
+  });
+}
+
+/**
+ * Get cost history for a service (most recent first).
+ */
+export async function getServiceCostHistory(serviceExternalId: string) {
+  const db = await getDb();
+  if (!db) return [];
+  return await db.select()
+    .from(serviceCostHistory)
+    .where(eq(serviceCostHistory.serviceExternalId, serviceExternalId))
+    .orderBy(desc(serviceCostHistory.createdAt));
+}
+
+/**
+ * Sync Carbon API costs to monthlyCost for all ABB services that have a carbonMonthlyCost.
+ * Carbon API is the authoritative source of truth — it overrides any previously imported invoice cost.
+ * Before overwriting, the current cost is snapshotted to service_cost_history.
+ *
+ * Returns a summary of what was updated.
+ */
+export async function syncCarbonCostsToServices(syncedBy: string): Promise<{
+  updated: number;
+  skipped: number;
+  errors: number;
+  totalCarbonCost: number;
+  details: Array<{ externalId: string; oldCost: number; newCost: number; planName: string }>;
+}> {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+
+  // Fetch all ABB services with a valid carbonMonthlyCost
+  const abbServices = await db.select({
+    externalId: services.externalId,
+    planName: services.planName,
+    monthlyCost: services.monthlyCost,
+    costSource: services.costSource,
+    carbonMonthlyCost: services.carbonMonthlyCost,
+    carbonPlanName: services.carbonPlanName,
+    carbonServiceId: services.carbonServiceId,
+  }).from(services).where(
+    sql`${services.provider} = 'ABB' AND ${services.carbonMonthlyCost} IS NOT NULL AND ${services.carbonMonthlyCost} > 0`
+  );
+
+  let updated = 0;
+  let skipped = 0;
+  let errors = 0;
+  let totalCarbonCost = 0;
+  const details: Array<{ externalId: string; oldCost: number; newCost: number; planName: string }> = [];
+
+  for (const svc of abbServices) {
+    try {
+      const carbonCost = parseFloat(String(svc.carbonMonthlyCost));
+      const currentCost = parseFloat(String(svc.monthlyCost));
+      totalCarbonCost += carbonCost;
+
+      // Skip if already set to the exact Carbon API cost and source is already carbon_api
+      if (Math.abs(currentCost - carbonCost) < 0.005 && svc.costSource === 'carbon_api') {
+        skipped++;
+        continue;
+      }
+
+      // Snapshot old cost before overwriting (only if it was non-zero and from a different source)
+      if (currentCost > 0 && svc.costSource !== 'carbon_api') {
+        await snapshotServiceCost(
+          db,
+          svc.externalId,
+          currentCost,
+          svc.costSource || 'unknown',
+          'carbon_sync',
+          syncedBy,
+          `Overridden by Carbon API cost $${carbonCost.toFixed(2)} (plan: ${svc.carbonPlanName || svc.planName})`
+        );
+      }
+
+      // Set monthlyCost = carbonMonthlyCost and mark costSource as carbon_api
+      await db.update(services).set({
+        monthlyCost: carbonCost.toFixed(2),
+        costSource: 'carbon_api',
+      }).where(eq(services.externalId, svc.externalId));
+
+      details.push({
+        externalId: svc.externalId,
+        oldCost: currentCost,
+        newCost: carbonCost,
+        planName: svc.carbonPlanName || svc.planName || '',
+      });
+      updated++;
+    } catch (err) {
+      console.error(`[CarbonSync] Error updating ${svc.externalId}:`, err);
+      errors++;
+    }
+  }
+
+  // After updating all service costs, recalculate customer aggregate costs
+  if (updated > 0) {
+    try {
+      await db.execute(sql`
+        UPDATE customers c
+        SET monthlyCost = COALESCE((
+          SELECT SUM(s.monthlyCost)
+          FROM services s
+          WHERE s.customerExternalId = c.externalId
+            AND s.status NOT IN ('terminated', 'inactive')
+        ), 0)
+      `);
+    } catch (err) {
+      console.error('[CarbonSync] Error recalculating customer costs:', err);
+    }
+  }
+
+  return { updated, skipped, errors, totalCarbonCost, details };
+}
+
+/**
+ * Also update costSource for services that have a known supplier invoice cost but no costSource set.
+ * This is a one-time backfill for existing data.
+ */
+export async function backfillCostSources(): Promise<{ updated: number }> {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+
+  // ABB services with carbonMonthlyCost matching monthlyCost → carbon_api
+  const r1 = await db.execute(sql`
+    UPDATE services
+    SET costSource = 'carbon_api'
+    WHERE provider = 'ABB'
+      AND carbonMonthlyCost IS NOT NULL
+      AND carbonMonthlyCost > 0
+      AND ABS(monthlyCost - carbonMonthlyCost) < 0.01
+      AND (costSource IS NULL OR costSource = '' OR costSource = 'unknown')
+  `);
+
+  // Non-ABB services with monthlyCost > 0 and no costSource → supplier_invoice
+  const r2 = await db.execute(sql`
+    UPDATE services
+    SET costSource = 'supplier_invoice'
+    WHERE provider != 'ABB'
+      AND provider != 'Unknown'
+      AND monthlyCost > 0
+      AND (costSource IS NULL OR costSource = '' OR costSource = 'unknown')
+  `);
+
+  const r1Rows = r1 as unknown as { affectedRows?: number }[];
+  const r2Rows = r2 as unknown as { affectedRows?: number }[];
+  const updated = (r1Rows[0]?.affectedRows ?? 0) + (r2Rows[0]?.affectedRows ?? 0);
+  return { updated };
 }

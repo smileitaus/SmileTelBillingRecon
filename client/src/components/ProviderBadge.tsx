@@ -94,6 +94,18 @@ const providerConfig: Record<string, {
     border: "border-yellow-300",
     label: "Blitznet",
   },
+  TIAB: {
+    bg: "bg-slate-50",
+    text: "text-slate-700",
+    border: "border-slate-200",
+    label: "TIAB",
+  },
+  SmileTel: {
+    bg: "bg-pink-50",
+    text: "text-pink-700",
+    border: "border-pink-200",
+    label: "SmileTel",
+  },
   Unknown: {
     bg: "bg-gray-50",
     text: "text-gray-500",
@@ -199,6 +211,8 @@ export function ProviderDot({
     VineDirect: "bg-green-600",
     Infinet: "bg-sky-500",
     Blitznet: "bg-yellow-500",
+    TIAB: "bg-slate-500",
+    SmileTel: "bg-pink-500",
     Unknown: "bg-gray-400",
   };
   const color = dotColors[name] || dotColors.Unknown;
@@ -225,6 +239,8 @@ export const PROVIDER_COLORS: Record<string, string> = {
   VineDirect: "oklch(0.5 0.15 145)",
   Infinet: "oklch(0.55 0.15 225)",
   Blitznet: "oklch(0.6 0.15 90)",
+  TIAB: "oklch(0.55 0.05 240)",
+  SmileTel: "oklch(0.55 0.15 350)",
   Unknown: "oklch(0.6 0.01 56)",
 };
 

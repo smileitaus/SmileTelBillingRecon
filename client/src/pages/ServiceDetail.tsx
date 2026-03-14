@@ -384,11 +384,48 @@ function CustomerNameEditor({ service }: { service: any }) {
       <Pencil className="w-3.5 h-3.5" />
       Unassigned — click to set customer name
     </button>
+   );
+}
+// ─── Cost History Panel ────────────────────────────────────────────────────────
+function CostHistoryPanel({ serviceExternalId }: { serviceExternalId: string }) {
+  const { data: history, isLoading } = trpc.billing.serviceCostHistory.useQuery(
+    { serviceExternalId },
+    { enabled: !!serviceExternalId }
+  );
+
+  if (isLoading || !history || history.length === 0) return null;
+
+  return (
+    <div className="bg-card border border-border rounded-lg p-5 mb-4">
+      <div className="flex items-center gap-2 mb-3">
+        <Activity className="w-4 h-4 text-muted-foreground" />
+        <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Cost History</h2>
+      </div>
+      <div className="space-y-1">
+        {history.map((entry: any) => (
+          <div key={entry.id} className="flex items-center justify-between py-1.5 border-b border-border/40 last:border-0 text-xs">
+            <div className="flex items-center gap-2">
+              <span className={`px-1.5 py-0.5 rounded text-[9px] font-semibold ${
+                entry.newSource === 'carbon_api' ? 'bg-green-50 text-green-700 border border-green-200' :
+                entry.newSource === 'invoice' ? 'bg-blue-50 text-blue-700 border border-blue-200' :
+                'bg-amber-50 text-amber-700 border border-amber-200'
+              }`}>{entry.newSource === 'carbon_api' ? 'Carbon API' : entry.newSource === 'invoice' ? 'Invoice' : 'Manual'}</span>
+              <span className="text-muted-foreground">{entry.changedBy || 'System'}</span>
+              {entry.reason && <span className="text-muted-foreground italic truncate max-w-32">{entry.reason}</span>}
+            </div>
+            <div className="flex items-center gap-3 font-mono">
+              <span className="text-muted-foreground line-through">${Number(entry.oldCost).toFixed(2)}</span>
+              <span className="text-foreground font-medium">${Number(entry.newCost).toFixed(2)}</span>
+              <span className="text-muted-foreground text-[10px]">{new Date(Number(entry.changedAt)).toLocaleDateString('en-AU')}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }
 
 const BILLING_PLATFORMS = ["OneBill", "SasBoss", "ECN", "Halo", "DataGate"];
-
 function BillingPlatformEditor({ service }: { service: any }) {
   const [editing, setEditing] = useState(false);
   const currentPlatforms: string[] = service.billingPlatform ? JSON.parse(service.billingPlatform) : [];
@@ -808,11 +845,20 @@ export default function ServiceDetail() {
         <DetailRow label="Email" value={service.email} mono />
         <DetailRow label="Location ID" value={service.locId} mono />
         <DetailRow label="IP Address" value={service.ipAddress} mono />
-        <DetailRow
-          label="Monthly Cost (ex GST)"
-          value={`$${Number(service.monthlyCost).toLocaleString("en-AU", { minimumFractionDigits: 2 })}`}
-          mono
-        />
+        <DetailRow label="Monthly Cost (ex GST)">
+          <span className="flex items-center gap-2">
+            <span className="data-value font-mono">${Number(service.monthlyCost).toLocaleString("en-AU", { minimumFractionDigits: 2 })}</span>
+            {(service as any).costSource === 'carbon_api' && (
+              <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-green-50 text-green-700 border border-green-200 font-semibold">Carbon API</span>
+            )}
+            {(service as any).costSource === 'invoice' && (
+              <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200 font-semibold">Invoice</span>
+            )}
+            {(service as any).costSource === 'manual' && (
+              <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200 font-semibold">Manual</span>
+            )}
+          </span>
+        </DetailRow>
         {Number(service.monthlyRevenue) > 0 && (
           <DetailRow
             label="Monthly Revenue (ex GST)"
@@ -933,6 +979,9 @@ export default function ServiceDetail() {
           )}
         </div>
       )}
+
+      {/* Cost History */}
+      <CostHistoryPanel serviceExternalId={service.externalId} />
 
       {/* Customer & Location */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
