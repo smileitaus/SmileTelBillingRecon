@@ -13,7 +13,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
-import { UserPlus, AlertCircle, CheckCircle2, Loader2 } from "lucide-react";
+import { UserPlus, AlertCircle, CheckCircle2, Loader2, Send, Clock } from "lucide-react";
 import { toast } from "sonner";
 
 const BILLING_PLATFORMS = ["OneBill", "SasBoss", "ECN", "Halo", "DataGate"];
@@ -23,17 +23,24 @@ interface CreateCustomerDialogProps {
   onOpenChange: (open: boolean) => void;
   /** Pre-fill the name field (e.g. from SM import suggestion) */
   suggestedName?: string;
-  /** Called when a customer is successfully created */
+  /** If provided, the dialog submits a proposal (pending approval) instead of creating immediately */
+  serviceExternalId?: string;
+  /** Called when a customer is successfully created (immediate mode) */
   onCreated?: (externalId: string, name: string) => void;
+  /** Called when a proposal is successfully submitted */
+  onProposed?: () => void;
 }
 
 export function CreateCustomerDialog({
   open,
   onOpenChange,
   suggestedName = "",
+  serviceExternalId,
   onCreated,
+  onProposed,
 }: CreateCustomerDialogProps) {
   const utils = trpc.useUtils();
+  const isProposalMode = !!serviceExternalId;
 
   const [name, setName] = useState(suggestedName);
   const [businessName, setBusinessName] = useState("");
@@ -77,6 +84,19 @@ export function CreateCustomerDialog({
     },
   });
 
+  const proposeMutation = trpc.billing.customers.proposals.submit.useMutation({
+    onSuccess: () => {
+      toast.success(`Proposal for "${name}" submitted — pending approval in the Auto-Match › New Customers tab.`);
+      utils.billing.customers.proposals.list.invalidate();
+      utils.billing.customers.proposals.pendingCount.invalidate();
+      onProposed?.();
+      onOpenChange(false);
+    },
+    onError: (err: { message: string }) => {
+      toast.error(`Failed to submit proposal: ${err.message}`);
+    },
+  });
+
   const togglePlatform = (platform: string) => {
     setSelectedPlatforms(prev =>
       prev.includes(platform) ? prev.filter(p => p !== platform) : [...prev, platform]
@@ -85,27 +105,64 @@ export function CreateCustomerDialog({
 
   const handleSubmit = () => {
     if (!name.trim()) return;
-    createMutation.mutate({
-      name: name.trim(),
-      businessName: businessName.trim() || undefined,
-      contactName: contactName.trim() || undefined,
-      contactEmail: contactEmail.trim() || undefined,
-      contactPhone: contactPhone.trim() || undefined,
-      siteAddress: siteAddress.trim() || undefined,
-      notes: notes.trim() || undefined,
-      billingPlatforms: selectedPlatforms.length > 0 ? selectedPlatforms : null,
-      createPlatformCheck,
-    });
+    if (isProposalMode) {
+      // Build notes string including all extra fields
+      const extraDetails = [
+        businessName.trim() ? `Business: ${businessName.trim()}` : null,
+        contactName.trim() ? `Contact: ${contactName.trim()}` : null,
+        contactEmail.trim() ? `Email: ${contactEmail.trim()}` : null,
+        contactPhone.trim() ? `Phone: ${contactPhone.trim()}` : null,
+        siteAddress.trim() ? `Address: ${siteAddress.trim()}` : null,
+        selectedPlatforms.length > 0 ? `Billing Platforms: ${selectedPlatforms.join(', ')}` : null,
+        notes.trim() || null,
+      ].filter(Boolean).join('\n');
+      proposeMutation.mutate({
+        proposedName: name.trim(),
+        notes: extraDetails || undefined,
+        serviceExternalIds: [serviceExternalId!],
+        source: 'manual',
+        createPlatformCheck,
+      });
+    } else {
+      createMutation.mutate({
+        name: name.trim(),
+        businessName: businessName.trim() || undefined,
+        contactName: contactName.trim() || undefined,
+        contactEmail: contactEmail.trim() || undefined,
+        contactPhone: contactPhone.trim() || undefined,
+        siteAddress: siteAddress.trim() || undefined,
+        notes: notes.trim() || undefined,
+        billingPlatforms: selectedPlatforms.length > 0 ? selectedPlatforms : null,
+        createPlatformCheck,
+      });
+    }
   };
+
+  const isPending = createMutation.isPending || proposeMutation.isPending;
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <UserPlus className="h-5 w-5 text-primary" />
-            Create New Customer
+            {isProposalMode ? (
+              <>
+                <Send className="h-5 w-5 text-amber-500" />
+                Propose New Customer
+              </>
+            ) : (
+              <>
+                <UserPlus className="h-5 w-5 text-primary" />
+                Create New Customer
+              </>
+            )}
           </DialogTitle>
+          {isProposalMode && (
+            <p className="text-sm text-muted-foreground mt-1 flex items-center gap-1.5">
+              <Clock className="w-3.5 h-3.5 text-amber-500" />
+              This proposal will appear in <strong>Auto-Match › New Customers</strong> for approval before the customer is created.
+            </p>
+          )}
         </DialogHeader>
 
         <div className="space-y-4 py-2">
@@ -219,7 +276,9 @@ export function CreateCustomerDialog({
                 Create Platform Check entry
               </label>
               <p className="text-xs text-muted-foreground mt-0.5">
-                Adds a pending verification task to the Platform Checks page to confirm billing setup.
+                {isProposalMode
+                  ? "When approved, adds a pending verification task to the Platform Checks page."
+                  : "Adds a pending verification task to the Platform Checks page to confirm billing setup."}
               </p>
             </div>
           </div>
@@ -231,10 +290,13 @@ export function CreateCustomerDialog({
           </Button>
           <Button
             onClick={handleSubmit}
-            disabled={!name.trim() || createMutation.isPending}
+            disabled={!name.trim() || isPending}
+            className={isProposalMode ? "bg-amber-500 hover:bg-amber-600 text-white" : ""}
           >
-            {createMutation.isPending ? (
-              <><Loader2 className="h-4 w-4 animate-spin mr-2" />Creating...</>
+            {isPending ? (
+              <><Loader2 className="h-4 w-4 animate-spin mr-2" />{isProposalMode ? "Submitting..." : "Creating..."}</>
+            ) : isProposalMode ? (
+              <><Send className="h-4 w-4 mr-2" />Submit Proposal</>
             ) : (
               <><UserPlus className="h-4 w-4 mr-2" />Create Customer</>
             )}

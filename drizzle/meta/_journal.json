@@ -78,6 +78,20 @@
       "when": 1773358701003,
       "tag": "0010_chief_kang",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "5",
+      "when": 1773453913699,
+      "tag": "0011_rich_killraven",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "5",
+      "when": 1773453942791,
+      "tag": "0012_large_overlord",
+      "breakpoints": true
     }
   ]
 }

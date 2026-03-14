@@ -489,3 +489,27 @@
 - [x] 8 vitest tests for createCustomer and getSuggestedCustomersForService (all passing)
 - [ ] Match 51 named-but-unmatched SM services (new Zambrero/Nodo/Yiros locations) — use Create New Customer flow
 - [ ] Match 197 blank-name Telstra SIMs ("Dot Voice and Broadband Backup") — need manual review
+
+# New Customer Proposals Approval Workflow (Mar 14)
+- [x] Add customerProposals table to drizzle/schema.ts (id, proposedName, notes, serviceExternalIds, status: pending/approved/rejected, proposedBy, reviewedBy, reviewedAt, createdAt)
+- [x] Run pnpm db:push to migrate schema
+- [x] Add db helper functions: submitCustomerProposal, listCustomerProposals, approveCustomerProposal, rejectCustomerProposal, countPendingProposals
+- [x] Add tRPC procedures: customers.proposals.submit, customers.proposals.list, customers.proposals.approve, customers.proposals.reject, customers.proposals.pendingCount
+- [x] Build CustomerProposalsTab component with pending/approved/rejected views
+- [x] Tab shows pending proposals as cards: proposed name, notes, linked services, proposed by/when
+- [x] Each card has Approve (creates customer + assigns services) and Reject (with optional reason) actions
+- [x] Approved proposals auto-create the customer record and assign the linked services
+- [x] Approved proposals optionally create a Platform Check record
+- [x] Rejected proposals show reason and remain visible (greyed out) for audit trail
+- [x] Add Proposals tab to AutoMatch page with pending count badge
+- [x] Update CreateCustomerDialog: proposal mode (Submit for Approval) vs immediate create mode
+- [x] Update SM suggestion panel buttons to submit a proposal (amber styling) instead of immediate creation
+- [x] Show pending proposal count badge on "New Customers" tab in Auto-Match screen
+- [x] 11 vitest tests for proposal workflow (all passing)
+
+# Unknown Customer Name Surfacing in Unmatched Services (Mar 14)
+- [x] Surface suggested customer name prominently in unmatched service expanded panel (blue SM Import Suggestion section)
+- [x] Pre-fill customer search box with suggested name when expanding a service that has an SM suggestion
+- [x] Show "Suggested: [Name]" chip in collapsed service card when name is known but unmatched
+- [x] "Propose as New Customer" button pre-fills proposal form with suggested name + service ID
+- [x] Wire CreateCustomerDialog to submit proposal (not immediate creation) from unmatched panel

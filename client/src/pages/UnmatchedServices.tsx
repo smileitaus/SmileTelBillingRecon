@@ -29,6 +29,8 @@ import {
   ClipboardList,
   MapPin,
   Users,
+  Tag,
+  Send,
 } from "lucide-react";
 import {
   Dialog,
@@ -383,6 +385,12 @@ function ServiceCard({
   const isFlagged = service.status === "flagged_for_termination";
   const isTerminated = service.status === "terminated";
   const noDataUse = service.noDataUse === 1;
+  // Extract suggested customer name from discoveryNotes (SM Import or other sources)
+  const suggestedName = (() => {
+    if (!service.discoveryNotes) return null;
+    const m = service.discoveryNotes.match(/SM Import[^:]*:\s*([^|\n]+)/i);
+    return m ? m[1].trim() : null;
+  })();
 
   return (
     <div
@@ -432,6 +440,12 @@ function ServiceCard({
               <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-bold rounded-full border border-orange-400 bg-orange-100 text-orange-800">
                 <ZapOff className="w-2.5 h-2.5" />
                 No Data Use
+              </span>
+            )}
+            {suggestedName && (
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-semibold rounded-full border border-blue-300 bg-blue-50 text-blue-700 dark:bg-blue-950/30 dark:text-blue-300 dark:border-blue-700 max-w-[160px]">
+                <Tag className="w-2.5 h-2.5 shrink-0" />
+                <span className="truncate">{suggestedName}</span>
               </span>
             )}
             <ProviderBadge provider={service.provider} size="xs" />
@@ -491,6 +505,16 @@ function ExpandedPanel({ service }: { service: any }) {
   const [showManualSearch, setShowManualSearch] = useState(false);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const debouncedCustomerSearch = useDebounce(customerSearch, 350);
+
+  // Auto-open search and pre-fill with suggested name when panel opens
+  useEffect(() => {
+    if (smSuggestedName && !showManualSearch) {
+      setShowManualSearch(true);
+      setCustomerSearch(smSuggestedName);
+    }
+  // Only run on mount
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const { data: searchResults } = trpc.billing.search.useQuery(
     { query: debouncedCustomerSearch },
     { enabled: debouncedCustomerSearch.length >= 2 }
@@ -510,6 +534,7 @@ function ExpandedPanel({ service }: { service: any }) {
   const [bulkApplying, setBulkApplying] = useState(false);
   const [showCreateCustomer, setShowCreateCustomer] = useState(false);
   const [createCustomerName, setCreateCustomerName] = useState("");
+  const [createCustomerProposalMode, setCreateCustomerProposalMode] = useState(false);
   const utils = trpc.useUtils();
 
   // Extract SM Import suggestion name from discoveryNotes
@@ -750,22 +775,22 @@ function ExpandedPanel({ service }: { service: any }) {
                 </div>
               ))}
               <button
-                onClick={() => { setCreateCustomerName(smSuggestedName); setShowCreateCustomer(true); }}
-                className="w-full flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-medium text-blue-700 dark:text-blue-400 border border-blue-300 dark:border-blue-700 rounded-md hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors mt-1"
+                onClick={() => { setCreateCustomerName(smSuggestedName || ''); setCreateCustomerProposalMode(true); setShowCreateCustomer(true); }}
+                className="w-full flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-medium text-amber-700 dark:text-amber-400 border border-amber-300 dark:border-amber-700 rounded-md hover:bg-amber-50 dark:hover:bg-amber-900/30 transition-colors mt-1"
               >
-                <UserPlus className="w-3.5 h-3.5" />
-                None match &mdash; Create &ldquo;{smSuggestedName}&rdquo; as new customer
+                <Send className="w-3.5 h-3.5" />
+                None match &mdash; Propose &ldquo;{smSuggestedName}&rdquo; as new customer
               </button>
             </div>
           ) : (
             <div className="space-y-1.5">
               <p className="text-xs text-muted-foreground">No existing customers match this name.</p>
               <button
-                onClick={() => { setCreateCustomerName(smSuggestedName); setShowCreateCustomer(true); }}
-                className="flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-blue-700 dark:text-blue-400 border border-blue-300 dark:border-blue-700 rounded-md hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors"
+                onClick={() => { setCreateCustomerName(smSuggestedName || ''); setCreateCustomerProposalMode(true); setShowCreateCustomer(true); }}
+                className="flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-amber-700 dark:text-amber-400 border border-amber-300 dark:border-amber-700 rounded-md hover:bg-amber-50 dark:hover:bg-amber-900/30 transition-colors"
               >
-                <UserPlus className="w-3.5 h-3.5" />
-                Create &ldquo;{smSuggestedName}&rdquo; as new customer
+                <Send className="w-3.5 h-3.5" />
+                Propose &ldquo;{smSuggestedName}&rdquo; as new customer
               </button>
             </div>
           )}
@@ -775,10 +800,14 @@ function ExpandedPanel({ service }: { service: any }) {
       {/* Create Customer Dialog */}
       <CreateCustomerDialog
         open={showCreateCustomer}
-        onOpenChange={setShowCreateCustomer}
+        onOpenChange={(val) => { setShowCreateCustomer(val); if (!val) setCreateCustomerProposalMode(false); }}
         suggestedName={createCustomerName}
+        serviceExternalId={createCustomerProposalMode ? service.externalId : undefined}
         onCreated={(externalId, name) => {
           handleAssign(externalId, name);
+        }}
+        onProposed={() => {
+          setCreateCustomerProposalMode(false);
         }}
       />
 

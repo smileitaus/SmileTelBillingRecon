@@ -289,3 +289,35 @@ export const serviceEditHistory = mysqlTable("service_edit_history", {
 
 export type ServiceEditHistory = typeof serviceEditHistory.$inferSelect;
 export type InsertServiceEditHistory = typeof serviceEditHistory.$inferInsert;
+
+/**
+ * Customer Proposals - new customer creation requests that require approval
+ * before the customer record is created and services are assigned.
+ */
+export const customerProposals = mysqlTable("customer_proposals", {
+  id: int("id").autoincrement().primaryKey(),
+  // The proposed customer name
+  proposedName: varchar("proposedName", { length: 512 }).notNull(),
+  // Optional notes about why this customer is being proposed
+  notes: text("notes"),
+  // JSON array of service externalIds to assign upon approval e.g. ["SVC001","SVC002"]
+  serviceExternalIds: text("serviceExternalIds").notNull(),
+  // Source context: e.g. "SM Import", "Manual", "Unmatched Review"
+  source: varchar("source", { length: 128 }),
+  // Status lifecycle: pending → approved | rejected
+  status: mysqlEnum("status", ["pending", "approved", "rejected"]).default("pending").notNull(),
+  // Who submitted the proposal
+  proposedBy: varchar("proposedBy", { length: 256 }).notNull(),
+  // Review tracking
+  reviewedBy: varchar("reviewedBy", { length: 256 }),
+  reviewedAt: timestamp("reviewedAt"),
+  rejectionReason: text("rejectionReason"),
+  // If approved, the resulting customer externalId
+  createdCustomerExternalId: varchar("createdCustomerExternalId", { length: 32 }),
+  // Whether to create a Platform Check record on approval
+  createPlatformCheck: int("createPlatformCheck").default(0).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type CustomerProposal = typeof customerProposals.$inferSelect;
+export type InsertCustomerProposal = typeof customerProposals.$inferInsert;

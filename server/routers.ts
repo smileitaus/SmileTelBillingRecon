@@ -71,6 +71,11 @@ import {
   recalculateAll,
   createCustomer,
   getSuggestedCustomersForService,
+  submitCustomerProposal,
+  listCustomerProposals,
+  approveCustomerProposal,
+  rejectCustomerProposal,
+  countPendingProposals,
   type AddressMatchCandidate,
 } from "./db";
 
@@ -161,6 +166,51 @@ export const appRouter = router({
         .query(async ({ input }) => {
           return await getSuggestedCustomersForService(input.serviceExternalId);
         }),
+
+      proposals: router({
+        submit: protectedProcedure
+          .input(z.object({
+            proposedName: z.string().min(1, 'Customer name is required'),
+            notes: z.string().optional(),
+            serviceExternalIds: z.array(z.string()).default([]),
+            source: z.string().optional(),
+            createPlatformCheck: z.boolean().optional(),
+          }))
+          .mutation(async ({ input, ctx }) => {
+            const proposedBy = ctx.user?.name || ctx.user?.email || 'Unknown';
+            return await submitCustomerProposal({ ...input, proposedBy });
+          }),
+
+        list: protectedProcedure
+          .input(z.object({
+            status: z.enum(['pending', 'approved', 'rejected']).optional(),
+          }).optional())
+          .query(async ({ input }) => {
+            return await listCustomerProposals(input?.status);
+          }),
+
+        approve: protectedProcedure
+          .input(z.object({ proposalId: z.number() }))
+          .mutation(async ({ input, ctx }) => {
+            const reviewedBy = ctx.user?.name || ctx.user?.email || 'Unknown';
+            return await approveCustomerProposal(input.proposalId, reviewedBy);
+          }),
+
+        reject: protectedProcedure
+          .input(z.object({
+            proposalId: z.number(),
+            reason: z.string().optional(),
+          }))
+          .mutation(async ({ input, ctx }) => {
+            const reviewedBy = ctx.user?.name || ctx.user?.email || 'Unknown';
+            return await rejectCustomerProposal(input.proposalId, reviewedBy, input.reason);
+          }),
+
+        pendingCount: protectedProcedure
+          .query(async () => {
+            return await countPendingProposals();
+          }),
+      }),
 
       update: protectedProcedure
         .input(z.object({

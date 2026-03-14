@@ -1,6 +1,6 @@
 import { eq, like, or, and, sql, desc, asc, inArray, ne } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, customers, locations, services, supplierAccounts, billingItems, reviewItems, billingPlatformChecks, serviceEditHistory } from "../drizzle/schema";
+import { InsertUser, users, customers, locations, services, supplierAccounts, billingItems, reviewItems, billingPlatformChecks, serviceEditHistory, customerProposals } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -4322,4 +4322,167 @@ export async function getSuggestedCustomersForService(serviceExternalId: string)
     confidence: s.confidence,
     matchReason: `Name match: "${hintName}" → "${s.name}"`,
   }));
+}
+
+// ==================== Customer Proposals ====================
+
+export async function submitCustomerProposal(input: {
+  proposedName: string;
+  notes?: string;
+  serviceExternalIds: string[];
+  source?: string;
+  proposedBy: string;
+  createPlatformCheck?: boolean;
+}) {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+
+  // Check if an identical pending proposal already exists
+  const existing = await db.select().from(customerProposals)
+    .where(and(
+      eq(customerProposals.proposedName, input.proposedName.trim()),
+      eq(customerProposals.status, 'pending')
+    ))
+    .limit(1);
+
+  if (existing.length > 0) {
+    return { id: existing[0].id, alreadyExists: true };
+  }
+
+  const [result] = await db.insert(customerProposals).values({
+    proposedName: input.proposedName.trim(),
+    notes: input.notes || null,
+    serviceExternalIds: JSON.stringify(input.serviceExternalIds),
+    source: input.source || 'Manual',
+    status: 'pending',
+    proposedBy: input.proposedBy,
+    createPlatformCheck: input.createPlatformCheck ? 1 : 0,
+  });
+
+  return { id: (result as any).insertId, alreadyExists: false };
+}
+
+export async function listCustomerProposals(statusFilter?: 'pending' | 'approved' | 'rejected') {
+  const db = await getDb();
+  if (!db) return [];
+
+  const conditions = statusFilter ? [eq(customerProposals.status, statusFilter)] : [];
+  const whereClause = conditions.length > 0 ? conditions[0] : undefined;
+
+  const rows = await db.select().from(customerProposals)
+    .where(whereClause)
+    .orderBy(desc(customerProposals.createdAt));
+
+  return rows.map(r => ({
+    ...r,
+    serviceExternalIds: r.serviceExternalIds ? JSON.parse(r.serviceExternalIds) : [],
+    createPlatformCheck: r.createPlatformCheck === 1,
+  }));
+}
+
+export async function approveCustomerProposal(
+  proposalId: number,
+  reviewedBy: string
+): Promise<{ success: boolean; customerExternalId?: string; error?: string }> {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+
+  const [proposal] = await db.select().from(customerProposals)
+    .where(eq(customerProposals.id, proposalId))
+    .limit(1);
+
+  if (!proposal) return { success: false, error: 'Proposal not found' };
+  if (proposal.status !== 'pending') return { success: false, error: `Proposal is already ${proposal.status}` };
+
+  // Create the customer using the existing createCustomer function
+  const serviceIds: string[] = proposal.serviceExternalIds ? JSON.parse(proposal.serviceExternalIds) : [];
+  const createResult = await createCustomer({
+    name: proposal.proposedName,
+    notes: proposal.notes || undefined,
+    createdBy: reviewedBy,
+  });
+
+  if (createResult.alreadyExists) {
+    // Customer already exists — still mark proposal as approved and link it
+    await db.update(customerProposals).set({
+      status: 'approved',
+      reviewedBy,
+      reviewedAt: new Date(),
+      createdCustomerExternalId: createResult.externalId,
+    }).where(eq(customerProposals.id, proposalId));
+    return { success: true, customerExternalId: createResult.externalId };
+  }
+
+  // Assign linked services to the new customer
+  if (serviceIds.length > 0) {
+    const newName = proposal.proposedName.trim();
+    // Use raw SQL update to avoid ORM type issues with large services table
+    for (const svcId of serviceIds) {
+      await db.update(services).set({
+        customerExternalId: createResult.externalId,
+        customerName: newName,
+      } as any).where(eq(services.externalId, svcId));
+    }
+  }
+
+  // Create Platform Check record if requested
+  if (proposal.createPlatformCheck === 1) {
+    await createBillingPlatformCheck({
+      customerExternalId: createResult.externalId,
+      customerName: proposal.proposedName.trim(),
+      issueType: 'new-customer',
+      issueDescription: `New customer created from proposal by ${reviewedBy}. ${serviceIds.length} service(s) assigned.`,
+      createdBy: reviewedBy,
+      targetType: 'service',
+      targetId: createResult.externalId,
+      targetName: proposal.proposedName.trim(),
+      platform: 'Manual',
+      monthlyAmount: 0,
+      priority: 'medium',
+    });
+  }
+
+  // Mark proposal as approved
+  await db.update(customerProposals).set({
+    status: 'approved',
+    reviewedBy,
+    reviewedAt: new Date(),
+    createdCustomerExternalId: createResult.externalId,
+  }).where(eq(customerProposals.id, proposalId));
+
+  return { success: true, customerExternalId: createResult.externalId };
+}
+
+export async function rejectCustomerProposal(
+  proposalId: number,
+  reviewedBy: string,
+  reason?: string
+): Promise<{ success: boolean; error?: string }> {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+
+  const [proposal] = await db.select().from(customerProposals)
+    .where(eq(customerProposals.id, proposalId))
+    .limit(1);
+
+  if (!proposal) return { success: false, error: 'Proposal not found' };
+  if (proposal.status !== 'pending') return { success: false, error: `Proposal is already ${proposal.status}` };
+
+  await db.update(customerProposals).set({
+    status: 'rejected',
+    reviewedBy,
+    reviewedAt: new Date(),
+    rejectionReason: reason || null,
+  }).where(eq(customerProposals.id, proposalId));
+
+  return { success: true };
+}
+
+export async function countPendingProposals(): Promise<number> {
+  const db = await getDb();
+  if (!db) return 0;
+  const [row] = await db.select({ count: sql<number>`COUNT(*)` })
+    .from(customerProposals)
+    .where(eq(customerProposals.status, 'pending'));
+  return Number(row?.count ?? 0);
 }

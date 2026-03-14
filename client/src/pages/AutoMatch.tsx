@@ -24,9 +24,11 @@ import {
   MapPin,
   Tag,
   User,
+  UserPlus,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { exportToCSV } from "@/lib/exportCsv";
+import CustomerProposalsTab from "@/components/CustomerProposalsTab";
 
 // ─── Shared types ────────────────────────────────────────────────────────────
 
@@ -1351,7 +1353,8 @@ function RecalculateAllSection() {
 // ─── Root page ─────────────────────────────────────────────────────────────────
 
 export default function AutoMatch() {
-  const [activeTab, setActiveTab] = useState<"alias" | "address" | "bulk">("bulk");
+  const [activeTab, setActiveTab] = useState<"alias" | "address" | "bulk" | "proposals">("bulk");
+  const { data: pendingCount = 0 } = trpc.billing.customers.proposals.pendingCount.useQuery(undefined, { refetchInterval: 30_000 });
 
   return (
     <div className="p-6 lg:p-8">
@@ -1404,10 +1407,26 @@ export default function AutoMatch() {
           <Zap className="w-4 h-4" />
           Alias Match
         </button>
+        <button
+          onClick={() => setActiveTab("proposals")}
+          className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+            activeTab === "proposals"
+              ? "bg-card shadow-sm text-foreground"
+              : "text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          <UserPlus className="w-4 h-4" />
+          New Customers
+          {pendingCount > 0 && (
+            <span className="ml-1 bg-amber-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+              {pendingCount > 9 ? "9+" : pendingCount}
+            </span>
+          )}
+        </button>
       </div>
 
       {/* Tab content */}
-      {activeTab === "bulk" ? <BulkActivateTab /> : activeTab === "address" ? <AddressMatchTab /> : <AliasMatchTab />}
+      {activeTab === "bulk" ? <BulkActivateTab /> : activeTab === "address" ? <AddressMatchTab /> : activeTab === "alias" ? <AliasMatchTab /> : <CustomerProposalsTab />}
     </div>
   );
 }
