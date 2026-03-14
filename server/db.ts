@@ -1,6 +1,6 @@
 import { eq, like, or, and, sql, desc, asc, inArray, ne } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, customers, locations, services, supplierAccounts, billingItems, reviewItems, billingPlatformChecks, serviceEditHistory, customerProposals, serviceCostHistory, supplierWorkbookUploads, supplierWorkbookLineItems, customerUsageSummaries, supplierEnterpriseMap, supplierProductMap, serviceBillingMatchLog } from "../drizzle/schema";
+import { InsertUser, users, customers, locations, services, supplierAccounts, billingItems, reviewItems, billingPlatformChecks, serviceEditHistory, customerProposals, serviceCostHistory, supplierWorkbookUploads, supplierWorkbookLineItems, customerUsageSummaries, supplierEnterpriseMap, supplierProductMap, serviceBillingMatchLog, serviceBillingAssignments, unbillableServices } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -6422,4 +6422,382 @@ export async function linkServiceToWorkbookItem(
     resolvedAt: new Date(),
   });
   return { success: true, newCost };
+}
+
+// ==================== Service Billing Assignments (many-to-one) ====================
+
+/**
+ * Get all billing items for a customer with their assigned services and margin data.
+ * Revenue = billingItem.lineAmount
+ * Cost = SUM of assigned services' monthlyCost
+ * Margin = Revenue - Cost
+ */
+export async function getBillingItemsWithAssignments(customerExternalId: string) {
+  const db = await getDb();
+  if (!db) return [];
+
+  // Get all billing items for this customer
+  const items = await db
+    .select()
+    .from(billingItems)
+    .where(eq(billingItems.customerExternalId, customerExternalId))
+    .orderBy(asc(billingItems.invoiceDate));
+
+  // Get all existing assignments for this customer
+  const assignments = await db
+    .select({
+      id: serviceBillingAssignments.id,
+      billingItemExternalId: serviceBillingAssignments.billingItemExternalId,
+      serviceExternalId: serviceBillingAssignments.serviceExternalId,
+      assignedBy: serviceBillingAssignments.assignedBy,
+      assignmentMethod: serviceBillingAssignments.assignmentMethod,
+      notes: serviceBillingAssignments.notes,
+    })
+    .from(serviceBillingAssignments)
+    .where(eq(serviceBillingAssignments.customerExternalId, customerExternalId));
+
+  // Get all services for this customer
+  const svcs = await db
+    .select({
+      externalId: services.externalId,
+      serviceType: services.serviceType,
+      serviceTypeDetail: services.serviceTypeDetail,
+      planName: services.planName,
+      monthlyCost: services.monthlyCost,
+      provider: services.provider,
+      locationAddress: services.locationAddress,
+      phoneNumber: services.phoneNumber,
+      status: services.status,
+    })
+    .from(services)
+    .where(eq(services.customerExternalId, customerExternalId));
+
+  const svcMap = new Map(svcs.map(s => [s.externalId, s]));
+
+  // Build assignment map: billingItemExternalId -> assigned service details
+  const assignmentMap = new Map<string, Array<{
+    assignmentId: number;
+    serviceExternalId: string;
+    serviceType: string;
+    planName: string;
+    monthlyCost: number;
+    provider: string;
+    locationAddress: string;
+    assignedBy: string;
+    assignmentMethod: string;
+  }>>();
+
+  for (const a of assignments) {
+    const svc = svcMap.get(a.serviceExternalId);
+    if (!svc) continue;
+    if (!assignmentMap.has(a.billingItemExternalId)) {
+      assignmentMap.set(a.billingItemExternalId, []);
+    }
+    assignmentMap.get(a.billingItemExternalId)!.push({
+      assignmentId: a.id,
+      serviceExternalId: a.serviceExternalId,
+      serviceType: svc.serviceType,
+      planName: svc.planName || '',
+      monthlyCost: parseFloat(String(svc.monthlyCost)),
+      provider: svc.provider || 'Unknown',
+      locationAddress: svc.locationAddress || '',
+      assignedBy: a.assignedBy,
+      assignmentMethod: a.assignmentMethod,
+    });
+  }
+
+  return items.map(item => {
+    const revenue = parseFloat(String(item.lineAmount));
+    const assignedServices = assignmentMap.get(item.externalId) || [];
+    const totalCost = assignedServices.reduce((sum, s) => sum + s.monthlyCost, 0);
+    const margin = revenue - totalCost;
+    const marginPercent = revenue > 0 ? (margin / revenue) * 100 : null;
+
+    return {
+      externalId: item.externalId,
+      invoiceDate: item.invoiceDate,
+      invoiceNumber: item.invoiceNumber,
+      description: String(item.description),
+      lineAmount: revenue,
+      quantity: parseFloat(String(item.quantity)),
+      unitAmount: parseFloat(String(item.unitAmount)),
+      category: item.category,
+      matchStatus: item.matchStatus,
+      // Legacy 1:1 service link (for backwards compat)
+      legacyServiceExternalId: item.serviceExternalId,
+      // New many-to-one assignments
+      assignedServices,
+      totalCost,
+      margin,
+      marginPercent,
+    };
+  });
+}
+
+/**
+ * Get all unmatched services for a customer:
+ * - Not in service_billing_assignments
+ * - Not in unbillable_services
+ * - Not terminated
+ */
+export async function getUnassignedServicesForCustomer(customerExternalId: string) {
+  const db = await getDb();
+  if (!db) return [];
+
+  // Get service IDs already assigned to a billing item
+  const assigned = await db
+    .select({ serviceExternalId: serviceBillingAssignments.serviceExternalId })
+    .from(serviceBillingAssignments)
+    .where(eq(serviceBillingAssignments.customerExternalId, customerExternalId));
+
+  // Get service IDs marked as unbillable
+  const unbillable = await db
+    .select({ serviceExternalId: unbillableServices.serviceExternalId })
+    .from(unbillableServices)
+    .where(eq(unbillableServices.customerExternalId, customerExternalId));
+
+  const excludedIds = new Set([
+    ...assigned.map(a => a.serviceExternalId),
+    ...unbillable.map(u => u.serviceExternalId),
+  ]);
+
+  const allServices = await db
+    .select()
+    .from(services)
+    .where(
+      and(
+        eq(services.customerExternalId, customerExternalId),
+        sql`${services.status} NOT IN ('terminated', 'flagged_for_termination')`
+      )
+    );
+
+  return allServices
+    .filter(s => !excludedIds.has(s.externalId))
+    .map(s => ({
+      externalId: s.externalId,
+      serviceType: s.serviceType,
+      serviceTypeDetail: s.serviceTypeDetail || '',
+      planName: s.planName || '',
+      monthlyCost: parseFloat(String(s.monthlyCost)),
+      provider: s.provider || 'Unknown',
+      locationAddress: s.locationAddress || '',
+      phoneNumber: s.phoneNumber || '',
+      status: s.status,
+    }));
+}
+
+/**
+ * Assign a service to a billing item (many-to-one).
+ * Idempotent: if the assignment already exists, it's a no-op.
+ */
+export async function assignServiceToBillingItem(
+  billingItemExternalId: string,
+  serviceExternalId: string,
+  customerExternalId: string,
+  assignedBy: string,
+  assignmentMethod: 'manual' | 'auto' | 'drag-drop' = 'drag-drop',
+  notes?: string
+) {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+
+  // Check if already assigned
+  const existing = await db
+    .select({ id: serviceBillingAssignments.id })
+    .from(serviceBillingAssignments)
+    .where(
+      and(
+        eq(serviceBillingAssignments.billingItemExternalId, billingItemExternalId),
+        eq(serviceBillingAssignments.serviceExternalId, serviceExternalId)
+      )
+    )
+    .limit(1);
+
+  if (existing.length > 0) return { success: true, alreadyAssigned: true };
+
+  await db.insert(serviceBillingAssignments).values({
+    billingItemExternalId,
+    serviceExternalId,
+    customerExternalId,
+    assignedBy,
+    assignmentMethod,
+    notes: notes || null,
+  });
+
+  return { success: true, alreadyAssigned: false };
+}
+
+/**
+ * Remove a service assignment from a billing item.
+ */
+export async function removeServiceAssignment(
+  billingItemExternalId: string,
+  serviceExternalId: string
+) {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+
+  await db
+    .delete(serviceBillingAssignments)
+    .where(
+      and(
+        eq(serviceBillingAssignments.billingItemExternalId, billingItemExternalId),
+        eq(serviceBillingAssignments.serviceExternalId, serviceExternalId)
+      )
+    );
+
+  return { success: true };
+}
+
+/**
+ * Mark a service as unbillable (intentionally not assigned to any billing item).
+ */
+export async function markServiceUnbillable(
+  serviceExternalId: string,
+  customerExternalId: string,
+  reason: string,
+  markedBy: string,
+  notes?: string
+) {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+
+  await db
+    .insert(unbillableServices)
+    .values({
+      serviceExternalId,
+      customerExternalId,
+      reason,
+      markedBy,
+      notes: notes || null,
+    })
+    .onDuplicateKeyUpdate({
+      set: {
+        reason,
+        markedBy,
+        notes: notes || null,
+        updatedAt: new Date(),
+      },
+    });
+
+  return { success: true };
+}
+
+/**
+ * Remove a service from the unbillable list (re-enable for assignment).
+ */
+export async function unmarkServiceUnbillable(serviceExternalId: string) {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+
+  await db
+    .delete(unbillableServices)
+    .where(eq(unbillableServices.serviceExternalId, serviceExternalId));
+
+  return { success: true };
+}
+
+/**
+ * Get unbillable services for a customer.
+ */
+export async function getUnbillableServicesForCustomer(customerExternalId: string) {
+  const db = await getDb();
+  if (!db) return [];
+
+  const unbillable = await db
+    .select()
+    .from(unbillableServices)
+    .where(eq(unbillableServices.customerExternalId, customerExternalId));
+
+  // Enrich with service details
+  const svcIds = unbillable.map(u => u.serviceExternalId);
+  if (svcIds.length === 0) return [];
+
+  const svcs = await db
+    .select()
+    .from(services)
+    .where(inArray(services.externalId, svcIds));
+
+  const svcMap = new Map(svcs.map(s => [s.externalId, s]));
+
+  return unbillable.map(u => {
+    const svc = svcMap.get(u.serviceExternalId);
+    return {
+      id: u.id,
+      serviceExternalId: u.serviceExternalId,
+      reason: u.reason,
+      notes: u.notes,
+      markedBy: u.markedBy,
+      createdAt: u.createdAt,
+      serviceType: svc?.serviceType || 'Unknown',
+      planName: svc?.planName || '',
+      monthlyCost: parseFloat(String(svc?.monthlyCost || '0')),
+      provider: svc?.provider || 'Unknown',
+      locationAddress: svc?.locationAddress || '',
+    };
+  });
+}
+
+/**
+ * Fuzzy auto-match: score unassigned services against billing items using token overlap.
+ * Returns proposals sorted by score descending.
+ */
+export async function fuzzyMatchServicesAgainstBillingItems(customerExternalId: string) {
+  const unassigned = await getUnassignedServicesForCustomer(customerExternalId);
+  const billingItemsWithAssign = await getBillingItemsWithAssignments(customerExternalId);
+
+  function tokenize(str: string): Set<string> {
+    return new Set(
+      str.toLowerCase()
+        .replace(/[^a-z0-9\s]/g, ' ')
+        .split(/\s+/)
+        .filter(t => t.length > 2)
+    );
+  }
+
+  function jaccardScore(a: Set<string>, b: Set<string>): number {
+    if (a.size === 0 || b.size === 0) return 0;
+    const intersection = new Set(Array.from(a).filter(x => b.has(x)));
+    const union = new Set([...Array.from(a), ...Array.from(b)]);
+    return intersection.size / union.size;
+  }
+
+  const proposals: Array<{
+    serviceExternalId: string;
+    servicePlanName: string;
+    serviceType: string;
+    billingItemExternalId: string;
+    billingDescription: string;
+    score: number;
+    scorePercent: number;
+  }> = [];
+
+  for (const svc of unassigned) {
+    const svcTokens = tokenize(`${svc.planName} ${svc.serviceType} ${svc.serviceTypeDetail}`);
+    let bestScore = 0;
+    let bestItem: typeof billingItemsWithAssign[0] | null = null;
+
+    for (const item of billingItemsWithAssign) {
+      const itemTokens = tokenize(item.description);
+      const score = jaccardScore(svcTokens, itemTokens);
+      if (score > bestScore) {
+        bestScore = score;
+        bestItem = item;
+      }
+    }
+
+    if (bestItem && bestScore >= 0.15) {
+      proposals.push({
+        serviceExternalId: svc.externalId,
+        servicePlanName: svc.planName,
+        serviceType: svc.serviceType,
+        billingItemExternalId: bestItem.externalId,
+        billingDescription: bestItem.description,
+        score: bestScore,
+        scorePercent: Math.round(bestScore * 100),
+      });
+    }
+  }
+
+  return proposals.sort((a, b) => b.score - a.score);
 }

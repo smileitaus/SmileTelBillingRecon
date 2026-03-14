@@ -23,6 +23,7 @@ import BillingPlatformChecks from "./pages/BillingPlatformChecks";
 import ServiceBillingMatch from "./pages/ServiceBillingMatch";
 import SupplierInvoices from "./pages/SupplierInvoices";
 import CustomerWorkbookMatching from "./pages/CustomerWorkbookMatching";
+import CustomerBillingMatch from "./pages/CustomerBillingMatch";
 import { useState } from "react";
 import { trpc } from "@/lib/trpc";
 
@@ -238,6 +239,7 @@ function Router() {
           <Route path="/service-billing-match" component={ServiceBillingMatch} />
           <Route path="/supplier-invoices" component={SupplierInvoices} />
           <Route path="/customers/:customerId/match-workbook" component={CustomerWorkbookMatching} />
+          <Route path="/customers/:id/billing-match" component={CustomerBillingMatch} />
           <Route path="/404" component={NotFound} />
           <Route component={NotFound} />
         </Switch>

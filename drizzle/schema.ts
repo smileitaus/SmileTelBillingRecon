@@ -484,3 +484,39 @@ export const serviceBillingMatchLog = mysqlTable("service_billing_match_log", {
 });
 export type ServiceBillingMatchLog = typeof serviceBillingMatchLog.$inferSelect;
 export type InsertServiceBillingMatchLog = typeof serviceBillingMatchLog.$inferInsert;
+
+/**
+ * Service Billing Assignments - many-to-one junction between services and billing items.
+ * Allows multiple supplier services to be grouped under a single Xero billing line item.
+ * Revenue = billingItem.lineAmount; Cost = SUM(assigned services' monthlyCost).
+ * Margin = Revenue - Cost.
+ */
+export const serviceBillingAssignments = mysqlTable("service_billing_assignments", {
+  id: int("id").autoincrement().primaryKey(),
+  billingItemExternalId: varchar("billingItemExternalId", { length: 32 }).notNull(),
+  serviceExternalId: varchar("serviceExternalId", { length: 32 }).notNull(),
+  customerExternalId: varchar("customerExternalId", { length: 32 }).notNull(),
+  assignedBy: varchar("assignedBy", { length: 256 }).notNull(),
+  assignmentMethod: varchar("assignmentMethod", { length: 32 }).default("manual").notNull(), // 'manual' | 'auto' | 'drag-drop'
+  notes: text("notes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type ServiceBillingAssignment = typeof serviceBillingAssignments.$inferSelect;
+export type InsertServiceBillingAssignment = typeof serviceBillingAssignments.$inferInsert;
+
+/**
+ * Unbillable Services - services explicitly marked as not requiring a billing item.
+ */
+export const unbillableServices = mysqlTable("unbillable_services", {
+  id: int("id").autoincrement().primaryKey(),
+  serviceExternalId: varchar("serviceExternalId", { length: 32 }).notNull().unique(),
+  customerExternalId: varchar("customerExternalId", { length: 32 }).notNull(),
+  reason: varchar("reason", { length: 64 }).notNull(), // 'intentionally-unbilled' | 'internal-use' | 'bundled' | 'other'
+  notes: text("notes"),
+  markedBy: varchar("markedBy", { length: 256 }).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type UnbillableService = typeof unbillableServices.$inferSelect;
+export type InsertUnbillableService = typeof unbillableServices.$inferInsert;

@@ -1179,6 +1179,12 @@ export default function CustomerDetail() {
                 <span className="text-xs font-semibold text-orange-700 bg-orange-100 px-2 py-0.5 rounded-full">
                   {unmatchedBillingServices.length} service{unmatchedBillingServices.length !== 1 ? 's' : ''}
                 </span>
+                <Link href={`/customers/${params.id}/billing-match`}>
+                  <Button size="sm" className="gap-1 text-xs bg-orange-600 hover:bg-orange-700 text-white shrink-0">
+                    <Link2 className="w-3.5 h-3.5" />
+                    Billing Match
+                  </Button>
+                </Link>
                 <Link href={`/customers/${params.id}/match-workbook`}>
                   <Button size="sm" variant="outline" className="gap-1 text-xs border-orange-300 text-orange-700 hover:bg-orange-50 shrink-0">
                     <Link2 className="w-3.5 h-3.5" />

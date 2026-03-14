@@ -101,6 +101,14 @@ import {
   getWorkbookItemsForCustomer,
   fuzzyMatchServicesToWorkbook,
   linkServiceToWorkbookItem,
+  getBillingItemsWithAssignments,
+  getUnassignedServicesForCustomer,
+  assignServiceToBillingItem,
+  removeServiceAssignment,
+  markServiceUnbillable,
+  unmarkServiceUnbillable,
+  getUnbillableServicesForCustomer,
+  fuzzyMatchServicesAgainstBillingItems,
 } from "./db";
 
 export const appRouter = router({
@@ -315,6 +323,86 @@ export const appRouter = router({
         .mutation(async () => {
           return await recalculateAllUnmatchedBilling();
         }),
+
+      // ── Billing Assignments (many-to-one service → billing item) ────────────
+      billingAssignments: router({
+        billingItemsWithAssignments: protectedProcedure
+          .input(z.object({ customerExternalId: z.string() }))
+          .query(async ({ input }) => {
+            return await getBillingItemsWithAssignments(input.customerExternalId);
+          }),
+
+        unassignedServices: protectedProcedure
+          .input(z.object({ customerExternalId: z.string() }))
+          .query(async ({ input }) => {
+            return await getUnassignedServicesForCustomer(input.customerExternalId);
+          }),
+
+        assign: protectedProcedure
+          .input(z.object({
+            billingItemExternalId: z.string(),
+            serviceExternalId: z.string(),
+            customerExternalId: z.string(),
+            assignmentMethod: z.enum(['manual', 'auto', 'drag-drop']).default('drag-drop'),
+            notes: z.string().optional(),
+          }))
+          .mutation(async ({ input, ctx }) => {
+            const assignedBy = ctx.user?.name || ctx.user?.email || 'unknown';
+            return await assignServiceToBillingItem(
+              input.billingItemExternalId,
+              input.serviceExternalId,
+              input.customerExternalId,
+              assignedBy,
+              input.assignmentMethod,
+              input.notes
+            );
+          }),
+
+        removeAssignment: protectedProcedure
+          .input(z.object({
+            billingItemExternalId: z.string(),
+            serviceExternalId: z.string(),
+          }))
+          .mutation(async ({ input }) => {
+            return await removeServiceAssignment(input.billingItemExternalId, input.serviceExternalId);
+          }),
+
+        markUnbillable: protectedProcedure
+          .input(z.object({
+            serviceExternalId: z.string(),
+            customerExternalId: z.string(),
+            reason: z.string(),
+            notes: z.string().optional(),
+          }))
+          .mutation(async ({ input, ctx }) => {
+            const markedBy = ctx.user?.name || ctx.user?.email || 'unknown';
+            return await markServiceUnbillable(
+              input.serviceExternalId,
+              input.customerExternalId,
+              input.reason,
+              markedBy,
+              input.notes
+            );
+          }),
+
+        unmarkUnbillable: protectedProcedure
+          .input(z.object({ serviceExternalId: z.string() }))
+          .mutation(async ({ input }) => {
+            return await unmarkServiceUnbillable(input.serviceExternalId);
+          }),
+
+        unbillableServices: protectedProcedure
+          .input(z.object({ customerExternalId: z.string() }))
+          .query(async ({ input }) => {
+            return await getUnbillableServicesForCustomer(input.customerExternalId);
+          }),
+
+        fuzzyProposals: protectedProcedure
+          .input(z.object({ customerExternalId: z.string() }))
+          .query(async ({ input }) => {
+            return await fuzzyMatchServicesAgainstBillingItems(input.customerExternalId);
+          }),
+      }),
 
       // ── Workbook Matching (drag-and-drop + fuzzy auto-match) ────────────────
       workbookMatching: router({

@@ -721,3 +721,19 @@
 - [x] Build CustomerWorkbookMatching page with drag-and-drop and fuzzy auto-match
 - [x] Add route /customers/:customerId/match-workbook
 - [x] Add "Match Workbook" button to CustomerDetail Unmatched Billing section header
+
+# Billing Match Page (Drag-and-Drop)
+- [x] Add service_billing_assignments junction table (many services → one billing item)
+- [x] Add unbillable_services table for intentionally unbilled tracking
+- [x] Push schema migration to DB
+- [x] Add getBillingItemsWithAssignments, getUnassignedServicesForCustomer, assignServiceToBillingItem, removeServiceAssignment, markServiceUnbillable, unmarkServiceUnbillable, getUnbillableServicesForCustomer, fuzzyMatchServicesAgainstBillingItems helpers to db.ts
+- [x] Add billingAssignments router procedures to routers.ts
+- [x] Build CustomerBillingMatch page with dnd-kit drag-and-drop
+- [x] Xero billing items on right (droppable, many services per item)
+- [x] Unassigned services on left (draggable)
+- [x] Live margin calculation per billing item (revenue - cost)
+- [x] Auto-match dialog with fuzzy proposals
+- [x] Unbillable workflow with reason/notes dialog
+- [x] Restore unbillable services to unassigned
+- [x] Add Billing Match button to CustomerDetail Unmatched Billing section
+- [x] Register /customers/:id/billing-match route in App.tsx
