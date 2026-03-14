@@ -748,3 +748,7 @@
 - [x] Add autoApplyMatchRules function: auto-creates assignments from saved match rules on import
 - [x] Wire autoApplyMatchRules into Exetel, Generic, and SasBoss import procedures
 - [x] assignServiceToBillingItem now writes persistent match rule to service_billing_match_log
+- [x] Enrich service cards with extra context (AVC ID, connection ID, technology, speed tier, device, SIM, contract term)
+- [x] Widen auto-match modal to max-w-5xl with two-column grid layout and confidence bars
+- [x] Remove line-clamp from billing item descriptions
+- [x] Fix drag-and-drop freeze with MouseSensor+TouchSensor and fixed-height scroll columns

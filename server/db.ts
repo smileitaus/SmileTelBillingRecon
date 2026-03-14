@@ -6583,6 +6583,16 @@ export async function getUnassignedServicesForCustomer(customerExternalId: strin
       locationAddress: s.locationAddress || '',
       phoneNumber: s.phoneNumber || '',
       status: s.status,
+      // Extra context fields
+      description: s.planName || '',  // use planName as description if no separate field
+      avcId: s.avcId || '',
+      contractTerm: s.contractEndDate ? `Contract ends ${s.contractEndDate}` : '',
+      connectionId: s.connectionId || '',
+      supplierAccount: s.supplierAccount || '',
+      technology: (s as any).technology || '',
+      speedTier: (s as any).speedTier || '',
+      simSerialNumber: s.simSerialNumber || '',
+      deviceName: s.deviceName || '',
     }));
 }
 

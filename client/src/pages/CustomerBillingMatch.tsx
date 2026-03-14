@@ -76,6 +76,15 @@ type UnassignedService = {
   locationAddress: string;
   phoneNumber: string;
   status: string;
+  description?: string;
+  contractTerm?: string;
+  avcId?: string;
+  connectionId?: string;
+  supplierAccount?: string;
+  technology?: string;
+  speedTier?: string;
+  simSerialNumber?: string;
+  deviceName?: string;
 };
 
 type AssignedService = {
@@ -188,15 +197,48 @@ function DraggableServiceCard({
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-1.5 flex-wrap">
             <span className="text-muted-foreground">{serviceTypeIcon(service.serviceType)}</span>
-            <span className="font-medium text-sm truncate">{service.planName || service.serviceType}</span>
+            <span className="font-medium text-sm">{service.planName || service.serviceType}</span>
             <ProviderBadge provider={service.provider} size="xs" />
           </div>
+          {/* Service type detail */}
+          {service.serviceTypeDetail && service.serviceTypeDetail !== service.serviceType && (
+            <p className="text-xs text-muted-foreground mt-0.5">{service.serviceTypeDetail}</p>
+          )}
+          {/* Description (e.g. long Exetel plan names) */}
+          {service.description && service.description !== service.planName && (
+            <p className="text-xs text-muted-foreground mt-0.5 leading-snug">{service.description}</p>
+          )}
+          {/* Location */}
           {service.locationAddress && (
-            <p className="text-xs text-muted-foreground mt-0.5 truncate">{service.locationAddress}</p>
+            <p className="text-xs text-muted-foreground mt-0.5">{service.locationAddress}</p>
           )}
+          {/* Phone number or AVC ID */}
           {service.phoneNumber && (
-            <p className="text-xs text-muted-foreground">{service.phoneNumber}</p>
+            <p className="text-xs text-muted-foreground font-mono">{service.phoneNumber}</p>
           )}
+          {service.avcId && (
+            <p className="text-xs text-muted-foreground font-mono">AVC: {service.avcId}</p>
+          )}
+          {service.connectionId && (
+            <p className="text-xs text-muted-foreground font-mono">ID: {service.connectionId}</p>
+          )}
+          {service.technology && (
+            <p className="text-xs text-muted-foreground">{service.technology}{service.speedTier ? ` · ${service.speedTier}` : ''}</p>
+          )}
+          {service.supplierAccount && (
+            <p className="text-xs text-muted-foreground">Account: {service.supplierAccount}</p>
+          )}
+          {service.deviceName && (
+            <p className="text-xs text-muted-foreground">Device: {service.deviceName}</p>
+          )}
+          {service.simSerialNumber && (
+            <p className="text-xs text-muted-foreground font-mono">SIM: {service.simSerialNumber}</p>
+          )}
+          {service.contractTerm && (
+            <p className="text-xs text-amber-600">{service.contractTerm}</p>
+          )}
+          {/* Ref ID (last 8 chars) */}
+          <p className="text-xs text-muted-foreground/60 font-mono mt-0.5">ref: ...{service.externalId.slice(-8)}</p>
           <p className="text-xs font-semibold text-orange-600 mt-1">
             Supplier cost: {fmt(service.monthlyCost)}/mo
           </p>
@@ -236,7 +278,7 @@ function DroppableBillingItem({
       <div className="p-3">
         <div className="flex items-start justify-between gap-2">
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium leading-snug line-clamp-2">{item.description}</p>
+            <p className="text-sm font-medium leading-snug">{item.description}</p>
             <p className="text-xs text-muted-foreground mt-0.5">
               {item.invoiceNumber} · {item.invoiceDate}
             </p>
@@ -734,7 +776,7 @@ export default function CustomerBillingMatch() {
 
       {/* Auto-Match Preview Dialog */}
       <Dialog open={showAutoMatchPreview} onOpenChange={setShowAutoMatchPreview}>
-        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+        <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Sparkles className="w-5 h-5 text-amber-500" />
@@ -744,38 +786,57 @@ export default function CustomerBillingMatch() {
           <p className="text-sm text-muted-foreground">
             Review fuzzy-matched proposals below. Accept individually or accept all at once.
           </p>
-          <div className="space-y-3 mt-2">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-2">
             {fuzzyProposals
               .filter(p => !acceptedProposals.has(p.serviceExternalId))
+              .sort((a, b) => b.scorePercent - a.scorePercent)
               .map(proposal => (
                 <div
                   key={proposal.serviceExternalId}
-                  className="border rounded-lg p-3 flex items-start justify-between gap-3"
+                  className="border rounded-lg p-3 flex flex-col gap-2"
                 >
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <span className="text-sm font-medium">{proposal.servicePlanName || proposal.serviceType}</span>
-                      <Badge
-                        variant="outline"
-                        className={
+                  {/* Confidence bar */}
+                  <div className="flex items-center gap-2">
+                    <div className="flex-1 h-1.5 rounded-full bg-muted overflow-hidden">
+                      <div
+                        className={`h-full rounded-full transition-all ${
                           proposal.scorePercent >= 70
-                            ? "border-emerald-400 text-emerald-700"
+                            ? 'bg-emerald-500'
                             : proposal.scorePercent >= 50
-                            ? "border-amber-400 text-amber-700"
-                            : "border-orange-400 text-orange-700"
-                        }
-                      >
-                        {proposal.scorePercent}% match
-                      </Badge>
+                            ? 'bg-amber-500'
+                            : 'bg-orange-500'
+                        }`}
+                        style={{ width: `${proposal.scorePercent}%` }}
+                      />
                     </div>
-                    <p className="text-xs text-muted-foreground mt-0.5 truncate">
-                      → {proposal.billingDescription}
-                    </p>
+                    <Badge
+                      variant="outline"
+                      className={`text-xs ${
+                        proposal.scorePercent >= 70
+                          ? 'border-emerald-400 text-emerald-700'
+                          : proposal.scorePercent >= 50
+                          ? 'border-amber-400 text-amber-700'
+                          : 'border-orange-400 text-orange-700'
+                      }`}
+                    >
+                      {proposal.scorePercent}%
+                    </Badge>
+                  </div>
+                  {/* Service → Billing item */}
+                  <div className="space-y-1">
+                    <div className="flex items-start gap-1.5">
+                      <span className="text-xs text-muted-foreground shrink-0 mt-0.5">Service:</span>
+                      <span className="text-sm font-medium leading-snug">{proposal.servicePlanName || proposal.serviceType}</span>
+                    </div>
+                    <div className="flex items-start gap-1.5">
+                      <span className="text-xs text-muted-foreground shrink-0 mt-0.5">→ Billing:</span>
+                      <span className="text-xs text-muted-foreground leading-snug">{proposal.billingDescription}</span>
+                    </div>
                   </div>
                   <Button
                     size="sm"
                     variant="outline"
-                    className="shrink-0 gap-1"
+                    className="w-full gap-1 mt-auto"
                     onClick={() => handleAcceptProposal(proposal)}
                     disabled={assignMutation.isPending}
                   >
