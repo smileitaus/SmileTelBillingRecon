@@ -94,16 +94,20 @@ function ProviderBar({
   provider,
   count,
   cost,
-  total,
+  maxCost,
   color,
 }: {
   provider: string;
   count: number;
   cost: number;
-  total: number;
+  maxCost: number;  // largest cost value in the list, used to scale bars
   color: string;
 }) {
-  const pct = total > 0 ? (count / total) * 100 : 0;
+  // Bar width is proportional to absolute cost value; negative costs get 0 width
+  const pct = maxCost > 0 ? (Math.max(0, cost) / maxCost) * 100 : 0;
+  const costDisplay = cost < 0
+    ? `-$${Math.abs(cost).toLocaleString("en-AU", { minimumFractionDigits: 2 })}`
+    : `$${cost.toLocaleString("en-AU", { minimumFractionDigits: 2 })}`;
   return (
     <div className="flex items-center gap-3 py-2">
       <div className="w-24 shrink-0">
@@ -116,8 +120,8 @@ function ProviderBar({
         />
       </div>
       <span className="data-value text-sm text-muted-foreground w-12 text-right">{count}</span>
-      <span className="data-value text-xs text-muted-foreground w-24 text-right">
-        ${cost.toLocaleString("en-AU", { minimumFractionDigits: 2 })}
+      <span className={`data-value text-xs w-24 text-right ${cost < 0 ? 'text-red-500' : 'text-muted-foreground'}`}>
+        {costDisplay}
       </span>
     </div>
   );
@@ -246,18 +250,21 @@ export default function Dashboard() {
           <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-4">
             Services by Provider
           </h2>
-          {Object.entries(servicesByProvider)
-            .sort((a, b) => b[1].count - a[1].count)
-            .map(([provider, data]) => (
+          {(() => {
+            const sorted = Object.entries(servicesByProvider)
+              .sort((a, b) => b[1].cost - a[1].cost); // sort by cost descending (ABB $24k first)
+            const maxCost = sorted.length > 0 ? Math.max(...sorted.map(([, d]) => d.cost)) : 0;
+            return sorted.map(([provider, data]) => (
               <ProviderBar
                 key={provider}
                 provider={provider}
                 count={data.count}
                 cost={data.cost}
-                total={summary.totalServices}
+                maxCost={maxCost}
                 color={PROVIDER_COLORS[provider] || PROVIDER_COLORS.Unknown}
               />
-            ))}
+            ));
+          })()}
           {Object.keys(servicesByProvider).length === 0 && (
             <p className="text-sm text-muted-foreground py-4 text-center">
               No provider data available

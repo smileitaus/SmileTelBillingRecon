@@ -8,6 +8,8 @@ export function useSummary() {
     // Always re-fetch on mount and window focus so the dashboard stays current
     staleTime: 0,
     refetchOnWindowFocus: true,
+    // Auto-refresh every 60 seconds so the dashboard reflects recent data changes
+    refetchInterval: 60_000,
   });
   return { summary: data ?? null, isLoading, error };
 }

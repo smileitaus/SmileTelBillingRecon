@@ -52,6 +52,11 @@ function MarginBadge({ margin }: { margin: number | null }) {
     </span>
   );
 
+  // Colour scale:
+  //   negative  = red (cost > revenue — losing money)
+  //   0–20%     = amber/yellow (low but profitable)
+  //   20–50%    = teal (healthy)
+  //   50%+      = green (high margin)
   let bg = "bg-emerald-50 text-emerald-700 border-emerald-200";
   let icon = <TrendingUp className="w-3 h-3" />;
 
@@ -59,10 +64,11 @@ function MarginBadge({ margin }: { margin: number | null }) {
     bg = "bg-red-100 text-red-800 border-red-300 font-bold";
     icon = <TrendingDown className="w-3 h-3" />;
   } else if (margin < 20) {
-    bg = "bg-red-50 text-red-700 border-red-200 font-semibold";
+    // Low but positive — amber warning, not red
+    bg = "bg-amber-50 text-amber-700 border-amber-200 font-semibold";
     icon = <AlertTriangle className="w-3 h-3" />;
   } else if (margin < 50) {
-    bg = "bg-amber-50 text-amber-700 border-amber-200";
+    bg = "bg-teal-50 text-teal-700 border-teal-200";
     icon = <TrendingUp className="w-3 h-3" />;
   }
 
@@ -95,7 +101,8 @@ function CustomerGroupRow({ group }: { group: any }) {
   const [expanded, setExpanded] = useState(false);
   const isNegative = group.marginPercent !== null && group.marginPercent < 0;
   const isLow = group.marginPercent !== null && group.marginPercent >= 0 && group.marginPercent < 20;
-  const rowBg = isNegative ? "bg-red-50/60" : isLow ? "bg-red-50/30" : "";
+  // Only red background for genuinely negative margins; amber tint for low-but-positive
+  const rowBg = isNegative ? "bg-red-50/60" : isLow ? "bg-amber-50/20" : "";
 
   return (
     <>
@@ -139,7 +146,7 @@ function CustomerGroupRow({ group }: { group: any }) {
       {expanded && group.services.map((s: any) => {
         const sNeg = s.marginPercent !== null && s.marginPercent < 0;
         const sLow = s.marginPercent !== null && s.marginPercent >= 0 && s.marginPercent < 20;
-        const sBg = sNeg ? "bg-red-50/40" : sLow ? "bg-red-50/20" : "bg-muted/20";
+        const sBg = sNeg ? "bg-red-50/40" : sLow ? "bg-amber-50/20" : "bg-muted/20";
         return (
           <tr key={s.id} className={`border-b border-border/30 ${sBg}`}>
             <td className="pl-10 pr-4 py-2.5">

@@ -554,3 +554,19 @@
 - [x] 48 services with SM Customer: names now correctly show customer name badge in Unmatched Services
 - [x] Added "SM Pending" filter tab to Unmatched Services page (violet badge, filters to services with SM Customer: in notes)
 - [x] SM Pending filter count shows 48 services with known customer names pending assignment
+
+# Margin Calculation Fix + Dashboard Bar Charts (Mar 14)
+- [ ] Fix margin % formula: margin = (revenue - cost) / revenue * 100 (positive when revenue > cost)
+- [ ] Fix margin badge colour: green when positive, red when negative/zero
+- [ ] Fix dashboard provider bar chart: bars should be proportional to cost value (not count)
+- [ ] Fix dashboard provider bar chart: sort by cost descending (ABB $24k should be top, not Unknown)
+- [ ] Fix dashboard type bar chart: bars proportional to count, sorted by count descending
+- [ ] Add refetchInterval to dashboard summary so it auto-refreshes every 60s
+
+# Margin Badge + Dashboard Bar Chart Fixes (Mar 14)
+- [x] Fix MarginBadge colour thresholds: positive margins (even if low) now show amber, only negative shows red
+- [x] Fix CustomerGroupRow row background: amber tint for low-but-positive, red only for negative
+- [x] Fix ProviderBar: bar width now proportional to cost (not service count)
+- [x] Fix ProviderBar: sort order now by cost descending (ABB $24k first, not Unknown 782 services first)
+- [x] Fix ProviderBar: negative costs shown in red text with minus sign
+- [x] Add refetchInterval: 60_000 to useSummary hook for automatic dashboard refresh every 60 seconds
