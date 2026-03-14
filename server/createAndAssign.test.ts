@@ -38,7 +38,7 @@ describe('create-and-assign workflow', () => {
 
   it('full workflow: create customer → assign service → create Platform Check', async () => {
     const { getDb } = await import('./db');
-    const { services, billingPlatformChecks: billing_platform_checks } = await import('../drizzle/schema');
+    const { services, customers, billingPlatformChecks: billing_platform_checks } = await import('../drizzle/schema');
     const { eq, and } = await import('drizzle-orm');
     const db = await getDb();
     if (!db) return;
@@ -116,5 +116,16 @@ describe('create-and-assign workflow', () => {
     expect(check?.targetId).toBe(unmatchedSvc.externalId);
     expect(check?.customerExternalId).toBe(customer.externalId);
     expect(check?.issueType).toBe('new-customer-assignment');
+
+    // Cleanup: remove test records so they don’t pollute the Platform Checks page
+    if (check?.id) {
+      await db.delete(billing_platform_checks).where(eq(billing_platform_checks.id, check.id));
+    }
+    // Also unassign the service so it goes back to unmatched for future test runs
+    await db.update(services)
+      .set({ customerExternalId: null, customerName: null, status: 'unmatched' } as any)
+      .where(eq(services.externalId, unmatchedSvc.externalId));
+    // Remove test customer
+    await db.delete(customers).where(eq(customers.externalId, customer.externalId));
   });
 });

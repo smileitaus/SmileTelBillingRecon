@@ -694,7 +694,7 @@ export const appRouter = router({
       action: protectedProcedure
         .input(z.object({
           id: z.number(),
-          actionedNote: z.string().min(1, 'Note is required'),
+          actionedNote: z.string().optional().default(''),
           newStatus: z.enum(['actioned', 'dismissed', 'in-progress']),
         }))
         .mutation(async ({ input, ctx }) => {

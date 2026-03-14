@@ -596,3 +596,23 @@
 - [x] getServiceForPlatformCheck helper added to db.ts
 - [x] deferPlatformCheckToAssign prop added to CreateCustomerDialog to avoid duplicate checks
 - [x] 3 vitest tests added and passing for the full workflow
+
+# Platform Check: Proposal Approve/Reject + Quick Actions (Mar 14)
+- [ ] Fix: approveCustomerProposal should always create a Platform Check with correct service details
+- [ ] Fix: rejectCustomerProposal should create a Platform Check noting the rejection
+- [ ] Fix: Platform Check targetId should be serviceExternalId (not customerExternalId) when services are available
+- [ ] Add quick "Actioned" and "Ignore" buttons directly on each Platform Check row (no dialog required)
+- [ ] Keep full dialog for adding notes when needed
+- [ ] Verify Angus Test (rejected) and Little Cha (accepted) appear in Platform Checks
+
+# Platform Check Cleanup & UI Improvements (Mar 14)
+- [x] Delete test Platform Check records (Workflow Test Customer 1773...) from DB
+- [x] Delete test customer records created by vitest from DB
+- [x] Fix vitest tests to clean up after themselves (delete Platform Check + customer + unassign service)
+- [x] Expand Platform Check rows to show full service details (service ID, type, phone, address, AVC, provider, device, SIM, IMEI, user, contract end)
+- [x] getBillingPlatformChecks LEFT JOINs services table for enriched detail
+- [x] Add quick "Actioned" and "Ignore" buttons directly on each check row (no note required)
+- [x] Keep full "+ Note" dialog for adding notes when needed
+- [x] approveCustomerProposal always creates Platform Check per service with correct targetId=serviceExternalId
+- [x] rejectCustomerProposal now creates Platform Check noting rejection for billing verification
+- [x] actionedNote made optional in platformChecks.action procedure (was required)

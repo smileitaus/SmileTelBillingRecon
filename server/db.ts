@@ -2421,7 +2421,48 @@ export async function getBillingPlatformChecks(filters?: {
     ? conditions.reduce((acc, c) => sql`${acc} AND ${c}`)
     : undefined;
 
-  const result = await db.select().from(billingPlatformChecks)
+  const result = await db
+    .select({
+      // All billing_platform_checks columns
+      id: billingPlatformChecks.id,
+      reviewItemId: billingPlatformChecks.reviewItemId,
+      targetType: billingPlatformChecks.targetType,
+      targetId: billingPlatformChecks.targetId,
+      targetName: billingPlatformChecks.targetName,
+      platform: billingPlatformChecks.platform,
+      issueType: billingPlatformChecks.issueType,
+      issueDescription: billingPlatformChecks.issueDescription,
+      customerName: billingPlatformChecks.customerName,
+      customerExternalId: billingPlatformChecks.customerExternalId,
+      monthlyAmount: billingPlatformChecks.monthlyAmount,
+      priority: billingPlatformChecks.priority,
+      status: billingPlatformChecks.status,
+      actionedBy: billingPlatformChecks.actionedBy,
+      actionedNote: billingPlatformChecks.actionedNote,
+      actionedAt: billingPlatformChecks.actionedAt,
+      createdBy: billingPlatformChecks.createdBy,
+      createdAt: billingPlatformChecks.createdAt,
+      updatedAt: billingPlatformChecks.updatedAt,
+      // Enriched service details from LEFT JOIN
+      svcPhoneNumber: services.phoneNumber,
+      svcServiceType: services.serviceType,
+      svcPlanName: services.planName,
+      svcConnectionId: services.connectionId,
+      svcProvider: services.provider,
+      svcAddress: services.locationAddress,
+      svcStatus: services.status,
+      svcMonthlyCost: services.monthlyCost,
+      svcSimSerialNumber: services.simSerialNumber,
+      svcImei: services.imei,
+      svcDeviceName: services.deviceName,
+      svcUserName: services.userName,
+      svcContractEndDate: services.contractEndDate,
+    })
+    .from(billingPlatformChecks)
+    .leftJoin(services, and(
+      eq(billingPlatformChecks.targetId, services.externalId),
+      eq(billingPlatformChecks.targetType, sql`'service'`)
+    ))
     .where(whereClause)
     .orderBy(
       sql`FIELD(${billingPlatformChecks.priority}, 'critical', 'high', 'medium', 'low')`,
@@ -4509,17 +4550,39 @@ export async function approveCustomerProposal(
     }
   }
 
-  // Create Platform Check record if requested
-  if (proposal.createPlatformCheck === 1) {
+  // Always create a Platform Check for each assigned service so billing can be verified
+  const customerName = proposal.proposedName.trim();
+  if (serviceIds.length > 0) {
+    for (const svcId of serviceIds) {
+      const svcDetails = await getServiceForPlatformCheck(svcId);
+      const platform = svcDetails?.billingPlatform || 'Manual';
+      const monthlyCost = Number(svcDetails?.monthlyCost ?? 0);
+      const targetName = svcDetails?.planName || svcDetails?.serviceType || svcId;
+      await createBillingPlatformCheck({
+        customerExternalId: createResult.externalId,
+        customerName,
+        issueType: 'new-customer-assignment',
+        issueDescription: `New customer "${customerName}" created from proposal (approved by ${reviewedBy}). Verify service is correctly set up in billing platform.`,
+        createdBy: reviewedBy,
+        targetType: 'service',
+        targetId: svcId,
+        targetName,
+        platform,
+        monthlyAmount: monthlyCost,
+        priority: 'medium',
+      });
+    }
+  } else {
+    // No services linked — create a single check for the customer
     await createBillingPlatformCheck({
       customerExternalId: createResult.externalId,
-      customerName: proposal.proposedName.trim(),
-      issueType: 'new-customer',
-      issueDescription: `New customer created from proposal by ${reviewedBy}. ${serviceIds.length} service(s) assigned.`,
+      customerName,
+      issueType: 'new-customer-assignment',
+      issueDescription: `New customer "${customerName}" created from proposal (approved by ${reviewedBy}). No services assigned yet — verify billing platform setup.`,
       createdBy: reviewedBy,
       targetType: 'service',
       targetId: createResult.externalId,
-      targetName: proposal.proposedName.trim(),
+      targetName: customerName,
       platform: 'Manual',
       monthlyAmount: 0,
       priority: 'medium',
@@ -4558,6 +4621,47 @@ export async function rejectCustomerProposal(
     reviewedAt: new Date(),
     rejectionReason: reason || null,
   }).where(eq(customerProposals.id, proposalId));
+
+  // Create a Platform Check so the billing team knows the proposal was rejected
+  // and can verify no billing was set up for the rejected customer
+  const customerName = proposal.proposedName.trim();
+  const serviceIds: string[] = proposal.serviceExternalIds ? JSON.parse(proposal.serviceExternalIds) : [];
+  const reasonNote = reason ? ` Reason: ${reason}` : '';
+  if (serviceIds.length > 0) {
+    for (const svcId of serviceIds) {
+      const svcDetails = await getServiceForPlatformCheck(svcId);
+      const platform = svcDetails?.billingPlatform || 'Manual';
+      const monthlyCost = Number(svcDetails?.monthlyCost ?? 0);
+      const targetName = svcDetails?.planName || svcDetails?.serviceType || svcId;
+      await createBillingPlatformCheck({
+        customerExternalId: '',
+        customerName,
+        issueType: 'rejected-proposal',
+        issueDescription: `Proposal for new customer "${customerName}" was REJECTED by ${reviewedBy}.${reasonNote} Confirm no billing was set up in the platform for this service.`,
+        createdBy: reviewedBy,
+        targetType: 'service',
+        targetId: svcId,
+        targetName,
+        platform,
+        monthlyAmount: monthlyCost,
+        priority: 'medium',
+      });
+    }
+  } else {
+    await createBillingPlatformCheck({
+      customerExternalId: '',
+      customerName,
+      issueType: 'rejected-proposal',
+      issueDescription: `Proposal for new customer "${customerName}" was REJECTED by ${reviewedBy}.${reasonNote} Confirm no billing was set up in the platform.`,
+      createdBy: reviewedBy,
+      targetType: 'service',
+      targetId: `proposal-${proposalId}`,
+      targetName: customerName,
+      platform: 'Manual',
+      monthlyAmount: 0,
+      priority: 'medium',
+    });
+  }
 
   return { success: true };
 }
