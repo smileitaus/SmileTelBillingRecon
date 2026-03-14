@@ -106,6 +106,12 @@ const providerConfig: Record<string, {
     border: "border-pink-200",
     label: "SmileTel",
   },
+  SasBoss: {
+    bg: "bg-indigo-50",
+    text: "text-indigo-700",
+    border: "border-indigo-200",
+    label: "SasBoss",
+  },
   Unknown: {
     bg: "bg-gray-50",
     text: "text-gray-500",
@@ -213,6 +219,7 @@ export function ProviderDot({
     Blitznet: "bg-yellow-500",
     TIAB: "bg-slate-500",
     SmileTel: "bg-pink-500",
+    SasBoss: "bg-indigo-500",
     Unknown: "bg-gray-400",
   };
   const color = dotColors[name] || dotColors.Unknown;
@@ -241,6 +248,7 @@ export const PROVIDER_COLORS: Record<string, string> = {
   Blitznet: "oklch(0.6 0.15 90)",
   TIAB: "oklch(0.55 0.05 240)",
   SmileTel: "oklch(0.55 0.15 350)",
+  SasBoss: "oklch(0.5 0.18 275)",
   Unknown: "oklch(0.6 0.01 56)",
 };
 

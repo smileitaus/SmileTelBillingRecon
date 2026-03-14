@@ -204,6 +204,7 @@ export default function CustomerList() {
             <option value="ABB">ABB / Aussie Broadband</option>
             <option value="Exetel">Exetel</option>
             <option value="Vocus">Vocus</option>
+            <option value="SasBoss">SasBoss</option>
             <option value="SmileTel">SmileTel</option>
             <option value="ChannelHaus">Channel Haus</option>
             <option value="Legion">Legion Telecom</option>

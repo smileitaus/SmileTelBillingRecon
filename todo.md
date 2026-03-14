@@ -701,3 +701,12 @@
 - [x] Add Unmatched Billing section to CustomerDetail (collapsible, shows before Locations & Services)
 - [x] Populate unmatchedBillingCount for all existing customers via SQL
 - [x] Write and pass 14 vitest tests for all new DB helpers
+
+# SasBoss Provider Integration
+- [x] Add SasBoss to ProviderBadge component (indigo colour scheme)
+- [x] Add SasBoss to PROVIDER_COLORS and ProviderDot
+- [x] Tag 275 Unknown services for SasBoss customers as SasBoss provider
+- [x] Tag 390 additional Unknown services with SasBoss plan name patterns as SasBoss provider
+- [x] Add SasBoss to CustomerList supplier filter dropdown
+- [x] Add SasBoss to RevenueMargin provider filter dropdown
+- [x] Recalculate unmatchedBillingCount for all customers after provider changes
