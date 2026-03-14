@@ -710,3 +710,14 @@
 - [x] Add SasBoss to CustomerList supplier filter dropdown
 - [x] Add SasBoss to RevenueMargin provider filter dropdown
 - [x] Recalculate unmatchedBillingCount for all customers after provider changes
+
+# Service/Billing Matching Refinement (Mar 14 2026)
+- [x] Fix cost labels to show 'supplier cost' clarity in CustomerDetail service rows and Unmatched section
+- [x] Build getUnmatchedServicesForMatching DB helper (services with no matched workbook item)
+- [x] Build getWorkbookItemsForCustomer DB helper (latest SasBoss upload items for customer)
+- [x] Build fuzzyMatchServicesToWorkbook DB helper (Jaccard token-overlap scoring)
+- [x] Build linkServiceToWorkbookItem DB helper (updates matchStatus, monthlyCost, logs to service_billing_match_log)
+- [x] Add workbookMatching tRPC procedures (unmatchedServices, workbookItems, fuzzyProposals, linkService)
+- [x] Build CustomerWorkbookMatching page with drag-and-drop and fuzzy auto-match
+- [x] Add route /customers/:customerId/match-workbook
+- [x] Add "Match Workbook" button to CustomerDetail Unmatched Billing section header

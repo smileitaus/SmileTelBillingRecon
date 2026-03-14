@@ -97,6 +97,10 @@ import {
   resolveServiceBillingMatch,
   recalculateAllUnmatchedBilling,
   getServiceBillingMatchLog,
+  getUnmatchedServicesForMatching,
+  getWorkbookItemsForCustomer,
+  fuzzyMatchServicesToWorkbook,
+  linkServiceToWorkbookItem,
 } from "./db";
 
 export const appRouter = router({
@@ -311,6 +315,47 @@ export const appRouter = router({
         .mutation(async () => {
           return await recalculateAllUnmatchedBilling();
         }),
+
+      // ── Workbook Matching (drag-and-drop + fuzzy auto-match) ────────────────
+      workbookMatching: router({
+        unmatchedServices: protectedProcedure
+          .input(z.object({ customerExternalId: z.string() }))
+          .query(async ({ input }) => {
+            return await getUnmatchedServicesForMatching(input.customerExternalId);
+          }),
+
+        workbookItems: protectedProcedure
+          .input(z.object({ customerExternalId: z.string() }))
+          .query(async ({ input }) => {
+            return await getWorkbookItemsForCustomer(input.customerExternalId);
+          }),
+
+        fuzzyProposals: protectedProcedure
+          .input(z.object({
+            customerExternalId: z.string(),
+            minScore: z.number().min(0).max(100).optional(),
+          }))
+          .query(async ({ input }) => {
+            return await fuzzyMatchServicesToWorkbook(
+              input.customerExternalId,
+              input.minScore ?? 40
+            );
+          }),
+
+        linkService: protectedProcedure
+          .input(z.object({
+            serviceExternalId: z.string(),
+            workbookItemId: z.number(),
+          }))
+          .mutation(async ({ input, ctx }) => {
+            const linkedBy = ctx.user?.name || ctx.user?.email || 'Unknown';
+            return await linkServiceToWorkbookItem(
+              input.serviceExternalId,
+              input.workbookItemId,
+              linkedBy
+            );
+          }),
+      }),
     }),
 
     services: router({

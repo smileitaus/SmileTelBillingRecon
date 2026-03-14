@@ -6205,3 +6205,221 @@ export async function getServiceBillingMatchLog(serviceExternalId: string) {
     .where(eq(serviceBillingMatchLog.serviceExternalId, serviceExternalId))
     .orderBy(desc(serviceBillingMatchLog.resolvedAt));
 }
+
+
+// ─── Service ↔ Workbook Matching Helpers ─────────────────────────────────────
+
+/**
+ * Returns services for a customer that have no "matched" workbook line item
+ * in the latest SasBoss upload. These are candidates for the matching UI.
+ */
+export async function getUnmatchedServicesForMatching(customerExternalId: string) {
+  const db = await getDb();
+  if (!db) return [];
+  const [latestUpload] = await db
+    .select({ id: supplierWorkbookUploads.id })
+    .from(supplierWorkbookUploads)
+    .where(eq(supplierWorkbookUploads.supplier, 'SasBoss'))
+    .orderBy(desc(supplierWorkbookUploads.id))
+    .limit(1);
+  if (!latestUpload) return [];
+  const latestUploadId = latestUpload.id;
+
+  const rows = await db.execute(sql`
+    SELECT s.externalId, s.serviceType, s.serviceTypeDetail, s.planName,
+           s.phoneNumber, s.connectionId, s.locationAddress, s.provider,
+           s.monthlyCost, s.monthlyRevenue, s.status
+    FROM services s
+    WHERE s.customerExternalId = ${customerExternalId}
+      AND s.status NOT IN ('terminated', 'flagged')
+      AND s.externalId NOT IN (
+        SELECT matchedServiceExternalId
+        FROM supplier_workbook_line_items
+        WHERE uploadId = ${latestUploadId}
+          AND matchStatus = 'matched'
+          AND matchedServiceExternalId != ''
+      )
+    ORDER BY s.monthlyCost DESC, s.planName
+  `);
+   return (rows[0] as unknown as any[]).map((s: any) => ({
+    externalId: s.externalId,
+    serviceType: s.serviceType,
+    serviceTypeDetail: s.serviceTypeDetail,
+    planName: s.planName,
+    phoneNumber: s.phoneNumber,
+    connectionId: s.connectionId,
+    locationAddress: s.locationAddress,
+    provider: s.provider,
+    monthlyCost: parseFloat(String(s.monthlyCost ?? 0)),
+    monthlyRevenue: parseFloat(String(s.monthlyRevenue ?? 0)),
+    status: s.status,
+  }));
+}
+/**
+ * Returns all workbook line items for a customer from the latest SasBoss upload.
+ */
+export async function getWorkbookItemsForCustomer(customerExternalId: string) {
+  const db = await getDb();
+  if (!db) return [];
+  const [latestUpload] = await db
+    .select({ id: supplierWorkbookUploads.id })
+    .from(supplierWorkbookUploads)
+    .where(eq(supplierWorkbookUploads.supplier, 'SasBoss'))
+    .orderBy(desc(supplierWorkbookUploads.id))
+    .limit(1);
+  if (!latestUpload) return [];
+  const latestUploadId = latestUpload.id;
+
+  const rows = await db.execute(sql`
+    SELECT id, productName, productType, amountExGst, amountIncGst,
+           matchStatus, matchedServiceExternalId, serviceRefId
+    FROM supplier_workbook_line_items
+    WHERE uploadId = ${latestUploadId}
+      AND matchedCustomerExternalId = ${customerExternalId}
+    ORDER BY amountExGst DESC, productName
+  `);
+  return (rows[0] as unknown as any[]).map((item: any) => ({
+    id: Number(item.id),
+    productName: item.productName,
+    productType: item.productType,
+    amountExGst: parseFloat(String(item.amountExGst ?? 0)),
+    amountIncGst: parseFloat(String(item.amountIncGst ?? 0)),
+    matchStatus: item.matchStatus,
+    matchedServiceExternalId: item.matchedServiceExternalId || '',
+    serviceRefId: item.serviceRefId || '',
+  }));
+}
+
+/**
+ * Fuzzy match: score each unmatched service against available workbook items
+ * using Jaccard token-overlap similarity. Returns proposals sorted by score descending.
+ */
+export async function fuzzyMatchServicesToWorkbook(
+  customerExternalId: string,
+  minScore = 40
+): Promise<Array<{
+  serviceExternalId: string;
+  servicePlanName: string;
+  workbookItemId: number;
+  workbookProductName: string;
+  score: number;
+  amountExGst: number;
+}>> {
+  const unmatchedServices = await getUnmatchedServicesForMatching(customerExternalId);
+  const workbookItems = await getWorkbookItemsForCustomer(customerExternalId);
+  const availableItems = workbookItems.filter(
+    (w) => !w.matchedServiceExternalId || w.matchedServiceExternalId === ''
+  );
+
+  function tokenise(s: string): Set<string> {
+    return new Set(
+      s.toLowerCase()
+        .replace(/[^a-z0-9\s]/g, ' ')
+        .split(/\s+/)
+        .filter((t) => t.length > 1)
+    );
+  }
+
+  function jaccardScore(a: string, b: string): number {
+    const ta = tokenise(a);
+    const tb = tokenise(b);
+    if (ta.size === 0 || tb.size === 0) return 0;
+    const taArr = Array.from(ta);
+    const tbArr = Array.from(tb);
+    const intersection = taArr.filter((x) => tb.has(x));
+    const unionSize = new Set([...taArr, ...tbArr]).size;
+    return Math.round((intersection.length / unionSize) * 100);
+  }
+
+  const proposals: Array<{
+    serviceExternalId: string;
+    servicePlanName: string;
+    workbookItemId: number;
+    workbookProductName: string;
+    score: number;
+    amountExGst: number;
+  }> = [];
+
+  for (const svc of unmatchedServices) {
+    let bestScore = 0;
+    let bestItem: (typeof availableItems)[0] | null = null;
+    for (const item of availableItems) {
+      const score = jaccardScore(svc.planName, item.productName);
+      if (score > bestScore) {
+        bestScore = score;
+        bestItem = item;
+      }
+    }
+    if (bestItem && bestScore >= minScore) {
+      proposals.push({
+        serviceExternalId: svc.externalId,
+        servicePlanName: svc.planName,
+        workbookItemId: bestItem.id,
+        workbookProductName: bestItem.productName,
+        score: bestScore,
+        amountExGst: bestItem.amountExGst,
+      });
+    }
+  }
+
+  return proposals.sort((a, b) => b.score - a.score);
+}
+
+/**
+ * Links a service to a workbook line item (drag-and-drop or auto-match confirm).
+ * Updates the workbook item's matchStatus to 'matched' and sets the service's
+ * monthlyCost from the workbook item's amountExGst.
+ */
+export async function linkServiceToWorkbookItem(
+  serviceExternalId: string,
+  workbookItemId: number,
+  linkedBy: string
+): Promise<{ success: boolean; newCost: number }> {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+
+  const [item] = await db
+    .select()
+    .from(supplierWorkbookLineItems)
+    .where(eq(supplierWorkbookLineItems.id, workbookItemId))
+    .limit(1);
+  if (!item) throw new Error(`Workbook item ${workbookItemId} not found`);
+
+  const newCost = parseFloat(String(item.amountExGst ?? 0));
+
+  await db
+    .update(supplierWorkbookLineItems)
+    .set({
+      matchStatus: 'matched',
+      matchedServiceExternalId: serviceExternalId,
+    })
+    .where(eq(supplierWorkbookLineItems.id, workbookItemId));
+
+  await db
+    .update(services)
+    .set({
+      monthlyCost: String(newCost),
+      costSource: 'supplier_invoice',
+      updatedAt: new Date(),
+    })
+    .where(eq(services.externalId, serviceExternalId));
+
+   // Log the resolution for future auto-matching
+  // Fetch the service to get serviceType and customerName for the log
+  const [svc] = await db.select().from(services).where(eq(services.externalId, serviceExternalId)).limit(1);
+  const [cust] = svc?.customerExternalId
+    ? await db.select({ name: customers.name }).from(customers).where(eq(customers.externalId, svc.customerExternalId)).limit(1)
+    : [null];
+  await db.insert(serviceBillingMatchLog).values({
+    serviceExternalId,
+    serviceType: svc?.serviceType || 'Unknown',
+    planName: svc?.planName || '',
+    customerExternalId: item.matchedCustomerExternalId || '',
+    customerName: cust?.name || '',
+    resolution: 'linked',
+    resolvedBy: linkedBy,
+    notes: `Linked to workbook item ${workbookItemId} (${item.productName}) via matching UI`,
+    resolvedAt: new Date(),
+  });
+  return { success: true, newCost };
+}

@@ -565,7 +565,7 @@ function ServiceRow({ service, customerExternalId, onTerminated }: { service: an
             <span className="data-value text-sm">
               ${Number(service.monthlyCost).toLocaleString("en-AU", { minimumFractionDigits: 2 })}
             </span>
-            <span className="text-[10px] text-muted-foreground block">/month</span>
+            <span className="text-[10px] text-muted-foreground block">supplier cost/mo</span>
           </div>
           <div className="shrink-0 hidden md:block">
             <StatusPill status={service.status} />
@@ -701,7 +701,7 @@ function UnmatchedBillingRow({
             {service.phoneNumber && <span>{service.phoneNumber}</span>}
             {service.connectionId && <span>AVC: {service.connectionId}</span>}
             {service.locationAddress && <span className="truncate max-w-[200px]">{service.locationAddress}</span>}
-            <span className="font-medium text-foreground">${Number(service.monthlyCost).toFixed(2)}/mo</span>
+            <span className="font-medium text-foreground">${Number(service.monthlyCost).toFixed(2)}/mo <span className="text-[10px] font-normal text-muted-foreground">(supplier cost)</span></span>
           </div>
         </div>
         {/* Expand toggle */}
@@ -1179,6 +1179,12 @@ export default function CustomerDetail() {
                 <span className="text-xs font-semibold text-orange-700 bg-orange-100 px-2 py-0.5 rounded-full">
                   {unmatchedBillingServices.length} service{unmatchedBillingServices.length !== 1 ? 's' : ''}
                 </span>
+                <Link href={`/customers/${params.id}/match-workbook`}>
+                  <Button size="sm" variant="outline" className="gap-1 text-xs border-orange-300 text-orange-700 hover:bg-orange-50 shrink-0">
+                    <Link2 className="w-3.5 h-3.5" />
+                    Match Workbook
+                  </Button>
+                </Link>
               </div>
               {isLoadingUnmatched ? (
                 <div className="flex items-center justify-center py-8">
