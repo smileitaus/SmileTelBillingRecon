@@ -520,3 +520,23 @@ export const unbillableServices = mysqlTable("unbillable_services", {
 });
 export type UnbillableService = typeof unbillableServices.$inferSelect;
 export type InsertUnbillableService = typeof unbillableServices.$inferInsert;
+
+/**
+ * Escalated Services - services that could not be matched to any Xero billing item
+ * and have been escalated for manual review. Shown on the dashboard as a customer-level alert.
+ */
+export const escalatedServices = mysqlTable("escalated_services", {
+  id: int("id").autoincrement().primaryKey(),
+  serviceExternalId: varchar("serviceExternalId", { length: 32 }).notNull().unique(),
+  customerExternalId: varchar("customerExternalId", { length: 32 }).notNull(),
+  reason: varchar("reason", { length: 256 }).default("No matching Xero billing item found").notNull(),
+  notes: text("notes"),
+  escalatedBy: varchar("escalatedBy", { length: 256 }).notNull(),
+  resolvedAt: timestamp("resolvedAt"),
+  resolvedBy: varchar("resolvedBy", { length: 256 }),
+  resolutionNotes: text("resolutionNotes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type EscalatedService = typeof escalatedServices.$inferSelect;
+export type InsertEscalatedService = typeof escalatedServices.$inferInsert;

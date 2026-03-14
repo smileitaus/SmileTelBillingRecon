@@ -110,6 +110,10 @@ import {
   getUnbillableServicesForCustomer,
   fuzzyMatchServicesAgainstBillingItems,
   autoApplyMatchRules,
+  escalateService,
+  resolveEscalatedService,
+  getEscalatedServices,
+  getCustomersWithEscalations,
 } from "./db";
 
 export const appRouter = router({
@@ -402,6 +406,50 @@ export const appRouter = router({
           .input(z.object({ customerExternalId: z.string() }))
           .query(async ({ input }) => {
             return await fuzzyMatchServicesAgainstBillingItems(input.customerExternalId);
+          }),
+
+        // ── Escalation workflow ──────────────────────────────────────────────
+        escalate: protectedProcedure
+          .input(z.object({
+            serviceExternalId: z.string(),
+            customerExternalId: z.string(),
+            reason: z.string().optional(),
+            notes: z.string().optional(),
+          }))
+          .mutation(async ({ input, ctx }) => {
+            const escalatedBy = ctx.user?.name || ctx.user?.email || 'unknown';
+            return await escalateService(
+              input.serviceExternalId,
+              input.customerExternalId,
+              escalatedBy,
+              input.reason,
+              input.notes
+            );
+          }),
+
+        resolveEscalation: protectedProcedure
+          .input(z.object({
+            serviceExternalId: z.string(),
+            resolutionNotes: z.string().optional(),
+          }))
+          .mutation(async ({ input, ctx }) => {
+            const resolvedBy = ctx.user?.name || ctx.user?.email || 'unknown';
+            return await resolveEscalatedService(
+              input.serviceExternalId,
+              resolvedBy,
+              input.resolutionNotes
+            );
+          }),
+
+        escalatedServices: protectedProcedure
+          .input(z.object({ customerExternalId: z.string().optional() }))
+          .query(async ({ input }) => {
+            return await getEscalatedServices(input.customerExternalId);
+          }),
+
+        customersWithEscalations: protectedProcedure
+          .query(async () => {
+            return await getCustomersWithEscalations();
           }),
       }),
 

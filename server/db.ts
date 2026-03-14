@@ -1,6 +1,6 @@
-import { eq, like, or, and, sql, desc, asc, inArray, ne } from "drizzle-orm";
+import { eq, like, or, and, sql, desc, asc, inArray, ne, isNull } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, customers, locations, services, supplierAccounts, billingItems, reviewItems, billingPlatformChecks, serviceEditHistory, customerProposals, serviceCostHistory, supplierWorkbookUploads, supplierWorkbookLineItems, customerUsageSummaries, supplierEnterpriseMap, supplierProductMap, serviceBillingMatchLog, serviceBillingAssignments, unbillableServices } from "../drizzle/schema";
+import { InsertUser, users, customers, locations, services, supplierAccounts, billingItems, reviewItems, billingPlatformChecks, serviceEditHistory, customerProposals, serviceCostHistory, supplierWorkbookUploads, supplierWorkbookLineItems, customerUsageSummaries, supplierEnterpriseMap, supplierProductMap, serviceBillingMatchLog, serviceBillingAssignments, unbillableServices, escalatedServices } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -6985,4 +6985,268 @@ export async function autoApplyMatchRules(
   }
 
   return { applied, skipped };
+}
+
+// ── Escalated Services ──────────────────────────────────────────────────────
+
+/**
+ * Escalate a service for manual review (no matching Xero billing item found).
+ */
+export async function escalateService(
+  serviceExternalId: string,
+  customerExternalId: string,
+  escalatedBy: string,
+  reason?: string,
+  notes?: string
+): Promise<{ success: boolean; message: string }> {
+  const db = await getDb();
+  if (!db) return { success: false, message: 'DB unavailable' };
+
+  // Upsert: if already escalated, update notes/reason
+  const existing = await db
+    .select({ id: escalatedServices.id })
+    .from(escalatedServices)
+    .where(eq(escalatedServices.serviceExternalId, serviceExternalId))
+    .limit(1);
+
+  if (existing.length > 0) {
+    await db
+      .update(escalatedServices)
+      .set({
+        reason: reason || 'No matching Xero billing item found',
+        notes: notes || null,
+        escalatedBy,
+        resolvedAt: null,
+        resolvedBy: null,
+        resolutionNotes: null,
+      })
+      .where(eq(escalatedServices.serviceExternalId, serviceExternalId));
+    return { success: true, message: 'Escalation updated' };
+  }
+
+  await db.insert(escalatedServices).values({
+    serviceExternalId,
+    customerExternalId,
+    reason: reason || 'No matching Xero billing item found',
+    notes: notes || null,
+    escalatedBy,
+  });
+
+  // Recalculate unmatchedBillingCount for the customer
+  await recalculateCustomerUnmatchedBilling(customerExternalId);
+
+  return { success: true, message: 'Service escalated for review' };
+}
+
+/**
+ * Resolve an escalated service (mark as resolved).
+ */
+export async function resolveEscalatedService(
+  serviceExternalId: string,
+  resolvedBy: string,
+  resolutionNotes?: string
+): Promise<{ success: boolean; message: string }> {
+  const db = await getDb();
+  if (!db) return { success: false, message: 'DB unavailable' };
+
+  await db
+    .update(escalatedServices)
+    .set({
+      resolvedAt: new Date(),
+      resolvedBy,
+      resolutionNotes: resolutionNotes || null,
+    })
+    .where(eq(escalatedServices.serviceExternalId, serviceExternalId));
+
+  // Get customer for recalculation
+  const rows = await db
+    .select({ customerExternalId: escalatedServices.customerExternalId })
+    .from(escalatedServices)
+    .where(eq(escalatedServices.serviceExternalId, serviceExternalId))
+    .limit(1);
+
+  if (rows.length > 0) {
+    await recalculateCustomerUnmatchedBilling(rows[0].customerExternalId);
+  }
+
+  return { success: true, message: 'Escalation resolved' };
+}
+
+/**
+ * Get all open (unresolved) escalated services, optionally filtered by customer.
+ */
+export async function getEscalatedServices(customerExternalId?: string): Promise<Array<{
+  id: number;
+  serviceExternalId: string;
+  customerExternalId: string;
+  reason: string;
+  notes: string | null;
+  escalatedBy: string;
+  createdAt: Date;
+  // Joined service fields
+  serviceType: string;
+  planName: string;
+  monthlyCost: number;
+  provider: string;
+  locationAddress: string;
+  phoneNumber: string;
+  customerName: string;
+}>> {
+  const db = await getDb();
+  if (!db) return [];
+
+  const conditions = [isNull(escalatedServices.resolvedAt)];
+  if (customerExternalId) {
+    conditions.push(eq(escalatedServices.customerExternalId, customerExternalId));
+  }
+
+  const rows = await db
+    .select({
+      id: escalatedServices.id,
+      serviceExternalId: escalatedServices.serviceExternalId,
+      customerExternalId: escalatedServices.customerExternalId,
+      reason: escalatedServices.reason,
+      notes: escalatedServices.notes,
+      escalatedBy: escalatedServices.escalatedBy,
+      createdAt: escalatedServices.createdAt,
+      serviceType: services.serviceType,
+      planName: services.planName,
+      monthlyCost: services.monthlyCost,
+      provider: services.provider,
+      locationAddress: services.locationAddress,
+      phoneNumber: services.phoneNumber,
+      customerName: services.customerName,
+    })
+    .from(escalatedServices)
+    .leftJoin(services, eq(services.externalId, escalatedServices.serviceExternalId))
+    .where(and(...conditions))
+    .orderBy(desc(escalatedServices.createdAt));
+
+  return rows.map(r => ({
+    ...r,
+    serviceType: r.serviceType || 'Unknown',
+    planName: r.planName || '',
+    monthlyCost: parseFloat(String(r.monthlyCost || '0')),
+    provider: r.provider || 'Unknown',
+    locationAddress: r.locationAddress || '',
+    phoneNumber: r.phoneNumber || '',
+    customerName: r.customerName || '',
+  }));
+}
+
+/**
+ * Get escalation count per customer (for dashboard badges).
+ */
+export async function getEscalationCountByCustomer(): Promise<Array<{
+  customerExternalId: string;
+  count: number;
+}>> {
+  const db = await getDb();
+  if (!db) return [];
+
+  const rows = await db
+    .select({
+      customerExternalId: escalatedServices.customerExternalId,
+      count: sql<number>`COUNT(*)`,
+    })
+    .from(escalatedServices)
+    .where(isNull(escalatedServices.resolvedAt))
+    .groupBy(escalatedServices.customerExternalId);
+
+  return rows.map(r => ({
+    customerExternalId: r.customerExternalId,
+    count: Number(r.count),
+  }));
+}
+
+/**
+ * Get all customers that have open escalated services (for the Unmatched Queue page).
+ */
+export async function getCustomersWithEscalations(): Promise<Array<{
+  customerExternalId: string;
+  customerName: string;
+  escalationCount: number;
+  totalMonthlyCost: number;
+  services: Array<{
+    serviceExternalId: string;
+    serviceType: string;
+    planName: string;
+    monthlyCost: number;
+    provider: string;
+    locationAddress: string;
+    reason: string;
+    escalatedBy: string;
+    createdAt: Date;
+  }>;
+}>> {
+  const db = await getDb();
+  if (!db) return [];
+
+  const rows = await db
+    .select({
+      id: escalatedServices.id,
+      serviceExternalId: escalatedServices.serviceExternalId,
+      customerExternalId: escalatedServices.customerExternalId,
+      reason: escalatedServices.reason,
+      escalatedBy: escalatedServices.escalatedBy,
+      createdAt: escalatedServices.createdAt,
+      serviceType: services.serviceType,
+      planName: services.planName,
+      monthlyCost: services.monthlyCost,
+      provider: services.provider,
+      locationAddress: services.locationAddress,
+      customerName: services.customerName,
+    })
+    .from(escalatedServices)
+    .leftJoin(services, eq(services.externalId, escalatedServices.serviceExternalId))
+    .where(isNull(escalatedServices.resolvedAt))
+    .orderBy(escalatedServices.customerExternalId, desc(escalatedServices.createdAt));
+
+  // Group by customer
+  const customerMap = new Map<string, {
+    customerExternalId: string;
+    customerName: string;
+    escalationCount: number;
+    totalMonthlyCost: number;
+    services: Array<{
+      serviceExternalId: string;
+      serviceType: string;
+      planName: string;
+      monthlyCost: number;
+      provider: string;
+      locationAddress: string;
+      reason: string;
+      escalatedBy: string;
+      createdAt: Date;
+    }>;
+  }>();
+
+  for (const r of rows) {
+    const cost = parseFloat(String(r.monthlyCost || '0'));
+    if (!customerMap.has(r.customerExternalId)) {
+      customerMap.set(r.customerExternalId, {
+        customerExternalId: r.customerExternalId,
+        customerName: r.customerName || r.customerExternalId,
+        escalationCount: 0,
+        totalMonthlyCost: 0,
+        services: [],
+      });
+    }
+    const entry = customerMap.get(r.customerExternalId)!;
+    entry.escalationCount++;
+    entry.totalMonthlyCost += cost;
+    entry.services.push({
+      serviceExternalId: r.serviceExternalId,
+      serviceType: r.serviceType || 'Unknown',
+      planName: r.planName || '',
+      monthlyCost: cost,
+      provider: r.provider || 'Unknown',
+      locationAddress: r.locationAddress || '',
+      reason: r.reason,
+      escalatedBy: r.escalatedBy,
+      createdAt: r.createdAt,
+    });
+  }
+
+  return Array.from(customerMap.values()).sort((a, b) => b.escalationCount - a.escalationCount);
 }

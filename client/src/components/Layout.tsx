@@ -20,6 +20,7 @@ import {
   ShieldCheck,
   Link2,
   Upload,
+  Receipt,
 } from "lucide-react";
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useGlobalSearch } from "@/hooks/useData";
@@ -38,6 +39,7 @@ const navItems = [
   { path: "/platform-checks", label: "Platform Checks", icon: ShieldCheck },
   { path: "/service-billing-match", label: "Service Linking", icon: Link2 },
   { path: "/supplier-invoices", label: "Supplier Invoices", icon: Upload },
+  { path: "/billing-queue", label: "Billing Queue", icon: Receipt },
 ];
 
 interface SearchCustomer {

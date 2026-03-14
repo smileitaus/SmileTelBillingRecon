@@ -752,3 +752,25 @@
 - [x] Widen auto-match modal to max-w-5xl with two-column grid layout and confidence bars
 - [x] Remove line-clamp from billing item descriptions
 - [x] Fix drag-and-drop freeze with MouseSensor+TouchSensor and fixed-height scroll columns
+- [ ] Add 'Escalate for Review' button on Billing Match page for services that can't be matched to any Xero billing item
+- [ ] Add escalated_services table to schema for tracking services escalated for manual review
+- [ ] Dashboard alert: show customers with escalated unmatched services with count badge
+- [ ] Unmatched page: show escalated services grouped by customer with action to resolve
+
+# Escalation Workflow & Billing Queue (2026-03-14)
+- [x] Add escalated_services table to schema for tracking services escalated for manual review
+- [x] Push schema migration to DB (pnpm db:push)
+- [x] Add escalateService, resolveEscalatedService, getEscalatedServices, getCustomersWithEscalations DB helpers to db.ts
+- [x] Add billingAssignments.escalate, resolveEscalation, escalatedServices, customersWithEscalations tRPC procedures
+- [x] Add 'Escalate for Review' button on Billing Match page (AlertCircle icon, amber styling)
+- [x] Add Escalate dialog with notes field on CustomerBillingMatch page
+- [x] Show escalated services section in left column of CustomerBillingMatch page (red styling)
+- [x] Allow resolving escalations inline from CustomerBillingMatch page
+- [x] Add search/filter bar for unassigned services (text search + service type dropdown)
+- [x] Add search bar for billing items (text search)
+- [x] Show assigned services always-visible when billing item is expanded (not just on hover)
+- [x] Build UnmatchedBillingQueue page at /billing-queue with Unmatched + Escalated tabs
+- [x] Show summary stats (customers affected, unmatched count, escalated count) on queue page
+- [x] Add Billing Queue nav item to Layout.tsx sidebar
+- [x] Register /billing-queue route in App.tsx
+- [x] Write 12 vitest tests for escalation workflow (all passing)
