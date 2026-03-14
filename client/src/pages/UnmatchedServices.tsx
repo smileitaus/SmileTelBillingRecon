@@ -574,12 +574,18 @@ function ExpandedPanel({ service }: { service: any }) {
     utils.billing.margin.list.invalidate();
   };
 
-  const handleAssign = async (customerExternalId: string, customerName?: string) => {
+  const handleAssign = async (
+    customerExternalId: string,
+    customerName?: string,
+    opts?: { createPlatformCheck?: boolean; billingPlatforms?: string[] }
+  ) => {
     setAssigningCustomerId(customerExternalId);
     try {
       await assignMutation.mutateAsync({
         serviceExternalId: service.externalId,
         customerExternalId,
+        createPlatformCheck: opts?.createPlatformCheck,
+        billingPlatforms: opts?.billingPlatforms,
       });
       toast.success("Service assigned to customer");
       invalidateAfterAssign();
@@ -813,8 +819,9 @@ function ExpandedPanel({ service }: { service: any }) {
         onOpenChange={(val) => { setShowCreateCustomer(val); if (!val) setCreateCustomerProposalMode(false); }}
         suggestedName={createCustomerName}
         serviceExternalId={createCustomerProposalMode ? service.externalId : undefined}
-        onCreated={(externalId, name) => {
-          handleAssign(externalId, name);
+        deferPlatformCheckToAssign={!createCustomerProposalMode}
+        onCreated={(externalId, name, opts) => {
+          handleAssign(externalId, name, opts);
         }}
         onProposed={() => {
           setCreateCustomerProposalMode(false);

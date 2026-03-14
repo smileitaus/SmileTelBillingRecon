@@ -79,6 +79,7 @@ import {
   syncCarbonCostsToServices,
   backfillCostSources,
   getServiceCostHistory,
+  getServiceForPlatformCheck,
   type AddressMatchCandidate,
 } from "./db";
 
@@ -340,13 +341,35 @@ export const appRouter = router({
           serviceExternalId: z.string(),
           customerExternalId: z.string(),
           locationExternalId: z.string().optional(),
+          createPlatformCheck: z.boolean().optional(),
+          billingPlatforms: z.array(z.string()).optional(),
         }))
-        .mutation(async ({ input }) => {
-          return await assignServiceToCustomer(
+        .mutation(async ({ input, ctx }) => {
+          const result = await assignServiceToCustomer(
             input.serviceExternalId,
             input.customerExternalId,
             input.locationExternalId
           );
+          // Auto-create a Platform Check task for billing verification
+          if (result.success && input.createPlatformCheck) {
+            const createdBy = ctx.user?.name || ctx.user?.email || 'Unknown';
+            // Fetch service details for the platform check
+            const svcDetails = await getServiceForPlatformCheck(input.serviceExternalId);
+            await createBillingPlatformCheck({
+              targetType: 'service',
+              targetId: input.serviceExternalId,
+              targetName: svcDetails?.planName || svcDetails?.serviceType || input.serviceExternalId,
+              platform: input.billingPlatforms?.[0] || svcDetails?.billingPlatform || 'Unknown',
+              issueType: 'new-customer-assignment',
+              issueDescription: `Service assigned to new customer "${svcDetails?.customerName || input.customerExternalId}". Verify billing platform setup matches service details (type: ${svcDetails?.serviceType || 'Unknown'}, cost: $${svcDetails?.monthlyCost ?? 0}/mo).`,
+              customerName: svcDetails?.customerName || input.customerExternalId,
+              customerExternalId: input.customerExternalId,
+              monthlyAmount: Number(svcDetails?.monthlyCost ?? 0),
+              priority: 'medium',
+              createdBy,
+            });
+          }
+          return result;
         }),
 
       dismiss: protectedProcedure

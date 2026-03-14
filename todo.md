@@ -586,3 +586,13 @@
 - [x] SM Name candidates show violet 'SM Name' badge in the Alias column
 - [x] Updated Alias Match info banner to explain both sources
 - [x] TypeScript: 0 errors
+
+# Create New Customer + Platform Check Auto-Task (Mar 14)
+- [x] Trace "Create as new customer" button code path in UnmatchedServices.tsx
+- [x] Fix: button should immediately create customer + assign service (not just submit proposal)
+- [x] Fix: after customer creation + service assignment, auto-create Platform Check task via unmatched.assign
+- [x] Platform Check task includes: customer name, service type, provider, monthly cost, billing platform
+- [x] Platform Check targetType='service', targetId=serviceExternalId (correct, not customer ID)
+- [x] getServiceForPlatformCheck helper added to db.ts
+- [x] deferPlatformCheckToAssign prop added to CreateCustomerDialog to avoid duplicate checks
+- [x] 3 vitest tests added and passing for the full workflow

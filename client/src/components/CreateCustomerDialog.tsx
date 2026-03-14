@@ -26,9 +26,15 @@ interface CreateCustomerDialogProps {
   /** If provided, the dialog submits a proposal (pending approval) instead of creating immediately */
   serviceExternalId?: string;
   /** Called when a customer is successfully created (immediate mode) */
-  onCreated?: (externalId: string, name: string) => void;
+  onCreated?: (externalId: string, name: string, opts: { createPlatformCheck: boolean; billingPlatforms: string[] }) => void;
   /** Called when a proposal is successfully submitted */
   onProposed?: () => void;
+  /**
+   * When true, the Platform Check is NOT created in customers.create — it will be created
+   * in the unmatched.assign step (where service details are available). Use this when the
+   * dialog is opened from the Unmatched Services workflow.
+   */
+  deferPlatformCheckToAssign?: boolean;
 }
 
 export function CreateCustomerDialog({
@@ -38,6 +44,7 @@ export function CreateCustomerDialog({
   serviceExternalId,
   onCreated,
   onProposed,
+  deferPlatformCheckToAssign = false,
 }: CreateCustomerDialogProps) {
   const utils = trpc.useUtils();
   const isProposalMode = !!serviceExternalId;
@@ -74,9 +81,9 @@ export function CreateCustomerDialog({
         toast.error(`A customer named "${name}" already exists (${result.externalId}).`);
         return;
       }
-      toast.success(`${name} has been added${createPlatformCheck ? " and a Platform Check entry created" : ""}.`);
+      toast.success(`${name} has been added.`);
       utils.billing.customers.list.invalidate();
-      onCreated?.(result.externalId, name);
+      onCreated?.(result.externalId, name, { createPlatformCheck, billingPlatforms: selectedPlatforms });
       onOpenChange(false);
     },
     onError: (err) => {
@@ -124,6 +131,10 @@ export function CreateCustomerDialog({
         createPlatformCheck,
       });
     } else {
+      // When called from UnmatchedServices (serviceExternalId is NOT set but we still want to
+      // create the Platform Check in the assign step, not here). We pass createPlatformCheck: false
+      // to customers.create so it doesn't create a duplicate check without service details.
+      // The onCreated callback forwards createPlatformCheck + billingPlatforms to handleAssign.
       createMutation.mutate({
         name: name.trim(),
         businessName: businessName.trim() || undefined,
@@ -133,7 +144,7 @@ export function CreateCustomerDialog({
         siteAddress: siteAddress.trim() || undefined,
         notes: notes.trim() || undefined,
         billingPlatforms: selectedPlatforms.length > 0 ? selectedPlatforms : null,
-        createPlatformCheck,
+        createPlatformCheck: deferPlatformCheckToAssign ? false : createPlatformCheck, // Platform Check created in assign step (with service details) when deferPlatformCheckToAssign=true
       });
     }
   };

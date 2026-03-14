@@ -700,6 +700,21 @@ export async function assignServiceToCustomer(
   return { success: true };
 }
 
+export async function getServiceForPlatformCheck(serviceExternalId: string) {
+  const db = await getDb();
+  if (!db) return null;
+  const [svc] = await db.select().from(services).where(eq(services.externalId, serviceExternalId)).limit(1);
+  if (!svc) return null;
+  return {
+    planName: svc.planName || null,
+    serviceType: svc.serviceType || null,
+    billingPlatform: svc.billingPlatform || null,
+    monthlyCost: svc.monthlyCost || 0,
+    customerName: svc.customerName || null,
+    phoneNumber: svc.phoneNumber || null,
+  };
+}
+
 export async function updateServiceAvc(serviceExternalId: string, connectionId: string) {
   const db = await getDb();
   if (!db) throw new Error('Database not available');
@@ -2352,7 +2367,7 @@ export async function createBillingPlatformCheck(input: {
 }) {
   const db = await getDb();
   if (!db) throw new Error('Database not available');
-  const result = await db.insert(billingPlatformChecks).values({
+  const [result] = await db.insert(billingPlatformChecks).values({
     reviewItemId: input.reviewItemId ?? null,
     targetType: input.targetType,
     targetId: input.targetId,
@@ -2367,7 +2382,8 @@ export async function createBillingPlatformCheck(input: {
     status: 'open',
     createdBy: input.createdBy,
   });
-  return { id: Number((result as any).insertId), ...input };
+  const rawId = (result as any).insertId;
+  return { id: rawId ? Number(rawId) : 0, ...input };
 }
 
 export async function getBillingPlatformChecks(filters?: {
