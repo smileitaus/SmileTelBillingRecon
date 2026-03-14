@@ -1,4 +1,4 @@
-import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, decimal } from "drizzle-orm/mysql-core";
+import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, decimal, uniqueIndex } from "drizzle-orm/mysql-core";
 
 /**
  * Core user table backing auth flow.
@@ -46,10 +46,11 @@ export const customers = mysqlTable("customers", {
   // Revenue tracking
   monthlyRevenue: decimal("monthlyRevenue", { precision: 10, scale: 2 }).default("0.00").notNull(),
   marginPercent: decimal("marginPercent", { precision: 10, scale: 2 }),
+  // Billing completeness: services assigned to this customer with no billing item linked
+  unmatchedBillingCount: int("unmatchedBillingCount").default(0).notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });
-
 export type Customer = typeof customers.$inferSelect;
 export type InsertCustomer = typeof customers.$inferInsert;
 
@@ -345,3 +346,141 @@ export const serviceCostHistory = mysqlTable("service_cost_history", {
 });
 export type ServiceCostHistory = typeof serviceCostHistory.$inferSelect;
 export type InsertServiceCostHistory = typeof serviceCostHistory.$inferInsert;
+
+/**
+ * Supplier Workbook Uploads - tracks XLSX workbook uploads from suppliers like SasBoss.
+ * Each upload represents one month's dispatch charges workbook.
+ */
+export const supplierWorkbookUploads = mysqlTable("supplier_workbook_uploads", {
+  id: int("id").autoincrement().primaryKey(),
+  supplier: varchar("supplier", { length: 128 }).notNull(), // e.g. 'SasBoss'
+  workbookName: varchar("workbookName", { length: 256 }).notNull(), // e.g. 'SasBoss Dispatch Charges (March)'
+  billingMonth: varchar("billingMonth", { length: 16 }).notNull(), // e.g. '2026-03'
+  invoiceReference: varchar("invoiceReference", { length: 128 }).default(""),
+  totalExGst: decimal("totalExGst", { precision: 10, scale: 2 }).default("0.00").notNull(),
+  totalIncGst: decimal("totalIncGst", { precision: 10, scale: 2 }).default("0.00").notNull(),
+  lineItemCount: int("lineItemCount").default(0).notNull(),
+  matchedCount: int("matchedCount").default(0).notNull(),
+  unmatchedCount: int("unmatchedCount").default(0).notNull(),
+  importedBy: varchar("importedBy", { length: 256 }).notNull(),
+  importedAt: timestamp("importedAt").defaultNow().notNull(),
+  status: varchar("status", { length: 32 }).default("complete").notNull(), // 'complete' | 'partial'
+  notes: text("notes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type SupplierWorkbookUpload = typeof supplierWorkbookUploads.$inferSelect;
+export type InsertSupplierWorkbookUpload = typeof supplierWorkbookUploads.$inferInsert;
+
+/**
+ * Supplier Workbook Line Items - individual line items from a supplier workbook upload.
+ * Each row represents one product/service charge for one enterprise in the workbook.
+ */
+export const supplierWorkbookLineItems = mysqlTable("supplier_workbook_line_items", {
+  id: int("id").autoincrement().primaryKey(),
+  uploadId: int("uploadId").notNull(), // FK to supplierWorkbookUploads
+  enterpriseName: varchar("enterpriseName", { length: 512 }).notNull(),
+  productName: varchar("productName", { length: 512 }).notNull(),
+  productType: varchar("productType", { length: 64 }).default(""),
+  serviceRefId: varchar("serviceRefId", { length: 256 }).default(""),
+  amountExGst: decimal("amountExGst", { precision: 10, scale: 2 }).default("0.00").notNull(),
+  amountIncGst: decimal("amountIncGst", { precision: 10, scale: 2 }).default("0.00").notNull(),
+  // Match results
+  matchStatus: varchar("matchStatus", { length: 32 }).default("unmatched").notNull(), // 'matched' | 'unmatched' | 'partial'
+  matchedCustomerExternalId: varchar("matchedCustomerExternalId", { length: 32 }).default(""),
+  matchedCustomerName: varchar("matchedCustomerName", { length: 512 }).default(""),
+  matchedServiceExternalId: varchar("matchedServiceExternalId", { length: 32 }).default(""),
+  matchConfidence: decimal("matchConfidence", { precision: 4, scale: 2 }).default("0.00"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type SupplierWorkbookLineItem = typeof supplierWorkbookLineItems.$inferSelect;
+export type InsertSupplierWorkbookLineItem = typeof supplierWorkbookLineItems.$inferInsert;
+
+/**
+ * Customer Usage Summaries - aggregated call/data usage per customer per month.
+ * Populated from supplier workbook imports (e.g. SasBoss call usage from Sheet1).
+ */
+export const customerUsageSummaries = mysqlTable("customer_usage_summaries", {
+  id: int("id").autoincrement().primaryKey(),
+  uploadId: int("uploadId"), // FK to supplierWorkbookUploads (nullable for manual entries)
+  customerExternalId: varchar("customerExternalId", { length: 32 }).notNull(),
+  customerName: varchar("customerName", { length: 512 }).notNull(),
+  usageMonth: varchar("usageMonth", { length: 16 }).notNull(), // e.g. '2026-02' (February usage)
+  usageType: varchar("usageType", { length: 64 }).default("call-usage").notNull(), // 'call-usage' | 'data-usage'
+  supplier: varchar("supplier", { length: 128 }).notNull(), // e.g. 'SasBoss'
+  totalExGst: decimal("totalExGst", { precision: 10, scale: 2 }).default("0.00").notNull(),
+  totalIncGst: decimal("totalIncGst", { precision: 10, scale: 2 }).default("0.00").notNull(),
+  notes: text("notes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type CustomerUsageSummary = typeof customerUsageSummaries.$inferSelect;
+export type InsertCustomerUsageSummary = typeof customerUsageSummaries.$inferInsert;
+
+/**
+ * Supplier Enterprise Map - persistent mapping of supplier enterprise names to customers.
+ * Once a match is confirmed (manually or auto), it is stored here so future uploads
+ * skip fuzzy matching and auto-accept the match with 'mapped' confidence.
+ */
+export const supplierEnterpriseMap = mysqlTable("supplier_enterprise_map", {
+  id: int("id").autoincrement().primaryKey(),
+  supplierName: varchar("supplierName", { length: 128 }).notNull(), // e.g. 'SasBoss'
+  enterpriseName: varchar("enterpriseName", { length: 512 }).notNull(), // exact string from workbook
+  customerId: int("customerId").notNull(),
+  customerExternalId: varchar("customerExternalId", { length: 32 }).notNull(),
+  customerName: varchar("customerName", { length: 512 }).notNull(),
+  confirmedBy: varchar("confirmedBy", { length: 64 }).default("auto").notNull(), // 'auto' | 'manual' | 'backfill'
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => ({
+  uniqSupplierEnterprise: uniqueIndex("uniq_supplier_enterprise").on(table.supplierName, table.enterpriseName),
+}));
+export type SupplierEnterpriseMap = typeof supplierEnterpriseMap.$inferSelect;
+export type InsertSupplierEnterpriseMap = typeof supplierEnterpriseMap.$inferInsert;
+
+/**
+ * Supplier Product Map - persistent mapping of supplier product names to internal service types.
+ * Stores how each product name/type from a supplier workbook maps to our taxonomy.
+ * Used to auto-classify products in future uploads without re-running fuzzy matching.
+ */
+export const supplierProductMap = mysqlTable("supplier_product_map", {
+  id: int("id").autoincrement().primaryKey(),
+  supplierName: varchar("supplierName", { length: 128 }).notNull(), // e.g. 'SasBoss'
+  productName: varchar("productName", { length: 512 }).notNull(), // exact product name from workbook
+  productType: varchar("productType", { length: 64 }).default("").notNull(), // product type from workbook
+  internalServiceType: varchar("internalServiceType", { length: 64 }).default("Voice").notNull(), // 'Voice' | 'Data' | 'DID' | 'Other'
+  billingLabel: varchar("billingLabel", { length: 256 }).default("").notNull(), // friendly label for UI
+  notes: text("notes"), // any additional context
+  confirmedBy: varchar("confirmedBy", { length: 64 }).default("auto").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type SupplierProductMap = typeof supplierProductMap.$inferSelect;
+export type InsertSupplierProductMap = typeof supplierProductMap.$inferInsert;
+
+/**
+ * Service Billing Match Log - persistent log of service-to-billing-item resolutions.
+ * When a user links a service to a billing item (or marks it as intentionally unbilled),
+ * the resolution is stored here so future imports can auto-apply the same match.
+ */
+export const serviceBillingMatchLog = mysqlTable("service_billing_match_log", {
+  id: int("id").autoincrement().primaryKey(),
+  serviceExternalId: varchar("serviceExternalId", { length: 32 }).notNull(),
+  serviceType: varchar("serviceType", { length: 64 }).notNull(),
+  planName: varchar("planName", { length: 512 }).default(""),
+  customerExternalId: varchar("customerExternalId", { length: 32 }).notNull(),
+  customerName: varchar("customerName", { length: 512 }).notNull(),
+  // Resolution outcome
+  resolution: varchar("resolution", { length: 32 }).notNull(), // 'linked' | 'intentionally-unbilled' | 'new-billing-item'
+  billingItemId: varchar("billingItemId", { length: 32 }).default(""), // the billing item linked (if resolution='linked')
+  billingPlatform: varchar("billingPlatform", { length: 64 }).default(""), // which platform the billing item is on
+  notes: text("notes"), // optional user note about the resolution
+  resolvedBy: varchar("resolvedBy", { length: 256 }).notNull(),
+  resolvedAt: timestamp("resolvedAt").defaultNow().notNull(),
+  // For future auto-matching: key fields to identify the same service in future months
+  matchKey: varchar("matchKey", { length: 512 }).default(""), // e.g. serviceExternalId or planName+customerExternalId
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type ServiceBillingMatchLog = typeof serviceBillingMatchLog.$inferSelect;
+export type InsertServiceBillingMatchLog = typeof serviceBillingMatchLog.$inferInsert;

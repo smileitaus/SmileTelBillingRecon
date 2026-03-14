@@ -1,0 +1,1 @@
+ALTER TABLE `supplier_enterprise_map` ADD CONSTRAINT `uniq_supplier_enterprise` UNIQUE(`supplierName`,`enterpriseName`);

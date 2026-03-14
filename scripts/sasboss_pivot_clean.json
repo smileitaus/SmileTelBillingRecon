@@ -1,0 +1,4426 @@
+[
+  {
+    "enterprise_name": "A & K Financial Planning",
+    "product_name": "DID Australia (1)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 2.0,
+    "sum_inc_gst": 2.2
+  },
+  {
+    "enterprise_name": "A & K Financial Planning",
+    "product_name": "Premium-2",
+    "product_type": "call-pack",
+    "service_ref_id": "janmay@akfinancialplanning.com.au",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "A & K Financial Planning",
+    "product_name": "UCXcel Essential",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 30.0,
+    "sum_inc_gst": 33.0
+  },
+  {
+    "enterprise_name": "A & K Financial Planning",
+    "product_name": "UCXcel Webex Basic",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "A & K Financial Planning",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 191.99,
+    "sum_inc_gst": 211.18900000000002
+  },
+  {
+    "enterprise_name": "Accountant Ready Services",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 189.0,
+    "sum_inc_gst": 207.9
+  },
+  {
+    "enterprise_name": "Active Living - Allen Developments Pty Ltd",
+    "product_name": "Call Centre Queue with Time of Day Routing",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Active Living - Allen Developments Pty Ltd",
+    "product_name": "DID Australia (1)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 4.0,
+    "sum_inc_gst": 4.4
+  },
+  {
+    "enterprise_name": "Active Living - Allen Developments Pty Ltd",
+    "product_name": "ME - 3 Included Local National Mobile Call Pack",
+    "product_type": "call-pack",
+    "service_ref_id": "maroochy.reception@activeliving.com.au",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Active Living - Allen Developments Pty Ltd",
+    "product_name": "UCXcel Basic Queue Agent",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Active Living - Allen Developments Pty Ltd",
+    "product_name": "UCXcel Essential",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 60.0,
+    "sum_inc_gst": 66.0
+  },
+  {
+    "enterprise_name": "Active Living - Allen Developments Pty Ltd",
+    "product_name": "Voicemail",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Active Living - Allen Developments Pty Ltd",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 197.8,
+    "sum_inc_gst": 217.57999999999998
+  },
+  {
+    "enterprise_name": "Adams Financial Group",
+    "product_name": "Call Centre Queue with Time of Day Routing",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Adams Financial Group",
+    "product_name": "DID Australia (1)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 2.0,
+    "sum_inc_gst": 2.2
+  },
+  {
+    "enterprise_name": "Adams Financial Group",
+    "product_name": "MC - SmileTel Executive User License",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 90.0,
+    "sum_inc_gst": 99.0
+  },
+  {
+    "enterprise_name": "Adams Financial Group",
+    "product_name": "ME - 3 Included Local National Mobile Call Pack",
+    "product_type": "call-pack",
+    "service_ref_id": "chloe@adamsfg.com",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Adams Financial Group",
+    "product_name": "Softphone add-on with Cisco Webex",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Adams Financial Group",
+    "product_name": "Voicemail",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Adams Financial Group",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 12.0,
+    "sum_inc_gst": 13.200000000000001
+  },
+  {
+    "enterprise_name": "Affinage Professional",
+    "product_name": "Call Centre Queue with Time of Day Routing",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Affinage Professional",
+    "product_name": "DID Australia (1)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 2.0,
+    "sum_inc_gst": 2.2
+  },
+  {
+    "enterprise_name": "Affinage Professional",
+    "product_name": "DID Australia (100)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 55.0,
+    "sum_inc_gst": 60.5
+  },
+  {
+    "enterprise_name": "Affinage Professional",
+    "product_name": "Inbound 1800 Number Hosting",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 22.0,
+    "sum_inc_gst": 24.2
+  },
+  {
+    "enterprise_name": "Affinage Professional",
+    "product_name": "MC - SmileTel Executive User License",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 15.0,
+    "sum_inc_gst": 16.5
+  },
+  {
+    "enterprise_name": "Affinage Professional",
+    "product_name": "Operator Connect SIP Trunk",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 90.0,
+    "sum_inc_gst": 99.0
+  },
+  {
+    "enterprise_name": "Affinage Professional",
+    "product_name": "Premium-2",
+    "product_type": "call-pack",
+    "service_ref_id": "TEAMS_TG_125648@affinage.com.au",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Affinage Professional",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 63.78000000000001,
+    "sum_inc_gst": 70.15799999999999
+  },
+  {
+    "enterprise_name": "Agnes Water Beauty Hub",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 100.0,
+    "sum_inc_gst": 110.0
+  },
+  {
+    "enterprise_name": "All Crops Haulage Pty Ltd",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 149.0,
+    "sum_inc_gst": 163.9
+  },
+  {
+    "enterprise_name": "AM Emerick & TJ Morrice",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 98.0,
+    "sum_inc_gst": 107.8
+  },
+  {
+    "enterprise_name": "ARM Group Pty Ltd ATF ARM Property Trust No. 2",
+    "product_name": "Call Centre Queue with Time of Day Routing",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "ARM Group Pty Ltd ATF ARM Property Trust No. 2",
+    "product_name": "DID Australia (1)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 2.0,
+    "sum_inc_gst": 2.2
+  },
+  {
+    "enterprise_name": "ARM Group Pty Ltd ATF ARM Property Trust No. 2",
+    "product_name": "MC - SmileTel Executive User License",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 60.0,
+    "sum_inc_gst": 66.0
+  },
+  {
+    "enterprise_name": "ARM Group Pty Ltd ATF ARM Property Trust No. 2",
+    "product_name": "ME - 3 Included Local National Mobile Call Pack",
+    "product_type": "call-pack",
+    "service_ref_id": "reception1@coolumatthebeach.com.au",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "ARM Group Pty Ltd ATF ARM Property Trust No. 2",
+    "product_name": "Premium-2",
+    "product_type": "call-pack",
+    "service_ref_id": "callpark@coolumatthebeach.com.au",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "ARM Group Pty Ltd ATF ARM Property Trust No. 2",
+    "product_name": "Virtual Park User",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "ARM Group Pty Ltd ATF ARM Property Trust No. 2",
+    "product_name": "Voicemail",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "ARM Group Pty Ltd ATF ARM Property Trust No. 2",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 1066.1,
+    "sum_inc_gst": 1172.71
+  },
+  {
+    "enterprise_name": "Aromas Noosa",
+    "product_name": "Call Centre Queue with Time of Day Routing",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Aromas Noosa",
+    "product_name": "DID Australia (1)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 2.0,
+    "sum_inc_gst": 2.2
+  },
+  {
+    "enterprise_name": "Aromas Noosa",
+    "product_name": "MC - SmileTel Executive User License",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 30.0,
+    "sum_inc_gst": 33.0
+  },
+  {
+    "enterprise_name": "Aromas Noosa",
+    "product_name": "ME - 3 Included Local National Mobile Call Pack",
+    "product_type": "call-pack",
+    "service_ref_id": "e100@aromasnoosa.com.au",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Aromas Noosa",
+    "product_name": "Voicemail",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Aromas Noosa",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 304.05,
+    "sum_inc_gst": 334.455
+  },
+  {
+    "enterprise_name": "ASG Hail Pty Ltd",
+    "product_name": "Auto Attendant with Time of Day Routing",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "ASG Hail Pty Ltd",
+    "product_name": "Call Recording - Unlimited",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 420.55,
+    "sum_inc_gst": 462.60500000000025
+  },
+  {
+    "enterprise_name": "ASG Hail Pty Ltd",
+    "product_name": "DID Australia (1)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 92.0,
+    "sum_inc_gst": 101.20000000000007
+  },
+  {
+    "enterprise_name": "ASG Hail Pty Ltd",
+    "product_name": "DID Australia (10)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 40.0,
+    "sum_inc_gst": 44.0
+  },
+  {
+    "enterprise_name": "ASG Hail Pty Ltd",
+    "product_name": "iCall Suite - Ultimate User Licence",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 258.0,
+    "sum_inc_gst": 283.8
+  },
+  {
+    "enterprise_name": "ASG Hail Pty Ltd",
+    "product_name": "Inbound 1800 Number Hosting",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 10.5,
+    "sum_inc_gst": 11.55
+  },
+  {
+    "enterprise_name": "ASG Hail Pty Ltd",
+    "product_name": "ME - 3 Included Local National Mobile Call Pack",
+    "product_type": "call-pack",
+    "service_ref_id": "akelly@asghail.com",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "ASG Hail Pty Ltd",
+    "product_name": "Premium-1",
+    "product_type": "call-pack",
+    "service_ref_id": "holiday_vm@asghail.com",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "ASG Hail Pty Ltd",
+    "product_name": "UCXcel Call Centre Queue",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "ASG Hail Pty Ltd",
+    "product_name": "UCXcel Hunt Group",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "ASG Hail Pty Ltd",
+    "product_name": "UCXcel Premium",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 37.5,
+    "sum_inc_gst": 41.25
+  },
+  {
+    "enterprise_name": "ASG Hail Pty Ltd",
+    "product_name": "UCXcel Premium Queue Agent",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "ASG Hail Pty Ltd",
+    "product_name": "UCXcel Professional",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 1132.26,
+    "sum_inc_gst": 1245.4859999999999
+  },
+  {
+    "enterprise_name": "ASG Hail Pty Ltd",
+    "product_name": "UCXcel Webex Basic",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "ASG Hail Pty Ltd",
+    "product_name": "Voicemail",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "ASG Hail Pty Ltd",
+    "product_name": "Voicemail User",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "ASG Hail Pty Ltd",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 920.1099999999999,
+    "sum_inc_gst": 1012.1209999999998
+  },
+  {
+    "enterprise_name": "Atlantis Pool Shop",
+    "product_name": "Call Centre Queue with Time of Day Routing",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Atlantis Pool Shop",
+    "product_name": "DID Australia (1)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 2.0,
+    "sum_inc_gst": 2.2
+  },
+  {
+    "enterprise_name": "Atlantis Pool Shop",
+    "product_name": "MC - SmileTel Executive User License",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 90.0,
+    "sum_inc_gst": 99.0
+  },
+  {
+    "enterprise_name": "Atlantis Pool Shop",
+    "product_name": "ME - 3 Included Local National Mobile Call Pack",
+    "product_type": "call-pack",
+    "service_ref_id": "office@atlantispoolshop.com.au",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Atlantis Pool Shop",
+    "product_name": "Voicemail",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Atlantis Pool Shop",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 98.3,
+    "sum_inc_gst": 108.13
+  },
+  {
+    "enterprise_name": "Aus Ships",
+    "product_name": "DID Australia (1)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 164.13,
+    "sum_inc_gst": 180.54299999999998
+  },
+  {
+    "enterprise_name": "Aus Ships",
+    "product_name": "Premium-1",
+    "product_type": "call-pack",
+    "service_ref_id": "61735441265@ausships.com.au",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Aus Ships",
+    "product_name": "UCXcel Essential",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 25.0,
+    "sum_inc_gst": 27.5
+  },
+  {
+    "enterprise_name": "Aus Ships",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 1630.77,
+    "sum_inc_gst": 1793.8470000000002
+  },
+  {
+    "enterprise_name": "Ausavo Corporation Pty Ltd",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 196.0,
+    "sum_inc_gst": 215.6
+  },
+  {
+    "enterprise_name": "Australian Air Science",
+    "product_name": "DID Australia (1)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 8.0,
+    "sum_inc_gst": 8.8
+  },
+  {
+    "enterprise_name": "Australian Air Science",
+    "product_name": "Premium-1",
+    "product_type": "call-pack",
+    "service_ref_id": "air.restore.01@airrestore.com.au",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Australian Air Science",
+    "product_name": "UCXcel Essential",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 330.0,
+    "sum_inc_gst": 363.0
+  },
+  {
+    "enterprise_name": "Australian Air Science",
+    "product_name": "Voicemail",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Australian Air Science",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 692.15,
+    "sum_inc_gst": 761.365
+  },
+  {
+    "enterprise_name": "Australian Computer Traders",
+    "product_name": "Auto Attendant with Time of Day Routing",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 15.0,
+    "sum_inc_gst": 16.5
+  },
+  {
+    "enterprise_name": "Australian Computer Traders",
+    "product_name": "DID Australia (1)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 4.0,
+    "sum_inc_gst": 4.4
+  },
+  {
+    "enterprise_name": "Australian Computer Traders",
+    "product_name": "MC - SmileTel Lite User License",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 10.0,
+    "sum_inc_gst": 11.0
+  },
+  {
+    "enterprise_name": "Australian Computer Traders",
+    "product_name": "Premium-1",
+    "product_type": "call-pack",
+    "service_ref_id": "ACT01@actlogistics.com.au",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Australian Computer Traders",
+    "product_name": "SmileTel Essential User Special",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 337.5,
+    "sum_inc_gst": 371.25
+  },
+  {
+    "enterprise_name": "Australian Computer Traders",
+    "product_name": "UCXcel Webex Basic",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Australian Computer Traders",
+    "product_name": "Voicemail User",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Australian Computer Traders",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 1172.9800000000002,
+    "sum_inc_gst": 1290.2780000000002
+  },
+  {
+    "enterprise_name": "Australian Resort Management Pty Ltd",
+    "product_name": "DID Australia (1)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 4.0,
+    "sum_inc_gst": 4.4
+  },
+  {
+    "enterprise_name": "Australian Resort Management Pty Ltd",
+    "product_name": "Essentials",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 60.0,
+    "sum_inc_gst": 66.0
+  },
+  {
+    "enterprise_name": "Australian Resort Management Pty Ltd",
+    "product_name": "External Channels",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 150.0,
+    "sum_inc_gst": 165.0
+  },
+  {
+    "enterprise_name": "Australian Resort Management Pty Ltd",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 1310.1499999999999,
+    "sum_inc_gst": 1441.1650000000002
+  },
+  {
+    "enterprise_name": "Back2Health",
+    "product_name": "DID Australia (1)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 4.0,
+    "sum_inc_gst": 4.4
+  },
+  {
+    "enterprise_name": "Back2Health",
+    "product_name": "DID Australia (10)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 20.0,
+    "sum_inc_gst": 22.0
+  },
+  {
+    "enterprise_name": "Back2Health",
+    "product_name": "MC - SmileTel Premium User License",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 15.0,
+    "sum_inc_gst": 16.5
+  },
+  {
+    "enterprise_name": "Back2Health",
+    "product_name": "Premium-1",
+    "product_type": "call-pack",
+    "service_ref_id": "b2h.04@back2health.net.au",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Back2Health",
+    "product_name": "Voicemail",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Back2Health",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 255.3,
+    "sum_inc_gst": 280.83
+  },
+  {
+    "enterprise_name": "Balanced Business Accounting",
+    "product_name": "DID Australia (1)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 6.0,
+    "sum_inc_gst": 6.6000000000000005
+  },
+  {
+    "enterprise_name": "Balanced Business Accounting",
+    "product_name": "Premium-1",
+    "product_type": "call-pack",
+    "service_ref_id": "bba1@businessaccounting.com.au",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Balanced Business Accounting",
+    "product_name": "SmileTel Executive User License",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 90.0,
+    "sum_inc_gst": 99.0
+  },
+  {
+    "enterprise_name": "Balanced Business Accounting",
+    "product_name": "Softphone add-on with Cisco Webex",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Balanced Business Accounting",
+    "product_name": "UCXcel Hunt Group",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Balanced Business Accounting",
+    "product_name": "Voicemail",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Balanced Business Accounting",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 236.11,
+    "sum_inc_gst": 259.72099999999995
+  },
+  {
+    "enterprise_name": "Bar Alto",
+    "product_name": "Call Centre Queue with Time of Day Routing",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Bar Alto",
+    "product_name": "DID Australia (1)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 6.0,
+    "sum_inc_gst": 6.6000000000000005
+  },
+  {
+    "enterprise_name": "Bar Alto",
+    "product_name": "Premium-1",
+    "product_type": "call-pack",
+    "service_ref_id": "main_baralto@baralto.com.au",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Bar Alto",
+    "product_name": "SmileTel Essential user",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 15.0,
+    "sum_inc_gst": 16.5
+  },
+  {
+    "enterprise_name": "Bar Alto",
+    "product_name": "UCXcel Call Centre Queue",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Bar Alto",
+    "product_name": "UCXcel Essential",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 30.0,
+    "sum_inc_gst": 33.0
+  },
+  {
+    "enterprise_name": "Bar Alto",
+    "product_name": "Voicemail",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Bar Alto",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 297.15,
+    "sum_inc_gst": 326.86499999999995
+  },
+  {
+    "enterprise_name": "Bell Criminal Lawyers Pty Ltd",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 449.0,
+    "sum_inc_gst": 493.9
+  },
+  {
+    "enterprise_name": "Bracken Ridge Family Practice",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 35.0,
+    "sum_inc_gst": 38.5
+  },
+  {
+    "enterprise_name": "Branyan Early Learning Centre",
+    "product_name": "DID Australia (1)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 2.0,
+    "sum_inc_gst": 2.2
+  },
+  {
+    "enterprise_name": "Branyan Early Learning Centre",
+    "product_name": "Premium-1",
+    "product_type": "call-pack",
+    "service_ref_id": "ecl1@branyanelc.com.au",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Branyan Early Learning Centre",
+    "product_name": "UCXcel Essential",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 75.0,
+    "sum_inc_gst": 82.5
+  },
+  {
+    "enterprise_name": "Branyan Early Learning Centre",
+    "product_name": "Voicemail User",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Branyan Early Learning Centre",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 60.629999999999995,
+    "sum_inc_gst": 66.693
+  },
+  {
+    "enterprise_name": "BT Lawyers Pty Ltd",
+    "product_name": "Business Trunk (PAYG)",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 600.0,
+    "sum_inc_gst": 660.0
+  },
+  {
+    "enterprise_name": "BT Lawyers Pty Ltd",
+    "product_name": "CS - 3 Included Local National Mobile Call Pack",
+    "product_type": "call-pack",
+    "service_ref_id": "97157_bt_lawyers_sip@btlwayers.com.au",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "BT Lawyers Pty Ltd",
+    "product_name": "DID Australia (1)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 2.0,
+    "sum_inc_gst": 2.2
+  },
+  {
+    "enterprise_name": "BT Lawyers Pty Ltd",
+    "product_name": "DID Australia (100)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 55.0,
+    "sum_inc_gst": 60.5
+  },
+  {
+    "enterprise_name": "BT Lawyers Pty Ltd",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 2050.64,
+    "sum_inc_gst": 2255.7039999999997
+  },
+  {
+    "enterprise_name": "Bush to Beach Legal Pty Ltd",
+    "product_name": "DID Australia (1)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 4.0,
+    "sum_inc_gst": 4.4
+  },
+  {
+    "enterprise_name": "Bush to Beach Legal Pty Ltd",
+    "product_name": "DID Australia (100)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 55.0,
+    "sum_inc_gst": 60.5
+  },
+  {
+    "enterprise_name": "Bush to Beach Legal Pty Ltd",
+    "product_name": "Inbound 1300 Number Hosting",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 10.5,
+    "sum_inc_gst": 11.55
+  },
+  {
+    "enterprise_name": "Bush to Beach Legal Pty Ltd",
+    "product_name": "Operator Connect SIP Trunk",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 90.0,
+    "sum_inc_gst": 99.0
+  },
+  {
+    "enterprise_name": "Bush to Beach Legal Pty Ltd",
+    "product_name": "Premium-1",
+    "product_type": "call-pack",
+    "service_ref_id": "TEAMS_TG_126243@bushtobeachlegal.com.au",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Bush to Beach Legal Pty Ltd",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 607.0600000000001,
+    "sum_inc_gst": 667.7659999999998
+  },
+  {
+    "enterprise_name": "Butchulla Enterprises Ltd",
+    "product_name": "Call Centre Queue with Time of Day Routing",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Butchulla Enterprises Ltd",
+    "product_name": "DID Australia (1)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 2.0,
+    "sum_inc_gst": 2.2
+  },
+  {
+    "enterprise_name": "Butchulla Enterprises Ltd",
+    "product_name": "MC - SmileTel Executive User License",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 60.0,
+    "sum_inc_gst": 66.0
+  },
+  {
+    "enterprise_name": "Butchulla Enterprises Ltd",
+    "product_name": "ME - 3 Included Local National Mobile Call Pack",
+    "product_type": "call-pack",
+    "service_ref_id": "kgarireception@butchulla.com.au",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Butchulla Enterprises Ltd",
+    "product_name": "Premium-2",
+    "product_type": "call-pack",
+    "service_ref_id": "callpark@butchulla.com.au",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Butchulla Enterprises Ltd",
+    "product_name": "Virtual Park User",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Butchulla Enterprises Ltd",
+    "product_name": "Voicemail",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Butchulla Enterprises Ltd",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Cala Luna Rental",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 115.45,
+    "sum_inc_gst": 126.995
+  },
+  {
+    "enterprise_name": "Caneland Engineering",
+    "product_name": "DID Australia (1)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 2.0,
+    "sum_inc_gst": 2.2
+  },
+  {
+    "enterprise_name": "Caneland Engineering",
+    "product_name": "External Channels",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Caneland Engineering",
+    "product_name": "Lite",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Caneland Engineering",
+    "product_name": "Premium-3",
+    "product_type": "call-pack",
+    "service_ref_id": "admin@caneland.com.au",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Caneland Engineering",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 290.07,
+    "sum_inc_gst": 319.077
+  },
+  {
+    "enterprise_name": "Canossa Medical Centre Pharmacy",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 114.0,
+    "sum_inc_gst": 125.4
+  },
+  {
+    "enterprise_name": "Cassels Strata Management Pty Ltd",
+    "product_name": "DID Australia (1)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 6.0,
+    "sum_inc_gst": 6.6000000000000005
+  },
+  {
+    "enterprise_name": "Cassels Strata Management Pty Ltd",
+    "product_name": "Operator Connect SIP Trunk",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 90.0,
+    "sum_inc_gst": 99.0
+  },
+  {
+    "enterprise_name": "Cassels Strata Management Pty Ltd",
+    "product_name": "Premium-1",
+    "product_type": "call-pack",
+    "service_ref_id": "TEAMS_TG_127018@casselsstrata.com.au",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Cassels Strata Management Pty Ltd",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 185.28000000000006,
+    "sum_inc_gst": 203.80799999999996
+  },
+  {
+    "enterprise_name": "Catolin Pty Ltd T-A Helloworld Strathpine",
+    "product_name": "Call Centre Queue with Time of Day Routing",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Catolin Pty Ltd T-A Helloworld Strathpine",
+    "product_name": "DID Australia (1)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 4.0,
+    "sum_inc_gst": 4.4
+  },
+  {
+    "enterprise_name": "Catolin Pty Ltd T-A Helloworld Strathpine",
+    "product_name": "MC - SmileTel Executive User License",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 30.0,
+    "sum_inc_gst": 33.0
+  },
+  {
+    "enterprise_name": "Catolin Pty Ltd T-A Helloworld Strathpine",
+    "product_name": "MC - SmileTel Premium User License",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 180.0,
+    "sum_inc_gst": 198.0
+  },
+  {
+    "enterprise_name": "Catolin Pty Ltd T-A Helloworld Strathpine",
+    "product_name": "ME - 3 Included Local National Mobile Call Pack",
+    "product_type": "call-pack",
+    "service_ref_id": "100@helloworld.com.au",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Catolin Pty Ltd T-A Helloworld Strathpine",
+    "product_name": "Premium-2",
+    "product_type": "call-pack",
+    "service_ref_id": "park_1@helloworld.com.au",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Catolin Pty Ltd T-A Helloworld Strathpine",
+    "product_name": "Virtual Park User",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Catolin Pty Ltd T-A Helloworld Strathpine",
+    "product_name": "Voicemail",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Catolin Pty Ltd T-A Helloworld Strathpine",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 192.92000000000002,
+    "sum_inc_gst": 212.212
+  },
+  {
+    "enterprise_name": "Clear Insurance",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 149.0,
+    "sum_inc_gst": 163.9
+  },
+  {
+    "enterprise_name": "CMC Property Management",
+    "product_name": "DID Australia (1)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 2.0,
+    "sum_inc_gst": 2.2
+  },
+  {
+    "enterprise_name": "CMC Property Management",
+    "product_name": "Premium-1",
+    "product_type": "call-pack",
+    "service_ref_id": "annemarie@cmcproperty.com.au",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "CMC Property Management",
+    "product_name": "SmileTel Executive User License",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 90.0,
+    "sum_inc_gst": 99.0
+  },
+  {
+    "enterprise_name": "CMC Property Management",
+    "product_name": "UCXcel Call Centre Queue",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "CMC Property Management",
+    "product_name": "Voicemail",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "CMC Property Management",
+    "product_name": "Voicemail User",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 5.0,
+    "sum_inc_gst": 5.5
+  },
+  {
+    "enterprise_name": "CMC Property Management",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 184.64,
+    "sum_inc_gst": 203.10399999999998
+  },
+  {
+    "enterprise_name": "Community Lifestyle Agency Inc",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 565.0,
+    "sum_inc_gst": 621.5
+  },
+  {
+    "enterprise_name": "Core Glass & Aluminum",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 114.0,
+    "sum_inc_gst": 125.4
+  },
+  {
+    "enterprise_name": "CPM Advisory and Project Management",
+    "product_name": "DID Australia (1)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 26.0,
+    "sum_inc_gst": 28.599999999999994
+  },
+  {
+    "enterprise_name": "CPM Advisory and Project Management",
+    "product_name": "Premium-1",
+    "product_type": "call-pack",
+    "service_ref_id": "4hbphone02@cpmadvisory.com.au",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "CPM Advisory and Project Management",
+    "product_name": "UCXcel Essential",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 255.0,
+    "sum_inc_gst": 280.5
+  },
+  {
+    "enterprise_name": "CPM Advisory and Project Management",
+    "product_name": "UCXcel Voicemail User",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "CPM Advisory and Project Management",
+    "product_name": "Voicemail User",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 5.0,
+    "sum_inc_gst": 5.5
+  },
+  {
+    "enterprise_name": "CPM Advisory and Project Management",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 144.16,
+    "sum_inc_gst": 158.57600000000002
+  },
+  {
+    "enterprise_name": "Creek St Pharmacy",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 114.0,
+    "sum_inc_gst": 125.4
+  },
+  {
+    "enterprise_name": "CU at N8S",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 105.0,
+    "sum_inc_gst": 115.5
+  },
+  {
+    "enterprise_name": "DanKel Electrical Pty Ltd",
+    "product_name": "Call Centre Queue with Time of Day Routing",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "DanKel Electrical Pty Ltd",
+    "product_name": "DID Australia (1)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 2.0,
+    "sum_inc_gst": 2.2
+  },
+  {
+    "enterprise_name": "DanKel Electrical Pty Ltd",
+    "product_name": "MC - SmileTel Executive User License",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 30.0,
+    "sum_inc_gst": 33.0
+  },
+  {
+    "enterprise_name": "DanKel Electrical Pty Ltd",
+    "product_name": "ME - 3 Included Local National Mobile Call Pack",
+    "product_type": "call-pack",
+    "service_ref_id": "reception@dankelelectrical.com.au",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "DanKel Electrical Pty Ltd",
+    "product_name": "Softphone add-on with Cisco Webex",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "DanKel Electrical Pty Ltd",
+    "product_name": "Voicemail",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "DanKel Electrical Pty Ltd",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "DJ Steel Biloela - AJ and KL Fletcher",
+    "product_name": "DID Australia (1)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 2.0,
+    "sum_inc_gst": 2.2
+  },
+  {
+    "enterprise_name": "DJ Steel Biloela - AJ and KL Fletcher",
+    "product_name": "MC - SmileTel Premium User License",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 240.0,
+    "sum_inc_gst": 264.0
+  },
+  {
+    "enterprise_name": "DJ Steel Biloela - AJ and KL Fletcher",
+    "product_name": "ME - 3 Included Local National Mobile Call Pack",
+    "product_type": "call-pack",
+    "service_ref_id": "adam@djsteel.com.au",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "DJ Steel Biloela - AJ and KL Fletcher",
+    "product_name": "Premium-2",
+    "product_type": "call-pack",
+    "service_ref_id": "park.01@djsteel.com.au",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "DJ Steel Biloela - AJ and KL Fletcher",
+    "product_name": "UCXcel Call Centre Queue",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "DJ Steel Biloela - AJ and KL Fletcher",
+    "product_name": "UCXcel Hunt Group",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "DJ Steel Biloela - AJ and KL Fletcher",
+    "product_name": "UCXcel Virtual Park User",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "DJ Steel Biloela - AJ and KL Fletcher",
+    "product_name": "Voicemail",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "DJ Steel Biloela - AJ and KL Fletcher",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 111.95,
+    "sum_inc_gst": 123.14500000000001
+  },
+  {
+    "enterprise_name": "Doyles Trade Centre",
+    "product_name": "DID Australia (1)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 22.0,
+    "sum_inc_gst": 24.199999999999996
+  },
+  {
+    "enterprise_name": "Doyles Trade Centre",
+    "product_name": "MC - SmileTel Premium User License",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 389.0,
+    "sum_inc_gst": 427.9
+  },
+  {
+    "enterprise_name": "Doyles Trade Centre",
+    "product_name": "Premium-1",
+    "product_type": "call-pack",
+    "service_ref_id": "allisonexley@doyleshome.com.au",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Doyles Trade Centre",
+    "product_name": "SmileTel Executive User License",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 30.0,
+    "sum_inc_gst": 33.0
+  },
+  {
+    "enterprise_name": "Doyles Trade Centre",
+    "product_name": "Softphone add-on with Cisco Webex",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Doyles Trade Centre",
+    "product_name": "Voicemail",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Doyles Trade Centre",
+    "product_name": "Voicemail User",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Doyles Trade Centre",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 358.22,
+    "sum_inc_gst": 394.042
+  },
+  {
+    "enterprise_name": "Edens Landing Doctors",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 114.0,
+    "sum_inc_gst": 125.4
+  },
+  {
+    "enterprise_name": "Emergency Medicine Foundation",
+    "product_name": "Call Centre Queue with Time of Day Routing",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Emergency Medicine Foundation",
+    "product_name": "DID Australia (1)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 2.0,
+    "sum_inc_gst": 2.2
+  },
+  {
+    "enterprise_name": "Emergency Medicine Foundation",
+    "product_name": "Premium-1",
+    "product_type": "call-pack",
+    "service_ref_id": "emf1@emfoundation.org.au",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Emergency Medicine Foundation",
+    "product_name": "UCXcel Basic Queue Agent",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Emergency Medicine Foundation",
+    "product_name": "UCXcel Essential",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 25.0,
+    "sum_inc_gst": 27.5
+  },
+  {
+    "enterprise_name": "Emergency Medicine Foundation",
+    "product_name": "UCXcel Webex Basic",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Emergency Medicine Foundation",
+    "product_name": "Voicemail",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Emergency Medicine Foundation",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Fast Cut Qld Pty Ltd",
+    "product_name": "DID Australia (1)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 2.0,
+    "sum_inc_gst": 2.2
+  },
+  {
+    "enterprise_name": "Fast Cut Qld Pty Ltd",
+    "product_name": "ME - 3 Included Local National Mobile Call Pack",
+    "product_type": "call-pack",
+    "service_ref_id": "brock@fastcut.com.au",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Fast Cut Qld Pty Ltd",
+    "product_name": "SmileTel Executive User License",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 150.0,
+    "sum_inc_gst": 165.0
+  },
+  {
+    "enterprise_name": "Fast Cut Qld Pty Ltd",
+    "product_name": "Softphone add-on with Cisco Webex",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Fast Cut Qld Pty Ltd",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 125.45,
+    "sum_inc_gst": 137.995
+  },
+  {
+    "enterprise_name": "First National Childers",
+    "product_name": "Call Centre Queue with Time of Day Routing",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "First National Childers",
+    "product_name": "DID Australia (1)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 2.0,
+    "sum_inc_gst": 2.2
+  },
+  {
+    "enterprise_name": "First National Childers",
+    "product_name": "MC - SmileTel Executive User License",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 180.0,
+    "sum_inc_gst": 198.0
+  },
+  {
+    "enterprise_name": "First National Childers",
+    "product_name": "ME - 3 Included Local National Mobile Call Pack",
+    "product_type": "call-pack",
+    "service_ref_id": "heather@childersfn.com.au",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "First National Childers",
+    "product_name": "Voicemail",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "First National Childers",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 117.86,
+    "sum_inc_gst": 129.646
+  },
+  {
+    "enterprise_name": "Flutterbys Child Care",
+    "product_name": "Call Centre Queue with Time of Day Routing",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Flutterbys Child Care",
+    "product_name": "DID Australia (1)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 2.0,
+    "sum_inc_gst": 2.2
+  },
+  {
+    "enterprise_name": "Flutterbys Child Care",
+    "product_name": "MC - SmileTel Executive User License",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 210.0,
+    "sum_inc_gst": 231.0
+  },
+  {
+    "enterprise_name": "Flutterbys Child Care",
+    "product_name": "ME - 3 Included Local National Mobile Call Pack",
+    "product_type": "call-pack",
+    "service_ref_id": "kitchen1@flutterbyschildcare.com.au",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Flutterbys Child Care",
+    "product_name": "Voicemail",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Flutterbys Child Care",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 117.86,
+    "sum_inc_gst": 129.646
+  },
+  {
+    "enterprise_name": "GBA Consulting Engineers",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 5648.0,
+    "sum_inc_gst": 6212.8
+  },
+  {
+    "enterprise_name": "GEORGE'S LOADER HIRE PTY LTD",
+    "product_name": "Call Centre Queue with Time of Day Routing",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "GEORGE'S LOADER HIRE PTY LTD",
+    "product_name": "DID Australia (1)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 4.0,
+    "sum_inc_gst": 4.4
+  },
+  {
+    "enterprise_name": "GEORGE'S LOADER HIRE PTY LTD",
+    "product_name": "Premium-1",
+    "product_type": "call-pack",
+    "service_ref_id": "admin@glh.net.au",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "GEORGE'S LOADER HIRE PTY LTD",
+    "product_name": "SmileTel Executive User License",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 60.0,
+    "sum_inc_gst": 66.0
+  },
+  {
+    "enterprise_name": "GEORGE'S LOADER HIRE PTY LTD",
+    "product_name": "Softphone add-on with Cisco Webex",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 20.0,
+    "sum_inc_gst": 22.0
+  },
+  {
+    "enterprise_name": "GEORGE'S LOADER HIRE PTY LTD",
+    "product_name": "Voicemail",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "GEORGE'S LOADER HIRE PTY LTD",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 19.97,
+    "sum_inc_gst": 21.96699999999999
+  },
+  {
+    "enterprise_name": "Graphene Manufacturing Australia",
+    "product_name": "DID Australia (1)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 2.0,
+    "sum_inc_gst": 2.2
+  },
+  {
+    "enterprise_name": "Graphene Manufacturing Australia",
+    "product_name": "Inbound 1300 Number Hosting",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 22.0,
+    "sum_inc_gst": 24.2
+  },
+  {
+    "enterprise_name": "Graphene Manufacturing Australia",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 432.54999999999995,
+    "sum_inc_gst": 475.805
+  },
+  {
+    "enterprise_name": "Greg & Jan Taylor",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 114.0,
+    "sum_inc_gst": 125.4
+  },
+  {
+    "enterprise_name": "Groundswell Accounting & Advisory",
+    "product_name": "DID Australia (1)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 6.0,
+    "sum_inc_gst": 6.6000000000000005
+  },
+  {
+    "enterprise_name": "Groundswell Accounting & Advisory",
+    "product_name": "Premium-2",
+    "product_type": "call-pack",
+    "service_ref_id": "ellah@groundswellca.com.au",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Groundswell Accounting & Advisory",
+    "product_name": "SmileTel Executive User License",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 54.5,
+    "sum_inc_gst": 59.95
+  },
+  {
+    "enterprise_name": "Groundswell Accounting & Advisory",
+    "product_name": "Softphone add-on with Cisco Webex",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Groundswell Accounting & Advisory",
+    "product_name": "UCXcel Call Centre Queue",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Groundswell Accounting & Advisory",
+    "product_name": "UCXcel Essential",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 94.62,
+    "sum_inc_gst": 104.082
+  },
+  {
+    "enterprise_name": "Groundswell Accounting & Advisory",
+    "product_name": "UCXcel Hunt Group",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Groundswell Accounting & Advisory",
+    "product_name": "UCXcel Webex Basic",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Groundswell Accounting & Advisory",
+    "product_name": "Voicemail",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Groundswell Accounting & Advisory",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 131.76000000000005,
+    "sum_inc_gst": 144.93599999999995
+  },
+  {
+    "enterprise_name": "Grunskes by the River",
+    "product_name": "Call Centre Queue with Time of Day Routing",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Grunskes by the River",
+    "product_name": "DID Australia (1)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 2.0,
+    "sum_inc_gst": 2.2
+  },
+  {
+    "enterprise_name": "Grunskes by the River",
+    "product_name": "MC (Special - Inc) - Executive User License",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 210.0,
+    "sum_inc_gst": 231.0
+  },
+  {
+    "enterprise_name": "Grunskes by the River",
+    "product_name": "ME - 3 Included Local National Mobile Call Pack",
+    "product_type": "call-pack",
+    "service_ref_id": "annette@gbtr.com.au",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Grunskes by the River",
+    "product_name": "Premium Call Queue",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Grunskes by the River",
+    "product_name": "Premium-2",
+    "product_type": "call-pack",
+    "service_ref_id": "park_1@gbtr.com.au",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Grunskes by the River",
+    "product_name": "Virtual Park User",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Grunskes by the River",
+    "product_name": "Voicemail",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Grunskes by the River",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 346.6,
+    "sum_inc_gst": 381.26
+  },
+  {
+    "enterprise_name": "Hemmingway Financial Pty Ltd",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 116.66,
+    "sum_inc_gst": 128.326
+  },
+  {
+    "enterprise_name": "Hervey Bay Garden Centre",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 78.59,
+    "sum_inc_gst": 86.449
+  },
+  {
+    "enterprise_name": "Institute for Healthy Communities Australia",
+    "product_name": "DID Australia (1)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 2.0,
+    "sum_inc_gst": 2.2
+  },
+  {
+    "enterprise_name": "Institute for Healthy Communities Australia",
+    "product_name": "Essentials",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 130.0,
+    "sum_inc_gst": 143.0
+  },
+  {
+    "enterprise_name": "Institute for Healthy Communities Australia",
+    "product_name": "External Channels",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 28.4,
+    "sum_inc_gst": 31.24
+  },
+  {
+    "enterprise_name": "Institute for Healthy Communities Australia",
+    "product_name": "Inbound 1800 Number Hosting",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 22.0,
+    "sum_inc_gst": 24.2
+  },
+  {
+    "enterprise_name": "Institute for Healthy Communities Australia",
+    "product_name": "Premium-3",
+    "product_type": "call-pack",
+    "service_ref_id": "danielle.meldrum@ihca.com.au",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Institute for Healthy Communities Australia",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 856.19,
+    "sum_inc_gst": 941.809
+  },
+  {
+    "enterprise_name": "Integrated Oral and Maxillofacial Surgery Pty Ltd",
+    "product_name": "Call Centre Queue with Time of Day Routing",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Integrated Oral and Maxillofacial Surgery Pty Ltd",
+    "product_name": "DID Australia (1)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 2.0,
+    "sum_inc_gst": 2.2
+  },
+  {
+    "enterprise_name": "Integrated Oral and Maxillofacial Surgery Pty Ltd",
+    "product_name": "MC - SmileTel Executive User License",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 150.0,
+    "sum_inc_gst": 165.0
+  },
+  {
+    "enterprise_name": "Integrated Oral and Maxillofacial Surgery Pty Ltd",
+    "product_name": "ME - 3 Included Local National Mobile Call Pack",
+    "product_type": "call-pack",
+    "service_ref_id": "manager@integratedoralsurgery.com.au",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Integrated Oral and Maxillofacial Surgery Pty Ltd",
+    "product_name": "Premium-2",
+    "product_type": "call-pack",
+    "service_ref_id": "holiday_vm@integratedoralsurgery.com.au",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Integrated Oral and Maxillofacial Surgery Pty Ltd",
+    "product_name": "Voicemail",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Integrated Oral and Maxillofacial Surgery Pty Ltd",
+    "product_name": "Voicemail User",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 5.0,
+    "sum_inc_gst": 5.5
+  },
+  {
+    "enterprise_name": "Integrated Oral and Maxillofacial Surgery Pty Ltd",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 167.94,
+    "sum_inc_gst": 184.734
+  },
+  {
+    "enterprise_name": "Jayden Adams Home",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 74.38,
+    "sum_inc_gst": 81.818
+  },
+  {
+    "enterprise_name": "Just Better Care",
+    "product_name": "DID Australia (1)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 2.0,
+    "sum_inc_gst": 2.2
+  },
+  {
+    "enterprise_name": "Just Better Care",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 157.8,
+    "sum_inc_gst": 173.58
+  },
+  {
+    "enterprise_name": "Kaleidoscope Australasia Pty Ltd",
+    "product_name": "Call Centre Queue with Time of Day Routing",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Kaleidoscope Australasia Pty Ltd",
+    "product_name": "DID Australia (1)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 2.0,
+    "sum_inc_gst": 2.2
+  },
+  {
+    "enterprise_name": "Kaleidoscope Australasia Pty Ltd",
+    "product_name": "MC (Special) - Executive User License",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 96.0,
+    "sum_inc_gst": 105.60000000000001
+  },
+  {
+    "enterprise_name": "Kaleidoscope Australasia Pty Ltd",
+    "product_name": "Premium-2",
+    "product_type": "call-pack",
+    "service_ref_id": "ann@kaleidoscope.com.au",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Kaleidoscope Australasia Pty Ltd",
+    "product_name": "Softphone add-on with Cisco Webex",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Kaleidoscope Australasia Pty Ltd",
+    "product_name": "Virtual Park User",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 5.0,
+    "sum_inc_gst": 5.5
+  },
+  {
+    "enterprise_name": "Kaleidoscope Australasia Pty Ltd",
+    "product_name": "Voicemail",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Kaleidoscope Australasia Pty Ltd",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 158.01999999999998,
+    "sum_inc_gst": 173.822
+  },
+  {
+    "enterprise_name": "Livingstone Low Electrical Pty Ltd",
+    "product_name": "Call Centre Queue with Time of Day Routing",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Livingstone Low Electrical Pty Ltd",
+    "product_name": "DID Australia (1)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 2.0,
+    "sum_inc_gst": 2.2
+  },
+  {
+    "enterprise_name": "Livingstone Low Electrical Pty Ltd",
+    "product_name": "MC - SmileTel Executive User License",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 60.0,
+    "sum_inc_gst": 66.0
+  },
+  {
+    "enterprise_name": "Livingstone Low Electrical Pty Ltd",
+    "product_name": "ME - 3 Included Local National Mobile Call Pack",
+    "product_type": "call-pack",
+    "service_ref_id": "cordless@livingstonelowelectrical.com",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Livingstone Low Electrical Pty Ltd",
+    "product_name": "Softphone add-on with Cisco Webex",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Livingstone Low Electrical Pty Ltd",
+    "product_name": "Voicemail",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Livingstone Low Electrical Pty Ltd",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 98.6,
+    "sum_inc_gst": 108.46
+  },
+  {
+    "enterprise_name": "London Fire and Safe",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 155.0,
+    "sum_inc_gst": 170.5
+  },
+  {
+    "enterprise_name": "Loving Tan",
+    "product_name": "Call Centre Queue with Time of Day Routing",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Loving Tan",
+    "product_name": "DID Australia (1)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 0.7,
+    "sum_inc_gst": 0.77
+  },
+  {
+    "enterprise_name": "Loving Tan",
+    "product_name": "MC - SmileTel Executive User License",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 30.0,
+    "sum_inc_gst": 33.0
+  },
+  {
+    "enterprise_name": "Loving Tan",
+    "product_name": "Premium-2",
+    "product_type": "call-pack",
+    "service_ref_id": "kea@lovingtan.com",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Loving Tan",
+    "product_name": "Softphone add-on with Cisco Webex",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Loving Tan",
+    "product_name": "Voicemail",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Loving Tan",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 0.55,
+    "sum_inc_gst": 0.605
+  },
+  {
+    "enterprise_name": "Makris Group - Balgra Shopping Centre",
+    "product_name": "DID Australia (10)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 60.0,
+    "sum_inc_gst": 66.0
+  },
+  {
+    "enterprise_name": "Makris Group - Balgra Shopping Centre",
+    "product_name": "Premium-1",
+    "product_type": "call-pack",
+    "service_ref_id": "Goldcoast.VM@makris.com.au",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Makris Group - Balgra Shopping Centre",
+    "product_name": "UCXcel Essential",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 165.0,
+    "sum_inc_gst": 181.5
+  },
+  {
+    "enterprise_name": "Makris Group - Balgra Shopping Centre",
+    "product_name": "Voicemail User",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Makris Group - Balgra Shopping Centre",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 88.95,
+    "sum_inc_gst": 97.845
+  },
+  {
+    "enterprise_name": "Mega Electrics",
+    "product_name": "DID Australia (1)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 12.0,
+    "sum_inc_gst": 13.2
+  },
+  {
+    "enterprise_name": "Mega Electrics",
+    "product_name": "DID Australia (10)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 20.0,
+    "sum_inc_gst": 22.0
+  },
+  {
+    "enterprise_name": "Mega Electrics",
+    "product_name": "Inbound 1300 Number Hosting",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 10.5,
+    "sum_inc_gst": 11.55
+  },
+  {
+    "enterprise_name": "Mega Electrics",
+    "product_name": "Operator Connect SIP Trunk",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 90.0,
+    "sum_inc_gst": 99.0
+  },
+  {
+    "enterprise_name": "Mega Electrics",
+    "product_name": "Premium-1",
+    "product_type": "call-pack",
+    "service_ref_id": "broadworksanywhere@megaelectrics.com",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Mega Electrics",
+    "product_name": "UCXcel Essential",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 15.0,
+    "sum_inc_gst": 16.5
+  },
+  {
+    "enterprise_name": "Mega Electrics",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 611.29,
+    "sum_inc_gst": 672.419
+  },
+  {
+    "enterprise_name": "Mother Duck Bellbowrie",
+    "product_name": "DID Australia (1)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 2.0,
+    "sum_inc_gst": 2.2
+  },
+  {
+    "enterprise_name": "Mother Duck Bellbowrie",
+    "product_name": "Premium-1",
+    "product_type": "call-pack",
+    "service_ref_id": "bellbowrie_cordless_1@motherduck.com.au",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Mother Duck Bellbowrie",
+    "product_name": "UCXcel Call Centre Queue",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Mother Duck Bellbowrie",
+    "product_name": "UCXcel Lite",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 50.0,
+    "sum_inc_gst": 55.0
+  },
+  {
+    "enterprise_name": "Mother Duck Bellbowrie",
+    "product_name": "UCXcel Professional",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 25.0,
+    "sum_inc_gst": 27.5
+  },
+  {
+    "enterprise_name": "Mother Duck Bellbowrie",
+    "product_name": "Voicemail",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Mother Duck Bellbowrie",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 148.0,
+    "sum_inc_gst": 162.8
+  },
+  {
+    "enterprise_name": "Mother Duck Eatons Hill",
+    "product_name": "Call Centre Queue with Time of Day Routing",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Mother Duck Eatons Hill",
+    "product_name": "DID Australia (1)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 2.0,
+    "sum_inc_gst": 2.2
+  },
+  {
+    "enterprise_name": "Mother Duck Eatons Hill",
+    "product_name": "MC - SmileTel Executive User License",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 90.0,
+    "sum_inc_gst": 99.0
+  },
+  {
+    "enterprise_name": "Mother Duck Eatons Hill",
+    "product_name": "Premium-2",
+    "product_type": "call-pack",
+    "service_ref_id": "cordless_1@motherduck.com.au",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Mother Duck Eatons Hill",
+    "product_name": "Voicemail",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Mother Duck Eatons Hill",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 142.17,
+    "sum_inc_gst": 156.387
+  },
+  {
+    "enterprise_name": "Nicki's Professional Security Screens & Blinds",
+    "product_name": "Call Centre Queue with Time of Day Routing",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Nicki's Professional Security Screens & Blinds",
+    "product_name": "DID Australia (1)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 4.0,
+    "sum_inc_gst": 4.4
+  },
+  {
+    "enterprise_name": "Nicki's Professional Security Screens & Blinds",
+    "product_name": "ME - 3 Included Local National Mobile Call Pack",
+    "product_type": "call-pack",
+    "service_ref_id": "info@nickis.com.au",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Nicki's Professional Security Screens & Blinds",
+    "product_name": "Premium-1",
+    "product_type": "call-pack",
+    "service_ref_id": "holiday_vm@nickis.com.au",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Nicki's Professional Security Screens & Blinds",
+    "product_name": "UCXcel Essential",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 30.0,
+    "sum_inc_gst": 33.0
+  },
+  {
+    "enterprise_name": "Nicki's Professional Security Screens & Blinds",
+    "product_name": "UCXcel Webex Basic",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Nicki's Professional Security Screens & Blinds",
+    "product_name": "Voicemail",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Nicki's Professional Security Screens & Blinds",
+    "product_name": "Voicemail User",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 5.0,
+    "sum_inc_gst": 5.5
+  },
+  {
+    "enterprise_name": "Nicki's Professional Security Screens & Blinds",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 170.8,
+    "sum_inc_gst": 187.88
+  },
+  {
+    "enterprise_name": "Nina Bambino Dental",
+    "product_name": "Call Centre Queue with Time of Day Routing",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Nina Bambino Dental",
+    "product_name": "DID Australia (1)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 2.0,
+    "sum_inc_gst": 2.2
+  },
+  {
+    "enterprise_name": "Nina Bambino Dental",
+    "product_name": "Premium-1",
+    "product_type": "call-pack",
+    "service_ref_id": "downstairs@nbdental.com.au",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Nina Bambino Dental",
+    "product_name": "SmileTel Executive User License",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 135.0,
+    "sum_inc_gst": 148.5
+  },
+  {
+    "enterprise_name": "Nina Bambino Dental",
+    "product_name": "UCXcel Hunt Group",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Nina Bambino Dental",
+    "product_name": "Voicemail",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Nina Bambino Dental",
+    "product_name": "Voicemail User",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 5.0,
+    "sum_inc_gst": 5.5
+  },
+  {
+    "enterprise_name": "Nina Bambino Dental",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 107.39000000000001,
+    "sum_inc_gst": 118.129
+  },
+  {
+    "enterprise_name": "Noma Themba",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 82.73,
+    "sum_inc_gst": 91.003
+  },
+  {
+    "enterprise_name": "North Coast Mower Centre",
+    "product_name": "Call Centre Queue with Time of Day Routing",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "North Coast Mower Centre",
+    "product_name": "DID Australia (1)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 2.0,
+    "sum_inc_gst": 2.2
+  },
+  {
+    "enterprise_name": "North Coast Mower Centre",
+    "product_name": "MC - SmileTel Executive User License",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 90.0,
+    "sum_inc_gst": 99.0
+  },
+  {
+    "enterprise_name": "North Coast Mower Centre",
+    "product_name": "ME - 3 Included Local National Mobile Call Pack",
+    "product_type": "call-pack",
+    "service_ref_id": "phone1@northcoastmowercentre.com.au",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "North Coast Mower Centre",
+    "product_name": "Premium-1",
+    "product_type": "call-pack",
+    "service_ref_id": "holiday_vm@northcoastmowercentre.com.au",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "North Coast Mower Centre",
+    "product_name": "Voicemail",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "North Coast Mower Centre",
+    "product_name": "Voicemail User",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 5.0,
+    "sum_inc_gst": 5.5
+  },
+  {
+    "enterprise_name": "North Coast Mower Centre",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 129.2,
+    "sum_inc_gst": 142.12
+  },
+  {
+    "enterprise_name": "Nurturing Brain Potential",
+    "product_name": "DID Australia (1)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 2.0,
+    "sum_inc_gst": 2.2
+  },
+  {
+    "enterprise_name": "Nurturing Brain Potential",
+    "product_name": "MC - SmileTel Premium User License",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 45.0,
+    "sum_inc_gst": 49.5
+  },
+  {
+    "enterprise_name": "Nurturing Brain Potential",
+    "product_name": "Premium-1",
+    "product_type": "call-pack",
+    "service_ref_id": "nbp.01@brainpotential.com.au",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Nurturing Brain Potential",
+    "product_name": "Voicemail",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Nurturing Brain Potential",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 128.17000000000002,
+    "sum_inc_gst": 140.98700000000002
+  },
+  {
+    "enterprise_name": "Oakhurst Gun Works",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 98.0,
+    "sum_inc_gst": 107.8
+  },
+  {
+    "enterprise_name": "Paedicare Pty Ltd",
+    "product_name": "Call Centre Queue with Time of Day Routing",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Paedicare Pty Ltd",
+    "product_name": "DID Australia (1)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 6.0,
+    "sum_inc_gst": 6.6000000000000005
+  },
+  {
+    "enterprise_name": "Paedicare Pty Ltd",
+    "product_name": "DID Australia (10)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 20.0,
+    "sum_inc_gst": 22.0
+  },
+  {
+    "enterprise_name": "Paedicare Pty Ltd",
+    "product_name": "MC - SmileTel Executive User License",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 15.0,
+    "sum_inc_gst": 16.5
+  },
+  {
+    "enterprise_name": "Paedicare Pty Ltd",
+    "product_name": "MC - SmileTel Premium User License",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 105.0,
+    "sum_inc_gst": 115.5
+  },
+  {
+    "enterprise_name": "Paedicare Pty Ltd",
+    "product_name": "Premium-1",
+    "product_type": "call-pack",
+    "service_ref_id": "Consult@paedicare.com.au",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Paedicare Pty Ltd",
+    "product_name": "Softphone add-on with Cisco Webex",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Paedicare Pty Ltd",
+    "product_name": "UCXcel Call Centre Queue",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Paedicare Pty Ltd",
+    "product_name": "UCXcel Essential",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 15.0,
+    "sum_inc_gst": 16.5
+  },
+  {
+    "enterprise_name": "Paedicare Pty Ltd",
+    "product_name": "UCXcel Webex Basic",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Paedicare Pty Ltd",
+    "product_name": "Voicemail",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Paedicare Pty Ltd",
+    "product_name": "Voicemail User",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 5.0,
+    "sum_inc_gst": 5.5
+  },
+  {
+    "enterprise_name": "Paedicare Pty Ltd",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 425.09000000000003,
+    "sum_inc_gst": 467.5989999999998
+  },
+  {
+    "enterprise_name": "PD Capital",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 122.8,
+    "sum_inc_gst": 135.08
+  },
+  {
+    "enterprise_name": "Promogear",
+    "product_name": "DID Australia (1)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 4.0,
+    "sum_inc_gst": 4.4
+  },
+  {
+    "enterprise_name": "Promogear",
+    "product_name": "MC - SmileTel Premium User License",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 195.0,
+    "sum_inc_gst": 214.5
+  },
+  {
+    "enterprise_name": "Promogear",
+    "product_name": "Premium-1",
+    "product_type": "call-pack",
+    "service_ref_id": "abeeforward@promogear.com.au",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Promogear",
+    "product_name": "UCXcel Call Centre Queue",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Promogear",
+    "product_name": "Voicemail",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Promogear",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 81.58,
+    "sum_inc_gst": 89.738
+  },
+  {
+    "enterprise_name": "Red Ridge Produce",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 196.0,
+    "sum_inc_gst": 215.6
+  },
+  {
+    "enterprise_name": "Red Roo Australia",
+    "product_name": "MC - SmileTel Basic User License",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": -3.2,
+    "sum_inc_gst": -3.52
+  },
+  {
+    "enterprise_name": "Red Roo Australia",
+    "product_name": "Premium-1",
+    "product_type": "call-pack",
+    "service_ref_id": "redroo_vm@redrooaustralia.com.au-old",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Red Roo Australia",
+    "product_name": "SmileTel Essential user",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": -9.6,
+    "sum_inc_gst": -10.56
+  },
+  {
+    "enterprise_name": "Red Roo Australia",
+    "product_name": "UCXcel Hunt Group",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Red Roo Australia",
+    "product_name": "Voicemail",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Red Roo Australia",
+    "product_name": "Voicemail User",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": -0.8,
+    "sum_inc_gst": -0.88
+  },
+  {
+    "enterprise_name": "Red Roo Australia",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": -7.630000000000001,
+    "sum_inc_gst": -8.392999999999999
+  },
+  {
+    "enterprise_name": "Renovo Solutions Pty Ltd",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 839.0,
+    "sum_inc_gst": 922.9
+  },
+  {
+    "enterprise_name": "Res-Com Airconditioning Pty Ltd",
+    "product_name": "DID Australia (1)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 20.0,
+    "sum_inc_gst": 21.999999999999996
+  },
+  {
+    "enterprise_name": "Res-Com Airconditioning Pty Ltd",
+    "product_name": "Premium-1",
+    "product_type": "call-pack",
+    "service_ref_id": "rescom@res-comairconditioning.com.au",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Res-Com Airconditioning Pty Ltd",
+    "product_name": "SmileTel Executive User License",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 15.0,
+    "sum_inc_gst": 16.5
+  },
+  {
+    "enterprise_name": "Res-Com Airconditioning Pty Ltd",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 209.17,
+    "sum_inc_gst": 230.087
+  },
+  {
+    "enterprise_name": "River City Maintenance",
+    "product_name": "Auto Attendant with Time of Day Routing",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 30.0,
+    "sum_inc_gst": 33.0
+  },
+  {
+    "enterprise_name": "River City Maintenance",
+    "product_name": "Call Centre Queue with Time of Day Routing",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "River City Maintenance",
+    "product_name": "DID Australia (1)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 2.0,
+    "sum_inc_gst": 2.2
+  },
+  {
+    "enterprise_name": "River City Maintenance",
+    "product_name": "Premium-1",
+    "product_type": "call-pack",
+    "service_ref_id": "harrison@rivercitymaintenance.com.au",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "River City Maintenance",
+    "product_name": "UCXcel Basic Queue Agent",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "River City Maintenance",
+    "product_name": "UCXcel Call Centre Queue",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "River City Maintenance",
+    "product_name": "UCXcel Essential",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 165.0,
+    "sum_inc_gst": 181.5
+  },
+  {
+    "enterprise_name": "River City Maintenance",
+    "product_name": "UCXcel Webex Basic",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "River City Maintenance",
+    "product_name": "Voicemail",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "River City Maintenance",
+    "product_name": "Voicemail User",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 5.0,
+    "sum_inc_gst": 5.5
+  },
+  {
+    "enterprise_name": "River City Maintenance",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 470.73999999999995,
+    "sum_inc_gst": 517.814
+  },
+  {
+    "enterprise_name": "RND Pilates Pty Ltd",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 116.66,
+    "sum_inc_gst": 128.326
+  },
+  {
+    "enterprise_name": "Rockwell Technology",
+    "product_name": "Call Centre Queue with Time of Day Routing",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Rockwell Technology",
+    "product_name": "DID Australia (1)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 2.0,
+    "sum_inc_gst": 2.2
+  },
+  {
+    "enterprise_name": "Rockwell Technology",
+    "product_name": "MC - SmileTel Executive User License",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 90.0,
+    "sum_inc_gst": 99.0
+  },
+  {
+    "enterprise_name": "Rockwell Technology",
+    "product_name": "ME - 3 Included Local National Mobile Call Pack",
+    "product_type": "call-pack",
+    "service_ref_id": "e100@rocktec.com.au",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Rockwell Technology",
+    "product_name": "Voicemail",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Rockwell Technology",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 95.75,
+    "sum_inc_gst": 105.325
+  },
+  {
+    "enterprise_name": "Scout Talent",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 399.0,
+    "sum_inc_gst": 438.9
+  },
+  {
+    "enterprise_name": "Seven Digit's Pty Ltd",
+    "product_name": "DID Australia (1)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 0.2,
+    "sum_inc_gst": 0.22
+  },
+  {
+    "enterprise_name": "Seven Digit's Pty Ltd",
+    "product_name": "MC - SmileTel Lite User License",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 6.5,
+    "sum_inc_gst": 7.15
+  },
+  {
+    "enterprise_name": "Seven Digit's Pty Ltd",
+    "product_name": "Premium-1",
+    "product_type": "call-pack",
+    "service_ref_id": "61741305309@sevendigits.com.au",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Seven Digit's Pty Ltd",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 123.68,
+    "sum_inc_gst": 136.048
+  },
+  {
+    "enterprise_name": "Sparrow Group Management Pty Ltd",
+    "product_name": "Auto Attendant with Time of Day Routing",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 34.5,
+    "sum_inc_gst": 37.95
+  },
+  {
+    "enterprise_name": "Sparrow Group Management Pty Ltd",
+    "product_name": "Basic Call Queue",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 42.0,
+    "sum_inc_gst": 46.2
+  },
+  {
+    "enterprise_name": "Sparrow Group Management Pty Ltd",
+    "product_name": "Call Centre Queue with Time of Day Routing",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Sparrow Group Management Pty Ltd",
+    "product_name": "DID Australia (1)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 65.2,
+    "sum_inc_gst": 71.72000000000004
+  },
+  {
+    "enterprise_name": "Sparrow Group Management Pty Ltd",
+    "product_name": "DID Australia (100)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 55.0,
+    "sum_inc_gst": 60.5
+  },
+  {
+    "enterprise_name": "Sparrow Group Management Pty Ltd",
+    "product_name": "Inbound 1300 Number Hosting",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 10.5,
+    "sum_inc_gst": 11.55
+  },
+  {
+    "enterprise_name": "Sparrow Group Management Pty Ltd",
+    "product_name": "Premium Call Queue",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 76.5,
+    "sum_inc_gst": 84.15
+  },
+  {
+    "enterprise_name": "Sparrow Group Management Pty Ltd",
+    "product_name": "Premium-2",
+    "product_type": "call-pack",
+    "service_ref_id": "106_spare@sparrow.edu.au",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Sparrow Group Management Pty Ltd",
+    "product_name": "SmileTel Essential user",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 378.72,
+    "sum_inc_gst": 416.592
+  },
+  {
+    "enterprise_name": "Sparrow Group Management Pty Ltd",
+    "product_name": "SmileTel Executive User License",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 120.0,
+    "sum_inc_gst": 132.0
+  },
+  {
+    "enterprise_name": "Sparrow Group Management Pty Ltd",
+    "product_name": "SmileTel Lite user",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 117.0,
+    "sum_inc_gst": 128.7
+  },
+  {
+    "enterprise_name": "Sparrow Group Management Pty Ltd",
+    "product_name": "Softphone add-on with Cisco Webex",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Sparrow Group Management Pty Ltd",
+    "product_name": "UCXcel Auto-Attendant",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Sparrow Group Management Pty Ltd",
+    "product_name": "UCXcel Basic Queue Agent",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Sparrow Group Management Pty Ltd",
+    "product_name": "UCXcel Essential",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 445.0,
+    "sum_inc_gst": 489.5
+  },
+  {
+    "enterprise_name": "Sparrow Group Management Pty Ltd",
+    "product_name": "UCXcel Hunt Group",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Sparrow Group Management Pty Ltd",
+    "product_name": "UCXcel Lite",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 1465.0,
+    "sum_inc_gst": 1611.5
+  },
+  {
+    "enterprise_name": "Sparrow Group Management Pty Ltd",
+    "product_name": "UCXcel Webex Basic",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Sparrow Group Management Pty Ltd",
+    "product_name": "Voicemail",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Sparrow Group Management Pty Ltd",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 1276.27,
+    "sum_inc_gst": 1403.8970000000002
+  },
+  {
+    "enterprise_name": "Spring Projects Pty Ltd",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 332.0,
+    "sum_inc_gst": 365.2
+  },
+  {
+    "enterprise_name": "STA Consulting Engineers",
+    "product_name": "Auto Attendant with Time of Day Routing",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 45.0,
+    "sum_inc_gst": 49.5
+  },
+  {
+    "enterprise_name": "STA Consulting Engineers",
+    "product_name": "Collaborate Basic User with Cisco Webex",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 37.56,
+    "sum_inc_gst": 41.316
+  },
+  {
+    "enterprise_name": "STA Consulting Engineers",
+    "product_name": "DID Australia (1)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 20.0,
+    "sum_inc_gst": 21.999999999999996
+  },
+  {
+    "enterprise_name": "STA Consulting Engineers",
+    "product_name": "DID Australia (10)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 60.0,
+    "sum_inc_gst": 66.0
+  },
+  {
+    "enterprise_name": "STA Consulting Engineers",
+    "product_name": "Premium-1",
+    "product_type": "call-pack",
+    "service_ref_id": "amandeep.gill@staconsulting.com.au",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "STA Consulting Engineers",
+    "product_name": "SmileTel Basic User License",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 10.0,
+    "sum_inc_gst": 11.0
+  },
+  {
+    "enterprise_name": "STA Consulting Engineers",
+    "product_name": "UCXcel Auto-Attendant",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "STA Consulting Engineers",
+    "product_name": "UCXcel Basic Queue Agent",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "STA Consulting Engineers",
+    "product_name": "UCXcel Call Centre Queue",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "STA Consulting Engineers",
+    "product_name": "UCXcel Essential",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 1084.81,
+    "sum_inc_gst": 1193.291
+  },
+  {
+    "enterprise_name": "STA Consulting Engineers",
+    "product_name": "UCXcel Hunt Group",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "STA Consulting Engineers",
+    "product_name": "UCXcel Webex Basic",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "STA Consulting Engineers",
+    "product_name": "Voicemail",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "STA Consulting Engineers",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 725.51,
+    "sum_inc_gst": 798.0610000000001
+  },
+  {
+    "enterprise_name": "Suncoast Building Approvals",
+    "product_name": "Auto Attendant with Time of Day Routing",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 30.0,
+    "sum_inc_gst": 33.0
+  },
+  {
+    "enterprise_name": "Suncoast Building Approvals",
+    "product_name": "Call Centre Queue with Time of Day Routing",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Suncoast Building Approvals",
+    "product_name": "DID Australia (1)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 2.0,
+    "sum_inc_gst": 2.2
+  },
+  {
+    "enterprise_name": "Suncoast Building Approvals",
+    "product_name": "Premium Call Queue",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 25.5,
+    "sum_inc_gst": 28.05
+  },
+  {
+    "enterprise_name": "Suncoast Building Approvals",
+    "product_name": "Premium-1",
+    "product_type": "call-pack",
+    "service_ref_id": "asha.blandford@suncoastba.com.au",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Suncoast Building Approvals",
+    "product_name": "SmileTel Executive User License",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 375.0,
+    "sum_inc_gst": 412.5
+  },
+  {
+    "enterprise_name": "Suncoast Building Approvals",
+    "product_name": "UCXcel Hunt Group",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Suncoast Building Approvals",
+    "product_name": "Voicemail",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Suncoast Building Approvals",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 523.18,
+    "sum_inc_gst": 575.498
+  },
+  {
+    "enterprise_name": "Swara",
+    "product_name": "DID Australia (1)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 6.0,
+    "sum_inc_gst": 6.6000000000000005
+  },
+  {
+    "enterprise_name": "Swara",
+    "product_name": "Premium-1",
+    "product_type": "call-pack",
+    "service_ref_id": "swaraadmin@swara.com.au",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Swara",
+    "product_name": "UCXcel Essential",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 15.0,
+    "sum_inc_gst": 16.5
+  },
+  {
+    "enterprise_name": "Swara",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 31.759999999999998,
+    "sum_inc_gst": 34.936
+  },
+  {
+    "enterprise_name": "Talisman Partners",
+    "product_name": "DID Australia (1)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 2.0,
+    "sum_inc_gst": 2.2
+  },
+  {
+    "enterprise_name": "Talisman Partners",
+    "product_name": "Premium-1",
+    "product_type": "call-pack",
+    "service_ref_id": "talisman.01@talismantechnical.com.au",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Talisman Partners",
+    "product_name": "SmileTel Executive User License",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 15.0,
+    "sum_inc_gst": 16.5
+  },
+  {
+    "enterprise_name": "Talisman Partners",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 155.43,
+    "sum_inc_gst": 170.973
+  },
+  {
+    "enterprise_name": "The Sycamore School",
+    "product_name": "Auto Attendant with Time of Day Routing",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 15.0,
+    "sum_inc_gst": 16.5
+  },
+  {
+    "enterprise_name": "The Sycamore School",
+    "product_name": "DID Australia (1)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 2.0,
+    "sum_inc_gst": 2.2
+  },
+  {
+    "enterprise_name": "The Sycamore School",
+    "product_name": "MC - SmileTel Basic User License",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 210.0,
+    "sum_inc_gst": 231.0
+  },
+  {
+    "enterprise_name": "The Sycamore School",
+    "product_name": "MC - SmileTel Premium User License",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 99.0,
+    "sum_inc_gst": 108.90000000000002
+  },
+  {
+    "enterprise_name": "The Sycamore School",
+    "product_name": "Premium-3",
+    "product_type": "call-pack",
+    "service_ref_id": "absenceVM@sycamore.qld.edu.au",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "The Sycamore School",
+    "product_name": "UCXcel Hunt Group",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "The Sycamore School",
+    "product_name": "UCXcel Voicemail User",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "The Sycamore School",
+    "product_name": "Voicemail",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "The Sycamore School",
+    "product_name": "Voicemail User",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 5.0,
+    "sum_inc_gst": 5.5
+  },
+  {
+    "enterprise_name": "The Sycamore School",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 164.65999999999997,
+    "sum_inc_gst": 181.12599999999998
+  },
+  {
+    "enterprise_name": "The Trustee for The Ferguson Family Trust",
+    "product_name": "Call Centre Queue with Time of Day Routing",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "The Trustee for The Ferguson Family Trust",
+    "product_name": "DID Australia (1)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 2.0,
+    "sum_inc_gst": 2.2
+  },
+  {
+    "enterprise_name": "The Trustee for The Ferguson Family Trust",
+    "product_name": "MC - SmileTel Executive User License",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 30.0,
+    "sum_inc_gst": 33.0
+  },
+  {
+    "enterprise_name": "The Trustee for The Ferguson Family Trust",
+    "product_name": "MC - SmileTel Premium User License",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 28.0,
+    "sum_inc_gst": 30.8
+  },
+  {
+    "enterprise_name": "The Trustee for The Ferguson Family Trust",
+    "product_name": "ME - 3 Included Local National Mobile Call Pack",
+    "product_type": "call-pack",
+    "service_ref_id": "dave@coastaladvisers.com.au",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "The Trustee for The Ferguson Family Trust",
+    "product_name": "Premium Call Queue",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 25.5,
+    "sum_inc_gst": 28.05
+  },
+  {
+    "enterprise_name": "The Trustee for The Ferguson Family Trust",
+    "product_name": "Softphone add-on with Cisco Webex",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "The Trustee for The Ferguson Family Trust",
+    "product_name": "Voicemail",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "The Trustee for The Ferguson Family Trust",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 62.699999999999996,
+    "sum_inc_gst": 68.97
+  },
+  {
+    "enterprise_name": "THRL Pty Ltd trading as Scenic Rim Trail",
+    "product_name": "Call Centre Queue with Time of Day Routing",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "THRL Pty Ltd trading as Scenic Rim Trail",
+    "product_name": "DID Australia (1)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 2.0,
+    "sum_inc_gst": 2.2
+  },
+  {
+    "enterprise_name": "THRL Pty Ltd trading as Scenic Rim Trail",
+    "product_name": "Premium-1",
+    "product_type": "call-pack",
+    "service_ref_id": "gm1@scenicrimtrail.com.au",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "THRL Pty Ltd trading as Scenic Rim Trail",
+    "product_name": "UCXcel Basic Queue Agent",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "THRL Pty Ltd trading as Scenic Rim Trail",
+    "product_name": "UCXcel Essential",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 45.0,
+    "sum_inc_gst": 49.5
+  },
+  {
+    "enterprise_name": "THRL Pty Ltd trading as Scenic Rim Trail",
+    "product_name": "UCXcel Webex Basic",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "THRL Pty Ltd trading as Scenic Rim Trail",
+    "product_name": "Voicemail",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "THRL Pty Ltd trading as Scenic Rim Trail",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 76.23,
+    "sum_inc_gst": 83.853
+  },
+  {
+    "enterprise_name": "Travellers Group",
+    "product_name": "Call Centre Queue with Time of Day Routing",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Travellers Group",
+    "product_name": "DID Australia (1)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 2.0,
+    "sum_inc_gst": 2.2
+  },
+  {
+    "enterprise_name": "Travellers Group",
+    "product_name": "MC - SmileTel Executive User License",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 30.0,
+    "sum_inc_gst": 33.0
+  },
+  {
+    "enterprise_name": "Travellers Group",
+    "product_name": "Premium-1",
+    "product_type": "call-pack",
+    "service_ref_id": "callpark@travellersgroup.com.au",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Travellers Group",
+    "product_name": "Softphone add-on with Cisco Webex",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Travellers Group",
+    "product_name": "Virtual Park User",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Travellers Group",
+    "product_name": "Voicemail",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Travellers Group",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Travellers Rockhampton Pty Ltd CityVille Apartments & Motel",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 158.33,
+    "sum_inc_gst": 174.163
+  },
+  {
+    "enterprise_name": "Troocoo",
+    "product_name": "Call Centre Queue with Time of Day Routing",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Troocoo",
+    "product_name": "DID Australia (1)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 6.0,
+    "sum_inc_gst": 6.6000000000000005
+  },
+  {
+    "enterprise_name": "Troocoo",
+    "product_name": "ME - 3 Included Local National Mobile Call Pack",
+    "product_type": "call-pack",
+    "service_ref_id": "brisbanephone@troocoo.com.au",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Troocoo",
+    "product_name": "Premium-1",
+    "product_type": "call-pack",
+    "service_ref_id": "brisbane-q@troocoo.com.au",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Troocoo",
+    "product_name": "SmileTel Essential user",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 15.0,
+    "sum_inc_gst": 16.5
+  },
+  {
+    "enterprise_name": "Troocoo",
+    "product_name": "UCXcel Essential",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 15.0,
+    "sum_inc_gst": 16.5
+  },
+  {
+    "enterprise_name": "Troocoo",
+    "product_name": "UCXcel Webex Basic",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Troocoo",
+    "product_name": "Voicemail",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Troocoo",
+    "product_name": "Voicemail User",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Troocoo",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 557.49,
+    "sum_inc_gst": 613.239
+  },
+  {
+    "enterprise_name": "True Metal Solutions",
+    "product_name": "Call Centre Queue with Time of Day Routing",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "True Metal Solutions",
+    "product_name": "DID Australia (1)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 2.0,
+    "sum_inc_gst": 2.2
+  },
+  {
+    "enterprise_name": "True Metal Solutions",
+    "product_name": "MC - SmileTel Executive User License",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 180.0,
+    "sum_inc_gst": 198.0
+  },
+  {
+    "enterprise_name": "True Metal Solutions",
+    "product_name": "ME - 3 Included Local National Mobile Call Pack",
+    "product_type": "call-pack",
+    "service_ref_id": "e100@truemetalsolutions.com.au",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "True Metal Solutions",
+    "product_name": "Premium-2",
+    "product_type": "call-pack",
+    "service_ref_id": "park_701@truemetalsolutions.com.au",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "True Metal Solutions",
+    "product_name": "Virtual Park User",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "True Metal Solutions",
+    "product_name": "Voicemail",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "True Metal Solutions",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 160.06,
+    "sum_inc_gst": 176.066
+  },
+  {
+    "enterprise_name": "UMC North Lakes",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 114.0,
+    "sum_inc_gst": 125.4
+  },
+  {
+    "enterprise_name": "Urban Garden",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 86.36,
+    "sum_inc_gst": 94.996
+  },
+  {
+    "enterprise_name": "Viribus Kippa-Ring Pty Ltd (Golds Gym)",
+    "product_name": "Call Centre Queue with Time of Day Routing",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Viribus Kippa-Ring Pty Ltd (Golds Gym)",
+    "product_name": "DID Australia (1)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 2.0,
+    "sum_inc_gst": 2.2
+  },
+  {
+    "enterprise_name": "Viribus Kippa-Ring Pty Ltd (Golds Gym)",
+    "product_name": "MC - SmileTel Executive User License",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 60.0,
+    "sum_inc_gst": 66.0
+  },
+  {
+    "enterprise_name": "Viribus Kippa-Ring Pty Ltd (Golds Gym)",
+    "product_name": "ME - 3 Included Local National Mobile Call Pack",
+    "product_type": "call-pack",
+    "service_ref_id": "cordless@goldsgym.com.au",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Viribus Kippa-Ring Pty Ltd (Golds Gym)",
+    "product_name": "Voicemail",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Viribus Kippa-Ring Pty Ltd (Golds Gym)",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 451.0,
+    "sum_inc_gst": 496.1
+  },
+  {
+    "enterprise_name": "W&T Parcel & Freight",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 98.0,
+    "sum_inc_gst": 107.8
+  },
+  {
+    "enterprise_name": "Wattle Court Homes Pty Ltd",
+    "product_name": "DID Australia (1)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 2.0,
+    "sum_inc_gst": 2.2
+  },
+  {
+    "enterprise_name": "Wattle Court Homes Pty Ltd",
+    "product_name": "DID Australia (100)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 55.0,
+    "sum_inc_gst": 60.5
+  },
+  {
+    "enterprise_name": "Wattle Court Homes Pty Ltd",
+    "product_name": "MC - SmileTel Executive User License",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 105.0,
+    "sum_inc_gst": 115.5
+  },
+  {
+    "enterprise_name": "Wattle Court Homes Pty Ltd",
+    "product_name": "ME - 3 Included Local National Mobile Call Pack",
+    "product_type": "call-pack",
+    "service_ref_id": "cale@wattlecourt.com.au",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Wattle Court Homes Pty Ltd",
+    "product_name": "Premium Call Queue",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Wattle Court Homes Pty Ltd",
+    "product_name": "Softphone add-on with Cisco Webex",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Wattle Court Homes Pty Ltd",
+    "product_name": "UCXcel Call Centre Queue",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Wattle Court Homes Pty Ltd",
+    "product_name": "Voicemail",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Wattle Court Homes Pty Ltd",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 153.16,
+    "sum_inc_gst": 168.476
+  },
+  {
+    "enterprise_name": "Wattlestone",
+    "product_name": "DID Australia (1)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 10.0,
+    "sum_inc_gst": 11.0
+  },
+  {
+    "enterprise_name": "Wattlestone",
+    "product_name": "MC (Special) - Executive User License",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 24.0,
+    "sum_inc_gst": 26.4
+  },
+  {
+    "enterprise_name": "Wattlestone",
+    "product_name": "Premium-3",
+    "product_type": "call-pack",
+    "service_ref_id": "acornford@wattlestone.com.au",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Wattlestone",
+    "product_name": "Softphone add-on with Cisco Webex",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Wattlestone",
+    "product_name": "UCXcel Call Centre Queue",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Wattlestone",
+    "product_name": "Voicemail",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Wattlestone",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 0.25,
+    "sum_inc_gst": 0.275
+  },
+  {
+    "enterprise_name": "Woodlands Enterprises Pty Ltd",
+    "product_name": "Direct In Dial AU Mobile Number (1)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 22.5,
+    "sum_inc_gst": 24.75
+  },
+  {
+    "enterprise_name": "Woodlands Enterprises Pty Ltd",
+    "product_name": "SMS Gateway Instance ",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 5.0,
+    "sum_inc_gst": 5.5
+  },
+  {
+    "enterprise_name": "Woodlands Enterprises Pty Ltd",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 88.0,
+    "sum_inc_gst": 96.8
+  },
+  {
+    "enterprise_name": "Yallungah Boutique Hotel",
+    "product_name": "Call Centre Queue with Time of Day Routing",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Yallungah Boutique Hotel",
+    "product_name": "DID Australia (1)",
+    "product_type": "did-number",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 4.0,
+    "sum_inc_gst": 4.4
+  },
+  {
+    "enterprise_name": "Yallungah Boutique Hotel",
+    "product_name": "MC - SmileTel Executive User License",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 30.0,
+    "sum_inc_gst": 33.0
+  },
+  {
+    "enterprise_name": "Yallungah Boutique Hotel",
+    "product_name": "ME - 3 Included Local National Mobile Call Pack",
+    "product_type": "call-pack",
+    "service_ref_id": "office@yallungahhotel.com.au",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Yallungah Boutique Hotel",
+    "product_name": "Voicemail",
+    "product_type": "service-pack",
+    "service_ref_id": NaN,
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  },
+  {
+    "enterprise_name": "Yallungah Boutique Hotel",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 264.95000000000005,
+    "sum_inc_gst": 291.445
+  },
+  {
+    "enterprise_name": "Zambrero Sites",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 156.91000000000003,
+    "sum_inc_gst": 172.60100000000006
+  },
+  {
+    "enterprise_name": "(blank)",
+    "product_name": "(blank)",
+    "product_type": "(blank)",
+    "service_ref_id": "(blank)",
+    "sum_ex_gst": 0.0,
+    "sum_inc_gst": 0.0
+  }
+]

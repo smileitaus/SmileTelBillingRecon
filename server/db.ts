@@ -1,6 +1,6 @@
 import { eq, like, or, and, sql, desc, asc, inArray, ne } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, customers, locations, services, supplierAccounts, billingItems, reviewItems, billingPlatformChecks, serviceEditHistory, customerProposals, serviceCostHistory } from "../drizzle/schema";
+import { InsertUser, users, customers, locations, services, supplierAccounts, billingItems, reviewItems, billingPlatformChecks, serviceEditHistory, customerProposals, serviceCostHistory, supplierWorkbookUploads, supplierWorkbookLineItems, customerUsageSummaries, supplierEnterpriseMap, supplierProductMap, serviceBillingMatchLog } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -668,6 +668,20 @@ export async function recalculateAll() {
         )
         ELSE NULL
       END,
+      unmatchedBillingCount = (
+        SELECT COUNT(*)
+        FROM services s
+        LEFT JOIN billing_items bi
+          ON bi.serviceExternalId = s.externalId AND bi.matchStatus = 'service-matched'
+        WHERE s.customerExternalId = c.externalId
+          AND s.status NOT IN ('terminated', 'unmatched')
+          AND bi.id IS NULL
+          AND s.externalId NOT IN (
+            SELECT serviceExternalId FROM service_billing_match_log
+            WHERE customerExternalId = c.externalId
+              AND resolution = 'intentionally-unbilled'
+          )
+      ),
       updatedAt = NOW()
   `);
 
@@ -4950,4 +4964,1244 @@ export async function backfillCostSources(): Promise<{ updated: number }> {
   const r2Rows = r2 as unknown as { affectedRows?: number }[];
   const updated = (r1Rows[0]?.affectedRows ?? 0) + (r2Rows[0]?.affectedRows ?? 0);
   return { updated };
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// SASBOSS DISPATCH WORKBOOK IMPORT
+// ─────────────────────────────────────────────────────────────────────────────
+
+export interface SasBossPivotRow {
+  enterprise_name: string;
+  product_name: string;
+  product_type: string;
+  service_ref_id?: string;
+  sum_ex_gst: number;
+  sum_inc_gst: number;
+}
+
+export interface SasBossCallUsageRow {
+  enterprise_name: string;
+  call_usage_ex_gst: number;
+}
+
+export interface SasBossImportResult {
+  uploadId: number;
+  workbookName: string;
+  billingMonth: string;
+  totalExGst: number;
+  lineItemCount: number;
+  matchedCount: number;
+  unmatchedCount: number;
+  callUsageCount: number;
+  callUsageMatchedCount: number;
+  details: {
+    enterpriseName: string;
+    productName: string;
+    productType: string;
+    amountExGst: number;
+    matchStatus: 'matched' | 'unmatched' | 'partial';
+    matchedCustomerName?: string;
+    matchedServiceExternalId?: string;
+    matchConfidence?: number;
+  }[];
+  unmatchedItems: {
+    enterpriseName: string;
+    productName: string;
+    productType: string;
+    amountExGst: number;
+    reason: string;
+  }[];
+}
+
+/**
+ * Normalise a string for fuzzy matching: lowercase, strip punctuation, collapse spaces.
+ */
+function normaliseName(s: string): string {
+  return s.toLowerCase().replace(/[^a-z0-9\s]/g, ' ').replace(/\s+/g, ' ').trim();
+}
+
+/**
+ * Token overlap score between two strings (0–1).
+ * Tokens shorter than 3 chars are ignored to reduce noise.
+ */
+function tokenMatchScore(a: string, b: string): number {
+  const ta = Array.from(new Set(normaliseName(a).split(' ').filter(t => t.length > 2)));
+  const tb = Array.from(new Set(normaliseName(b).split(' ').filter(t => t.length > 2)));
+  const tbSet = new Set(tb);
+  if (ta.length === 0 || tb.length === 0) return 0;
+  let matches = 0;
+  for (const t of ta) {
+    if (tbSet.has(t)) { matches++; continue; }
+    for (const u of tb) {
+      if (t.includes(u) || u.includes(t)) { matches += 0.5; break; }
+    }
+  }
+  return matches / Math.max(ta.length, tb.length);
+}
+
+/**
+ * Map SasBoss product type to our service type enum.
+ */
+function mapProductTypeToServiceType(productType: string): string {
+  const pt = productType.toLowerCase();
+  if (pt === 'did-number') return 'Voice';
+  if (pt === 'call-pack') return 'Voice';
+  if (pt === 'service-pack') return 'Voice';
+  return 'Voice'; // SasBoss is a voice/UCaaS platform
+}
+
+/**
+ * Import a SasBoss Dispatch Charges workbook.
+ * - Matches enterprises to customers by name (fuzzy)
+ * - Matches products to existing voice services by customer + plan name (fuzzy)
+ * - Creates new unmatched services for unresolved line items
+ * - Records call usage summaries per customer
+ * - Updates service costs and billing platform tags
+ */
+export async function importSasBossDispatch(
+  workbookName: string,
+  billingMonth: string,
+  invoiceReference: string,
+  pivotRows: SasBossPivotRow[],
+  callUsageRows: SasBossCallUsageRow[],
+  importedBy: string
+): Promise<SasBossImportResult> {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+
+  // ── 1. Load all active customers for matching ──────────────────────────────
+  const allCustomers = await db
+    .select({ externalId: customers.externalId, name: customers.name })
+    .from(customers)
+    .where(ne(customers.status, 'inactive'));
+
+  function findBestCustomer(enterpriseName: string) {
+    let best: (typeof allCustomers)[0] | null = null;
+    let bestScore = 0;
+    for (const c of allCustomers) {
+      const score = tokenMatchScore(enterpriseName, c.name);
+      if (score > bestScore) { bestScore = score; best = c; }
+    }
+    return bestScore >= 0.35 ? { customer: best!, score: bestScore } : null;
+  }
+
+  // ── 2. Load all SasBoss voice services for matching ────────────────────────
+  const existingVoiceServices = await db
+    .select({
+      externalId: services.externalId,
+      planName: services.planName,
+      customerExternalId: services.customerExternalId,
+      customerName: services.customerName,
+      serviceType: services.serviceType,
+      supplierName: services.supplierName,
+    })
+    .from(services)
+    .where(and(
+      eq(services.supplierName, 'SasBoss'),
+      ne(services.status, 'inactive')
+    ));
+
+  // ── 3. Create the workbook upload record ───────────────────────────────────
+  const totalExGst = pivotRows.reduce((sum, r) => sum + (r.sum_ex_gst || 0), 0);
+  const totalIncGst = pivotRows.reduce((sum, r) => sum + (r.sum_inc_gst || 0), 0);
+
+  const [uploadResult] = await db.insert(supplierWorkbookUploads).values({
+    supplier: 'SasBoss',
+    workbookName,
+    billingMonth,
+    invoiceReference,
+    totalExGst: String(totalExGst.toFixed(2)),
+    totalIncGst: String(totalIncGst.toFixed(2)),
+    lineItemCount: pivotRows.length,
+    matchedCount: 0, // will update after matching
+    unmatchedCount: 0,
+    importedBy,
+    status: 'complete',
+  });
+  const uploadId = Number((uploadResult as any).insertId ?? 0);
+
+  // ── 4. Process all pivot rows in-memory, then batch insert ──────────────────
+  const details: SasBossImportResult['details'] = [];
+  const unmatchedItems: SasBossImportResult['unmatchedItems'] = [];
+  let matchedCount = 0;
+  let unmatchedCount = 0;
+
+  // Collect batch operations
+  const lineItemsToInsert: any[] = [];
+  const newServicesToInsert: any[] = [];
+  const serviceUpdates: Array<{ externalId: string; cost: string; account: string }> = [];
+
+  // Group pivot rows by enterprise for efficiency
+  const byEnterprise = new Map<string, SasBossPivotRow[]>();
+  for (const row of pivotRows) {
+    const key = row.enterprise_name;
+    if (!byEnterprise.has(key)) byEnterprise.set(key, []);
+    byEnterprise.get(key)!.push(row);
+  }
+
+  for (const [enterpriseName, rows] of Array.from(byEnterprise.entries())) {
+    const customerMatch = findBestCustomer(enterpriseName);
+    const customerExtId = customerMatch?.customer.externalId ?? null;
+    const customerName = customerMatch?.customer.name ?? null;
+    const customerScore = customerMatch?.score ?? 0;
+
+    // Load this customer's existing SasBoss services for product matching
+    const customerServices = customerExtId
+      ? existingVoiceServices.filter(s => s.customerExternalId === customerExtId)
+      : [];
+
+    for (const row of rows) {
+      const amountExGst = Number(row.sum_ex_gst) || 0;
+      const amountIncGst = Number(row.sum_inc_gst) || 0;
+
+      // Try to match to an existing service by plan name
+      let matchedService: (typeof existingVoiceServices)[0] | null = null;
+      let serviceScore = 0;
+      for (const svc of customerServices) {
+        const score = tokenMatchScore(row.product_name, svc.planName ?? '');
+        if (score > serviceScore) { serviceScore = score; matchedService = svc; }
+      }
+      const serviceMatched = serviceScore >= 0.4;
+
+      let matchStatus: 'matched' | 'unmatched' | 'partial' = 'unmatched';
+      let matchedServiceExtId = '';
+
+      if (customerExtId && serviceMatched && matchedService) {
+        // Full match: customer + service
+        matchStatus = 'matched';
+        matchedServiceExtId = matchedService.externalId;
+        matchedCount++;
+        serviceUpdates.push({
+          externalId: matchedService.externalId,
+          cost: String(amountExGst.toFixed(2)),
+          account: invoiceReference || billingMonth,
+        });
+
+      } else if (customerExtId && !serviceMatched) {
+        // Partial match: customer found but no matching service
+        matchStatus = 'partial';
+        unmatchedCount++;
+        const newServiceId = 'SS' + Math.random().toString(36).slice(2, 8).toUpperCase();
+        matchedServiceExtId = newServiceId;
+        newServicesToInsert.push({
+          externalId: newServiceId,
+          customerExternalId: customerExtId,
+          customerName,
+          serviceType: mapProductTypeToServiceType(row.product_type),
+          planName: row.product_name,
+          supplierName: 'SasBoss',
+          supplierAccount: invoiceReference || billingMonth,
+          monthlyCost: String(amountExGst.toFixed(2)),
+          costSource: 'supplier_invoice',
+          billingPlatform: JSON.stringify(['SasBoss']),
+          status: 'active',
+          provider: 'SasBoss',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        });
+        unmatchedItems.push({
+          enterpriseName,
+          productName: row.product_name,
+          productType: row.product_type,
+          amountExGst,
+          reason: `Customer matched to "${customerName}" but no existing service found for product "${row.product_name}". New service created.`,
+        });
+
+      } else {
+        // No customer match at all
+        matchStatus = 'unmatched';
+        unmatchedCount++;
+        const newServiceId = 'SS' + Math.random().toString(36).slice(2, 8).toUpperCase();
+        matchedServiceExtId = newServiceId;
+        newServicesToInsert.push({
+          externalId: newServiceId,
+          customerExternalId: null,
+          customerName: enterpriseName,
+          serviceType: mapProductTypeToServiceType(row.product_type),
+          planName: row.product_name,
+          supplierName: 'SasBoss',
+          supplierAccount: invoiceReference || billingMonth,
+          monthlyCost: String(amountExGst.toFixed(2)),
+          costSource: 'supplier_invoice',
+          billingPlatform: JSON.stringify(['SasBoss']),
+          status: 'unmatched',
+          provider: 'SasBoss',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        });
+        unmatchedItems.push({
+          enterpriseName,
+          productName: row.product_name,
+          productType: row.product_type,
+          amountExGst,
+          reason: `No customer found matching "${enterpriseName}" in the database.`,
+        });
+      }
+
+      lineItemsToInsert.push({
+        uploadId,
+        enterpriseName,
+        productName: row.product_name,
+        productType: row.product_type,
+        serviceRefId: row.service_ref_id ?? '',
+        amountExGst: String(amountExGst.toFixed(2)),
+        amountIncGst: String(amountIncGst.toFixed(2)),
+        matchStatus,
+        matchedCustomerExternalId: customerExtId ?? '',
+        matchedCustomerName: customerName ?? '',
+        matchedServiceExternalId: matchedServiceExtId,
+        matchConfidence: String(Math.max(customerScore, serviceScore).toFixed(2)),
+      });
+
+      details.push({
+        enterpriseName,
+        productName: row.product_name,
+        productType: row.product_type,
+        amountExGst,
+        matchStatus,
+        matchedCustomerName: customerName ?? undefined,
+        matchedServiceExternalId: matchedServiceExtId || undefined,
+        matchConfidence: Math.max(customerScore, serviceScore),
+      });
+    }
+  }
+
+  // ── 5. Execute all DB writes in bulk ──────────────────────────────────────
+  // Batch insert new services (unmatched + partial)
+  const CHUNK = 50;
+  if (newServicesToInsert.length > 0) {
+    for (let i = 0; i < newServicesToInsert.length; i += CHUNK) {
+      await db.insert(services).values(newServicesToInsert.slice(i, i + CHUNK) as any);
+    }
+  }
+
+  // Batch update matched services (run in parallel, capped at 10 concurrent)
+  for (let i = 0; i < serviceUpdates.length; i += 10) {
+    await Promise.all(
+      serviceUpdates.slice(i, i + 10).map(u =>
+        db.update(services).set({
+          monthlyCost: u.cost,
+          costSource: 'supplier_invoice',
+          billingPlatform: JSON.stringify(['SasBoss']),
+          supplierAccount: u.account,
+          updatedAt: new Date(),
+        }).where(eq(services.externalId, u.externalId))
+      )
+    );
+  }
+
+  // Batch insert line items
+  if (lineItemsToInsert.length > 0) {
+    for (let i = 0; i < lineItemsToInsert.length; i += CHUNK) {
+      await db.insert(supplierWorkbookLineItems).values(lineItemsToInsert.slice(i, i + CHUNK));
+    }
+  }
+
+  // ── 6. Update upload record with final counts ──────────────────────────────
+  await db.update(supplierWorkbookUploads).set({
+    matchedCount,
+    unmatchedCount,
+    updatedAt: new Date(),
+  }).where(eq(supplierWorkbookUploads.id, uploadId));
+
+  // ── 7. Process call usage summaries (batch) ────────────────────────────────
+  let callUsageMatchedCount = 0;
+  // usageMonth is the month BEFORE billingMonth (February usage in March workbook)
+  const [billingYear, billingMonthNum] = billingMonth.split('-').map(Number);
+  const usageMonthDate = new Date(billingYear, billingMonthNum - 2, 1); // one month back
+  const usageMonth = `${usageMonthDate.getFullYear()}-${String(usageMonthDate.getMonth() + 1).padStart(2, '0')}`;
+
+  const usageToInsert: any[] = [];
+  for (const cu of callUsageRows) {
+    if (!cu.enterprise_name || cu.call_usage_ex_gst === 0) continue;
+    const customerMatch = findBestCustomer(cu.enterprise_name);
+    if (!customerMatch) continue;
+    callUsageMatchedCount++;
+    const callUsageIncGst = cu.call_usage_ex_gst * 1.1;
+    usageToInsert.push({
+      uploadId,
+      customerExternalId: customerMatch.customer.externalId,
+      customerName: customerMatch.customer.name,
+      usageMonth,
+      usageType: 'call-usage',
+      supplier: 'SasBoss',
+      totalExGst: String(cu.call_usage_ex_gst.toFixed(2)),
+      totalIncGst: String(callUsageIncGst.toFixed(2)),
+      notes: `Imported from ${workbookName}`,
+    });
+  }
+
+  // Delete existing usage for same month+supplier before bulk insert
+  if (usageToInsert.length > 0) {
+    await db.delete(customerUsageSummaries).where(
+      and(
+        eq(customerUsageSummaries.usageMonth, usageMonth),
+        eq(customerUsageSummaries.supplier, 'SasBoss')
+      )
+    );
+    for (let i = 0; i < usageToInsert.length; i += CHUNK) {
+      await db.insert(customerUsageSummaries).values(usageToInsert.slice(i, i + CHUNK));
+    }
+  }
+
+  return {
+    uploadId,
+    workbookName,
+    billingMonth,
+    totalExGst,
+    lineItemCount: pivotRows.length,
+    matchedCount,
+    unmatchedCount,
+    callUsageCount: callUsageRows.length,
+    callUsageMatchedCount,
+    details,
+    unmatchedItems,
+  };
+}
+
+/**
+ * Get all supplier workbook uploads, most recent first.
+ */
+export async function getSupplierWorkbookUploads() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(supplierWorkbookUploads).orderBy(desc(supplierWorkbookUploads.importedAt));
+}
+
+/**
+ * Get line items for a specific workbook upload.
+ */
+export async function getWorkbookLineItems(uploadId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(supplierWorkbookLineItems)
+    .where(eq(supplierWorkbookLineItems.uploadId, uploadId))
+    .orderBy(asc(supplierWorkbookLineItems.enterpriseName));
+}
+
+/**
+ * Get call usage summaries for a customer.
+ */
+export async function getCustomerUsageSummaries(customerExternalId: string) {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(customerUsageSummaries)
+    .where(eq(customerUsageSummaries.customerExternalId, customerExternalId))
+    .orderBy(desc(customerUsageSummaries.usageMonth));
+}
+
+// ── SasBoss Dry-Run & Confirm (Two-Phase Import) ──────────────────────────────
+
+export interface SasBossMatchProposal {
+  rowIndex: number;
+  enterpriseName: string;
+  productName: string;
+  productType: string;
+  serviceRefId: string;
+  amountExGst: number;
+  amountIncGst: number;
+  // Customer match
+  customerConfidence: 'mapped' | 'exact' | 'fuzzy' | 'none';
+  customerScore: number;
+  matchedCustomerExternalId: string | null;
+  matchedCustomerName: string | null;
+  // Service match
+  serviceConfidence: 'exact' | 'fuzzy' | 'none';
+  serviceScore: number;
+  matchedServiceExternalId: string | null;
+  matchedServicePlanName: string | null;
+  // Overall
+  overallConfidence: 'mapped' | 'exact' | 'fuzzy' | 'none';
+  requiresReview: boolean;
+  // Product mapping
+  productInternalType?: string | null;
+  productBillingLabel?: string | null;
+  // User decision (filled in by frontend)
+  approved?: boolean;
+  overrideCustomerExternalId?: string | null;
+}
+
+export interface SasBossDryRunResult {
+  workbookName: string;
+  billingMonth: string;
+  totalExGst: number;
+  lineItemCount: number;
+  exactCount: number;
+  fuzzyCount: number;
+  noneCount: number;
+  proposals: SasBossMatchProposal[];
+  callUsageProposals: Array<{
+    enterpriseName: string;
+    callUsageExGst: number;
+    customerConfidence: 'mapped' | 'exact' | 'fuzzy' | 'none';
+    customerScore: number;
+    matchedCustomerExternalId: string | null;
+    matchedCustomerName: string | null;
+  }>;
+}
+
+/**
+ * Dry-run: analyse the workbook and return match proposals with confidence scores.
+ * No DB writes occur. The frontend shows this to the user for review.
+ */
+export async function dryRunSasBossDispatch(
+  workbookName: string,
+  billingMonth: string,
+  pivotRows: SasBossPivotRow[],
+  callUsageRows: SasBossCallUsageRow[]
+): Promise<SasBossDryRunResult> {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+
+  // ── Load mapping tables (primary match source) ───────────────────────────
+  const enterpriseMaps = await db
+    .select()
+    .from(supplierEnterpriseMap)
+    .where(eq(supplierEnterpriseMap.supplierName, 'SasBoss'));
+  const enterpriseMapByName = new Map(enterpriseMaps.map(m => [m.enterpriseName.toLowerCase().trim(), m]));
+
+  const productMaps = await db
+    .select()
+    .from(supplierProductMap)
+    .where(eq(supplierProductMap.supplierName, 'SasBoss'));
+  const productMapByKey = new Map(productMaps.map(m => [`${m.productName.toLowerCase().trim()}|${m.productType.toLowerCase().trim()}`, m]));
+
+  // ── Load all active customers (fallback for fuzzy matching) ───────────────
+  const allCustomers = await db
+    .select({ externalId: customers.externalId, name: customers.name })
+    .from(customers)
+    .where(ne(customers.status, 'inactive'));
+
+  // Load all SasBoss voice services
+  const existingVoiceServices = await db
+    .select({
+      externalId: services.externalId,
+      planName: services.planName,
+      customerExternalId: services.customerExternalId,
+      customerName: services.customerName,
+      serviceType: services.serviceType,
+    })
+    .from(services)
+    .where(and(
+      eq(services.supplierName, 'SasBoss'),
+      ne(services.status, 'inactive')
+    ));
+
+  function findBestCustomer(name: string) {
+    // 1. Check mapping table first (exact key match)
+    const mapped = enterpriseMapByName.get(name.toLowerCase().trim());
+    if (mapped) {
+      return { customer: { externalId: mapped.customerExternalId, name: mapped.customerName }, score: 1.0, fromMap: true };
+    }
+    // 2. Fall back to fuzzy matching
+    let best: (typeof allCustomers)[0] | null = null;
+    let bestScore = 0;
+    for (const c of allCustomers) {
+      const score = tokenMatchScore(name, c.name);
+      if (score > bestScore) { bestScore = score; best = c; }
+    }
+    return { customer: best, score: bestScore, fromMap: false };
+  }
+
+  function customerConfidenceTier(score: number, fromMap: boolean): 'mapped' | 'exact' | 'fuzzy' | 'none' {
+    if (fromMap) return 'mapped'; // confirmed from mapping table → auto-accept
+    if (score >= 0.9) return 'exact';
+    if (score >= 0.5) return 'fuzzy';
+    return 'none';
+  }
+
+  function serviceConfidenceTier(score: number): 'exact' | 'fuzzy' | 'none' {
+    if (score >= 0.8) return 'exact';
+    if (score >= 0.4) return 'fuzzy';
+    return 'none';
+  }
+
+  const proposals: SasBossMatchProposal[] = [];
+  let exactCount = 0, fuzzyCount = 0, noneCount = 0;
+
+  for (let rowIndex = 0; rowIndex < pivotRows.length; rowIndex++) {
+    const row = pivotRows[rowIndex];
+    const { customer, score: custScore, fromMap } = findBestCustomer(row.enterprise_name);
+    const custTier = customerConfidenceTier(custScore, fromMap);
+    const custExtId = custTier !== 'none' && customer ? customer.externalId : null;
+    const custName = custTier !== 'none' && customer ? customer.name : null;
+
+    // Find best service match within this customer's SasBoss services
+    const custServices = custExtId
+      ? existingVoiceServices.filter(s => s.customerExternalId === custExtId)
+      : [];
+    let bestSvc: (typeof existingVoiceServices)[0] | null = null;
+    let bestSvcScore = 0;
+    for (const svc of custServices) {
+      const score = tokenMatchScore(row.product_name, svc.planName ?? '');
+      if (score > bestSvcScore) { bestSvcScore = score; bestSvc = svc; }
+    }
+    const svcTier = serviceConfidenceTier(bestSvcScore);
+
+    // Check product map for service type classification
+    const productKey = `${row.product_name.toLowerCase().trim()}|${(row.product_type || '').toLowerCase().trim()}`;
+    const productMapping = productMapByKey.get(productKey);
+
+    // Overall confidence: 'mapped' > 'exact' > 'fuzzy' > 'none'
+    // A mapped customer with any service tier is auto-acceptable
+    const tierOrder = { mapped: 3, exact: 2, fuzzy: 1, none: 0 } as const;
+    type ConfidenceTier = 'mapped' | 'exact' | 'fuzzy' | 'none';
+    const overallTier: ConfidenceTier = tierOrder[custTier] <= tierOrder[svcTier as ConfidenceTier]
+      ? custTier
+      : (svcTier as ConfidenceTier);
+
+    // Requires review if customer is fuzzy/none (mapped and exact are auto-accepted)
+    const requiresReview = custTier === 'fuzzy' || custTier === 'none';
+
+    if (overallTier === 'mapped' || overallTier === 'exact') exactCount++;
+    else if (overallTier === 'fuzzy') fuzzyCount++;
+    else noneCount++;
+
+    proposals.push({
+      rowIndex,
+      enterpriseName: row.enterprise_name,
+      productName: row.product_name,
+      productType: row.product_type,
+      serviceRefId: row.service_ref_id ?? '',
+      amountExGst: Number(row.sum_ex_gst) || 0,
+      amountIncGst: Number(row.sum_inc_gst) || 0,
+      customerConfidence: custTier,
+      customerScore: custScore,
+      matchedCustomerExternalId: custExtId,
+      matchedCustomerName: custName,
+      serviceConfidence: svcTier,
+      serviceScore: bestSvcScore,
+      matchedServiceExternalId: bestSvc?.externalId ?? null,
+      matchedServicePlanName: bestSvc?.planName ?? null,
+      overallConfidence: overallTier,
+      requiresReview,
+      productInternalType: productMapping?.internalServiceType ?? null,
+      productBillingLabel: productMapping?.billingLabel ?? null,
+    });
+  }
+
+  // Call usage proposals — also check mapping table
+  const callUsageProposals = callUsageRows.map(cu => {
+    const { customer, score, fromMap } = findBestCustomer(cu.enterprise_name);
+    const tier = customerConfidenceTier(score, fromMap);
+    return {
+      enterpriseName: cu.enterprise_name,
+      callUsageExGst: cu.call_usage_ex_gst,
+      customerConfidence: tier,
+      customerScore: score,
+      matchedCustomerExternalId: tier !== 'none' && customer ? customer.externalId : null,
+      matchedCustomerName: tier !== 'none' && customer ? customer.name : null,
+    };
+  });
+
+  return {
+    workbookName,
+    billingMonth,
+    totalExGst: pivotRows.reduce((s, r) => s + (Number(r.sum_ex_gst) || 0), 0),
+    lineItemCount: pivotRows.length,
+    exactCount,
+    fuzzyCount,
+    noneCount,
+    proposals,
+    callUsageProposals,
+  };
+}
+
+export interface SasBossConfirmInput {
+  workbookName: string;
+  billingMonth: string;
+  invoiceReference: string;
+  importedBy: string;
+  // Each proposal with user decisions applied
+  approvedProposals: Array<{
+    rowIndex: number;
+    enterpriseName: string;
+    productName: string;
+    productType: string;
+    serviceRefId: string;
+    amountExGst: number;
+    amountIncGst: number;
+    // User-confirmed customer (may differ from original match)
+    confirmedCustomerExternalId: string | null;
+    confirmedCustomerName: string | null;
+    // User-confirmed service (may differ from original match)
+    confirmedServiceExternalId: string | null;
+    // Original confidence tier from dry-run (used to decide whether to persist mapping)
+    originalConfidence: 'mapped' | 'exact' | 'fuzzy' | 'none';
+    // Whether this row was approved or skipped
+    action: 'approve' | 'skip';
+  }>;
+  callUsageProposals: Array<{
+    enterpriseName: string;
+    callUsageExGst: number;
+    confirmedCustomerExternalId: string | null;
+    confirmedCustomerName: string | null;
+    originalConfidence: 'mapped' | 'exact' | 'fuzzy' | 'none';
+    action: 'approve' | 'skip';
+  }>;
+}
+
+/**
+ * Confirm: commit only the user-approved proposals to the database.
+ */
+export async function confirmSasBossDispatch(input: SasBossConfirmInput): Promise<SasBossImportResult> {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+
+  const { workbookName, billingMonth, invoiceReference, importedBy, approvedProposals, callUsageProposals } = input;
+  const approvedRows = approvedProposals.filter(p => p.action === 'approve');
+  const totalExGst = approvedRows.reduce((s, r) => s + r.amountExGst, 0);
+  const totalIncGst = approvedRows.reduce((s, r) => s + r.amountIncGst, 0);
+
+  // Create workbook upload record
+  const [uploadResult] = await db.insert(supplierWorkbookUploads).values({
+    supplier: 'SasBoss',
+    workbookName,
+    billingMonth,
+    invoiceReference,
+    totalExGst: String(totalExGst.toFixed(2)),
+    totalIncGst: String(totalIncGst.toFixed(2)),
+    lineItemCount: approvedProposals.length,
+    matchedCount: 0,
+    unmatchedCount: 0,
+    importedBy,
+    status: 'complete',
+  });
+  const uploadId = Number((uploadResult as any).insertId ?? 0);
+
+  const lineItemsToInsert: any[] = [];
+  const newServicesToInsert: any[] = [];
+  const serviceUpdates: Array<{ externalId: string; cost: string; account: string }> = [];
+  const unmatchedItems: SasBossImportResult['unmatchedItems'] = [];
+  const details: SasBossImportResult['details'] = [];
+  let matchedCount = 0, unmatchedCount = 0;
+
+  const CHUNK = 50;
+
+  for (const p of approvedRows) {
+    const { confirmedCustomerExternalId: custExtId, confirmedCustomerName: custName,
+      confirmedServiceExternalId: svcExtId } = p;
+
+    let matchStatus: 'matched' | 'unmatched' | 'partial' = 'unmatched';
+    let finalSvcExtId = svcExtId ?? '';
+
+    if (custExtId && svcExtId) {
+      // Full match — update existing service cost
+      matchStatus = 'matched';
+      matchedCount++;
+      serviceUpdates.push({
+        externalId: svcExtId,
+        cost: String(p.amountExGst.toFixed(2)),
+        account: invoiceReference || billingMonth,
+      });
+    } else if (custExtId && !svcExtId) {
+      // Partial match — create new service
+      matchStatus = 'partial';
+      unmatchedCount++;
+      const newId = 'SS' + Math.random().toString(36).slice(2, 8).toUpperCase();
+      finalSvcExtId = newId;
+      newServicesToInsert.push({
+        externalId: newId,
+        customerExternalId: custExtId,
+        customerName: custName,
+        serviceType: mapProductTypeToServiceType(p.productType),
+        planName: p.productName,
+        supplierName: 'SasBoss',
+        supplierAccount: invoiceReference || billingMonth,
+        monthlyCost: String(p.amountExGst.toFixed(2)),
+        costSource: 'supplier_invoice',
+        billingPlatform: JSON.stringify(['SasBoss']),
+        status: 'active',
+        provider: 'SasBoss',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
+      unmatchedItems.push({
+        enterpriseName: p.enterpriseName,
+        productName: p.productName,
+        productType: p.productType,
+        amountExGst: p.amountExGst,
+        reason: `Customer matched to "${custName}" but no existing service — new service created.`,
+      });
+    } else {
+      // No customer — create unmatched service
+      matchStatus = 'unmatched';
+      unmatchedCount++;
+      const newId = 'SS' + Math.random().toString(36).slice(2, 8).toUpperCase();
+      finalSvcExtId = newId;
+      newServicesToInsert.push({
+        externalId: newId,
+        customerExternalId: null,
+        customerName: p.enterpriseName,
+        serviceType: mapProductTypeToServiceType(p.productType),
+        planName: p.productName,
+        supplierName: 'SasBoss',
+        supplierAccount: invoiceReference || billingMonth,
+        monthlyCost: String(p.amountExGst.toFixed(2)),
+        costSource: 'supplier_invoice',
+        billingPlatform: JSON.stringify(['SasBoss']),
+        status: 'unmatched',
+        provider: 'SasBoss',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
+      unmatchedItems.push({
+        enterpriseName: p.enterpriseName,
+        productName: p.productName,
+        productType: p.productType,
+        amountExGst: p.amountExGst,
+        reason: `No customer confirmed for "${p.enterpriseName}".`,
+      });
+    }
+
+    lineItemsToInsert.push({
+      uploadId,
+      enterpriseName: p.enterpriseName,
+      productName: p.productName,
+      productType: p.productType,
+      serviceRefId: p.serviceRefId,
+      amountExGst: String(p.amountExGst.toFixed(2)),
+      amountIncGst: String(p.amountIncGst.toFixed(2)),
+      matchStatus,
+      matchedCustomerExternalId: custExtId ?? '',
+      matchedCustomerName: custName ?? '',
+      matchedServiceExternalId: finalSvcExtId,
+      matchConfidence: '1.00',
+    });
+
+    details.push({
+      enterpriseName: p.enterpriseName,
+      productName: p.productName,
+      productType: p.productType,
+      amountExGst: p.amountExGst,
+      matchStatus,
+      matchedCustomerName: custName ?? undefined,
+      matchedServiceExternalId: finalSvcExtId || undefined,
+      matchConfidence: 1,
+    });
+  }
+
+  // ── Persist new enterprise mappings for fuzzy/none matches that were approved ──
+  // Only persist when user has confirmed a customer (i.e., action='approve' and confirmedCustomerExternalId set)
+  // Mappings from 'mapped' tier already exist; 'exact' tier is high-confidence auto-match, persist too.
+  const enterpriseMappingsToUpsert = new Map<string, { customerExternalId: string; customerName: string }>();
+  for (const p of approvedRows) {
+    if (p.confirmedCustomerExternalId && p.confirmedCustomerName) {
+      // Always upsert — ensures mapping is current even if customer was reassigned
+      const key = p.enterpriseName.toLowerCase().trim();
+      if (!enterpriseMappingsToUpsert.has(key)) {
+        enterpriseMappingsToUpsert.set(key, {
+          customerExternalId: p.confirmedCustomerExternalId,
+          customerName: p.confirmedCustomerName,
+        });
+      }
+    }
+  }
+  // Also persist call usage enterprise mappings
+  for (const cu of callUsageProposals.filter(c => c.action === 'approve' && c.confirmedCustomerExternalId)) {
+    const key = cu.enterpriseName.toLowerCase().trim();
+    if (!enterpriseMappingsToUpsert.has(key) && cu.confirmedCustomerExternalId && cu.confirmedCustomerName) {
+      enterpriseMappingsToUpsert.set(key, {
+        customerExternalId: cu.confirmedCustomerExternalId,
+        customerName: cu.confirmedCustomerName,
+      });
+    }
+  }
+  // Build a map of customerExternalId -> customerId (DB int id) for mapping inserts
+  const uniqueCustomerExtIds = Array.from(new Set(
+    Array.from(enterpriseMappingsToUpsert.values()).map(m => m.customerExternalId)
+  ));
+  const customerIdMap = new Map<string, number>();
+  if (uniqueCustomerExtIds.length > 0) {
+    const customerRows = await db
+      .select({ externalId: customers.externalId, id: customers.id })
+      .from(customers)
+      .where(inArray(customers.externalId, uniqueCustomerExtIds));
+    for (const row of customerRows) {
+      customerIdMap.set(row.externalId, row.id);
+    }
+  }
+
+  for (const [enterpriseKey, mapping] of Array.from(enterpriseMappingsToUpsert.entries())) {
+    // Find the original enterprise name from the proposals (preserve original casing)
+    const originalEnterpriseName = approvedRows.find(
+      p => p.confirmedCustomerExternalId === mapping.customerExternalId
+    )?.enterpriseName ?? callUsageProposals.find(
+      c => c.confirmedCustomerExternalId === mapping.customerExternalId
+    )?.enterpriseName ?? '';
+    if (!originalEnterpriseName) continue;
+    const customerId = customerIdMap.get(mapping.customerExternalId) ?? 0;
+    await db.insert(supplierEnterpriseMap).values({
+      supplierName: 'SasBoss',
+      enterpriseName: originalEnterpriseName,
+      customerId,
+      customerExternalId: mapping.customerExternalId,
+      customerName: mapping.customerName,
+      confirmedBy: 'manual',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    }).onDuplicateKeyUpdate({
+      set: {
+        customerExternalId: mapping.customerExternalId,
+        customerName: mapping.customerName,
+        customerId,
+        confirmedBy: 'manual',
+        updatedAt: new Date(),
+      },
+    });
+  }
+
+  // Execute DB writes
+  if (newServicesToInsert.length > 0) {
+    for (let i = 0; i < newServicesToInsert.length; i += CHUNK) {
+      await db.insert(services).values(newServicesToInsert.slice(i, i + CHUNK) as any);
+    }
+  }
+  for (let i = 0; i < serviceUpdates.length; i += 10) {
+    await Promise.all(
+      serviceUpdates.slice(i, i + 10).map(u =>
+        db.update(services).set({
+          monthlyCost: u.cost,
+          costSource: 'supplier_invoice',
+          billingPlatform: JSON.stringify(['SasBoss']),
+          supplierAccount: u.account,
+          updatedAt: new Date(),
+        }).where(eq(services.externalId, u.externalId))
+      )
+    );
+  }
+  if (lineItemsToInsert.length > 0) {
+    for (let i = 0; i < lineItemsToInsert.length; i += CHUNK) {
+      await db.insert(supplierWorkbookLineItems).values(lineItemsToInsert.slice(i, i + CHUNK));
+    }
+  }
+
+  // Update upload record
+  await db.update(supplierWorkbookUploads).set({
+    matchedCount,
+    unmatchedCount,
+    updatedAt: new Date(),
+  }).where(eq(supplierWorkbookUploads.id, uploadId));
+
+  // Process call usage
+  let callUsageMatchedCount = 0;
+  const [billingYear, billingMonthNum] = billingMonth.split('-').map(Number);
+  const usageMonthDate = new Date(billingYear, billingMonthNum - 2, 1);
+  const usageMonth = `${usageMonthDate.getFullYear()}-${String(usageMonthDate.getMonth() + 1).padStart(2, '0')}`;
+
+  const usageToInsert: any[] = [];
+  for (const cu of callUsageProposals.filter(c => c.action === 'approve' && c.confirmedCustomerExternalId)) {
+    callUsageMatchedCount++;
+    const callUsageIncGst = cu.callUsageExGst * 1.1;
+    usageToInsert.push({
+      uploadId,
+      customerExternalId: cu.confirmedCustomerExternalId,
+      customerName: cu.confirmedCustomerName,
+      usageMonth,
+      usageType: 'call-usage',
+      supplier: 'SasBoss',
+      totalExGst: String(cu.callUsageExGst.toFixed(2)),
+      totalIncGst: String(callUsageIncGst.toFixed(2)),
+      notes: `Imported from ${workbookName}`,
+    });
+  }
+
+  if (usageToInsert.length > 0) {
+    await db.delete(customerUsageSummaries).where(
+      and(
+        eq(customerUsageSummaries.usageMonth, usageMonth),
+        eq(customerUsageSummaries.supplier, 'SasBoss')
+      )
+    );
+    for (let i = 0; i < usageToInsert.length; i += CHUNK) {
+      await db.insert(customerUsageSummaries).values(usageToInsert.slice(i, i + CHUNK));
+    }
+  }
+
+  return {
+    uploadId,
+    workbookName,
+    billingMonth,
+    totalExGst,
+    lineItemCount: approvedProposals.length,
+    matchedCount,
+    unmatchedCount,
+    callUsageCount: callUsageProposals.length,
+    callUsageMatchedCount,
+    details,
+    unmatchedItems,
+  };
+}
+
+// ── Unmatched Billing Services ────────────────────────────────────────────────
+
+/**
+ * Returns active services for a customer that have no billing item linked.
+ * "No billing outcome" = no billing_items row with serviceExternalId = this service's externalId.
+ * Excludes terminated and unmatched services (those are handled elsewhere).
+ */
+export async function getServicesWithoutBilling(customerExternalId: string) {
+  const db = await getDb();
+  if (!db) return [];
+
+  const rows = await db
+    .select({
+      externalId: services.externalId,
+      serviceType: services.serviceType,
+      serviceTypeDetail: services.serviceTypeDetail,
+      planName: services.planName,
+      phoneNumber: services.phoneNumber,
+      connectionId: services.connectionId,
+      locationAddress: services.locationAddress,
+      supplierName: services.supplierName,
+      provider: services.provider,
+      monthlyCost: services.monthlyCost,
+      monthlyRevenue: services.monthlyRevenue,
+      costSource: services.costSource,
+      billingPlatform: services.billingPlatform,
+      status: services.status,
+      createdAt: services.createdAt,
+    })
+    .from(services)
+    .leftJoin(
+      billingItems,
+      sql`${billingItems.serviceExternalId} = ${services.externalId} AND ${billingItems.matchStatus} = 'service-matched'`
+    )
+    .where(
+      and(
+        eq(services.customerExternalId, customerExternalId),
+        sql`${services.status} NOT IN ('terminated', 'unmatched')`,
+        sql`${billingItems.id} IS NULL`,
+        // Exclude services that have been explicitly marked as intentionally-unbilled in the log
+        sql`${services.externalId} NOT IN (
+          SELECT serviceExternalId FROM service_billing_match_log
+          WHERE customerExternalId = ${customerExternalId}
+            AND resolution = 'intentionally-unbilled'
+        )`
+      )
+    )
+    .orderBy(desc(services.monthlyCost));
+
+  return rows.map(s => ({
+    ...s,
+    monthlyCost: parseFloat(String(s.monthlyCost)),
+    monthlyRevenue: parseFloat(String(s.monthlyRevenue)),
+  }));
+}
+
+/**
+ * Returns the count of services without billing for a customer.
+ * Used for the warning badge on the customer list.
+ */
+export async function getUnmatchedBillingCount(customerExternalId: string): Promise<number> {
+  const db = await getDb();
+  if (!db) return 0;
+
+  const [row] = await db
+    .select({ count: sql<number>`count(*)` })
+    .from(services)
+    .leftJoin(
+      billingItems,
+      sql`${billingItems.serviceExternalId} = ${services.externalId} AND ${billingItems.matchStatus} = 'service-matched'`
+    )
+    .where(
+      and(
+        eq(services.customerExternalId, customerExternalId),
+        sql`${services.status} NOT IN ('terminated', 'unmatched')`,
+        sql`${billingItems.id} IS NULL`,
+        sql`${services.externalId} NOT IN (
+          SELECT serviceExternalId FROM service_billing_match_log
+          WHERE customerExternalId = ${customerExternalId}
+            AND resolution = 'intentionally-unbilled'
+        )`
+      )
+    );
+
+  return Number(row?.count ?? 0);
+}
+
+/**
+ * Returns available (unmatched or customer-matched) billing items for a customer
+ * that can be linked to a service. Used in the resolution picker.
+ */
+export async function getAvailableBillingItemsForCustomer(customerExternalId: string) {
+  const db = await getDb();
+  if (!db) return [];
+
+  const rows = await db
+    .select({
+      id: billingItems.id,
+      externalId: billingItems.externalId,
+      description: billingItems.description,
+      lineAmount: billingItems.lineAmount,
+      invoiceDate: billingItems.invoiceDate,
+      invoiceNumber: billingItems.invoiceNumber,
+      matchStatus: billingItems.matchStatus,
+      billingPlatform: billingItems.billingPlatform,
+      contactName: billingItems.contactName,
+    })
+    .from(billingItems)
+    .where(
+      and(
+        eq(billingItems.customerExternalId, customerExternalId),
+        sql`${billingItems.matchStatus} IN ('customer-matched', 'unmatched')`
+      )
+    )
+    .orderBy(desc(billingItems.lineAmount));
+
+  return rows.map(b => ({
+    ...b,
+    lineAmount: parseFloat(String(b.lineAmount)),
+  }));
+}
+
+/**
+ * Links a service to a billing item, updates match statuses, and logs the resolution
+ * so future imports can auto-apply the same match.
+ */
+export async function resolveServiceBillingMatch(
+  serviceExternalId: string,
+  billingItemExternalId: string | null,
+  resolution: 'linked' | 'intentionally-unbilled',
+  resolvedBy: string,
+  notes?: string
+) {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+
+  // Load the service
+  const [svc] = await db
+    .select({
+      externalId: services.externalId,
+      serviceType: services.serviceType,
+      planName: services.planName,
+      customerExternalId: services.customerExternalId,
+      customerName: services.customerName,
+    })
+    .from(services)
+    .where(eq(services.externalId, serviceExternalId))
+    .limit(1);
+
+  if (!svc) throw new Error(`Service ${serviceExternalId} not found`);
+
+  let billingItemDbId: number | null = null;
+  let billingPlatform = '';
+
+  if (resolution === 'linked' && billingItemExternalId) {
+    // Load the billing item
+    const [bi] = await db
+      .select({ id: billingItems.id, billingPlatform: billingItems.billingPlatform })
+      .from(billingItems)
+      .where(eq(billingItems.externalId, billingItemExternalId))
+      .limit(1);
+
+    if (!bi) throw new Error(`Billing item ${billingItemExternalId} not found`);
+    billingItemDbId = bi.id;
+    billingPlatform = bi.billingPlatform || '';
+
+    // Update billing item: mark as service-matched
+    await db.update(billingItems).set({
+      serviceExternalId,
+      matchStatus: 'service-matched',
+      matchConfidence: 'manual',
+      updatedAt: new Date(),
+    }).where(eq(billingItems.id, billingItemDbId));
+
+    // Update service: set billingItemId and recalculate revenue from billing item
+    const [biAmount] = await db
+      .select({ lineAmount: billingItems.lineAmount })
+      .from(billingItems)
+      .where(eq(billingItems.id, billingItemDbId));
+
+    const revenue = biAmount ? parseFloat(String(biAmount.lineAmount)) : 0;
+    const cost = parseFloat(String(svc.planName)); // will be recalculated below
+    await db.update(services).set({
+      billingItemId: billingItemExternalId,
+      monthlyRevenue: String(revenue.toFixed(2)),
+      updatedAt: new Date(),
+    }).where(eq(services.externalId, serviceExternalId));
+  }
+
+  // Log the resolution
+  const matchKey = `${serviceExternalId}|${svc.customerExternalId}`;
+  await db.insert(serviceBillingMatchLog).values({
+    serviceExternalId,
+    serviceType: svc.serviceType,
+    planName: svc.planName || '',
+    customerExternalId: svc.customerExternalId || '',
+    customerName: svc.customerName || '',
+    resolution,
+    billingItemId: billingItemExternalId || '',
+    billingPlatform,
+    notes: notes || null,
+    resolvedBy,
+    resolvedAt: new Date(),
+    matchKey,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  });
+
+  // Recalculate unmatchedBillingCount for this customer
+  await recalculateCustomerUnmatchedBilling(svc.customerExternalId || '');
+
+  return { success: true, serviceExternalId, resolution };
+}
+
+/**
+ * Recalculates unmatchedBillingCount for a single customer.
+ */
+export async function recalculateCustomerUnmatchedBilling(customerExternalId: string) {
+  const db = await getDb();
+  if (!db) return;
+
+  const count = await getUnmatchedBillingCount(customerExternalId);
+  await db.update(customers).set({
+    unmatchedBillingCount: count,
+    updatedAt: new Date(),
+  }).where(eq(customers.externalId, customerExternalId));
+}
+
+/**
+ * Bulk recalculates unmatchedBillingCount for ALL customers.
+ * Run after any bulk billing import or match change.
+ */
+export async function recalculateAllUnmatchedBilling() {
+  const db = await getDb();
+  if (!db) return { updated: 0 };
+
+  await db.execute(sql`
+    UPDATE customers c
+    SET unmatchedBillingCount = (
+      SELECT COUNT(*)
+      FROM services s
+      LEFT JOIN billing_items bi
+        ON bi.serviceExternalId = s.externalId AND bi.matchStatus = 'service-matched'
+      WHERE s.customerExternalId = c.externalId
+        AND s.status NOT IN ('terminated', 'unmatched')
+        AND bi.id IS NULL
+        AND s.externalId NOT IN (
+          SELECT serviceExternalId FROM service_billing_match_log
+          WHERE customerExternalId = c.externalId
+            AND resolution = 'intentionally-unbilled'
+        )
+    ),
+    updatedAt = NOW()
+  `);
+
+  const [result] = await db.select({ count: sql<number>`count(*)` }).from(customers);
+  return { updated: Number(result.count) };
+}
+
+/**
+ * Returns the resolution log for a service (history of billing match decisions).
+ */
+export async function getServiceBillingMatchLog(serviceExternalId: string) {
+  const db = await getDb();
+  if (!db) return [];
+
+  return await db
+    .select()
+    .from(serviceBillingMatchLog)
+    .where(eq(serviceBillingMatchLog.serviceExternalId, serviceExternalId))
+    .orderBy(desc(serviceBillingMatchLog.resolvedAt));
 }

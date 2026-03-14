@@ -7,13 +7,15 @@
  *   - Tech-e: PDF files parsed server-side
  */
 import { useState, useRef, useCallback } from "react";
+import { SasBossMatchReview } from "@/components/SasBossMatchReview";
 import {
   Upload, FileText, CheckCircle, AlertTriangle, X,
-  ChevronDown, ChevronUp, RefreshCw, FileType,
+  ChevronDown, ChevronUp, RefreshCw, FileType, BookOpen,
 } from "lucide-react";
 import { ProviderBadge } from "@/components/ProviderBadge";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
+import * as XLSX from "xlsx";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -60,7 +62,36 @@ interface ParsedPdfInvoice {
   services: ParsedPdfService[];
 }
 
-type ParsedInvoice = ParsedExetelInvoice | ParsedPdfInvoice;
+// ── SasBoss Workbook Types ────────────────────────────────────────────────────
+
+interface SasBossPivotRow {
+  enterprise_name: string;
+  product_name: string;
+  product_type: string;
+  service_ref_id?: string;
+  sum_ex_gst: number;
+  sum_inc_gst: number;
+}
+
+interface SasBossCallUsageRow {
+  enterprise_name: string;
+  call_usage_ex_gst: number;
+}
+
+interface ParsedSasBossWorkbook {
+  type: "xlsx";
+  supplier: "SasBoss";
+  workbookName: string;
+  billingMonth: string; // e.g. '2026-03'
+  invoiceReference: string;
+  pivotRows: SasBossPivotRow[];
+  callUsageRows: SasBossCallUsageRow[];
+  totalExGst: number;
+  totalCallUsageExGst: number;
+  enterpriseCount: number;
+}
+
+type ParsedInvoice = ParsedExetelInvoice | ParsedPdfInvoice | ParsedSasBossWorkbook;
 
 // ── Exetel CSV Parser ─────────────────────────────────────────────────────────
 
@@ -146,6 +177,118 @@ function parseExetelCsv(content: string): ParsedExetelInvoice {
   const subtotal = rows.reduce((sum, r) => sum + r.totalIncGst, 0);
 
   return { type: "csv", supplier: "Exetel", invoiceNumber, rows, recurringRows, onceOffRows, subtotal };
+}
+
+// ── SasBoss XLSX Parser ───────────────────────────────────────────────────────
+
+function normaliseName(s: string): string {
+  return s.toLowerCase().replace(/[^a-z0-9\s]/g, ' ').replace(/\s+/g, ' ').trim();
+}
+
+function parseSasBossWorkbook(buffer: ArrayBuffer, filename: string): ParsedSasBossWorkbook {
+  const wb = XLSX.read(buffer, { type: 'array' });
+  const sheetNames = wb.SheetNames;
+  if (!sheetNames.includes('Pivot')) {
+    throw new Error('This does not appear to be a SasBoss Dispatch workbook — no "Pivot" tab found.');
+  }
+
+  // ── Parse Pivot tab ──────────────────────────────────────────────────────────
+  const pivotSheet = wb.Sheets['Pivot'];
+  const pivotRaw: any[][] = XLSX.utils.sheet_to_json(pivotSheet, { header: 1, defval: null });
+
+  // Find header row (row 1, 0-indexed)
+  const headerRow = pivotRaw[1] as string[];
+  // Columns: Enterprise Name | Product Name | Product Type | Service Ref Id | Item Description | Sum of Enterprise Id | Sum of Qty | Sum of Total (INC-GST) | Sum of Total (EX-GST)
+  const colEnterprise = 0;
+  const colProduct = 1;
+  const colProductType = 2;
+  const colServiceRef = 3;
+  const colIncGst = 7;
+  const colExGst = 8;
+
+  const pivotRows: SasBossPivotRow[] = [];
+  let lastEnterprise = '';
+
+  for (let i = 2; i < pivotRaw.length; i++) {
+    const row = pivotRaw[i];
+    if (!row || row.every(c => c === null)) continue;
+
+    const enterprise = row[colEnterprise] ? String(row[colEnterprise]).trim() : lastEnterprise;
+    if (enterprise) lastEnterprise = enterprise;
+
+    const product = row[colProduct] ? String(row[colProduct]).trim() : null;
+    const productType = row[colProductType] ? String(row[colProductType]).trim() : null;
+
+    // Skip subtotal/total rows
+    if (!product || !productType) continue;
+    if (product.toLowerCase().includes('total') || productType.toLowerCase().includes('total')) continue;
+    if (enterprise.toLowerCase().includes('total') || enterprise.toLowerCase().includes('grand')) continue;
+
+    const exGst = typeof row[colExGst] === 'number' ? row[colExGst] : parseFloat(String(row[colExGst] ?? '0')) || 0;
+    const incGst = typeof row[colIncGst] === 'number' ? row[colIncGst] : parseFloat(String(row[colIncGst] ?? '0')) || 0;
+
+    pivotRows.push({
+      enterprise_name: enterprise,
+      product_name: product,
+      product_type: productType,
+      service_ref_id: row[colServiceRef] ? String(row[colServiceRef]).trim() : undefined,
+      sum_ex_gst: exGst,
+      sum_inc_gst: incGst,
+    });
+  }
+
+  // ── Parse Sheet1 (call usage) ─────────────────────────────────────────────────
+  const sheet1 = wb.Sheets['Sheet1'];
+  const sheet1Raw: any[] = XLSX.utils.sheet_to_json(sheet1, { defval: null });
+
+  // Call usage rows: Product Name is null/empty
+  const callUsageByEnterprise = new Map<string, number>();
+  for (const row of sheet1Raw) {
+    const productName = row['Product Name'];
+    if (productName !== null && productName !== undefined && String(productName).trim() !== '') continue;
+    const enterprise = row['Enterprise Name'] ? String(row['Enterprise Name']).trim() : null;
+    if (!enterprise) continue;
+    const cost = typeof row['Total (EX-GST)'] === 'number' ? row['Total (EX-GST)'] : parseFloat(String(row['Total (EX-GST)'] ?? '0')) || 0;
+    callUsageByEnterprise.set(enterprise, (callUsageByEnterprise.get(enterprise) ?? 0) + cost);
+  }
+
+  const callUsageRows: SasBossCallUsageRow[] = Array.from(callUsageByEnterprise.entries())
+    .filter(([, v]) => v > 0)
+    .map(([enterprise_name, call_usage_ex_gst]) => ({ enterprise_name, call_usage_ex_gst }));
+
+  // ── Derive billing month from filename ────────────────────────────────────────
+  // e.g. "SasbossDispatchcharges(March).xlsx" → 2026-03
+  const monthMap: Record<string, string> = {
+    january: '01', february: '02', march: '03', april: '04',
+    may: '05', june: '06', july: '07', august: '08',
+    september: '09', october: '10', november: '11', december: '12',
+  };
+  const fnLower = filename.toLowerCase();
+  let billingMonth = new Date().toISOString().slice(0, 7); // default to current month
+  for (const [name, num] of Object.entries(monthMap)) {
+    if (fnLower.includes(name)) {
+      const year = new Date().getFullYear();
+      billingMonth = `${year}-${num}`;
+      break;
+    }
+  }
+
+  const totalExGst = pivotRows.reduce((s, r) => s + r.sum_ex_gst, 0);
+  const totalCallUsageExGst = callUsageRows.reduce((s, r) => s + r.call_usage_ex_gst, 0);
+  const enterpriseCount = new Set(pivotRows.map(r => r.enterprise_name)).size;
+
+  return {
+    type: 'xlsx',
+    supplier: 'SasBoss',
+    workbookName: filename.replace(/\.xlsx$/i, ''),
+    billingMonth,
+    invoiceReference: '',
+    pivotRows,
+    callUsageRows,
+    totalExGst,
+    totalCallUsageExGst,
+    enterpriseCount,
+  };
 }
 
 function detectCsvSupplier(content: string): "Exetel" | null {
@@ -477,6 +620,139 @@ function AbbCarbonSyncSection() {
   );
 }
 
+// ── SasBoss Workbook Preview ──────────────────────────────────────────────────
+
+function SasBossPreview({
+  workbook,
+  onConfirm,
+  isImporting,
+}: {
+  workbook: ParsedSasBossWorkbook;
+  onConfirm: () => void;
+  isImporting: boolean;
+}) {
+  const [showPivot, setShowPivot] = useState(false);
+  const [showCallUsage, setShowCallUsage] = useState(false);
+
+  // Group pivot rows by enterprise for display
+  const byEnterprise = new Map<string, SasBossPivotRow[]>();
+  for (const row of workbook.pivotRows) {
+    if (!byEnterprise.has(row.enterprise_name)) byEnterprise.set(row.enterprise_name, []);
+    byEnterprise.get(row.enterprise_name)!.push(row);
+  }
+
+  return (
+    <div className="space-y-4">
+      {/* Summary header */}
+      <div className="flex items-center justify-between p-4 bg-card border border-border rounded-lg">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded bg-purple-100 flex items-center justify-center">
+            <BookOpen className="w-4 h-4 text-purple-700" />
+          </div>
+          <div>
+            <p className="text-sm font-semibold">{workbook.workbookName}</p>
+            <p className="text-xs text-muted-foreground">
+              Billing month: {workbook.billingMonth} · {workbook.enterpriseCount} enterprises · {workbook.pivotRows.length} line items
+            </p>
+          </div>
+        </div>
+        <div className="text-right">
+          <p className="text-xs text-muted-foreground">Services total (ex-GST)</p>
+          <p className="text-lg font-bold font-mono">${workbook.totalExGst.toFixed(2)}</p>
+          <p className="text-xs text-muted-foreground">+ ${workbook.totalCallUsageExGst.toFixed(2)} call usage</p>
+        </div>
+      </div>
+
+      {/* Pivot rows preview */}
+      <div className="border border-border rounded-lg overflow-hidden">
+        <button
+          onClick={() => setShowPivot(!showPivot)}
+          className="w-full flex items-center justify-between p-3 bg-muted/30 hover:bg-muted/50 text-sm font-medium"
+        >
+          <span>Billable Line Items ({workbook.pivotRows.length})</span>
+          {showPivot ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+        </button>
+        {showPivot && (
+          <div className="max-h-64 overflow-y-auto">
+            <table className="w-full text-xs">
+              <thead className="bg-muted/20 sticky top-0">
+                <tr>
+                  <th className="text-left p-2 font-medium">Enterprise</th>
+                  <th className="text-left p-2 font-medium">Product</th>
+                  <th className="text-left p-2 font-medium">Type</th>
+                  <th className="text-right p-2 font-medium">Ex-GST</th>
+                </tr>
+              </thead>
+              <tbody>
+                {workbook.pivotRows.slice(0, 200).map((row, i) => (
+                  <tr key={i} className="border-t border-border/50">
+                    <td className="p-2 text-muted-foreground truncate max-w-[160px]">{row.enterprise_name}</td>
+                    <td className="p-2 truncate max-w-[160px]">{row.product_name}</td>
+                    <td className="p-2 text-muted-foreground">{row.product_type}</td>
+                    <td className="p-2 text-right font-mono">${row.sum_ex_gst.toFixed(2)}</td>
+                  </tr>
+                ))}
+                {workbook.pivotRows.length > 200 && (
+                  <tr><td colSpan={4} className="p-2 text-center text-muted-foreground">… and {workbook.pivotRows.length - 200} more rows</td></tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+
+      {/* Call usage preview */}
+      <div className="border border-border rounded-lg overflow-hidden">
+        <button
+          onClick={() => setShowCallUsage(!showCallUsage)}
+          className="w-full flex items-center justify-between p-3 bg-muted/30 hover:bg-muted/50 text-sm font-medium"
+        >
+          <span>Call Usage Summaries — February ({workbook.callUsageRows.length} enterprises)</span>
+          {showCallUsage ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+        </button>
+        {showCallUsage && (
+          <div className="max-h-48 overflow-y-auto">
+            <table className="w-full text-xs">
+              <thead className="bg-muted/20 sticky top-0">
+                <tr>
+                  <th className="text-left p-2 font-medium">Enterprise</th>
+                  <th className="text-right p-2 font-medium">Call Usage (ex-GST)</th>
+                </tr>
+              </thead>
+              <tbody>
+                {workbook.callUsageRows.sort((a, b) => b.call_usage_ex_gst - a.call_usage_ex_gst).map((row, i) => (
+                  <tr key={i} className="border-t border-border/50">
+                    <td className="p-2 text-muted-foreground">{row.enterprise_name}</td>
+                    <td className="p-2 text-right font-mono">${row.call_usage_ex_gst.toFixed(2)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+
+      {/* Confirm */}
+      <div className="flex items-center justify-between p-4 bg-purple-50 border border-purple-200 rounded-lg">
+        <div>
+          <p className="text-sm font-medium text-purple-900">Ready to import</p>
+          <p className="text-xs text-purple-700 mt-0.5">
+            Will match {workbook.enterpriseCount} enterprises to customers, update service costs, and record {workbook.callUsageRows.length} call usage summaries.
+          </p>
+        </div>
+        <button
+          onClick={onConfirm}
+          disabled={isImporting}
+          className="flex items-center gap-2 px-4 py-2 bg-purple-700 text-white text-sm font-medium rounded-md hover:bg-purple-800 disabled:opacity-50 transition-colors"
+        >
+          {isImporting ? <RefreshCw className="w-4 h-4 animate-spin" /> : <CheckCircle className="w-4 h-4" />}
+          {isImporting ? 'Importing…' : 'Confirm Import'}
+        </button>
+      </div>
+    </div>
+  );
+}
+
 // ── Main Page ─────────────────────────────────────────────────────────────────────────────────
 
 export default function SupplierInvoices() {
@@ -524,6 +800,32 @@ export default function SupplierInvoices() {
     onError: (err) => toast.error("Import failed: " + err.message),
   });
 
+  const importSasBossMutation = trpc.billing.importSasBoss.useMutation({
+    onSuccess: (result) => {
+      setImportResults((prev) => [
+        {
+          invoiceNumber: result.workbookName,
+          supplier: 'SasBoss',
+          created: result.matchedCount,
+          updated: result.matchedCount,
+          skipped: result.unmatchedCount,
+          timestamp: new Date().toLocaleTimeString(),
+        },
+        ...prev,
+      ]);
+      setParsedInvoice(null);
+      toast.success(
+        `SasBoss import complete: ${result.matchedCount} matched, ${result.unmatchedCount} unmatched, ${result.callUsageMatchedCount} call usage records`
+      );
+      utils.billing.summary.invalidate();
+      utils.billing.services.list.invalidate();
+      utils.billing.margin.list.invalidate();
+      utils.billing.margin.grouped.invalidate();
+      utils.billing.customers.list.invalidate();
+    },
+    onError: (err) => toast.error('SasBoss import failed: ' + err.message),
+  });
+
   const parsePdfMutation = trpc.billing.parsePdf.useMutation({
     onSuccess: (result) => {
       setParsedInvoice({ type: "pdf", ...result });
@@ -542,6 +844,22 @@ export default function SupplierInvoices() {
 
       const isPdf = file.name.toLowerCase().endsWith(".pdf") || file.type === "application/pdf";
       const isCsv = file.name.toLowerCase().endsWith(".csv") || file.type === "text/csv";
+      const isXlsx = file.name.toLowerCase().endsWith(".xlsx") || file.name.toLowerCase().endsWith(".xls");
+
+      if (isXlsx) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          try {
+            const buffer = e.target?.result as ArrayBuffer;
+            const workbook = parseSasBossWorkbook(buffer, file.name);
+            setParsedInvoice(workbook);
+          } catch (err: unknown) {
+            setParseError(err instanceof Error ? err.message : 'Failed to parse workbook');
+          }
+        };
+        reader.readAsArrayBuffer(file);
+        return;
+      }
 
       if (isPdf) {
         setIsParsing(true);
@@ -576,9 +894,9 @@ export default function SupplierInvoices() {
         return;
       }
 
-      setParseError("Unsupported file type. Please upload a CSV (Exetel) or PDF (Channel Haus, Legion, Tech-e, Vine Direct, Infinet, Blitznet) invoice.");
+      setParseError("Unsupported file type. Please upload a CSV (Exetel), PDF (Channel Haus, Legion, Tech-e, Vine Direct, Infinet, Blitznet), or XLSX (SasBoss Dispatch Workbook).");
     },
-    [parsePdfMutation]
+    [parsePdfMutation, importSasBossMutation]
   );
 
   const handleDrop = useCallback(
@@ -593,6 +911,17 @@ export default function SupplierInvoices() {
 
   const handleConfirmImport = () => {
     if (!parsedInvoice) return;
+
+    if (parsedInvoice.type === "xlsx") {
+      importSasBossMutation.mutate({
+        workbookName: parsedInvoice.workbookName,
+        billingMonth: parsedInvoice.billingMonth,
+        invoiceReference: parsedInvoice.invoiceReference,
+        pivotRows: parsedInvoice.pivotRows,
+        callUsageRows: parsedInvoice.callUsageRows,
+      });
+      return;
+    }
 
     if (parsedInvoice.type === "csv") {
       importExetelMutation.mutate({
@@ -623,7 +952,7 @@ export default function SupplierInvoices() {
     }
   };
 
-  const isImporting = importExetelMutation.isPending || importGenericMutation.isPending;
+  const isImporting = importExetelMutation.isPending || importGenericMutation.isPending || importSasBossMutation.isPending;
 
   return (
     <div className="p-6 max-w-5xl mx-auto">
@@ -654,7 +983,7 @@ export default function SupplierInvoices() {
           <input
             ref={fileInputRef}
             type="file"
-            accept=".csv,.pdf"
+            accept=".csv,.pdf,.xlsx,.xls"
             className="hidden"
             onChange={(e) => {
               const file = e.target.files?.[0];
@@ -667,7 +996,7 @@ export default function SupplierInvoices() {
           </div>
           <p className="text-sm font-medium">Drop a supplier invoice here</p>
           <p className="text-xs text-muted-foreground mt-1">
-            or click to browse · CSV (Exetel) or PDF (Channel Haus, Legion, Tech-e, Vine Direct, Infinet, Blitznet)
+            or click to browse · CSV (Exetel) · PDF (Channel Haus, Legion, Tech-e, Vine Direct, Infinet, Blitznet) · XLSX (SasBoss)
           </p>
         </div>
       )}
@@ -706,7 +1035,13 @@ export default function SupplierInvoices() {
               <X className="w-3 h-3" /> Clear
             </button>
           </div>
-          {parsedInvoice.type === "csv" ? (
+          {parsedInvoice.type === "xlsx" ? (
+            <SasBossPreview
+              workbook={parsedInvoice}
+              onConfirm={handleConfirmImport}
+              isImporting={isImporting}
+            />
+          ) : parsedInvoice.type === "csv" ? (
             <ExetelPreview
               invoice={parsedInvoice}
               onConfirm={handleConfirmImport}
@@ -820,6 +1155,14 @@ export default function SupplierInvoices() {
               fileType: "API",
               status: "Via API",
               statusClass: "bg-muted text-muted-foreground border-border",
+            },
+            {
+              provider: "SasBoss",
+              label: "SasBoss Dispatch Charges",
+              detail: "XLSX workbook · Voice/UCaaS services (UCXcel, DID numbers, call packs)",
+              fileType: "XLSX",
+              status: "Supported",
+              statusClass: "bg-green-50 text-green-700 border-green-200",
             },
             {
               provider: "Telstra",

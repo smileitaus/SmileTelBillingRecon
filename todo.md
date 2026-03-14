@@ -636,3 +636,68 @@
 - [x] Assigned service S7141 (4G Data Back up, TIAB, 0493895348) to Smile IT (C2441)
 - [x] Service status updated from unmatched to active
 - [x] Platform Check created (ID 30010) for TIAB billing verification
+
+# SasBoss Dispatch Charges (March) Import (Mar 14)
+- [ ] Analyse workbook: Call Usage tab (February usage) and Pivot tab (billing line items)
+- [ ] Create SasBoss Dispatch Workbook supplier upload record in DB
+- [ ] Import all Pivot tab line items (Enterprise Name, Product Name, costs)
+- [ ] Match Enterprise Name to customers, Product Name to services/voice lines
+- [ ] Record matched services as billed from SasBoss with correct costs
+- [ ] Populate unmatched screen for unresolved line items
+- [ ] Add Call Usage summary as February usage under each customer
+- [ ] Recalculate customer costs, revenue and dashboard totals
+
+# SasBoss Import: Match Review Workflow (Mar 14)
+- [ ] Define confidence tiers: exact (auto-accept), fuzzy (review-required), none (no-match)
+- [ ] Backend: dry-run mode returns match proposals with confidence scores (no DB writes)
+- [ ] Backend: confirm endpoint commits only user-approved matches
+- [ ] Frontend: Match Review UI — show each proposed match with confidence badge, approve/reject/reassign per row
+- [ ] Frontend: fuzzy matches shown in amber, exact matches in green, no-match in red
+- [ ] Frontend: customer search picker for reassigning a no-match or wrong match
+- [ ] Roll back the already-committed March import and re-run through review workflow
+- [ ] Wire review workflow into SupplierInvoices upload flow (replaces direct confirm)
+
+# SasBoss Persistent Match Mapping Layer (Mar 14)
+- [ ] Schema: add supplier_enterprise_map table (supplierName, enterpriseName → customerId + customerExternalId)
+- [ ] Schema: add supplier_product_map table (supplierName, productName, productType → serviceType, billingLabel)
+- [ ] Push schema migration
+- [ ] Backfill enterprise map from March import (all matched enterprises → customer IDs)
+- [ ] Backfill product map from March import (all matched products → service types)
+- [ ] Update importSasBossDispatch: consult map tables first before fuzzy matching
+- [ ] Update dryRunSasBossDispatch: mark mapped matches as 'exact' confidence (auto-accept)
+- [ ] Build Match Review UI: dry-run → review → confirm; save confirmed matches to map tables
+- [ ] Wire review flow into SupplierInvoices upload (replace direct import with dry-run + review)
+- [ ] Roll back March auto-import and re-run through review workflow
+
+# Customer Unmatched Billing Tab (Mar 14)
+- [ ] Define "unmatched billing" = service assigned to customer but no billing item linked (no revenue, no billingItemId)
+- [ ] Add unmatchedBillingCount column to customers table; populate via recalculation
+- [ ] DB helper: getServicesWithoutBilling(customerExternalId) — returns active services with no billing item
+- [ ] DB helper: resolveServiceBillingMatch(serviceExternalId, billingItemId, resolvedBy) — links service to billing item + logs to service_billing_match_log
+- [ ] Schema: add service_billing_match_log table to persist resolutions for future auto-matching
+- [ ] tRPC: customers.unmatchedBillingServices query
+- [ ] tRPC: customers.resolveServiceBilling mutation (links + logs)
+- [ ] CustomerDetail: add "Unmatched Billing" tab showing services without billing outcomes
+- [ ] CustomerDetail: tab shows service details, cost, type, and available billing items to link
+- [ ] CustomerDetail: resolution action links service to billing item and logs the match
+- [ ] CustomerList: show warning icon (amber AlertTriangle) next to customer name when unmatchedBillingCount > 0
+- [ ] CustomerList: tooltip shows "X services need billing assignment"
+- [ ] Recalculate unmatchedBillingCount for all customers after any billing match change
+
+## Unmatched Billing Services Feature (Mar 2026)
+- [x] Add service_billing_match_log table to schema (tracks resolution history)
+- [x] Add unmatchedBillingCount column to customers table
+- [x] Push schema migration to DB
+- [x] Add getServicesWithoutBilling DB helper (excludes terminated, unmatched, intentionally-unbilled)
+- [x] Add getUnmatchedBillingCount DB helper
+- [x] Add getAvailableBillingItemsForCustomer DB helper
+- [x] Add resolveServiceBillingMatch DB helper (logs resolution, updates billing item, recalculates count)
+- [x] Add recalculateAllUnmatchedBilling DB helper (bulk update for monthly imports)
+- [x] Add recalculateCustomerUnmatchedBilling DB helper (single customer)
+- [x] Update recalculateAll to include unmatchedBillingCount in bulk recalculation
+- [x] Add tRPC procedures: unmatchedBillingServices, availableBillingItems, resolveServiceBilling, billingMatchLog, recalculateUnmatchedBilling
+- [x] Add orange Receipt badge to customer list rows for customers with unmatchedBillingCount > 0
+- [x] Add UnmatchedBillingRow component to CustomerDetail page
+- [x] Add Unmatched Billing section to CustomerDetail (collapsible, shows before Locations & Services)
+- [x] Populate unmatchedBillingCount for all existing customers via SQL
+- [x] Write and pass 14 vitest tests for all new DB helpers

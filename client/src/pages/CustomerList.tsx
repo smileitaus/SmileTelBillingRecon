@@ -16,6 +16,7 @@ import {
   LinkIcon,
   Download,
   UserPlus,
+  Receipt,
 } from "lucide-react";
 import { useCustomerSearch } from "@/hooks/useData";
 import { useState, useMemo } from "react";
@@ -323,6 +324,15 @@ function CustomerRow({ customer }: { customer: any }) {
                 >
                   <AlertTriangle className="w-2.5 h-2.5" />
                   {avcStats.missing}
+                </span>
+              )}
+              {customer.unmatchedBillingCount > 0 && (
+                <span
+                  className="inline-flex items-center gap-0.5 text-[10px] text-orange-600 bg-orange-50 border border-orange-200 px-1.5 py-0.5 rounded font-medium"
+                  title={`${customer.unmatchedBillingCount} service${customer.unmatchedBillingCount !== 1 ? 's' : ''} need${customer.unmatchedBillingCount === 1 ? 's' : ''} billing assignment`}
+                >
+                  <Receipt className="w-2.5 h-2.5" />
+                  {customer.unmatchedBillingCount}
                 </span>
               )}
             </div>

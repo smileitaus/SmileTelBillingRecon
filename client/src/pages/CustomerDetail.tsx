@@ -24,6 +24,13 @@ import {
   Ban,
   MessageSquare,
   Settings,
+  Receipt,
+  Link2,
+  CheckCircle2,
+  XCircle,
+  ChevronDown,
+  ChevronUp,
+  History,
 } from "lucide-react";
 import { useCustomerDetail } from "@/hooks/useData";
 import { trpc } from "@/lib/trpc";
@@ -629,9 +636,158 @@ function ServiceRow({ service, customerExternalId, onTerminated }: { service: an
   );
 }
 
+// ─── Unmatched Billing Row ───────────────────────────────────────────────────
+function UnmatchedBillingRow({
+  service,
+  availableBillingItems,
+  onResolve,
+}: {
+  service: any;
+  availableBillingItems: any[];
+  onResolve: (serviceExternalId: string, billingItemExternalId: string | null, resolution: 'linked' | 'intentionally-unbilled', notes?: string) => Promise<void>;
+}) {
+  const [expanded, setExpanded] = useState(false);
+  const [selectedBillingItem, setSelectedBillingItem] = useState<string>('');
+  const [notes, setNotes] = useState('');
+  const [resolving, setResolving] = useState(false);
+
+  const handleLink = async () => {
+    if (!selectedBillingItem) {
+      toast.error('Please select a billing item to link');
+      return;
+    }
+    setResolving(true);
+    try {
+      await onResolve(service.externalId, selectedBillingItem, 'linked', notes || undefined);
+      setExpanded(false);
+    } finally {
+      setResolving(false);
+    }
+  };
+
+  const handleMarkUnbilled = async () => {
+    setResolving(true);
+    try {
+      await onResolve(service.externalId, null, 'intentionally-unbilled', notes || undefined);
+      setExpanded(false);
+    } finally {
+      setResolving(false);
+    }
+  };
+
+  return (
+    <div className="border-b border-orange-100 last:border-0">
+      <div
+        className="flex items-center gap-3 px-4 py-3 hover:bg-orange-50/30 transition-colors cursor-pointer"
+        onClick={() => setExpanded(v => !v)}
+      >
+        {/* Service type icon */}
+        <div className="w-7 h-7 rounded-md flex items-center justify-center bg-orange-50 text-orange-600 shrink-0">
+          {service.serviceType === 'Internet' ? <Wifi className="w-3.5 h-3.5" /> :
+           service.serviceType === 'Voice' ? <Phone className="w-3.5 h-3.5" /> :
+           service.serviceType === 'Mobile' ? <Smartphone className="w-3.5 h-3.5" /> :
+           <Globe className="w-3.5 h-3.5" />}
+        </div>
+        {/* Service info */}
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-medium truncate">{service.planName || service.serviceType}</span>
+            <span className="text-[10px] text-muted-foreground bg-muted px-1.5 py-0.5 rounded">{service.serviceType}</span>
+            {service.provider && service.provider !== 'Unknown' && (
+              <span className="text-[10px] text-muted-foreground">{service.provider}</span>
+            )}
+          </div>
+          <div className="flex items-center gap-3 mt-0.5 text-xs text-muted-foreground">
+            {service.phoneNumber && <span>{service.phoneNumber}</span>}
+            {service.connectionId && <span>AVC: {service.connectionId}</span>}
+            {service.locationAddress && <span className="truncate max-w-[200px]">{service.locationAddress}</span>}
+            <span className="font-medium text-foreground">${Number(service.monthlyCost).toFixed(2)}/mo</span>
+          </div>
+        </div>
+        {/* Expand toggle */}
+        <div className="shrink-0 text-orange-500">
+          {expanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+        </div>
+      </div>
+
+      {/* Expanded resolution panel */}
+      {expanded && (
+        <div className="px-4 pb-4 pt-1 bg-orange-50/20 border-t border-orange-100">
+          <p className="text-xs font-semibold text-muted-foreground mb-3">Assign a billing item or mark as intentionally unbilled:</p>
+
+          {/* Billing item picker */}
+          <div className="mb-3">
+            <label className="text-xs text-muted-foreground mb-1 block">Available billing items for this customer</label>
+            {availableBillingItems.length === 0 ? (
+              <p className="text-xs text-muted-foreground italic">No unmatched billing items available for this customer.</p>
+            ) : (
+              <select
+                value={selectedBillingItem}
+                onChange={e => setSelectedBillingItem(e.target.value)}
+                className="w-full text-sm bg-background border border-border rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-ring/20"
+              >
+                <option value="">— Select a billing item —</option>
+                {availableBillingItems.map((bi: any) => (
+                  <option key={bi.externalId} value={bi.externalId}>
+                    {bi.description.substring(0, 60)}{bi.description.length > 60 ? '…' : ''} · ${Number(bi.lineAmount).toFixed(2)} · {bi.invoiceDate}
+                  </option>
+                ))}
+              </select>
+            )}
+          </div>
+
+          {/* Notes */}
+          <div className="mb-3">
+            <label className="text-xs text-muted-foreground mb-1 block">Notes (optional)</label>
+            <input
+              type="text"
+              value={notes}
+              onChange={e => setNotes(e.target.value)}
+              placeholder="e.g. Matched by invoice description..."
+              className="w-full text-sm bg-background border border-border rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-ring/20"
+            />
+          </div>
+
+          {/* Actions */}
+          <div className="flex items-center gap-2">
+            <Button
+              size="sm"
+              onClick={handleLink}
+              disabled={!selectedBillingItem || resolving}
+              className="gap-1.5"
+            >
+              {resolving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Link2 className="w-3.5 h-3.5" />}
+              Link Billing Item
+            </Button>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={handleMarkUnbilled}
+              disabled={resolving}
+              className="gap-1.5 text-muted-foreground"
+            >
+              {resolving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <CheckCircle2 className="w-3.5 h-3.5" />}
+              Mark Intentionally Unbilled
+            </Button>
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={() => setExpanded(false)}
+              className="ml-auto text-muted-foreground"
+            >
+              Cancel
+            </Button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function CustomerDetail() {
   const params = useParams<{ id: string }>();
   const [showEditDialog, setShowEditDialog] = useState(false);
+  const [showUnmatchedBilling, setShowUnmatchedBilling] = useState(true);
   const {
     customer,
     customerServices,
@@ -639,6 +795,26 @@ export default function CustomerDetail() {
     servicesByLocation,
     isLoading,
   } = useCustomerDetail(params.id || "");
+
+  const utils = trpc.useUtils();
+  const { data: unmatchedBillingServices = [], isLoading: isLoadingUnmatched } =
+    trpc.billing.customers.unmatchedBillingServices.useQuery(
+      { customerExternalId: params.id || "" },
+      { enabled: !!params.id, staleTime: 30_000 }
+    );
+  const { data: availableBillingItems = [] } =
+    trpc.billing.customers.availableBillingItems.useQuery(
+      { customerExternalId: params.id || "" },
+      { enabled: !!params.id, staleTime: 30_000 }
+    );
+  const resolveServiceBilling = trpc.billing.customers.resolveServiceBilling.useMutation({
+    onSuccess: () => {
+      utils.billing.customers.unmatchedBillingServices.invalidate();
+      utils.billing.customers.availableBillingItems.invalidate();
+      utils.billing.customers.byId.invalidate();
+      utils.billing.summary.invalidate();
+    },
+  });
 
   if (isLoading) {
     return (
@@ -969,6 +1145,69 @@ export default function CustomerDetail() {
                     <ServiceRow key={svc.id} service={svc} customerExternalId={customer?.externalId} />
                   ))}
               </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Unmatched Billing Services */}
+      {(unmatchedBillingServices.length > 0 || isLoadingUnmatched) && (
+        <div className="mb-8">
+          <button
+            onClick={() => setShowUnmatchedBilling(v => !v)}
+            className="w-full flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-orange-700 mb-3 hover:text-orange-800 transition-colors"
+          >
+            <Receipt className="w-3.5 h-3.5 text-orange-600" />
+            Unmatched Billing
+            <span className="text-xs font-medium bg-orange-100 text-orange-700 border border-orange-200 px-2 py-0.5 rounded-full">
+              {unmatchedBillingServices.length} service{unmatchedBillingServices.length !== 1 ? 's' : ''}
+            </span>
+            <span className="ml-auto">
+              {showUnmatchedBilling ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+            </span>
+          </button>
+          {showUnmatchedBilling && (
+            <div className="bg-card border border-orange-200 rounded-lg overflow-hidden border-l-[3px] border-l-orange-500">
+              <div className="flex items-center gap-3 px-4 py-3 border-b border-orange-100 bg-orange-50/50">
+                <Receipt className="w-4 h-4 text-orange-600 shrink-0" />
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-orange-900">Services Without Billing Assignment</p>
+                  <p className="text-xs text-orange-600/80">
+                    These services are active but have no billing item linked. Assign a billing item or mark as intentionally unbilled.
+                  </p>
+                </div>
+                <span className="text-xs font-semibold text-orange-700 bg-orange-100 px-2 py-0.5 rounded-full">
+                  {unmatchedBillingServices.length} service{unmatchedBillingServices.length !== 1 ? 's' : ''}
+                </span>
+              </div>
+              {isLoadingUnmatched ? (
+                <div className="flex items-center justify-center py-8">
+                  <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
+                </div>
+              ) : (
+                <div>
+                  {unmatchedBillingServices.map((svc: any) => (
+                    <UnmatchedBillingRow
+                      key={svc.externalId}
+                      service={svc}
+                      availableBillingItems={availableBillingItems}
+                      onResolve={async (serviceExternalId: string, billingItemExternalId: string | null, resolution: 'linked' | 'intentionally-unbilled', notes?: string) => {
+                        try {
+                          await resolveServiceBilling.mutateAsync({
+                            serviceExternalId,
+                            billingItemExternalId,
+                            resolution,
+                            notes,
+                          });
+                          toast.success(resolution === 'linked' ? 'Billing item linked successfully' : 'Marked as intentionally unbilled');
+                        } catch (e: any) {
+                          toast.error(`Failed: ${e.message}`);
+                        }
+                      }}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
           )}
         </div>

@@ -82,7 +82,21 @@ import {
   backfillCostSources,
   getServiceCostHistory,
   getServiceForPlatformCheck,
+  importSasBossDispatch,
+  dryRunSasBossDispatch,
+  confirmSasBossDispatch,
+  getSupplierWorkbookUploads,
+  getWorkbookLineItems,
+  getCustomerUsageSummaries,
+  type SasBossPivotRow,
+  type SasBossCallUsageRow,
+  type SasBossConfirmInput,
   type AddressMatchCandidate,
+  getServicesWithoutBilling,
+  getAvailableBillingItemsForCustomer,
+  resolveServiceBillingMatch,
+  recalculateAllUnmatchedBilling,
+  getServiceBillingMatchLog,
 } from "./db";
 
 export const appRouter = router({
@@ -254,6 +268,48 @@ export const appRouter = router({
         .mutation(async ({ input, ctx }) => {
           const updatedBy = ctx.user?.name || ctx.user?.email || 'Unknown';
           return await updateCustomer(input.externalId, input.updates, updatedBy);
+        }),
+
+      // ── Unmatched Billing Services ──────────────────────────────────────────
+      unmatchedBillingServices: protectedProcedure
+        .input(z.object({ customerExternalId: z.string() }))
+        .query(async ({ input }) => {
+          return await getServicesWithoutBilling(input.customerExternalId);
+        }),
+
+      availableBillingItems: protectedProcedure
+        .input(z.object({ customerExternalId: z.string() }))
+        .query(async ({ input }) => {
+          return await getAvailableBillingItemsForCustomer(input.customerExternalId);
+        }),
+
+      resolveServiceBilling: protectedProcedure
+        .input(z.object({
+          serviceExternalId: z.string(),
+          billingItemExternalId: z.string().nullable(),
+          resolution: z.enum(['linked', 'intentionally-unbilled']),
+          notes: z.string().optional(),
+        }))
+        .mutation(async ({ input, ctx }) => {
+          const resolvedBy = ctx.user?.name || ctx.user?.email || 'Unknown';
+          return await resolveServiceBillingMatch(
+            input.serviceExternalId,
+            input.billingItemExternalId,
+            input.resolution,
+            resolvedBy,
+            input.notes
+          );
+        }),
+
+      billingMatchLog: protectedProcedure
+        .input(z.object({ serviceExternalId: z.string() }))
+        .query(async ({ input }) => {
+          return await getServiceBillingMatchLog(input.serviceExternalId);
+        }),
+
+      recalculateUnmatchedBilling: protectedProcedure
+        .mutation(async () => {
+          return await recalculateAllUnmatchedBilling();
         }),
     }),
 
@@ -957,6 +1013,120 @@ export const appRouter = router({
       .input(z.object({ serviceExternalId: z.string() }))
       .query(async ({ input }) => {
         return await getServiceCostHistory(input.serviceExternalId);
+      }),
+
+    // SasBoss Dispatch Workbook import
+    importSasBoss: protectedProcedure
+      .input(z.object({
+        workbookName: z.string(),
+        billingMonth: z.string(), // e.g. '2026-03'
+        invoiceReference: z.string().default(''),
+        pivotRows: z.array(z.object({
+          enterprise_name: z.string(),
+          product_name: z.string(),
+          product_type: z.string(),
+          service_ref_id: z.string().optional(),
+          sum_ex_gst: z.number(),
+          sum_inc_gst: z.number(),
+        })),
+        callUsageRows: z.array(z.object({
+          enterprise_name: z.string(),
+          call_usage_ex_gst: z.number(),
+        })),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        const importedBy = ctx.user?.name || ctx.user?.email || 'Unknown';
+        return await importSasBossDispatch(
+          input.workbookName,
+          input.billingMonth,
+          input.invoiceReference,
+          input.pivotRows as SasBossPivotRow[],
+          input.callUsageRows as SasBossCallUsageRow[],
+          importedBy
+        );
+      }),
+
+    // Dry-run: analyse workbook and return match proposals (no DB writes)
+    dryRunSasBoss: protectedProcedure
+      .input(z.object({
+        workbookName: z.string(),
+        billingMonth: z.string(),
+        pivotRows: z.array(z.object({
+          enterprise_name: z.string(),
+          product_name: z.string(),
+          product_type: z.string(),
+          service_ref_id: z.string().optional(),
+          sum_ex_gst: z.number(),
+          sum_inc_gst: z.number(),
+        })),
+        callUsageRows: z.array(z.object({
+          enterprise_name: z.string(),
+          call_usage_ex_gst: z.number(),
+        })),
+      }))
+      .mutation(async ({ input }) => {
+        return await dryRunSasBossDispatch(
+          input.workbookName,
+          input.billingMonth,
+          input.pivotRows as SasBossPivotRow[],
+          input.callUsageRows as SasBossCallUsageRow[]
+        );
+      }),
+
+    // Confirm: commit only user-approved proposals to the database
+    confirmSasBoss: protectedProcedure
+      .input(z.object({
+        workbookName: z.string(),
+        billingMonth: z.string(),
+        invoiceReference: z.string().default(''),
+        importedBy: z.string().optional(),
+        approvedProposals: z.array(z.object({
+          rowIndex: z.number(),
+          enterpriseName: z.string(),
+          productName: z.string(),
+          productType: z.string(),
+          serviceRefId: z.string(),
+          amountExGst: z.number(),
+          amountIncGst: z.number(),
+          confirmedCustomerExternalId: z.string().nullable(),
+          confirmedCustomerName: z.string().nullable(),
+          confirmedServiceExternalId: z.string().nullable(),
+          action: z.enum(['approve', 'skip']),
+        })),
+        callUsageProposals: z.array(z.object({
+          enterpriseName: z.string(),
+          callUsageExGst: z.number(),
+          confirmedCustomerExternalId: z.string().nullable(),
+          confirmedCustomerName: z.string().nullable(),
+          action: z.enum(['approve', 'skip']),
+        })),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        const importedBy = input.importedBy || ctx.user?.name || ctx.user?.email || 'Unknown';
+        return await confirmSasBossDispatch({
+          ...input,
+          importedBy,
+        } as SasBossConfirmInput);
+      }),
+
+    // List SasBoss workbook uploads
+    listWorkbookUploads: protectedProcedure
+      .query(async () => {
+        return await getSupplierWorkbookUploads();
+      }),
+
+    // Get line items for a workbook upload
+    workbookLineItems: protectedProcedure
+      .input(z.object({ uploadId: z.number() }))
+      .query(async ({ input }) => {
+        return await getWorkbookLineItems(input.uploadId);
+      }),
+
+    // Get call usage summaries for a customer
+    customerUsage: protectedProcedure
+      .input(z.object({ customerExternalId: z.string() }))
+      .query(async ({ input }) => {
+        return await getCustomerUsageSummaries(input.customerExternalId);
       }),
 
     // Customer merge
