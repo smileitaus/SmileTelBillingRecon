@@ -2492,6 +2492,21 @@ export async function actionBillingPlatformCheck(
   return { success: true, id, status: newStatus };
 }
 
+export async function addNoteToBillingPlatformCheck(
+  id: number,
+  note: string,
+  addedBy: string
+) {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+  await db.update(billingPlatformChecks).set({
+    actionedNote: note,
+    actionedBy: addedBy,
+    // status is intentionally NOT changed — record stays visible
+  }).where(eq(billingPlatformChecks.id, id));
+  return { success: true, id };
+}
+
 export async function getBillingPlatformCheckSummary() {
   const db = await getDb();
   if (!db) return { total: 0, open: 0, inProgress: 0, actioned: 0, dismissed: 0, byPlatform: {} };

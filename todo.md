@@ -623,3 +623,16 @@
 - [x] Frontend: AssignToExistingCustomerDialog component with debounced search, customer list, selection preview
 - [x] Frontend: Wire "Assign to Existing" button into CustomerProposalsTab alongside Approve/Reject
 - [x] All three proposal actions (approve, reject, assign-to-existing) create Platform Check entries
+
+# Platform Check Note Bug Fix (Mar 14)
+- [x] Fix: adding a note via "+ Note" now calls addNote procedure — status stays Open, record stays visible
+- [x] Fix: note icon (FileText) is highlighted amber with filled style when a note exists on a check
+- [x] Fix: Cory Johnston Platform Check reinstated (ID 30007, service S6940)
+- [x] Fix: expanded note section now shows notes on Open records (amber styling), not just actioned/dismissed
+- [x] Verify: Actioned and Ignore correctly change status; Note does not
+
+# Service S7141 Reassignment to Smile IT (Mar 14)
+- [x] Found Smile IT customer: C2441
+- [x] Assigned service S7141 (4G Data Back up, TIAB, 0493895348) to Smile IT (C2441)
+- [x] Service status updated from unmatched to active
+- [x] Platform Check created (ID 30010) for TIAB billing verification

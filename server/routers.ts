@@ -48,6 +48,7 @@ import {
   createBillingPlatformCheck,
   getBillingPlatformChecks,
   actionBillingPlatformCheck,
+  addNoteToBillingPlatformCheck,
   getBillingPlatformCheckSummary,
   previewAliasAutoMatch,
   commitAliasAutoMatch,
@@ -717,6 +718,17 @@ export const appRouter = router({
         .mutation(async ({ input, ctx }) => {
           const actionedBy = ctx.user?.name || ctx.user?.email || 'Unknown';
           return await actionBillingPlatformCheck(input.id, actionedBy, input.actionedNote, input.newStatus);
+        }),
+
+      // Add or update a note WITHOUT changing the status (record stays visible)
+      addNote: protectedProcedure
+        .input(z.object({
+          id: z.number(),
+          note: z.string().min(1, 'Note cannot be empty'),
+        }))
+        .mutation(async ({ input, ctx }) => {
+          const addedBy = ctx.user?.name || ctx.user?.email || 'Unknown';
+          return await addNoteToBillingPlatformCheck(input.id, input.note, addedBy);
         }),
     }),
 
