@@ -534,3 +534,23 @@
 - [x] Show cost history on Service Detail page (Cost History section with old/new cost + source badge)
 - [x] Show costSource badge on Service Detail (Carbon API / Invoice / Manual)
 - [ ] Write vitest tests for Carbon cost sync and history snapshot
+
+# SM Pending Customer Names Workflow (Mar 14)
+- [ ] Add getSMPendingCustomerNames() db helper: extracts SM customer names from discoveryNotes, groups by name, returns service IDs + existing customer fuzzy matches
+- [ ] Add tRPC procedure: billing.smPendingNames (returns grouped pending names with fuzzy customer matches)
+- [ ] Add "SM Pending Names" tab to Auto-Match page showing grouped names with service counts
+- [ ] Each group shows: proposed name, number of services, fuzzy match suggestions to existing customers
+- [ ] "Assign to Existing" button: assigns all services in group to a matched customer
+- [ ] "Create Proposal" button: pre-fills proposal form with name + all service IDs
+- [ ] Show count badge on SM Pending Names tab
+- [ ] For 9 services where SM name fuzzy-matches existing customer: show as high-confidence suggestions
+
+# SM Customer Name Regex Fix + SM Pending Filter (Mar 14)
+- [x] Investigated root cause: regex /SM Import[^:]*:\s*([^|\n]+)/i was capturing Port Out CID instead of customer name
+- [x] Fixed regex in UnmatchedServices.tsx (2 locations): now uses /SM Customer:\s*([^\n\[|]+)/i
+- [x] Fixed regex in server/db.ts getSuggestedCustomersForService(): same fix applied server-side
+- [x] Confirmed 161 Account 586992900 SIMs genuinely have no customer name in source spreadsheet (RVC pending)
+- [x] Confirmed 30 Account 192549800 "Dot Voice And Broadband Backup" SIMs also have no customer name in source
+- [x] 48 services with SM Customer: names now correctly show customer name badge in Unmatched Services
+- [x] Added "SM Pending" filter tab to Unmatched Services page (violet badge, filters to services with SM Customer: in notes)
+- [x] SM Pending filter count shows 48 services with known customer names pending assignment

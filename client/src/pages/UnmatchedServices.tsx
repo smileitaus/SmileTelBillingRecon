@@ -388,8 +388,13 @@ function ServiceCard({
   // Extract suggested customer name from discoveryNotes (SM Import or other sources)
   const suggestedName = (() => {
     if (!service.discoveryNotes) return null;
-    const m = service.discoveryNotes.match(/SM Import[^:]*:\s*([^|\n]+)/i);
-    return m ? m[1].trim() : null;
+    // Look specifically for "SM Customer: <name>" pattern
+    const smCustomer = service.discoveryNotes.match(/SM Customer:\s*([^\n\[|]+)/i);
+    if (smCustomer) return smCustomer[1].trim();
+    // Fall back to [Pending] SM customer name: "..."
+    const pending = service.discoveryNotes.match(/SM customer name:\s*"?([^"\n\[]+)"?/i);
+    if (pending) return pending[1].trim();
+    return null;
   })();
 
   return (
@@ -540,8 +545,13 @@ function ExpandedPanel({ service }: { service: any }) {
   // Extract SM Import suggestion name from discoveryNotes
   const smSuggestedName = (() => {
     if (!service.discoveryNotes) return null;
-    const m = service.discoveryNotes.match(/SM Import[^:]*:\s*([^|\n]+)/i);
-    return m ? m[1].trim() : null;
+    // Look specifically for "SM Customer: <name>" pattern
+    const smCustomer = service.discoveryNotes.match(/SM Customer:\s*([^\n\[|]+)/i);
+    if (smCustomer) return smCustomer[1].trim();
+    // Fall back to [Pending] SM customer name: "..."
+    const pending = service.discoveryNotes.match(/SM customer name:\s*"?([^"\n\[]+)"?/i);
+    if (pending) return pending[1].trim();
+    return null;
   })();
 
   // Fetch fuzzy customer suggestions for this service (only if it has an SM suggestion)
@@ -1119,7 +1129,7 @@ export default function UnmatchedServices() {
     "all" | "Internet" | "Mobile" | "Voice"
   >("all");
   const [statusFilter, setStatusFilter] = useState<
-    "all" | "unmatched" | "flagged_for_termination" | "terminated" | "no_data_use"
+    "all" | "unmatched" | "flagged_for_termination" | "terminated" | "no_data_use" | "sm_pending"
   >("all");
   const [providerFilter, setProviderFilter] = useState<string>("all");
   const [sortBy, setSortBy] = useState<"cost" | "type" | "account">("cost");
@@ -1166,9 +1176,21 @@ export default function UnmatchedServices() {
     ? allServices
     : allServices.filter((s: any) => s.serviceType === typeFilter);
 
+  // Helper to extract SM customer name from notes
+  const extractSmName = (notes: string | null | undefined): string | null => {
+    if (!notes) return null;
+    const smCustomer = notes.match(/SM Customer:\s*([^\n\[|]+)/i);
+    if (smCustomer) return smCustomer[1].trim();
+    const pending = notes.match(/SM customer name:\s*"?([^"\n\[]+)"?/i);
+    if (pending) return pending[1].trim();
+    return null;
+  };
+
   // Apply status filter
   if (statusFilter === "no_data_use") {
     filtered = filtered.filter((s: any) => s.noDataUse === 1);
+  } else if (statusFilter === "sm_pending") {
+    filtered = filtered.filter((s: any) => !!extractSmName(s.discoveryNotes));
   } else if (statusFilter !== "all") {
     filtered = filtered.filter((s: any) => s.status === statusFilter);
   }
@@ -1204,6 +1226,11 @@ export default function UnmatchedServices() {
   const noDataUseCount = allServices.filter(
     (s: any) => s.noDataUse === 1
   ).length;
+  const smPendingCount = allServices.filter((s: any) => {
+    const notes = s.discoveryNotes;
+    if (!notes) return false;
+    return /SM Customer:/i.test(notes) || /SM customer name:/i.test(notes);
+  }).length;
 
   const typeCounts = allServices.reduce(
     (acc: Record<string, number>, s: any) => {
@@ -1327,6 +1354,7 @@ export default function UnmatchedServices() {
             { value: "flagged_for_termination", label: "Flagged", count: flaggedCount },
             { value: "terminated", label: "Terminated", count: terminatedCount },
             { value: "no_data_use", label: "No Data Use", count: noDataUseCount },
+            { value: "sm_pending", label: "SM Pending", count: smPendingCount },
           ] as const).map((f) => (
             <button
               key={f.value}
@@ -1343,6 +1371,7 @@ export default function UnmatchedServices() {
                   ? f.value === "flagged_for_termination" ? "bg-rose-100 text-rose-700"
                     : f.value === "terminated" ? "bg-gray-200 text-gray-600"
                     : f.value === "no_data_use" ? "bg-orange-200 text-orange-800"
+                    : f.value === "sm_pending" ? "bg-violet-100 text-violet-700"
                     : "bg-primary/10 text-primary"
                   : "bg-muted text-muted-foreground"
               }`}>

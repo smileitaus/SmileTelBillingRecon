@@ -4299,11 +4299,17 @@ export async function getSuggestedCustomersForService(serviceExternalId: string)
   if (!svc) return [];
 
   // Extract the suggested customer name from discoveryNotes
-  // Format: "SM Import: Zambrero Albury | ..."
+  // Format: "[SM Import (Ella)] Port Out CID: 123 | SM Customer: Zambrero Albury"
   let hintName = '';
   if (svc.discoveryNotes) {
-    const smMatch = svc.discoveryNotes.match(/SM Import[^:]*:\s*([^\|]+)/i);
-    if (smMatch) hintName = smMatch[1].trim();
+    // Look specifically for "SM Customer: <name>" pattern
+    const smCustomer = svc.discoveryNotes.match(/SM Customer:\s*([^\n\[|]+)/i);
+    if (smCustomer) hintName = smCustomer[1].trim();
+    // Fall back to [Pending] SM customer name: "..."
+    if (!hintName) {
+      const pending = svc.discoveryNotes.match(/SM customer name:\s*"?([^"\n\[]+)"?/i);
+      if (pending) hintName = pending[1].trim();
+    }
   }
   if (!hintName && svc.customerName && svc.customerName !== 'Unassigned') {
     hintName = svc.customerName;
