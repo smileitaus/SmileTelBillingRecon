@@ -6615,6 +6615,7 @@ export async function assignServiceToBillingItem(
 
   if (existing.length > 0) return { success: true, alreadyAssigned: true };
 
+  // Write the assignment record
   await db.insert(serviceBillingAssignments).values({
     billingItemExternalId,
     serviceExternalId,
@@ -6623,6 +6624,68 @@ export async function assignServiceToBillingItem(
     assignmentMethod,
     notes: notes || null,
   });
+
+  // ── Persist a reusable match rule to service_billing_match_log ──────────────
+  // Fetch service details so the rule captures enough context for future
+  // auto-matching (planName + customerExternalId uniquely identifies the
+  // service type for this customer across billing periods).
+  const svcRows = await db
+    .select({ planName: services.planName, serviceType: services.serviceType })
+    .from(services)
+    .where(eq(services.externalId, serviceExternalId))
+    .limit(1);
+
+  const customerRows = await db
+    .select({ name: customers.name })
+    .from(customers)
+    .where(eq(customers.externalId, customerExternalId))
+    .limit(1);
+
+  const planName = svcRows[0]?.planName ?? '';
+  const serviceType = svcRows[0]?.serviceType ?? '';
+  const customerName = customerRows[0]?.name ?? '';
+
+  // matchKey = planName|customerExternalId — identifies this service type for
+  // this customer so future monthly imports can auto-assign without review.
+  const matchKey = `${planName}|${customerExternalId}`;
+
+  // Upsert: update existing rule if present, otherwise insert a new one.
+  const existingLog = await db
+    .select({ id: serviceBillingMatchLog.id })
+    .from(serviceBillingMatchLog)
+    .where(
+      and(
+        eq(serviceBillingMatchLog.matchKey, matchKey),
+        eq(serviceBillingMatchLog.resolution, 'linked')
+      )
+    )
+    .limit(1);
+
+  if (existingLog.length > 0) {
+    await db
+      .update(serviceBillingMatchLog)
+      .set({
+        billingItemId: billingItemExternalId,
+        resolvedBy: assignedBy,
+        notes: notes || null,
+        updatedAt: new Date(),
+      })
+      .where(eq(serviceBillingMatchLog.id, existingLog[0].id));
+  } else {
+    await db.insert(serviceBillingMatchLog).values({
+      serviceExternalId,
+      serviceType,
+      planName,
+      customerExternalId,
+      customerName,
+      resolution: 'linked',
+      billingItemId: billingItemExternalId,
+      billingPlatform: 'Xero',
+      notes: notes || null,
+      resolvedBy: assignedBy,
+      matchKey,
+    });
+  }
 
   return { success: true, alreadyAssigned: false };
 }
@@ -6800,4 +6863,116 @@ export async function fuzzyMatchServicesAgainstBillingItems(customerExternalId: 
   }
 
   return proposals.sort((a, b) => b.score - a.score);
+}
+
+/**
+ * Auto-apply saved match rules to newly imported services/billing items.
+ *
+ * After every monthly import (Xero, SasBoss, Exetel, Generic), call this
+ * function to automatically create service_billing_assignments for any
+ * service that matches a confirmed rule in service_billing_match_log.
+ *
+ * Match logic:
+ *   matchKey = planName|customerExternalId
+ *   If a service has the same planName AND belongs to the same customer as
+ *   a previously confirmed 'linked' rule, it is auto-assigned to the same
+ *   billing item without requiring manual review.
+ *
+ * Returns a summary of how many assignments were created.
+ */
+export async function autoApplyMatchRules(
+  customerExternalId?: string // optional: scope to one customer
+): Promise<{ applied: number; skipped: number }> {
+  const db = await getDb();
+  if (!db) return { applied: 0, skipped: 0 };
+
+  // Fetch all 'linked' rules (or scoped to one customer)
+  const ruleConditions = [eq(serviceBillingMatchLog.resolution, 'linked')];
+  if (customerExternalId) {
+    ruleConditions.push(eq(serviceBillingMatchLog.customerExternalId, customerExternalId));
+  }
+  const rules = await db
+    .select()
+    .from(serviceBillingMatchLog)
+    .where(and(...ruleConditions));
+
+  if (rules.length === 0) return { applied: 0, skipped: 0 };
+
+  // Build a lookup: matchKey → billingItemId
+  const ruleMap = new Map<string, string>();
+  for (const rule of rules) {
+    if (rule.matchKey && rule.billingItemId) {
+      ruleMap.set(rule.matchKey, rule.billingItemId);
+    }
+  }
+
+  // Fetch unassigned services (no entry in service_billing_assignments yet)
+  const svcConditions = [];
+  if (customerExternalId) {
+    svcConditions.push(eq(services.customerExternalId, customerExternalId));
+  }
+
+  const allServices = await db
+    .select({
+      externalId: services.externalId,
+      planName: services.planName,
+      customerExternalId: services.customerExternalId,
+    })
+    .from(services)
+    .where(svcConditions.length > 0 ? and(...svcConditions) : undefined);
+
+  // Fetch already-assigned service IDs to avoid duplicates
+  const assignedRows = await db
+    .select({ serviceExternalId: serviceBillingAssignments.serviceExternalId })
+    .from(serviceBillingAssignments);
+  const assignedSet = new Set(assignedRows.map(r => r.serviceExternalId));
+
+  // Also fetch unbillable services to skip them
+  const unbillableRows = await db
+    .select({ serviceExternalId: unbillableServices.serviceExternalId })
+    .from(unbillableServices);
+  const unbillableSet = new Set(unbillableRows.map(r => r.serviceExternalId));
+
+  let applied = 0;
+  let skipped = 0;
+
+  for (const svc of allServices) {
+    // Skip already-assigned or unbillable services
+    if (assignedSet.has(svc.externalId) || unbillableSet.has(svc.externalId)) {
+      skipped++;
+      continue;
+    }
+
+    const matchKey = `${svc.planName}|${svc.customerExternalId}`;
+    const billingItemId = ruleMap.get(matchKey);
+    if (!billingItemId) {
+      skipped++;
+      continue;
+    }
+
+    // Verify the billing item still exists
+    const biRows = await db
+      .select({ externalId: billingItems.externalId })
+      .from(billingItems)
+      .where(eq(billingItems.externalId, billingItemId))
+      .limit(1);
+    if (biRows.length === 0) {
+      skipped++;
+      continue;
+    }
+
+    // Create the assignment
+    await db.insert(serviceBillingAssignments).values({
+      billingItemExternalId: billingItemId,
+      serviceExternalId: svc.externalId,
+      customerExternalId: svc.customerExternalId ?? '',
+      assignedBy: 'auto-match-rules',
+      assignmentMethod: 'auto',
+      notes: 'Auto-applied from saved match rule',
+    });
+
+    applied++;
+  }
+
+  return { applied, skipped };
 }

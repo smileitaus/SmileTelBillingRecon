@@ -109,6 +109,7 @@ import {
   unmarkServiceUnbillable,
   getUnbillableServicesForCustomer,
   fuzzyMatchServicesAgainstBillingItems,
+  autoApplyMatchRules,
 } from "./db";
 
 export const appRouter = router({
@@ -1095,7 +1096,10 @@ export const appRouter = router({
         })),
       }))
       .mutation(async ({ input }) => {
-        return await importExetelInvoice(input.invoiceNumber, input.rows);
+        const result = await importExetelInvoice(input.invoiceNumber, input.rows);
+        // Auto-apply saved match rules to any newly created services
+        await autoApplyMatchRules();
+        return result;
       }),
 
     // Generic supplier invoice import (Channel Haus, Legion, Tech-e, etc.)
@@ -1112,12 +1116,15 @@ export const appRouter = router({
       }))
       .mutation(async ({ input, ctx }) => {
         const importedBy = ctx.user?.name || ctx.user?.email || 'Unknown';
-        return await importGenericSupplierInvoice(
+        const result = await importGenericSupplierInvoice(
           input.supplier,
           input.invoiceNumber,
           input.rows as GenericSupplierRow[],
           importedBy
         );
+        // Auto-apply saved match rules to any newly created services
+        await autoApplyMatchRules();
+        return result;
       }),
 
     // PDF invoice parse (Channel Haus, Legion, Tech-e)
@@ -1236,10 +1243,13 @@ export const appRouter = router({
       }))
       .mutation(async ({ input, ctx }) => {
         const importedBy = input.importedBy || ctx.user?.name || ctx.user?.email || 'Unknown';
-        return await confirmSasBossDispatch({
+        const result = await confirmSasBossDispatch({
           ...input,
           importedBy,
         } as SasBossConfirmInput);
+        // Auto-apply saved match rules to any newly imported services
+        await autoApplyMatchRules();
+        return result;
       }),
 
     // List SasBoss workbook uploads

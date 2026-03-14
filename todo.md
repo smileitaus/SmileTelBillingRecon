@@ -737,3 +737,14 @@
 - [x] Restore unbillable services to unassigned
 - [x] Add Billing Match button to CustomerDetail Unmatched Billing section
 - [x] Register /customers/:id/billing-match route in App.tsx
+
+# Billing Match Improvements (2026-03-14)
+- [x] Fix drag-and-drop freeze: replace PointerSensor with MouseSensor+TouchSensor
+- [x] Fix scroll container layout: fixed-height independent scroll columns
+- [x] Clarify cost labels: show 'supplier cost' not just '/month'
+- [x] Add service_billing_assignments junction table (many services → one billing item)
+- [x] Add unbillable_services table for intentionally-unbilled services
+- [x] Build CustomerBillingMatch page: Xero billing items on right, multi-service drop, live margin
+- [x] Add autoApplyMatchRules function: auto-creates assignments from saved match rules on import
+- [x] Wire autoApplyMatchRules into Exetel, Generic, and SasBoss import procedures
+- [x] assignServiceToBillingItem now writes persistent match rule to service_billing_match_log

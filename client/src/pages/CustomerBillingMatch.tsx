@@ -14,7 +14,8 @@ import {
   DragOverlay,
   useDraggable,
   useDroppable,
-  PointerSensor,
+  MouseSensor,
+  TouchSensor,
   useSensor,
   useSensors,
   type DragEndEvent,
@@ -311,7 +312,8 @@ export default function CustomerBillingMatch() {
   const utils = trpc.useUtils();
 
   const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 8 } })
+    useSensor(MouseSensor, { activationConstraint: { distance: 5 } }),
+    useSensor(TouchSensor, { activationConstraint: { delay: 150, tolerance: 5 } })
   );
 
   const [activeService, setActiveService] = useState<UnassignedService | null>(null);
@@ -535,9 +537,9 @@ export default function CustomerBillingMatch() {
           onDragOver={handleDragOver as never}
           onDragEnd={handleDragEnd}
         >
-          <div className="max-w-[1600px] mx-auto px-4 py-4 grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="max-w-[1600px] mx-auto px-4 py-4 grid grid-cols-1 lg:grid-cols-2 gap-6" style={{ height: 'calc(100vh - 72px)' }}>
             {/* LEFT: Unassigned Services */}
-            <div>
+            <div className="flex flex-col overflow-hidden">
               <div className="flex items-center justify-between mb-3">
                 <h2 className="font-semibold text-sm flex items-center gap-2">
                   <AlertTriangle className="w-4 h-4 text-amber-500" />
@@ -547,6 +549,7 @@ export default function CustomerBillingMatch() {
                 <p className="text-xs text-muted-foreground">Drag onto a billing item →</p>
               </div>
 
+              <div className="flex-1 overflow-y-auto pr-1">
               {unassignedServices.length === 0 ? (
                 <div className="border rounded-lg p-8 text-center text-muted-foreground">
                   <CheckCircle2 className="w-8 h-8 mx-auto mb-2 text-emerald-500" />
@@ -610,10 +613,11 @@ export default function CustomerBillingMatch() {
                   </div>
                 </div>
               )}
+              </div>{/* end scroll container */}
             </div>
 
             {/* RIGHT: Billing Items */}
-            <div>
+            <div className="flex flex-col overflow-hidden">
               <div className="flex items-center justify-between mb-3">
                 <h2 className="font-semibold text-sm flex items-center gap-2">
                   <TrendingUp className="w-4 h-4 text-emerald-600" />
@@ -623,6 +627,7 @@ export default function CustomerBillingMatch() {
                 <p className="text-xs text-muted-foreground">← Drop services here</p>
               </div>
 
+              <div className="flex-1 overflow-y-auto pr-1">
               {billingItems.length === 0 ? (
                 <div className="border rounded-lg p-8 text-center text-muted-foreground">
                   <p className="font-medium">No billing items found</p>
@@ -644,6 +649,7 @@ export default function CustomerBillingMatch() {
                   ))}
                 </div>
               )}
+              </div>{/* end scroll container */}
             </div>
           </div>
 
