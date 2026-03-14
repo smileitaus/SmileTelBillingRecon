@@ -76,6 +76,7 @@ import {
   approveCustomerProposal,
   rejectCustomerProposal,
   countPendingProposals,
+  assignProposalToExistingCustomer,
   syncCarbonCostsToServices,
   backfillCostSources,
   getServiceCostHistory,
@@ -213,6 +214,22 @@ export const appRouter = router({
         pendingCount: protectedProcedure
           .query(async () => {
             return await countPendingProposals();
+          }),
+
+        assignToExisting: protectedProcedure
+          .input(z.object({
+            proposalId: z.number(),
+            customerExternalId: z.string(),
+          }))
+          .mutation(async ({ input, ctx }) => {
+            const reviewedBy = ctx.user?.name || ctx.user?.email || 'Unknown';
+            return await assignProposalToExistingCustomer(input.proposalId, input.customerExternalId, reviewedBy);
+          }),
+
+        searchCustomers: protectedProcedure
+          .input(z.object({ search: z.string() }))
+          .query(async ({ input }) => {
+            return await getCustomersForMerge(input.search);
           }),
       }),
 

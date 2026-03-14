@@ -4675,6 +4675,95 @@ export async function countPendingProposals(): Promise<number> {
   return Number(row?.count ?? 0);
 }
 
+/**
+ * Assign the services from a pending proposal to an existing customer (instead of creating a new one).
+ * Marks the proposal as approved, assigns all services, and creates a Platform Check for each service.
+ */
+export async function assignProposalToExistingCustomer(
+  proposalId: number,
+  existingCustomerExternalId: string,
+  reviewedBy: string
+): Promise<{ success: boolean; error?: string; customerExternalId?: string }> {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+
+  const [proposal] = await db.select().from(customerProposals)
+    .where(eq(customerProposals.id, proposalId))
+    .limit(1);
+
+  if (!proposal) return { success: false, error: 'Proposal not found' };
+  if (proposal.status !== 'pending') return { success: false, error: `Proposal is already ${proposal.status}` };
+
+  // Look up the existing customer
+  const [cust] = await db.select().from(customers)
+    .where(eq(customers.externalId, existingCustomerExternalId))
+    .limit(1);
+  if (!cust) return { success: false, error: 'Customer not found' };
+
+  const serviceIds: string[] = proposal.serviceExternalIds ? JSON.parse(proposal.serviceExternalIds) : [];
+
+  // Assign all services to the existing customer
+  for (const svcId of serviceIds) {
+    await db.update(services).set({
+      customerExternalId: existingCustomerExternalId,
+      customerName: cust.name,
+      status: 'active',
+    } as any).where(eq(services.externalId, svcId));
+  }
+
+  // Recalculate customer counts
+  await recalculateCustomerCounts(existingCustomerExternalId);
+
+  // Mark proposal as approved (assigned to existing customer)
+  await db.update(customerProposals).set({
+    status: 'approved',
+    reviewedBy,
+    reviewedAt: new Date(),
+    createdCustomerExternalId: existingCustomerExternalId,
+    rejectionReason: `Assigned to existing customer: ${cust.name} (${existingCustomerExternalId})`,
+  }).where(eq(customerProposals.id, proposalId));
+
+  // Create a Platform Check for each assigned service
+  const proposedName = proposal.proposedName.trim();
+  if (serviceIds.length > 0) {
+    for (const svcId of serviceIds) {
+      const svcDetails = await getServiceForPlatformCheck(svcId);
+      const platform = svcDetails?.billingPlatform || 'Manual';
+      const monthlyCost = Number(svcDetails?.monthlyCost ?? 0);
+      const targetName = svcDetails?.planName || svcDetails?.serviceType || svcId;
+      await createBillingPlatformCheck({
+        customerExternalId: existingCustomerExternalId,
+        customerName: cust.name,
+        issueType: 'new-customer-assignment',
+        issueDescription: `Proposal for "${proposedName}" was assigned to existing customer "${cust.name}" by ${reviewedBy}. Verify service is correctly set up in billing platform.`,
+        createdBy: reviewedBy,
+        targetType: 'service',
+        targetId: svcId,
+        targetName,
+        platform,
+        monthlyAmount: monthlyCost,
+        priority: 'medium',
+      });
+    }
+  } else {
+    await createBillingPlatformCheck({
+      customerExternalId: existingCustomerExternalId,
+      customerName: cust.name,
+      issueType: 'new-customer-assignment',
+      issueDescription: `Proposal for "${proposedName}" was assigned to existing customer "${cust.name}" by ${reviewedBy}. No services linked — verify billing platform setup.`,
+      createdBy: reviewedBy,
+      targetType: 'service',
+      targetId: existingCustomerExternalId,
+      targetName: cust.name,
+      platform: 'Manual',
+      monthlyAmount: 0,
+      priority: 'medium',
+    });
+  }
+
+  return { success: true, customerExternalId: existingCustomerExternalId };
+}
+
 // ==================== Carbon API Cost Sync ====================
 
 /**

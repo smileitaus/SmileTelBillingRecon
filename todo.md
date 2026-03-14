@@ -616,3 +616,10 @@
 - [x] approveCustomerProposal always creates Platform Check per service with correct targetId=serviceExternalId
 - [x] rejectCustomerProposal now creates Platform Check noting rejection for billing verification
 - [x] actionedNote made optional in platformChecks.action procedure (was required)
+
+# Proposals: Assign to Existing Customer (Mar 14)
+- [x] Backend: proposals.assignToExisting procedure - assigns proposal services to existing customer + creates Platform Check
+- [x] Backend: proposals.searchCustomers procedure - search customers by name for the picker dialog (reuses getCustomersForMerge)
+- [x] Frontend: AssignToExistingCustomerDialog component with debounced search, customer list, selection preview
+- [x] Frontend: Wire "Assign to Existing" button into CustomerProposalsTab alongside Approve/Reject
+- [x] All three proposal actions (approve, reject, assign-to-existing) create Platform Check entries

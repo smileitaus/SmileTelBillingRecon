@@ -1,7 +1,10 @@
 /**
  * CustomerProposalsTab — New Customer Proposals approval workflow
  * Shows pending proposals queued from SM imports and manual submissions.
- * Reviewers can approve (creates customer + assigns services) or reject with a reason.
+ * Reviewers can:
+ *   - Approve (creates new customer + assigns services + Platform Check)
+ *   - Assign to Existing Customer (assigns services to existing customer + Platform Check)
+ *   - Reject with a reason (creates Platform Check noting rejection)
  */
 import React, { useState } from "react";
 import { trpc } from "@/lib/trpc";
@@ -20,9 +23,11 @@ import {
   BadgeCheck,
   UserPlus,
   Link2,
+  UserCheck,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import AssignToExistingCustomerDialog from "./AssignToExistingCustomerDialog";
 
 type StatusFilter = "pending" | "approved" | "rejected" | "all";
 
@@ -50,12 +55,14 @@ function ProposalCard({
   proposal,
   onApprove,
   onReject,
+  onAssignToExisting,
   approving,
   rejecting,
 }: {
   proposal: any;
   onApprove: (id: number) => void;
   onReject: (id: number, reason: string) => void;
+  onAssignToExisting: (proposal: any) => void;
   approving: boolean;
   rejecting: boolean;
 }) {
@@ -113,9 +120,10 @@ function ProposalCard({
         </div>
 
         {/* Actions */}
-        <div className="flex items-center gap-2 flex-shrink-0">
+        <div className="flex items-center gap-2 flex-shrink-0 flex-wrap justify-end">
           {proposal.status === "pending" && (
             <>
+              {/* Reject */}
               <Button
                 size="sm"
                 variant="outline"
@@ -126,6 +134,18 @@ function ProposalCard({
                 <XCircle className="w-3.5 h-3.5 mr-1" />
                 Reject
               </Button>
+              {/* Assign to existing */}
+              <Button
+                size="sm"
+                variant="outline"
+                className="border-blue-300 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-950/30"
+                onClick={() => onAssignToExisting(proposal)}
+                disabled={approving || rejecting}
+              >
+                <UserCheck className="w-3.5 h-3.5 mr-1" />
+                Assign to Existing
+              </Button>
+              {/* Approve (create new customer) */}
               <Button
                 size="sm"
                 className="bg-emerald-600 hover:bg-emerald-700 text-white"
@@ -147,8 +167,8 @@ function ProposalCard({
             </span>
           )}
           {proposal.status === "rejected" && proposal.rejectionReason && (
-            <span className="text-xs text-red-500 max-w-[180px] truncate" title={proposal.rejectionReason}>
-              Reason: {proposal.rejectionReason}
+            <span className="text-xs text-red-500 max-w-[200px] truncate" title={proposal.rejectionReason}>
+              {proposal.rejectionReason}
             </span>
           )}
           <button
@@ -235,6 +255,7 @@ export default function CustomerProposalsTab() {
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("pending");
   const [approvingId, setApprovingId] = useState<number | null>(null);
   const [rejectingId, setRejectingId] = useState<number | null>(null);
+  const [assignToExistingProposal, setAssignToExistingProposal] = useState<any | null>(null);
 
   const utils = trpc.useUtils();
 
@@ -258,6 +279,8 @@ export default function CustomerProposalsTab() {
       utils.billing.customers.proposals.list.invalidate();
       utils.billing.customers.proposals.pendingCount.invalidate();
       utils.billing.customers.list.invalidate();
+      utils.billing.platformChecks.list.invalidate();
+      utils.billing.platformChecks.summary.invalidate();
       setApprovingId(null);
     },
     onError: (err) => {
@@ -268,9 +291,11 @@ export default function CustomerProposalsTab() {
 
   const rejectMutation = trpc.billing.customers.proposals.reject.useMutation({
     onSuccess: () => {
-      toast.success("Proposal rejected");
+      toast.success("Proposal rejected — Platform Check created for billing review");
       utils.billing.customers.proposals.list.invalidate();
       utils.billing.customers.proposals.pendingCount.invalidate();
+      utils.billing.platformChecks.list.invalidate();
+      utils.billing.platformChecks.summary.invalidate();
       setRejectingId(null);
     },
     onError: (err) => {
@@ -327,7 +352,7 @@ export default function CustomerProposalsTab() {
           <AlertTriangle className="w-4 h-4 mt-0.5 flex-shrink-0" />
           <span>
             <strong>{pendingCount} proposal{pendingCount !== 1 ? "s" : ""}</strong> awaiting review.
-            Approving a proposal will create the customer record and assign any linked services.
+            You can <strong>Approve</strong> (creates new customer), <strong>Assign to Existing</strong> (links services to an existing customer), or <strong>Reject</strong> (records a Platform Check for billing review).
           </span>
         </div>
       )}
@@ -356,11 +381,29 @@ export default function CustomerProposalsTab() {
               proposal={proposal}
               onApprove={handleApprove}
               onReject={handleReject}
+              onAssignToExisting={setAssignToExistingProposal}
               approving={approvingId === proposal.id}
               rejecting={rejectingId === proposal.id}
             />
           ))}
         </div>
+      )}
+
+      {/* Assign to Existing Customer dialog */}
+      {assignToExistingProposal && (
+        <AssignToExistingCustomerDialog
+          proposalId={assignToExistingProposal.id}
+          proposedName={assignToExistingProposal.proposedName}
+          serviceCount={
+            Array.isArray(assignToExistingProposal.serviceExternalIds)
+              ? assignToExistingProposal.serviceExternalIds.length
+              : 0
+          }
+          onSuccess={() => {
+            utils.billing.customers.list.invalidate();
+          }}
+          onClose={() => setAssignToExistingProposal(null)}
+        />
       )}
     </div>
   );
