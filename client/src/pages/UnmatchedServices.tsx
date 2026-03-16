@@ -31,6 +31,15 @@ import {
   Users,
   Tag,
   Send,
+  Cpu,
+  CreditCard,
+  Calendar,
+  Hash,
+  Building2,
+  Fingerprint,
+  Network,
+  Zap,
+  Copy,
 } from "lucide-react";
 import {
   Dialog,
@@ -516,6 +525,19 @@ function ServiceCard({
 }
 
 function ExpandedPanel({ service }: { service: any }) {
+  // Extract SM Import suggestion name from discoveryNotes
+  // MUST be computed before any hooks that reference it
+  const smSuggestedName = (() => {
+    if (!service.discoveryNotes) return null;
+    // Look specifically for "SM Customer: <name>" pattern
+    const smCustomer = service.discoveryNotes.match(/SM Customer:\s*([^\n\[|]+)/i);
+    if (smCustomer) return smCustomer[1].trim();
+    // Fall back to [Pending] SM customer name: "..."
+    const pending = service.discoveryNotes.match(/SM customer name:\s*"?([^"\n\[]+)"?/i);
+    if (pending) return pending[1].trim();
+    return null;
+  })();
+
   const { data: suggestions, isLoading } =
     trpc.billing.unmatched.suggestions.useQuery(
       { serviceId: service.externalId },
@@ -556,18 +578,6 @@ function ExpandedPanel({ service }: { service: any }) {
   const [createCustomerName, setCreateCustomerName] = useState("");
   const [createCustomerProposalMode, setCreateCustomerProposalMode] = useState(false);
   const utils = trpc.useUtils();
-
-  // Extract SM Import suggestion name from discoveryNotes
-  const smSuggestedName = (() => {
-    if (!service.discoveryNotes) return null;
-    // Look specifically for "SM Customer: <name>" pattern
-    const smCustomer = service.discoveryNotes.match(/SM Customer:\s*([^\n\[|]+)/i);
-    if (smCustomer) return smCustomer[1].trim();
-    // Fall back to [Pending] SM customer name: "..."
-    const pending = service.discoveryNotes.match(/SM customer name:\s*"?([^"\n\[]+)"?/i);
-    if (pending) return pending[1].trim();
-    return null;
-  })();
 
   // Fetch fuzzy customer suggestions for this service (only if it has an SM suggestion)
   const { data: smSuggestions, isLoading: smSuggestionsLoading } =
@@ -668,6 +678,12 @@ function ExpandedPanel({ service }: { service: any }) {
   const hasSuggestions = suggestions && suggestions.length > 0;
   const isTerminated = service.status === "terminated";
 
+  // Build a list of all available data points for the service intelligence panel
+  const serviceLabel = service.customerName && service.customerName.trim() ? service.customerName.trim() : null;
+  const hasDeviceInfo = !!(service.simSerialNumber || service.imei || service.deviceName || service.macAddress || service.modemSerialNumber);
+  const hasNetworkInfo = !!(service.technology || service.speedTier || service.poiName || service.zone || service.ipAddress || service.lastWanIp);
+  const hasContractInfo = !!(service.serviceActivationDate || service.contractEndDate || service.serviceEndDate);
+
   return (
     <div className="border-t border-border px-4 py-4 space-y-4">
       {/* Same-address bulk assign dialog */}
@@ -713,34 +729,238 @@ function ExpandedPanel({ service }: { service: any }) {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-      {/* Service Details */}
-      <div className="grid grid-cols-2 gap-x-6 gap-y-2 text-xs">
-        <div>
-          <span className="text-muted-foreground">Account:</span>
-          <span className="ml-2 font-mono">{service.supplierAccount}</span>
+      {/* Service Intelligence Panel */}
+      <div className="rounded-lg border border-border bg-muted/20 overflow-hidden">
+        <div className="flex items-center gap-2 px-3 py-2 bg-muted/40 border-b border-border">
+          <Fingerprint className="w-3.5 h-3.5 text-muted-foreground" />
+          <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Service Intelligence</span>
+          {service.dataSource && (
+            <span className="ml-auto text-[10px] text-muted-foreground bg-muted px-1.5 py-0.5 rounded font-mono">
+              {service.dataSource}
+            </span>
+          )}
         </div>
-        <div>
-          <span className="text-muted-foreground">Service ID:</span>
-          <span className="ml-2 font-mono">{service.serviceId || "—"}</span>
-        </div>
-        <div>
-          <span className="text-muted-foreground">Phone:</span>
-          <span className="ml-2 font-mono">{service.phoneNumber || "—"}</span>
-        </div>
-        <div>
-          <span className="text-muted-foreground">AVC/Connection:</span>
-          <span className="ml-2 font-mono">
-            {service.connectionId || (
-              <span className="text-amber-600">Missing — add below</span>
+
+        <div className="p-3 space-y-3">
+
+          {/* User/Device Label — most important for matching */}
+          {serviceLabel && (
+            <div className="flex items-start gap-2 p-2.5 rounded-md bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800">
+              <Tag className="w-3.5 h-3.5 text-blue-600 mt-0.5 shrink-0" />
+              <div className="flex-1 min-w-0">
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-blue-600 dark:text-blue-400 mb-0.5">User / Device Label</p>
+                <p className="text-sm font-medium text-blue-900 dark:text-blue-100 break-words">{serviceLabel}</p>
+                <p className="text-[10px] text-blue-600 dark:text-blue-400 mt-0.5">Use this label to search for the customer below</p>
+              </div>
+              <button
+                onClick={() => { setShowManualSearch(true); setCustomerSearch(serviceLabel); }}
+                className="shrink-0 flex items-center gap-1 px-2 py-1 text-[10px] font-medium bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+                title="Pre-fill search with this label"
+              >
+                <Search className="w-3 h-3" />
+                Search
+              </button>
+            </div>
+          )}
+
+          {/* Core identifiers grid */}
+          <div className="grid grid-cols-2 gap-x-4 gap-y-1.5 text-xs">
+            {/* Phone */}
+            <div className="flex items-center gap-1.5">
+              <Phone className="w-3 h-3 text-muted-foreground shrink-0" />
+              <span className="text-muted-foreground">Phone:</span>
+              {service.phoneNumber ? (
+                <span className="font-mono text-foreground">{service.phoneNumber}</span>
+              ) : (
+                <span className="text-rose-500 text-[10px]">Not available</span>
+              )}
+            </div>
+
+            {/* AVC/Connection */}
+            <div className="flex items-center gap-1.5">
+              <Network className="w-3 h-3 text-muted-foreground shrink-0" />
+              <span className="text-muted-foreground">AVC:</span>
+              {service.connectionId ? (
+                <span className="font-mono text-foreground">{service.connectionId}</span>
+              ) : (
+                <span className="text-amber-600 text-[10px]">Missing</span>
+              )}
+            </div>
+
+            {/* Service ID */}
+            {service.serviceId && (
+              <div className="flex items-center gap-1.5">
+                <Hash className="w-3 h-3 text-muted-foreground shrink-0" />
+                <span className="text-muted-foreground">Service ID:</span>
+                <span className="font-mono text-foreground truncate">{service.serviceId}</span>
+              </div>
             )}
-          </span>
-        </div>
-        {service.locationAddress && (
-          <div className="col-span-2">
-            <span className="text-muted-foreground">Address:</span>
-            <span className="ml-2">{service.locationAddress}</span>
+
+            {/* Supplier Account */}
+            {service.supplierAccount && (
+              <div className="flex items-center gap-1.5">
+                <CreditCard className="w-3 h-3 text-muted-foreground shrink-0" />
+                <span className="text-muted-foreground">Account:</span>
+                <span className="font-mono text-foreground">{service.supplierAccount}</span>
+              </div>
+            )}
+
+            {/* Address */}
+            {service.locationAddress && service.locationAddress !== 'Unknown Location' && (
+              <div className="flex items-start gap-1.5 col-span-2">
+                <MapPin className="w-3 h-3 text-muted-foreground shrink-0 mt-0.5" />
+                <span className="text-muted-foreground">Address:</span>
+                <span className="text-foreground break-words">{service.locationAddress}</span>
+              </div>
+            )}
           </div>
-        )}
+
+          {/* Device / Hardware info */}
+          {hasDeviceInfo && (
+            <div className="border-t border-border/50 pt-2.5">
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 flex items-center gap-1">
+                <Cpu className="w-3 h-3" /> Device / Hardware
+              </p>
+              <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
+                {service.deviceName && (
+                  <div className="flex items-center gap-1.5">
+                    <Smartphone className="w-3 h-3 text-muted-foreground shrink-0" />
+                    <span className="text-muted-foreground">Device:</span>
+                    <span className="text-foreground truncate">{service.deviceName}</span>
+                  </div>
+                )}
+                {service.simSerialNumber && (
+                  <div className="flex items-center gap-1.5">
+                    <Hash className="w-3 h-3 text-muted-foreground shrink-0" />
+                    <span className="text-muted-foreground">SIM:</span>
+                    <span className="font-mono text-foreground text-[10px]">{service.simSerialNumber}</span>
+                  </div>
+                )}
+                {service.imei && (
+                  <div className="flex items-center gap-1.5">
+                    <Fingerprint className="w-3 h-3 text-muted-foreground shrink-0" />
+                    <span className="text-muted-foreground">IMEI:</span>
+                    <span className="font-mono text-foreground text-[10px]">{service.imei}</span>
+                  </div>
+                )}
+                {service.macAddress && (
+                  <div className="flex items-center gap-1.5">
+                    <Network className="w-3 h-3 text-muted-foreground shrink-0" />
+                    <span className="text-muted-foreground">MAC:</span>
+                    <span className="font-mono text-foreground text-[10px]">{service.macAddress}</span>
+                  </div>
+                )}
+                {service.modemSerialNumber && (
+                  <div className="flex items-center gap-1.5">
+                    <Hash className="w-3 h-3 text-muted-foreground shrink-0" />
+                    <span className="text-muted-foreground">Modem S/N:</span>
+                    <span className="font-mono text-foreground text-[10px]">{service.modemSerialNumber}</span>
+                  </div>
+                )}
+                {service.simOwner && (
+                  <div className="flex items-center gap-1.5">
+                    <Users className="w-3 h-3 text-muted-foreground shrink-0" />
+                    <span className="text-muted-foreground">SIM Owner:</span>
+                    <span className="text-foreground truncate">{service.simOwner}</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Network / Plan info */}
+          {hasNetworkInfo && (
+            <div className="border-t border-border/50 pt-2.5">
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 flex items-center gap-1">
+                <Zap className="w-3 h-3" /> Network / Plan
+              </p>
+              <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
+                {service.technology && (
+                  <div className="flex items-center gap-1.5">
+                    <Network className="w-3 h-3 text-muted-foreground shrink-0" />
+                    <span className="text-muted-foreground">Technology:</span>
+                    <span className="text-foreground">{service.technology}</span>
+                  </div>
+                )}
+                {service.speedTier && (
+                  <div className="flex items-center gap-1.5">
+                    <Zap className="w-3 h-3 text-muted-foreground shrink-0" />
+                    <span className="text-muted-foreground">Speed:</span>
+                    <span className="text-foreground">{service.speedTier}</span>
+                  </div>
+                )}
+                {service.dataPlanGb && (
+                  <div className="flex items-center gap-1.5">
+                    <Wifi className="w-3 h-3 text-muted-foreground shrink-0" />
+                    <span className="text-muted-foreground">Data:</span>
+                    <span className="text-foreground">{service.dataPlanGb} GB</span>
+                  </div>
+                )}
+                {service.poiName && (
+                  <div className="flex items-center gap-1.5">
+                    <Building2 className="w-3 h-3 text-muted-foreground shrink-0" />
+                    <span className="text-muted-foreground">POI:</span>
+                    <span className="text-foreground truncate">{service.poiName}</span>
+                  </div>
+                )}
+                {service.ipAddress && (
+                  <div className="flex items-center gap-1.5">
+                    <Network className="w-3 h-3 text-muted-foreground shrink-0" />
+                    <span className="text-muted-foreground">IP:</span>
+                    <span className="font-mono text-foreground text-[10px]">{service.ipAddress}</span>
+                  </div>
+                )}
+                {service.lastWanIp && (
+                  <div className="flex items-center gap-1.5">
+                    <Network className="w-3 h-3 text-muted-foreground shrink-0" />
+                    <span className="text-muted-foreground">Last WAN IP:</span>
+                    <span className="font-mono text-foreground text-[10px]">{service.lastWanIp}</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Contract / Dates */}
+          {hasContractInfo && (
+            <div className="border-t border-border/50 pt-2.5">
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 flex items-center gap-1">
+                <Calendar className="w-3 h-3" /> Contract / Dates
+              </p>
+              <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
+                {service.serviceActivationDate && (
+                  <div className="flex items-center gap-1.5">
+                    <Calendar className="w-3 h-3 text-muted-foreground shrink-0" />
+                    <span className="text-muted-foreground">Activated:</span>
+                    <span className="text-foreground">{service.serviceActivationDate}</span>
+                  </div>
+                )}
+                {service.contractEndDate && (
+                  <div className="flex items-center gap-1.5">
+                    <Calendar className="w-3 h-3 text-muted-foreground shrink-0" />
+                    <span className="text-muted-foreground">Contract ends:</span>
+                    <span className="text-foreground">{service.contractEndDate}</span>
+                  </div>
+                )}
+                {service.serviceEndDate && (
+                  <div className="flex items-center gap-1.5">
+                    <Calendar className="w-3 h-3 text-muted-foreground shrink-0" />
+                    <span className="text-muted-foreground">Service ended:</span>
+                    <span className="text-foreground">{service.serviceEndDate}</span>
+                  </div>
+                )}
+                {service.purchaseDate && (
+                  <div className="flex items-center gap-1.5">
+                    <Calendar className="w-3 h-3 text-muted-foreground shrink-0" />
+                    <span className="text-muted-foreground">Purchased:</span>
+                    <span className="text-foreground">{service.purchaseDate}</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+        </div>
       </div>
 
       {/* Status Actions */}

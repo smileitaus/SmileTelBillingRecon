@@ -811,3 +811,12 @@
 - [x] Add summary banner with counts per tier
 - [x] Sort Has Identifiers tab: phone first, then AVC, then address only
 - [x] Add per-row triage badge (Phone/AVC/Address/No ID) on each service card
+
+# Unmatched Services - Enriched Matching Signals (2026-03-16)
+- [ ] Audit all available fields in services table and related tables
+- [ ] Enrich getUnmatchedServices query to return all available fields
+- [ ] Add cross-reference lookups: phone→customer, AVC→location, address→location, supplierAccount→customers
+- [ ] Redesign expanded panel to show all data points in structured layout
+- [ ] Show "similar services" already assigned to customers (same plan/provider/account)
+- [ ] Show location match candidates based on address
+- [ ] Show billing item candidates based on service type
