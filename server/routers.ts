@@ -528,6 +528,12 @@ export const appRouter = router({
         .input(z.object({
           serviceExternalId: z.string(),
           updates: z.object({
+            // Previously system-managed, now editable
+            serviceId: z.string().optional(),
+            monthlyCost: z.string().optional(),
+            serviceType: z.string().optional(),
+            provider: z.string().optional(),
+            // Standard editable fields
             serviceTypeDetail: z.string().optional(),
             planName: z.string().optional(),
             status: z.string().optional(),

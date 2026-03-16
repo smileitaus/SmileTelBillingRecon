@@ -825,3 +825,8 @@
 - [x] Fix all React hooks order violations in UnmatchedServices.tsx (React error #310 persists after first fix attempt)
 - [x] Root cause: triageCounts useMemo was placed after if (isLoading) return early return in main component
 - [x] Fix: moved triageCounts useMemo before the isLoading early return (all hooks must be called unconditionally)
+
+# System-Managed Fields - Make Editable
+- [x] Remove read-only lock from Service Name/ID, Monthly Cost, Service Type, Provider fields
+- [x] Add inline edit + save to those fields (amber section with note "editable until product mapping is complete")
+- [x] Wire to tRPC updateService procedure - added serviceId, monthlyCost, serviceType, provider to Zod schema and DB trackField calls

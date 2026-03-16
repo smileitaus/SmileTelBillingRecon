@@ -2296,6 +2296,12 @@ export async function getServicesByCustomerForReassign(customerExternalId: strin
 export async function updateServiceFields(
   serviceExternalId: string,
   updates: {
+    // Previously system-managed, now editable
+    serviceId?: string;
+    monthlyCost?: string;
+    serviceType?: string;
+    provider?: string;
+    // Standard editable fields
     serviceTypeDetail?: string;
     planName?: string;
     status?: string;
@@ -2349,6 +2355,10 @@ export async function updateServiceFields(
     }
   };
 
+  if (updates.serviceId !== undefined) trackField('serviceId', updates.serviceId, old.serviceId);
+  if (updates.monthlyCost !== undefined) trackField('monthlyCost', updates.monthlyCost, old.monthlyCost);
+  if (updates.serviceType !== undefined) trackField('serviceType', updates.serviceType, old.serviceType);
+  if (updates.provider !== undefined) trackField('provider', updates.provider, old.provider);
   if (updates.serviceTypeDetail !== undefined) trackField('serviceTypeDetail', updates.serviceTypeDetail, old.serviceTypeDetail);
   if (updates.planName !== undefined) trackField('planName', updates.planName, old.planName);
   if (updates.status !== undefined) trackField('status', updates.status, old.status);
