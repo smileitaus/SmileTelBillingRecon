@@ -857,3 +857,10 @@
 - [ ] On manual match confirmation, auto-save as mapping rule for future invoices
 - [ ] Refresh dashboard tallies (cost, margin, revenue) to include AAPT data
 - [ ] Refresh services-by-provider chart to show AAPT
+
+## SasBoss Wholesale Cost Mapping
+- [ ] Extract Access4 Diamond pricebook - all products, wholesale costs, RRP
+- [ ] Build supplierProductCostMap table in DB schema
+- [ ] Build product cost mapping UI on Suppliers page
+- [ ] Apply wholesale costs to all SasBoss services in DB
+- [ ] Support Xero per-customer cost overrides

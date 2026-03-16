@@ -386,6 +386,141 @@ function AaptPanel() {
   );
 }
 
+// ── SasBoss / Access4 Product Cost Pricebook Panel ─────────────────────────
+function SasBossPanel() {
+  const { data: products, isLoading, refetch } = trpc.billing.productCosts.list.useQuery({ supplier: "SasBoss" });
+  const updateMutation = trpc.billing.productCosts.update.useMutation({
+    onSuccess: () => { toast.success("Cost updated"); refetch(); setEditRow(null); },
+    onError: (e) => toast.error(e.message),
+  });
+  const [editRow, setEditRow] = useState<any>(null);
+  const [editWholesale, setEditWholesale] = useState("");
+  const [editRrp, setEditRrp] = useState("");
+  const [editNotes, setEditNotes] = useState("");
+  const [search, setSearch] = useState("");
+  const [filterCat, setFilterCat] = useState("all");
+
+  const categories = Array.from(new Set((products ?? []).map((p: any) => p.productCategory).filter(Boolean)));
+  const filtered = (products ?? []).filter((p: any) => {
+    const matchSearch = !search || p.productName?.toLowerCase().includes(search.toLowerCase());
+    const matchCat = filterCat === "all" || p.productCategory === filterCat;
+    return matchSearch && matchCat;
+  });
+
+  function openEdit(p: any) {
+    setEditRow(p);
+    setEditWholesale(parseFloat(p.wholesaleCost).toFixed(2));
+    setEditRrp(parseFloat(p.defaultRetailPrice).toFixed(2));
+    setEditNotes(p.notes ?? "");
+  }
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center gap-2">
+        <DollarSign className="h-4 w-4 text-purple-600" />
+        <span className="font-semibold text-sm">Access4 Diamond Pricebook</span>
+        <Badge variant="outline" className="text-[10px]">108 products</Badge>
+        <span className="text-xs text-muted-foreground ml-auto">Diamond Tier wholesale costs — edit to override</span>
+      </div>
+
+      {/* Filters */}
+      <div className="flex gap-2">
+        <div className="relative flex-1">
+          <Search className="absolute left-2.5 top-2.5 h-3.5 w-3.5 text-muted-foreground" />
+          <Input placeholder="Search products…" className="pl-8 h-8 text-sm" value={search} onChange={e => setSearch(e.target.value)} />
+        </div>
+        <select
+          className="h-8 text-sm rounded-md border border-input bg-background px-2 text-muted-foreground"
+          value={filterCat}
+          onChange={e => setFilterCat(e.target.value)}
+        >
+          <option value="all">All Categories</option>
+          {categories.map((c: any) => <option key={c} value={c}>{c}</option>)}
+        </select>
+      </div>
+
+      {isLoading ? (
+        <div className="flex items-center gap-2 text-sm text-muted-foreground py-4">
+          <RefreshCw className="h-4 w-4 animate-spin" />Loading pricebook…
+        </div>
+      ) : (
+        <div className="rounded-md border overflow-hidden">
+          <Table>
+            <TableHeader>
+              <TableRow className="bg-muted/40">
+                <TableHead className="text-xs">Category</TableHead>
+                <TableHead className="text-xs">Product</TableHead>
+                <TableHead className="text-xs text-right">Wholesale (Diamond)</TableHead>
+                <TableHead className="text-xs text-right">RRP</TableHead>
+                <TableHead className="text-xs text-right">Margin</TableHead>
+                <TableHead className="text-xs">Notes</TableHead>
+                <TableHead className="w-10"></TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filtered.map((p: any) => {
+                const wc = parseFloat(p.wholesaleCost);
+                const rrp = parseFloat(p.defaultRetailPrice);
+                const margin = rrp > 0 ? ((rrp - wc) / rrp * 100).toFixed(0) : "—";
+                return (
+                  <TableRow key={p.id} className="text-xs hover:bg-muted/30">
+                    <TableCell className="text-muted-foreground">{p.productCategory || "—"}</TableCell>
+                    <TableCell className="font-medium">{p.productName}</TableCell>
+                    <TableCell className="text-right font-mono text-green-700">${wc.toFixed(2)}</TableCell>
+                    <TableCell className="text-right font-mono text-muted-foreground">${rrp.toFixed(2)}</TableCell>
+                    <TableCell className="text-right">
+                      <Badge variant="outline" className={`text-[10px] ${Number(margin) >= 30 ? 'text-green-700 border-green-300' : Number(margin) >= 15 ? 'text-yellow-700 border-yellow-300' : 'text-red-700 border-red-300'}`}>
+                        {margin}%
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="text-muted-foreground max-w-[160px] truncate">{p.notes || "—"}</TableCell>
+                    <TableCell>
+                      <Button variant="ghost" size="sm" className="h-6 w-6 p-0" onClick={() => openEdit(p)}>
+                        <span className="text-xs">✏️</span>
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+        </div>
+      )}
+
+      {/* Edit dialog */}
+      {editRow && (
+        <Dialog open onOpenChange={() => setEditRow(null)}>
+          <DialogContent className="max-w-sm">
+            <DialogHeader>
+              <DialogTitle className="text-sm">Edit Cost — {editRow.productName}</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-3 py-2">
+              <div>
+                <label className="text-xs text-muted-foreground">Wholesale Cost (Diamond Tier, ex-GST)</label>
+                <Input type="number" step="0.01" value={editWholesale} onChange={e => setEditWholesale(e.target.value)} className="mt-1" />
+              </div>
+              <div>
+                <label className="text-xs text-muted-foreground">Default RRP (ex-GST)</label>
+                <Input type="number" step="0.01" value={editRrp} onChange={e => setEditRrp(e.target.value)} className="mt-1" />
+              </div>
+              <div>
+                <label className="text-xs text-muted-foreground">Notes</label>
+                <Input value={editNotes} onChange={e => setEditNotes(e.target.value)} className="mt-1" placeholder="Optional notes…" />
+              </div>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" size="sm" onClick={() => setEditRow(null)}>Cancel</Button>
+              <Button size="sm" onClick={() => updateMutation.mutate({ id: editRow.id, wholesaleCost: parseFloat(editWholesale), defaultRetailPrice: parseFloat(editRrp), notes: editNotes })} disabled={updateMutation.isPending}>
+                {updateMutation.isPending ? "Saving…" : "Save"}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
+    </div>
+  );
+}
+
 // ── Supplier Card ─────────────────────────────────────────────────────────────
 function SupplierCard({ supplier }: { supplier: any }) {
   const [expanded, setExpanded] = useState(false);
@@ -443,6 +578,8 @@ function SupplierCard({ supplier }: { supplier: any }) {
         <div className="px-5 py-4 border-t bg-background">
           {supplier.name === "AAPT" ? (
             <AaptPanel />
+          ) : supplier.name === "SasBoss" || supplier.name === "Access4" ? (
+            <SasBossPanel />
           ) : (
             <div className="space-y-3">
               {/* Generic supplier info */}

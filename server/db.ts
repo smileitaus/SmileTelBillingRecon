@@ -1,6 +1,6 @@
 import { eq, like, or, and, sql, desc, asc, inArray, ne, isNull, count } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, customers, locations, services, supplierAccounts, billingItems, reviewItems, billingPlatformChecks, serviceEditHistory, customerProposals, serviceCostHistory, supplierWorkbookUploads, supplierWorkbookLineItems, customerUsageSummaries, supplierEnterpriseMap, supplierProductMap, serviceBillingMatchLog, serviceBillingAssignments, unbillableServices, escalatedServices, supplierRegistry, supplierInvoiceUploads, supplierServiceMap } from "../drizzle/schema";
+import { InsertUser, users, customers, locations, services, supplierAccounts, billingItems, reviewItems, billingPlatformChecks, serviceEditHistory, customerProposals, serviceCostHistory, supplierWorkbookUploads, supplierWorkbookLineItems, customerUsageSummaries, supplierEnterpriseMap, supplierProductMap, serviceBillingMatchLog, serviceBillingAssignments, unbillableServices, escalatedServices, supplierRegistry, supplierInvoiceUploads, supplierServiceMap, supplierProductCostMap } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -7702,4 +7702,26 @@ export async function getDashboardTotals() {
   const totalMargin = totalRevenue - totalCost;
   const marginPercent = totalRevenue > 0 ? (totalMargin / totalRevenue) * 100 : 0;
   return { totalRevenue, totalCost, totalMargin, marginPercent, costByProvider };
+}
+
+// ===== Supplier Product Cost Map =====
+export async function getProductCostMappings(supplier?: string) {
+  const db = await getDb();
+  if (!db) return [];
+  if (supplier) {
+    return await db.select().from(supplierProductCostMap).where(eq(supplierProductCostMap.supplier, supplier)).orderBy(supplierProductCostMap.productCategory, supplierProductCostMap.productName);
+  }
+  return await db.select().from(supplierProductCostMap).orderBy(supplierProductCostMap.supplier, supplierProductCostMap.productCategory, supplierProductCostMap.productName);
+}
+
+export async function updateProductCostMapping(id: number, wholesaleCost: number, defaultRetailPrice: number, notes?: string) {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+  await db.update(supplierProductCostMap).set({
+    wholesaleCost: wholesaleCost.toFixed(5) as any,
+    defaultRetailPrice: defaultRetailPrice.toFixed(5) as any,
+    notes: notes ?? null,
+    updatedAt: new Date(),
+  }).where(eq(supplierProductCostMap.id, id));
+  return { success: true };
 }

@@ -125,6 +125,8 @@ import {
   assignAaptServiceToCustomer,
   getAaptImportStats,
   getDashboardTotals,
+  getProductCostMappings,
+  updateProductCostMapping,
 } from "./db";
 
 export const appRouter = router({
@@ -1394,6 +1396,24 @@ export const appRouter = router({
     }),
     dashboardTotals: protectedProcedure.query(async () => {
       return await getDashboardTotals();
+    }),
+    // Product cost mappings (Access4 Diamond pricebook)
+    productCosts: router({
+      list: protectedProcedure
+        .input(z.object({ supplier: z.string().optional() }).optional())
+        .query(async ({ input }) => {
+          return await getProductCostMappings(input?.supplier);
+        }),
+      update: protectedProcedure
+        .input(z.object({
+          id: z.number(),
+          wholesaleCost: z.number(),
+          defaultRetailPrice: z.number(),
+          notes: z.string().optional(),
+        }))
+        .mutation(async ({ input }) => {
+          return await updateProductCostMapping(input.id, input.wholesaleCost, input.defaultRetailPrice, input.notes);
+        }),
     }),
     // Blitz termination review
     blitz: router({

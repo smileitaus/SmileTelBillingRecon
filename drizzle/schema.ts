@@ -675,3 +675,27 @@ export const supplierRegistry = mysqlTable("supplier_registry", {
 });
 export type SupplierRegistry = typeof supplierRegistry.$inferSelect;
 export type InsertSupplierRegistry = typeof supplierRegistry.$inferInsert;
+
+/**
+ * Supplier Product Cost Map - stores the wholesale cost for each supplier product.
+ * Used to correctly set monthlyCost on services when importing supplier invoices.
+ * Diamond tier pricing from Access4 pricebook is the default for SasBoss products.
+ * Xero per-customer overrides take precedence when available.
+ */
+export const supplierProductCostMap = mysqlTable("supplier_product_cost_map", {
+  id: int("id").autoincrement().primaryKey(),
+  supplier: varchar("supplier", { length: 128 }).notNull(), // e.g. 'SasBoss'
+  productName: varchar("productName", { length: 512 }).notNull(), // exact product name from invoice
+  productCategory: varchar("productCategory", { length: 128 }).default(""), // e.g. 'UCaaS Licensing'
+  unit: varchar("unit", { length: 64 }).default("Per Month"), // e.g. 'Per Month', 'Per Minute'
+  rrp: decimal("rrp", { precision: 10, scale: 5 }).default("0.00000"), // RRP from pricebook
+  wholesaleCost: decimal("wholesaleCost", { precision: 10, scale: 5 }).notNull(), // Diamond tier cost
+  defaultRetailPrice: decimal("defaultRetailPrice", { precision: 10, scale: 5 }).default("0.00000"), // suggested retail
+  notes: text("notes"), // e.g. 'Free when attached to Executive User'
+  isActive: int("isActive").default(1).notNull(),
+  source: varchar("source", { length: 128 }).default("Access4 Diamond Pricebook v3.4"), // where this came from
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type SupplierProductCostMap = typeof supplierProductCostMap.$inferSelect;
+export type InsertSupplierProductCostMap = typeof supplierProductCostMap.$inferInsert;
