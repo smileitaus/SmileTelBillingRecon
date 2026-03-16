@@ -840,3 +840,20 @@
 - [x] Build Blitz Termination Review screen in app
 - [x] Generate termination report CSV for Telstra submission
 - [x] Add blitz import history table to track imports (tracked via blitzImportDate/blitzReportName fields)
+
+# AAPT March 2026 Invoice Import
+
+- [ ] Extract all AAPT services from PDF into structured dataset
+- [ ] Add supplier_invoice_mappings table to DB schema (supplier, product_key, description_pattern, mapped_customer_id, mapped_service_id, confidence, created_by, last_used)
+- [ ] Add AAPT-specific fields to services schema (aaptServiceId, aaptAccessId, aaptYourId, aaptProductType, aaptContractMonths, aaptSpeedMbps, aaptInvoiceNumber, aaptAccountNumber, aaptBillingPeriod)
+- [ ] Add AAPT to suppliers table with proper ranking
+- [ ] Run AVC/address/fuzzy matching script against existing customers and services
+- [ ] Store all confirmed matches as reusable mapping rules in supplier_invoice_mappings
+- [ ] Import all AAPT services into DB with provider = 'AAPT'
+- [ ] Populate unmatched screen with unmatched AAPT services (full context: address, AVC, cost, Your ID)
+- [ ] Build AAPT invoice uploader on suppliers screen with PDF parsing
+- [ ] Build mapping review UI: show auto-applied mappings + new lines needing review
+- [ ] Build mapping management screen: view/edit/delete saved mapping rules per supplier
+- [ ] On manual match confirmation, auto-save as mapping rule for future invoices
+- [ ] Refresh dashboard tallies (cost, margin, revenue) to include AAPT data
+- [ ] Refresh services-by-provider chart to show AAPT

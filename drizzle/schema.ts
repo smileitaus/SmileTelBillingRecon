@@ -178,6 +178,18 @@ export const services = mysqlTable("services", {
   blitzBillJan26: decimal("blitzBillJan26", { precision: 10, scale: 2 }),
   blitzUsageHistory: text("blitzUsageHistory"),
   terminationNote: text("terminationNote"),
+  // AAPT invoice fields
+  aaptServiceId: varchar("aaptServiceId", { length: 64 }).default(""),
+  aaptProductType: varchar("aaptProductType", { length: 128 }).default(""),
+  aaptProductCategory: varchar("aaptProductCategory", { length: 64 }).default(""),
+  aaptYourId: varchar("aaptYourId", { length: 256 }).default(""),
+  aaptAccessId: varchar("aaptAccessId", { length: 128 }).default(""),
+  aaptSpeedMbps: int("aaptSpeedMbps"),
+  aaptContractMonths: int("aaptContractMonths"),
+  aaptAccountNumber: varchar("aaptAccountNumber", { length: 64 }).default(""),
+  aaptInvoiceNumber: varchar("aaptInvoiceNumber", { length: 64 }).default(""),
+  aaptBillingPeriod: varchar("aaptBillingPeriod", { length: 64 }).default(""),
+  aaptImportDate: varchar("aaptImportDate", { length: 32 }).default(""),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });
@@ -564,3 +576,102 @@ export const escalatedServices = mysqlTable("escalated_services", {
 });
 export type EscalatedService = typeof escalatedServices.$inferSelect;
 export type InsertEscalatedService = typeof escalatedServices.$inferInsert;
+
+/**
+ * Supplier Invoice Uploads - tracks PDF/file invoice uploads from suppliers like AAPT.
+ * Each upload represents one month's invoice. Stores import metadata and match summary.
+ */
+export const supplierInvoiceUploads = mysqlTable("supplier_invoice_uploads", {
+  id: int("id").autoincrement().primaryKey(),
+  supplier: varchar("supplier", { length: 128 }).notNull(), // e.g. 'AAPT'
+  invoiceNumber: varchar("invoiceNumber", { length: 128 }).notNull(),
+  accountNumber: varchar("accountNumber", { length: 64 }).default(""),
+  billingPeriod: varchar("billingPeriod", { length: 64 }).default(""),
+  issueDate: varchar("issueDate", { length: 32 }).default(""),
+  billingMonth: varchar("billingMonth", { length: 16 }).notNull(), // e.g. '2026-03'
+  totalExGst: decimal("totalExGst", { precision: 10, scale: 2 }).default("0.00").notNull(),
+  totalIncGst: decimal("totalIncGst", { precision: 10, scale: 2 }).default("0.00").notNull(),
+  serviceCount: int("serviceCount").default(0).notNull(),
+  matchedCount: int("matchedCount").default(0).notNull(),
+  unmatchedCount: int("unmatchedCount").default(0).notNull(),
+  autoMatchedCount: int("autoMatchedCount").default(0).notNull(), // matched via saved mapping rules
+  newMappingsCreated: int("newMappingsCreated").default(0).notNull(),
+  importedBy: varchar("importedBy", { length: 256 }).notNull(),
+  importedAt: timestamp("importedAt").defaultNow().notNull(),
+  status: varchar("status", { length: 32 }).default("complete").notNull(), // 'complete' | 'partial' | 'pending_review'
+  notes: text("notes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type SupplierInvoiceUpload = typeof supplierInvoiceUploads.$inferSelect;
+export type InsertSupplierInvoiceUpload = typeof supplierInvoiceUploads.$inferInsert;
+
+/**
+ * Supplier Service Map - persistent mapping of supplier service identifiers to customers/services.
+ * The core repeatable mapping layer: once a supplier service ID or address is matched,
+ * future invoice uploads auto-apply the same mapping without requiring manual review.
+ *
+ * Match keys (in priority order):
+ *   1. aaptServiceId (exact) - most reliable, service-level
+ *   2. aaptAccessId / avcId (exact) - reliable for AAPT/NBN
+ *   3. address (normalised) - reliable for FAST Fibre services
+ *   4. yourId label (fuzzy) - useful hint but not definitive
+ */
+export const supplierServiceMap = mysqlTable("supplier_service_map", {
+  id: int("id").autoincrement().primaryKey(),
+  supplierName: varchar("supplierName", { length: 128 }).notNull(), // e.g. 'AAPT'
+  // The supplier-side identifier (the match key)
+  matchKeyType: varchar("matchKeyType", { length: 32 }).notNull(), // 'service_id' | 'access_id' | 'address' | 'your_id'
+  matchKeyValue: varchar("matchKeyValue", { length: 512 }).notNull(), // the actual key value
+  // Optional secondary context stored for display/debugging
+  productType: varchar("productType", { length: 128 }).default(""),
+  description: text("description"),
+  // The customer this maps to
+  customerExternalId: varchar("customerExternalId", { length: 32 }).notNull(),
+  customerName: varchar("customerName", { length: 512 }).notNull(),
+  // Optionally, the specific service record this maps to
+  serviceExternalId: varchar("serviceExternalId", { length: 32 }).default(""),
+  // How this mapping was established
+  confirmedBy: varchar("confirmedBy", { length: 64 }).default("manual").notNull(), // 'manual' | 'auto' | 'address_match' | 'avc_match' | 'fuzzy'
+  confidence: decimal("confidence", { precision: 4, scale: 2 }).default("1.00").notNull(), // 0.00-1.00
+  // Usage tracking
+  lastUsedAt: timestamp("lastUsedAt"),
+  useCount: int("useCount").default(0).notNull(),
+  // Lifecycle
+  isActive: int("isActive").default(1).notNull(), // 1=active, 0=disabled
+  notes: text("notes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => ({
+  uniqSupplierMatchKey: uniqueIndex("uniq_supplier_match_key").on(table.supplierName, table.matchKeyType, table.matchKeyValue),
+}));
+export type SupplierServiceMap = typeof supplierServiceMap.$inferSelect;
+export type InsertSupplierServiceMap = typeof supplierServiceMap.$inferInsert;
+
+/**
+ * Supplier Registry - master list of all suppliers with ranking, metadata, and upload config.
+ * Controls how each supplier appears in the UI and what upload formats are supported.
+ */
+export const supplierRegistry = mysqlTable("supplier_registry", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 128 }).notNull().unique(), // e.g. 'AAPT'
+  displayName: varchar("displayName", { length: 256 }).notNull(), // e.g. 'AAPT (TPG Telecom)'
+  category: varchar("category", { length: 64 }).default("Telecom").notNull(), // 'Telecom' | 'ISP' | 'Cloud' | 'Other'
+  rank: int("rank").default(99).notNull(), // lower = higher priority in UI
+  logoUrl: varchar("logoUrl", { length: 512 }).default(""),
+  abn: varchar("abn", { length: 32 }).default(""),
+  supportPhone: varchar("supportPhone", { length: 64 }).default(""),
+  supportEmail: varchar("supportEmail", { length: 320 }).default(""),
+  uploadFormats: varchar("uploadFormats", { length: 256 }).default(""), // e.g. 'pdf,xlsx'
+  uploadInstructions: text("uploadInstructions"),
+  isActive: int("isActive").default(1).notNull(),
+  totalServices: int("totalServices").default(0).notNull(),
+  totalMonthlyCost: decimal("totalMonthlyCost", { precision: 12, scale: 2 }).default("0.00").notNull(),
+  lastInvoiceDate: varchar("lastInvoiceDate", { length: 32 }).default(""),
+  lastInvoiceNumber: varchar("lastInvoiceNumber", { length: 128 }).default(""),
+  notes: text("notes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type SupplierRegistry = typeof supplierRegistry.$inferSelect;
+export type InsertSupplierRegistry = typeof supplierRegistry.$inferInsert;

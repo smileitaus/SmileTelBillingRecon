@@ -1,6 +1,6 @@
-import { eq, like, or, and, sql, desc, asc, inArray, ne, isNull } from "drizzle-orm";
+import { eq, like, or, and, sql, desc, asc, inArray, ne, isNull, count } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, customers, locations, services, supplierAccounts, billingItems, reviewItems, billingPlatformChecks, serviceEditHistory, customerProposals, serviceCostHistory, supplierWorkbookUploads, supplierWorkbookLineItems, customerUsageSummaries, supplierEnterpriseMap, supplierProductMap, serviceBillingMatchLog, serviceBillingAssignments, unbillableServices, escalatedServices } from "../drizzle/schema";
+import { InsertUser, users, customers, locations, services, supplierAccounts, billingItems, reviewItems, billingPlatformChecks, serviceEditHistory, customerProposals, serviceCostHistory, supplierWorkbookUploads, supplierWorkbookLineItems, customerUsageSummaries, supplierEnterpriseMap, supplierProductMap, serviceBillingMatchLog, serviceBillingAssignments, unbillableServices, escalatedServices, supplierRegistry, supplierInvoiceUploads, supplierServiceMap } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -7522,4 +7522,184 @@ export async function getBlitzImportStats() {
     mroContractFlagged: Number(mroRow.count),
     totalMonthlySavings: totalSavings,
   };
+}
+
+// ============================================================
+// AAPT & Supplier Registry helpers
+// ============================================================
+
+/** Get all supplier registry entries, ordered by rank */
+export async function getSupplierRegistry() {
+  const db = await getDb();
+  if (!db) return [];
+  return await db
+    .select()
+    .from(supplierRegistry)
+    .where(eq(supplierRegistry.isActive, 1))
+    .orderBy(asc(supplierRegistry.rank), asc(supplierRegistry.name));
+}
+
+/** Get all supplier invoice uploads, newest first */
+export async function getSupplierInvoiceUploads(supplier?: string) {
+  const db = await getDb();
+  if (!db) return [];
+  const conditions: any[] = supplier ? [eq(supplierInvoiceUploads.supplier, supplier)] : [];
+  return await db
+    .select()
+    .from(supplierInvoiceUploads)
+    .where(conditions.length ? and(...conditions) : undefined)
+    .orderBy(desc(supplierInvoiceUploads.importedAt));
+}
+
+/** Get all AAPT services */
+export async function getAaptServices(status?: string) {
+  const db = await getDb();
+  if (!db) return [];
+  const conditions: any[] = [eq(services.provider, 'AAPT')];
+  if (status) conditions.push(eq(services.status, status));
+  return await db
+    .select()
+    .from(services)
+    .where(and(...conditions))
+    .orderBy(asc(services.aaptProductCategory), asc(services.aaptServiceId));
+}
+
+/** Get unmatched AAPT services for the unmatched screen */
+export async function getUnmatchedAaptServices() {
+  const db = await getDb();
+  if (!db) return [];
+  return await db
+    .select()
+    .from(services)
+    .where(and(eq(services.provider, 'AAPT'), eq(services.status, 'unmatched')))
+    .orderBy(asc(services.aaptProductType), desc(services.monthlyCost));
+}
+
+/** Get supplier service mapping rules */
+export async function getSupplierServiceMappings(supplierName: string) {
+  const db = await getDb();
+  if (!db) return [];
+  return await db
+    .select()
+    .from(supplierServiceMap)
+    .where(and(eq(supplierServiceMap.supplierName, supplierName), eq(supplierServiceMap.isActive, 1)))
+    .orderBy(desc(supplierServiceMap.useCount), desc(supplierServiceMap.lastUsedAt));
+}
+
+/** Assign an unmatched AAPT service to a customer and save mapping rule */
+export async function assignAaptServiceToCustomer(
+  serviceExternalId: string,
+  customerExternalId: string,
+  customerName: string,
+  confirmedBy: string,
+  notes?: string
+) {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+
+  await db
+    .update(services)
+    .set({
+      customerExternalId,
+      customerName,
+      status: 'active',
+      updatedAt: new Date(),
+    })
+    .where(eq(services.externalId, serviceExternalId));
+
+  const [svc] = await db.select().from(services).where(eq(services.externalId, serviceExternalId)).limit(1);
+  if (!svc) return { success: false };
+
+  const mappingsToSave = [
+    { type: 'service_id', value: svc.aaptServiceId || '' },
+    { type: 'access_id', value: svc.aaptAccessId || '' },
+    { type: 'address', value: svc.locationAddress || '' },
+  ].filter(m => m.value && m.value.length > 2);
+
+  for (const mapping of mappingsToSave) {
+    await db
+      .insert(supplierServiceMap)
+      .values({
+        supplierName: 'AAPT',
+        matchKeyType: mapping.type,
+        matchKeyValue: mapping.value,
+        productType: svc.aaptProductType || '',
+        description: svc.planName || '',
+        customerExternalId,
+        customerName,
+        serviceExternalId,
+        confirmedBy: 'manual',
+        confidence: '1.00',
+        useCount: 1,
+        lastUsedAt: new Date(),
+        notes: notes || '',
+      })
+      .onDuplicateKeyUpdate({
+        set: {
+          customerExternalId,
+          customerName,
+          serviceExternalId,
+          confirmedBy: 'manual',
+          useCount: sql`use_count + 1`,
+          lastUsedAt: new Date(),
+          updatedAt: new Date(),
+        },
+      });
+  }
+
+  await db
+    .update(customers)
+    .set({
+      serviceCount: sql`(SELECT COUNT(*) FROM services WHERE customerExternalId = ${customerExternalId})`,
+      monthlyCost: sql`(SELECT COALESCE(SUM(monthlyCost), 0) FROM services WHERE customerExternalId = ${customerExternalId})`,
+      updatedAt: new Date(),
+    })
+    .where(eq(customers.externalId, customerExternalId));
+
+  return { success: true };
+}
+
+/** Get AAPT import summary stats */
+export async function getAaptImportStats() {
+  const db = await getDb();
+  if (!db) return null;
+  const [totalRow] = await db.select({ c: count() }).from(services).where(eq(services.provider, 'AAPT'));
+  const [matchedRow] = await db.select({ c: count() }).from(services).where(and(eq(services.provider, 'AAPT'), ne(services.status, 'unmatched')));
+  const [unmatchedRow] = await db.select({ c: count() }).from(services).where(and(eq(services.provider, 'AAPT'), eq(services.status, 'unmatched')));
+  const [costRow] = await db.select({ total: sql<number>`COALESCE(SUM(monthlyCost), 0)` }).from(services).where(eq(services.provider, 'AAPT'));
+  const [mappingRow] = await db.select({ c: count() }).from(supplierServiceMap).where(eq(supplierServiceMap.supplierName, 'AAPT'));
+  const [lastUpload] = await db.select().from(supplierInvoiceUploads).where(eq(supplierInvoiceUploads.supplier, 'AAPT')).orderBy(desc(supplierInvoiceUploads.importedAt)).limit(1);
+  return {
+    totalServices: Number(totalRow?.c || 0),
+    matchedServices: Number(matchedRow?.c || 0),
+    unmatchedServices: Number(unmatchedRow?.c || 0),
+    totalMonthlyCost: Number(costRow?.total || 0),
+    mappingRules: Number(mappingRow?.c || 0),
+    lastInvoiceNumber: lastUpload?.invoiceNumber || '',
+    lastBillingPeriod: lastUpload?.billingPeriod || '',
+    lastImportDate: lastUpload?.importedAt ? lastUpload.importedAt.toISOString() : '',
+  };
+}
+
+/** Get dashboard totals across all providers */
+export async function getDashboardTotals() {
+  const db = await getDb();
+  if (!db) return null;
+  const costByProvider = await db
+    .select({
+      provider: services.provider,
+      totalCost: sql<number>`COALESCE(SUM(monthlyCost), 0)`,
+      serviceCount: count(),
+    })
+    .from(services)
+    .where(ne(services.status, 'terminated'))
+    .groupBy(services.provider)
+    .orderBy(desc(sql`COALESCE(SUM(monthlyCost), 0)`));
+  const [revenueRow] = await db.select({ total: sql<number>`COALESCE(SUM(monthlyRevenue), 0)` }).from(customers).where(eq(customers.status, 'active'));
+  const [costRow] = await db.select({ total: sql<number>`COALESCE(SUM(monthlyCost), 0)` }).from(services).where(ne(services.status, 'terminated'));
+  const totalRevenue = Number(revenueRow?.total || 0);
+  const totalCost = Number(costRow?.total || 0);
+  const totalMargin = totalRevenue - totalCost;
+  const marginPercent = totalRevenue > 0 ? (totalMargin / totalRevenue) * 100 : 0;
+  return { totalRevenue, totalCost, totalMargin, marginPercent, costByProvider };
 }

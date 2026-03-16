@@ -117,6 +117,14 @@ import {
   getCustomersWithEscalations,
   getBlitzTerminationServices,
   getBlitzImportStats,
+  getSupplierRegistry,
+  getSupplierInvoiceUploads,
+  getAaptServices,
+  getUnmatchedAaptServices,
+  getSupplierServiceMappings,
+  assignAaptServiceToCustomer,
+  getAaptImportStats,
+  getDashboardTotals,
 } from "./db";
 
 export const appRouter = router({
@@ -1333,6 +1341,60 @@ export const appRouter = router({
         return await getCustomerUsageSummaries(input.customerExternalId);
       }),
 
+    // AAPT services & supplier registry
+    aapt: router({
+      stats: protectedProcedure.query(async () => {
+        return await getAaptImportStats();
+      }),
+      services: protectedProcedure
+        .input(z.object({ status: z.string().optional() }).optional())
+        .query(async ({ input }) => {
+          return await getAaptServices(input?.status);
+        }),
+      unmatched: protectedProcedure.query(async () => {
+        return await getUnmatchedAaptServices();
+      }),
+      assign: protectedProcedure
+        .input(z.object({
+          serviceExternalId: z.string(),
+          customerExternalId: z.string(),
+          customerName: z.string(),
+          notes: z.string().optional(),
+        }))
+        .mutation(async ({ ctx, input }) => {
+          return await assignAaptServiceToCustomer(
+            input.serviceExternalId,
+            input.customerExternalId,
+            input.customerName,
+            ctx.user.name || ctx.user.openId,
+            input.notes
+          );
+        }),
+      mappings: protectedProcedure.query(async () => {
+        return await getSupplierServiceMappings('AAPT');
+      }),
+      invoiceUploads: protectedProcedure.query(async () => {
+        return await getSupplierInvoiceUploads('AAPT');
+      }),
+    }),
+    supplierRegistry: router({
+      list: protectedProcedure.query(async () => {
+        return await getSupplierRegistry();
+      }),
+      invoiceUploads: protectedProcedure
+        .input(z.object({ supplier: z.string().optional() }).optional())
+        .query(async ({ input }) => {
+          return await getSupplierInvoiceUploads(input?.supplier);
+        }),
+      allMappings: protectedProcedure
+        .input(z.object({ supplierName: z.string() }))
+        .query(async ({ input }) => {
+          return await getSupplierServiceMappings(input.supplierName);
+        }),
+    }),
+    dashboardTotals: protectedProcedure.query(async () => {
+      return await getDashboardTotals();
+    }),
     // Blitz termination review
     blitz: router({
       terminationList: protectedProcedure
