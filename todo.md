@@ -820,3 +820,8 @@
 - [ ] Show "similar services" already assigned to customers (same plan/provider/account)
 - [ ] Show location match candidates based on address
 - [ ] Show billing item candidates based on service type
+
+# Bug Fix - React Error #310 (Unmatched Screen)
+- [x] Fix all React hooks order violations in UnmatchedServices.tsx (React error #310 persists after first fix attempt)
+- [x] Root cause: triageCounts useMemo was placed after if (isLoading) return early return in main component
+- [x] Fix: moved triageCounts useMemo before the isLoading early return (all hooks must be called unconditionally)

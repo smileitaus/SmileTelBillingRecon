@@ -1400,7 +1400,7 @@ export default function UnmatchedServices() {
     return score;
   };
 
-  // Provider counts (must be before early return to satisfy hooks rules)
+  // Provider counts (MUST be before early return to satisfy hooks rules)
   const providerCounts = useMemo(() => {
     return allServices.reduce(
       (acc: Record<string, number>, s: any) => {
@@ -1418,6 +1418,18 @@ export default function UnmatchedServices() {
       .map(([name, count]) => ({ name, count }));
   }, [providerCounts]);
 
+  // Triage counts (MUST be before early return to satisfy hooks rules)
+  const triageCounts = useMemo(() => {
+    let hasIdentifiers = 0;
+    let needsInvestigation = 0;
+    allServices.forEach((s: any) => {
+      if (classifyService(s) === 'has_identifiers') hasIdentifiers++;
+      else needsInvestigation++;
+    });
+    return { hasIdentifiers, needsInvestigation };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [allServices]);
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-full">
@@ -1430,18 +1442,6 @@ export default function UnmatchedServices() {
       </div>
     );
   }
-
-  // Triage counts (computed from full list, before other filters)
-  const triageCounts = useMemo(() => {
-    let hasIdentifiers = 0;
-    let needsInvestigation = 0;
-    allServices.forEach((s: any) => {
-      if (classifyService(s) === 'has_identifiers') hasIdentifiers++;
-      else needsInvestigation++;
-    });
-    return { hasIdentifiers, needsInvestigation };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [allServices]);
 
   // Apply triage filter first
   let filtered = triageFilter === 'all'
