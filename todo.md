@@ -795,3 +795,19 @@
 - [x] Fix: getAvailableBillingItemsForCustomer should return ALL billing items for the customer, not just unmatched ones
 - [x] Rule: a service is only "Matched" if it has BOTH a customer assignment AND a service_billing_assignments entry. Legacy match_log entries alone must NOT mark a service as matched.
 - [x] Remove legacy match_log "linked" entries from the matched/unmatched display logic — only service_billing_assignments counts
+
+# Unmatched Services - Customer Match Triage (2026-03-16)
+- [ ] Add batch scoring: tRPC procedure to count unmatched services by confidence tier (high/medium/low/none)
+- [ ] Add filter tabs to Unmatched Services page: All / Has Suggestions / No Customer Match
+- [ ] Add top summary banner: "X services can be assigned to a customer — Y have no match"
+- [ ] Auto-expand high-confidence cards on the Has Suggestions tab
+- [ ] Add Bulk Auto-Assign button for unambiguous high-confidence single-customer matches
+- [ ] Confirmation dialog showing list of services to be bulk-assigned before applying
+
+# Unmatched Services Triage - Revised (2026-03-16)
+- [x] Remove account-group approach (same account ≠ same customer)
+- [x] Add data-completeness triage: classify services as Has Identifiers (phone/AVC/address) vs Needs Investigation
+- [x] Add filter tabs: All / Has Identifiers / Needs Investigation
+- [x] Add summary banner with counts per tier
+- [x] Sort Has Identifiers tab: phone first, then AVC, then address only
+- [x] Add per-row triage badge (Phone/AVC/Address/No ID) on each service card

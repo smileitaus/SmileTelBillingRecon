@@ -15,6 +15,7 @@ import {
   getSummary,
   searchAll,
   getUnmatchedServices,
+  getUnmatchedServiceTriage,
   getSuggestedMatches,
   assignServiceToCustomer,
   updateServiceAvc,
@@ -584,6 +585,10 @@ export const appRouter = router({
     unmatched: router({
       list: protectedProcedure.query(async () => {
         return await getUnmatchedServices();
+      }),
+
+      triage: protectedProcedure.query(async () => {
+        return await getUnmatchedServiceTriage();
       }),
 
       suggestions: protectedProcedure

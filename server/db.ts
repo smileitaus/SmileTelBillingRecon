@@ -413,6 +413,45 @@ export async function getUnmatchedServices() {
   }));
 }
 
+/**
+ * Classifies unmatched services by data completeness for triage:
+ * - 'has_identifiers': has phone, AVC/connectionId, or a real address — operator can look up the customer
+ * - 'needs_investigation': missing all three identifiers — cannot be matched without more data
+ * Returns counts per tier and the sorted service list with a tier field.
+ */
+export async function getUnmatchedServiceTriage() {
+  const db = await getDb();
+  if (!db) return { hasIdentifiers: 0, needsInvestigation: 0 };
+
+  const unmatchedRows = await db.select({
+    externalId: services.externalId,
+    phoneNumber: services.phoneNumber,
+    connectionId: services.connectionId,
+    locationAddress: services.locationAddress,
+  }).from(services).where(
+    and(
+      or(eq(services.status, 'unmatched'), eq(services.status, 'flagged_for_termination')),
+      or(isNull(services.customerExternalId), eq(services.customerExternalId, ''))
+    )
+  );
+
+  let hasIdentifiers = 0;
+  let needsInvestigation = 0;
+
+  for (const svc of unmatchedRows) {
+    const hasPhone = !!(svc.phoneNumber && svc.phoneNumber.trim().length >= 6);
+    const hasAvc = !!(svc.connectionId && svc.connectionId.trim().length > 3);
+    const hasAddress = !!(svc.locationAddress && svc.locationAddress.trim().length > 5 && svc.locationAddress !== 'Unknown Location');
+    if (hasPhone || hasAvc || hasAddress) {
+      hasIdentifiers++;
+    } else {
+      needsInvestigation++;
+    }
+  }
+
+  return { hasIdentifiers, needsInvestigation };
+}
+
 // Helper: extract meaningful address parts, skipping generic prefixes
 function extractStreetName(address: string): string | null {
   if (!address || address === 'Unknown Location') return null;

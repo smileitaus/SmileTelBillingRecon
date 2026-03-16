@@ -385,6 +385,9 @@ function ServiceCard({
   const isFlagged = service.status === "flagged_for_termination";
   const isTerminated = service.status === "terminated";
   const noDataUse = service.noDataUse === 1;
+  const hasPhone = !!(service.phoneNumber && service.phoneNumber.trim().length >= 6);
+  const hasAddress = !!(service.locationAddress && service.locationAddress.trim().length > 5 && service.locationAddress !== 'Unknown Location');
+  const triageTier: 'has_identifiers' | 'needs_investigation' = (hasPhone || hasAvc || hasAddress) ? 'has_identifiers' : 'needs_investigation';
   // Extract suggested customer name from discoveryNotes (SM Import or other sources)
   const suggestedName = (() => {
     if (!service.discoveryNotes) return null;
@@ -451,6 +454,18 @@ function ServiceCard({
               <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-semibold rounded-full border border-blue-300 bg-blue-50 text-blue-700 dark:bg-blue-950/30 dark:text-blue-300 dark:border-blue-700 max-w-[160px]">
                 <Tag className="w-2.5 h-2.5 shrink-0" />
                 <span className="truncate">{suggestedName}</span>
+              </span>
+            )}
+            {/* Triage indicator */}
+            {triageTier === 'has_identifiers' ? (
+              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 text-[10px] font-semibold rounded-full border border-emerald-300 bg-emerald-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400 dark:border-emerald-700">
+                <Search className="w-2.5 h-2.5" />
+                {hasPhone ? 'Phone' : hasAvc ? 'AVC' : 'Address'}
+              </span>
+            ) : (
+              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 text-[10px] font-semibold rounded-full border border-rose-200 bg-rose-50 text-rose-600 dark:bg-rose-950/30 dark:text-rose-400 dark:border-rose-700">
+                <AlertTriangle className="w-2.5 h-2.5" />
+                No ID
               </span>
             )}
             <ProviderBadge provider={service.provider} size="xs" />
@@ -1140,12 +1155,30 @@ export default function UnmatchedServices() {
   >("all");
   const [providerFilter, setProviderFilter] = useState<string>("all");
   const [sortBy, setSortBy] = useState<"cost" | "type" | "account">("cost");
+  const [triageFilter, setTriageFilter] = useState<"all" | "has_identifiers" | "needs_investigation">("all");
 
   const handleExpand = useCallback((id: string) => {
     setExpandedId((prev) => (prev === id ? null : id));
   }, []);
 
   const allServices = services || [];
+
+  // Triage classification: does this service have enough identifiers to look up a customer?
+  const classifyService = (s: any): 'has_identifiers' | 'needs_investigation' => {
+    const hasPhone = !!(s.phoneNumber && s.phoneNumber.trim().length >= 6);
+    const hasAvc = !!(s.connectionId && s.connectionId.trim().length > 3);
+    const hasAddress = !!(s.locationAddress && s.locationAddress.trim().length > 5 && s.locationAddress !== 'Unknown Location');
+    return (hasPhone || hasAvc || hasAddress) ? 'has_identifiers' : 'needs_investigation';
+  };
+
+  // Identifier priority score for sorting (phone=3, AVC=2, address=1, none=0)
+  const identifierScore = (s: any): number => {
+    let score = 0;
+    if (s.phoneNumber && s.phoneNumber.trim().length >= 6) score += 3;
+    if (s.connectionId && s.connectionId.trim().length > 3) score += 2;
+    if (s.locationAddress && s.locationAddress.trim().length > 5 && s.locationAddress !== 'Unknown Location') score += 1;
+    return score;
+  };
 
   // Provider counts (must be before early return to satisfy hooks rules)
   const providerCounts = useMemo(() => {
@@ -1178,10 +1211,27 @@ export default function UnmatchedServices() {
     );
   }
 
-  // Apply type filter
-  let filtered = typeFilter === "all"
+  // Triage counts (computed from full list, before other filters)
+  const triageCounts = useMemo(() => {
+    let hasIdentifiers = 0;
+    let needsInvestigation = 0;
+    allServices.forEach((s: any) => {
+      if (classifyService(s) === 'has_identifiers') hasIdentifiers++;
+      else needsInvestigation++;
+    });
+    return { hasIdentifiers, needsInvestigation };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [allServices]);
+
+  // Apply triage filter first
+  let filtered = triageFilter === 'all'
     ? allServices
-    : allServices.filter((s: any) => s.serviceType === typeFilter);
+    : allServices.filter((s: any) => classifyService(s) === triageFilter);
+
+  // Apply type filter
+  filtered = typeFilter === "all"
+    ? filtered
+    : filtered.filter((s: any) => s.serviceType === typeFilter);
 
   // Helper to extract SM customer name from notes
   const extractSmName = (notes: string | null | undefined): string | null => {
@@ -1208,6 +1258,11 @@ export default function UnmatchedServices() {
   }
 
   const sorted = [...filtered].sort((a: any, b: any) => {
+    // When viewing Has Identifiers tab, sort by identifier richness first
+    if (triageFilter === 'has_identifiers') {
+      const scoreDiff = identifierScore(b) - identifierScore(a);
+      if (scoreDiff !== 0) return scoreDiff;
+    }
     if (sortBy === "cost") return b.monthlyCost - a.monthlyCost;
     if (sortBy === "type") return a.serviceType.localeCompare(b.serviceType);
     return (a.supplierAccount || "").localeCompare(b.supplierAccount || "");
@@ -1280,6 +1335,61 @@ export default function UnmatchedServices() {
           Export CSV
         </button>
       </div>
+
+      {/* Triage Banner */}
+      <div className="grid grid-cols-2 gap-3 mb-5">
+        <button
+          onClick={() => setTriageFilter(triageFilter === 'has_identifiers' ? 'all' : 'has_identifiers')}
+          className={`flex items-start gap-3 p-4 rounded-lg border-2 text-left transition-all ${
+            triageFilter === 'has_identifiers'
+              ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-950/30'
+              : 'border-emerald-200 bg-card hover:border-emerald-400'
+          }`}
+        >
+          <div className="w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center shrink-0 mt-0.5">
+            <Search className="w-4 h-4 text-emerald-700 dark:text-emerald-400" />
+          </div>
+          <div>
+            <p className="text-2xl font-bold text-emerald-700 dark:text-emerald-400 font-mono">{triageCounts.hasIdentifiers}</p>
+            <p className="text-xs font-semibold text-emerald-800 dark:text-emerald-300 mt-0.5">Ready to Assign</p>
+            <p className="text-[11px] text-muted-foreground mt-0.5 leading-snug">Have phone, AVC, or address — operator can look up the right customer</p>
+          </div>
+        </button>
+        <button
+          onClick={() => setTriageFilter(triageFilter === 'needs_investigation' ? 'all' : 'needs_investigation')}
+          className={`flex items-start gap-3 p-4 rounded-lg border-2 text-left transition-all ${
+            triageFilter === 'needs_investigation'
+              ? 'border-rose-500 bg-rose-50 dark:bg-rose-950/30'
+              : 'border-rose-200 bg-card hover:border-rose-400'
+          }`}
+        >
+          <div className="w-8 h-8 rounded-full bg-rose-100 dark:bg-rose-900/40 flex items-center justify-center shrink-0 mt-0.5">
+            <AlertTriangle className="w-4 h-4 text-rose-700 dark:text-rose-400" />
+          </div>
+          <div>
+            <p className="text-2xl font-bold text-rose-700 dark:text-rose-400 font-mono">{triageCounts.needsInvestigation}</p>
+            <p className="text-xs font-semibold text-rose-800 dark:text-rose-300 mt-0.5">Needs Investigation</p>
+            <p className="text-[11px] text-muted-foreground mt-0.5 leading-snug">No phone, AVC, or address — add identifiers before matching</p>
+          </div>
+        </button>
+      </div>
+      {triageFilter !== 'all' && (
+        <div className="flex items-center gap-2 mb-4">
+          <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${
+            triageFilter === 'has_identifiers'
+              ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300'
+              : 'bg-rose-100 text-rose-800 dark:bg-rose-900/40 dark:text-rose-300'
+          }`}>
+            {triageFilter === 'has_identifiers' ? 'Showing: Ready to Assign' : 'Showing: Needs Investigation'}
+          </span>
+          <button
+            onClick={() => setTriageFilter('all')}
+            className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1"
+          >
+            <X className="w-3 h-3" /> Clear filter
+          </button>
+        </div>
+      )}
 
       {/* Summary Cards */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-6">
@@ -1449,7 +1559,7 @@ export default function UnmatchedServices() {
           <div className="flex flex-col items-center justify-center py-12 text-muted-foreground">
             <Check className="w-8 h-8 mb-3 text-emerald-500" />
             <p className="text-sm font-medium">
-              {statusFilter !== "all" || typeFilter !== "all"
+              {triageFilter !== 'all' || statusFilter !== "all" || typeFilter !== "all"
                 ? "No services match the current filters"
                 : "All services have been matched!"}
             </p>
