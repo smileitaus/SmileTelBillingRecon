@@ -830,3 +830,13 @@
 - [x] Remove read-only lock from Service Name/ID, Monthly Cost, Service Type, Provider fields
 - [x] Add inline edit + save to those fields (amber section with note "editable until product mapping is complete")
 - [x] Wire to tRPC updateService procedure - added serviceId, monthlyCost, serviceType, provider to Zod schema and DB trackField calls
+
+# Blitz Report Import - March 2026
+- [x] Add blitz import fields to DB schema (blitzImportDate, blitzDataUsage3m, blitzDataUsage6m, blitzVoiceUsage3m, blitzVoiceUsage6m, blitzLastUsedDate, blitzNoUse3m, blitzNoUse6m, blitzDeviceAgeMths, blitzPostcode, blitzMroContract, blitzMroEndDate, blitzMroEtc, blitzBillingHistory)
+- [x] Write import script to match 161 existing services and update with Blitz data
+- [x] Write import script to create 60 new Telstra Mobile services from Blitz
+- [x] Flag 147 services (no usage 6 months) as flagged_for_termination with agent note
+- [x] Add MRO contract warning note to 18 services under contract
+- [x] Build Blitz Termination Review screen in app
+- [x] Generate termination report CSV for Telstra submission
+- [x] Add blitz import history table to track imports (tracked via blitzImportDate/blitzReportName fields)

@@ -7431,3 +7431,95 @@ export async function getCustomersWithEscalations(): Promise<Array<{
 
   return Array.from(customerMap.values()).sort((a, b) => b.escalationCount - a.escalationCount);
 }
+
+// ─── Blitz Import Functions ───────────────────────────────────────────────────
+
+/**
+ * Get all services flagged for termination from the Blitz import.
+ */
+export async function getBlitzTerminationServices() {
+  const db = await getDb();
+  if (!db) return [];
+
+  const rows = await db
+    .select()
+    .from(services)
+    .where(
+      and(
+        eq(services.provider, 'Telstra'),
+        eq(services.serviceType, 'Mobile'),
+        eq(services.blitzNoUse6m, 1),
+        ne(services.status, 'terminated')
+      )
+    )
+    .orderBy(services.monthlyCost);
+
+  return rows.map(r => ({
+    ...r,
+    monthlyCost: Number(r.monthlyCost),
+    blitzBillMar26: r.blitzBillMar26 !== null ? Number(r.blitzBillMar26) : null,
+    blitzAvg3mBill: r.blitzAvg3mBill !== null ? Number(r.blitzAvg3mBill) : null,
+    blitzMroEtc: r.blitzMroEtc !== null ? Number(r.blitzMroEtc) : null,
+    blitzAvg3mDataMb: r.blitzAvg3mDataMb !== null ? Number(r.blitzAvg3mDataMb) : null,
+    blitzAvg6mDataMb: r.blitzAvg6mDataMb !== null ? Number(r.blitzAvg6mDataMb) : null,
+    blitzAvg3mVoiceMins: r.blitzAvg3mVoiceMins !== null ? Number(r.blitzAvg3mVoiceMins) : null,
+    blitzAvg6mVoiceMins: r.blitzAvg6mVoiceMins !== null ? Number(r.blitzAvg6mVoiceMins) : null,
+    isZeroCost: Number(r.monthlyCost) === 0,
+    usageHistory: r.blitzUsageHistory ? (() => { try { return JSON.parse(r.blitzUsageHistory!); } catch { return null; } })() : null,
+  }));
+}
+
+/**
+ * Get Blitz import statistics.
+ */
+export async function getBlitzImportStats() {
+  const db = await getDb();
+  if (!db) return null;
+
+  const [totalRow] = await db
+    .select({ count: sql<number>`count(*)` })
+    .from(services)
+    .where(and(eq(services.provider, 'Telstra'), ne(services.blitzImportDate, '')));
+
+  const [flaggedRow] = await db
+    .select({ count: sql<number>`count(*)` })
+    .from(services)
+    .where(and(eq(services.provider, 'Telstra'), eq(services.blitzNoUse6m, 1), ne(services.status, 'terminated')));
+
+  const [zeroCostRow] = await db
+    .select({ count: sql<number>`count(*)` })
+    .from(services)
+    .where(and(eq(services.provider, 'Telstra'), eq(services.blitzNoUse6m, 1), eq(services.monthlyCost, '0.00'), ne(services.status, 'terminated')));
+
+  const [mroRow] = await db
+    .select({ count: sql<number>`count(*)` })
+    .from(services)
+    .where(and(eq(services.provider, 'Telstra'), eq(services.blitzNoUse6m, 1), ne(services.blitzMroContract, ''), ne(services.status, 'terminated')));
+
+  const savingsRows = await db
+    .select({ cost: services.monthlyCost })
+    .from(services)
+    .where(and(eq(services.provider, 'Telstra'), eq(services.blitzNoUse6m, 1), ne(services.status, 'terminated')));
+
+  const totalSavings = savingsRows.reduce((sum, r) => sum + Number(r.cost), 0);
+  const flaggedCount = Number(flaggedRow.count);
+  const zeroCostCount = Number(zeroCostRow.count);
+
+  const [lastImport] = await db
+    .select({ blitzImportDate: services.blitzImportDate, blitzReportName: services.blitzReportName })
+    .from(services)
+    .where(and(eq(services.provider, 'Telstra'), ne(services.blitzImportDate, '')))
+    .orderBy(desc(services.updatedAt))
+    .limit(1);
+
+  return {
+    totalImported: Number(totalRow.count),
+    lastImportDate: lastImport?.blitzImportDate || '',
+    lastReportName: lastImport?.blitzReportName || '',
+    flaggedForTermination: flaggedCount,
+    zeroCostFlagged: zeroCostCount,
+    paidFlagged: flaggedCount - zeroCostCount,
+    mroContractFlagged: Number(mroRow.count),
+    totalMonthlySavings: totalSavings,
+  };
+}

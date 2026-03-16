@@ -25,6 +25,7 @@ import SupplierInvoices from "./pages/SupplierInvoices";
 import CustomerWorkbookMatching from "./pages/CustomerWorkbookMatching";
 import CustomerBillingMatch from "./pages/CustomerBillingMatch";
 import UnmatchedBillingQueue from "./pages/UnmatchedBillingQueue";
+import BlitzTerminationReview from "./pages/BlitzTerminationReview";
 import { useState } from "react";
 import { trpc } from "@/lib/trpc";
 
@@ -242,6 +243,7 @@ function Router() {
           <Route path="/customers/:customerId/match-workbook" component={CustomerWorkbookMatching} />
           <Route path="/customers/:id/billing-match" component={CustomerBillingMatch} />
           <Route path="/billing-queue" component={UnmatchedBillingQueue} />
+          <Route path="/blitz-termination" component={BlitzTerminationReview} />
           <Route path="/404" component={NotFound} />
           <Route component={NotFound} />
         </Switch>

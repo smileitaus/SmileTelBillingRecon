@@ -21,6 +21,7 @@ import {
   Link2,
   Upload,
   Receipt,
+  Scissors,
 } from "lucide-react";
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useGlobalSearch } from "@/hooks/useData";
@@ -40,6 +41,7 @@ const navItems = [
   { path: "/service-billing-match", label: "Service Linking", icon: Link2 },
   { path: "/supplier-invoices", label: "Supplier Invoices", icon: Upload },
   { path: "/billing-queue", label: "Billing Queue", icon: Receipt },
+  { path: "/blitz-termination", label: "Blitz Terminations", icon: Scissors },
 ];
 
 interface SearchCustomer {

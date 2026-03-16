@@ -115,6 +115,8 @@ import {
   resolveEscalatedService,
   getEscalatedServices,
   getCustomersWithEscalations,
+  getBlitzTerminationServices,
+  getBlitzImportStats,
 } from "./db";
 
 export const appRouter = router({
@@ -1331,6 +1333,17 @@ export const appRouter = router({
         return await getCustomerUsageSummaries(input.customerExternalId);
       }),
 
+    // Blitz termination review
+    blitz: router({
+      terminationList: protectedProcedure
+        .query(async () => {
+          return await getBlitzTerminationServices();
+        }),
+      importStats: protectedProcedure
+        .query(async () => {
+          return await getBlitzImportStats();
+        }),
+    }),
     // Customer merge
     merge: router({
       search: protectedProcedure
