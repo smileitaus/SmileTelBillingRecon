@@ -127,6 +127,7 @@ import {
   getDashboardTotals,
   getProductCostMappings,
   updateProductCostMapping,
+  importAccess4Invoice,
 } from "./db";
 
 export const appRouter = router({
@@ -1426,6 +1427,33 @@ export const appRouter = router({
           return await getBlitzImportStats();
         }),
     }),
+    // Access4 / SasBoss PDF invoice import
+    importAccess4: protectedProcedure
+      .input(z.object({
+        invoiceNumber: z.string(),
+        invoiceDate: z.string(),
+        totalIncGst: z.number(),
+        enterprises: z.array(z.object({
+          name: z.string(),
+          endpoints: z.number(),
+          endpointDelta: z.number(),
+          mrc: z.number(),
+          variable: z.number(),
+          onceOff: z.number(),
+          total: z.number(),
+          isInternal: z.boolean(),
+        })),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        const importedBy = ctx.user?.name || ctx.user?.email || 'Unknown';
+        return await importAccess4Invoice(
+          input.invoiceNumber,
+          input.invoiceDate,
+          input.totalIncGst,
+          input.enterprises,
+          importedBy
+        );
+      }),
     // Customer merge
     merge: router({
       search: protectedProcedure

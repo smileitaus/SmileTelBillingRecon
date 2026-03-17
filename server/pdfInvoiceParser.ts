@@ -15,11 +15,24 @@ export interface ParsedPdfService {
 }
 
 export interface ParsedPdfInvoice {
-  supplier: "ChannelHaus" | "Legion" | "Tech-e" | "VineDirect" | "Infinet" | "Blitznet" | "Exetel";
+  supplier: "ChannelHaus" | "Legion" | "Tech-e" | "VineDirect" | "Infinet" | "Blitznet" | "Exetel" | "Access4";
   invoiceNumber: string;
   invoiceDate: string;
   totalIncGst: number;
   services: ParsedPdfService[];
+  // Access4-specific: enterprise-level breakdown
+  enterprises?: Access4Enterprise[];
+}
+
+export interface Access4Enterprise {
+  name: string;
+  endpoints: number;
+  endpointDelta: number;
+  mrc: number;
+  variable: number;
+  onceOff: number;
+  total: number;
+  isInternal: boolean;
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -606,8 +619,102 @@ function parseExetelPdf(text: string): ParsedPdfInvoice {
   return { supplier: "Exetel", invoiceNumber, invoiceDate, totalIncGst, services };
 }
 
-// ── Detect & Parse ────────────────────────────────────────────────────────────
+// ── Access4 Parser ───────────────────────────────────────────────────────────
+function parseAccess4(text: string): ParsedPdfInvoice {
+  // Extract invoice number and date
+  const invMatch = text.match(/Invoice Number\s*(\d+)/);
+  const invoiceNumber = invMatch?.[1] || "UNKNOWN";
+  const dateMatch = text.match(/Tax Invoice Issued\s*(\d{2}\/\d{2}\/\d{4})/);
+  const invoiceDate = dateMatch?.[1] || "";
+  const totalMatch = text.match(/Current Charges \(INC-GST\)\s*AUD\s*\$([\d,]+\.\d{2})/);
+  const totalIncGst = parseFloat((totalMatch?.[1] || "0").replace(/,/g, ""));
+  const exGstMatch = text.match(/Current Charges \(EX-GST\)\s*\$([\d,]+\.\d{2})/);
+  const totalExGst = parseFloat((exGstMatch?.[1] || "0").replace(/,/g, ""));
 
+  // Internal SmileIT enterprise names to exclude from customer matching
+  const INTERNAL_NAMES = [
+    "SMILE IT PTY. LTD.",
+    "Smile IT Internal Demo",
+    "Smile IT Internal Training",
+    "Smile IT UC Xpress Internal Demo",
+    "Smile IT UC Xpress Internal Training",
+    "Reseller Direct Charges",
+  ];
+
+  // Parse enterprise rows from the summary table
+  // Format: EnterpriseName [endpoints] [delta] $MRC $Variable $OnceOff
+  const enterprises: Access4Enterprise[] = [];
+  const lines = text.split("\n").map(l => l.trim()).filter(l => l.length > 0);
+
+  for (const line of lines) {
+    // Skip header rows and page markers
+    if (line.startsWith("Reseller/Enterprise") || line.startsWith("Page ") ||
+        line.startsWith("points") || line.startsWith("Total")) continue;
+
+    // Match lines with dollar amounts: name [endpoints] [+/-delta] $mrc $variable $onceoff
+    // Various formats:
+    // "A & K Financial Planning 2 0 $18.20 $0.78 $0.00"
+    // "BT Lawyers Pty Ltd $308.20 $25.80 $0.00"
+    // "ASG Hail Pty Ltd 33 +1 $1,220.93 $106.16 $0.00"
+    const withEndpoints = line.match(/^(.+?)\s+(\d+)\s+([+-]?\d+)\s+\$(-?[\d,]+\.\d{2})\s+\$([\d,]+\.\d{2})\s+\$([\d,]+\.\d{2})/);
+    const withoutEndpoints = line.match(/^(.+?)\s+\$(-?[\d,]+\.\d{2})\s+\$([\d,]+\.\d{2})\s+\$([\d,]+\.\d{2})$/);
+
+    let ent: Access4Enterprise | null = null;
+    if (withEndpoints) {
+      const name = withEndpoints[1].trim();
+      ent = {
+        name,
+        endpoints: parseInt(withEndpoints[2]),
+        endpointDelta: parseInt(withEndpoints[3]),
+        mrc: parseFloat(withEndpoints[4].replace(/,/g, "")),
+        variable: parseFloat(withEndpoints[5].replace(/,/g, "")),
+        onceOff: parseFloat(withEndpoints[6].replace(/,/g, "")),
+        total: 0,
+        isInternal: INTERNAL_NAMES.some(n => name.toLowerCase().includes(n.toLowerCase())),
+      };
+    } else if (withoutEndpoints) {
+      const name = withoutEndpoints[1].trim();
+      // Skip if name looks like a header or summary line
+      if (name.length < 3 || /^\$/.test(name)) continue;
+      ent = {
+        name,
+        endpoints: 0,
+        endpointDelta: 0,
+        mrc: parseFloat(withoutEndpoints[2].replace(/,/g, "")),
+        variable: parseFloat(withoutEndpoints[3].replace(/,/g, "")),
+        onceOff: parseFloat(withoutEndpoints[4].replace(/,/g, "")),
+        total: 0,
+        isInternal: INTERNAL_NAMES.some(n => name.toLowerCase().includes(n.toLowerCase())),
+      };
+    }
+    if (ent) {
+      ent.total = Math.round((ent.mrc + ent.variable + ent.onceOff) * 100) / 100;
+      enterprises.push(ent);
+    }
+  }
+
+  // Convert enterprises to services (one service per enterprise for the uploader)
+  const services: ParsedPdfService[] = enterprises
+    .filter(e => !e.isInternal)
+    .map(e => ({
+      friendlyName: e.name,
+      serviceId: `access4-${e.name.toLowerCase().replace(/[^a-z0-9]/g, "-").replace(/-+/g, "-")}`,
+      serviceType: "Voice" as const,
+      amountExGst: e.mrc,
+      description: `MRC: $${e.mrc.toFixed(2)}, Variable: $${e.variable.toFixed(2)}, Once-Off: $${e.onceOff.toFixed(2)}, Endpoints: ${e.endpoints}`,
+    }));
+
+  return {
+    supplier: "Access4",
+    invoiceNumber,
+    invoiceDate,
+    totalIncGst,
+    services,
+    enterprises,
+  };
+}
+
+// ── Detect & Parse ────────────────────────────────────────────────────────────
 export async function parsePdfInvoice(buffer: Buffer): Promise<ParsedPdfInvoice> {
   const parser = new PDFParse({ data: buffer });
   const result = await parser.getText();
@@ -632,11 +739,13 @@ export async function parsePdfInvoice(buffer: Buffer): Promise<ParsedPdfInvoice>
   if (text.includes("BLITZNET") || text.includes("Blitznet") || text.includes("blitznet")) {
     return parseBlitznet(text);
   }
-  if (text.includes("Exetel") || text.includes("exetel.com.au")) {
+   if (text.includes("Exetel") || text.includes("exetel.com.au")) {
     return parseExetelPdf(text);
   }
-
+  if (text.includes("Access4 Pty Ltd") || text.includes("access4.com.au") || text.includes("accounts@access4")) {
+    return parseAccess4(text);
+  }
   throw new Error(
-    "Could not detect supplier from PDF. Supported: Channel Haus, Legion, Tech-e, Vine Direct, Infinet, Blitznet, Exetel."
+    "Could not detect supplier from PDF. Supported: Channel Haus, Legion, Tech-e, Vine Direct, Infinet, Blitznet, Exetel, Access4."
   );
 }

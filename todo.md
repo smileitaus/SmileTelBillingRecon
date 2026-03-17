@@ -864,3 +864,16 @@
 - [ ] Build product cost mapping UI on Suppliers page
 - [ ] Apply wholesale costs to all SasBoss services in DB
 - [ ] Support Xero per-customer cost overrides
+
+## Access4/SasBoss Invoice Import & Uploader - March 2026
+
+- [ ] Fix pricebook DB seed script (Python f-string error) and re-seed from Excel
+- [ ] Re-apply correct Diamond wholesale costs to all SasBoss services (monthlyCost = wholesale)
+- [ ] Move SasBoss Pivot retail data to monthlyRevenue field (not monthlyCost)
+- [ ] Extract March Access4 invoice PDF - all line items, customer names, amounts
+- [ ] Match invoice lines to existing customers and services using fuzzy logic
+- [ ] Import matched invoice lines: wholesale cost to monthlyCost, retail to monthlyRevenue
+- [ ] Populate unmatched screen for lines that cannot be auto-matched
+- [ ] Build drag-and-drop invoice uploader on Suppliers page (SasBoss panel)
+- [ ] Repeatable mapping engine: save product→customer mappings for future uploads
+- [ ] Pivot/Dispatch sheet upload: auto-store as retail (monthlyRevenue) not cost

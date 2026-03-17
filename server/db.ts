@@ -7725,3 +7725,149 @@ export async function updateProductCostMapping(id: number, wholesaleCost: number
   }).where(eq(supplierProductCostMap.id, id));
   return { success: true };
 }
+
+// ── Access4 Invoice Import ────────────────────────────────────────────────────
+
+export interface Access4EnterpriseInput {
+  name: string;
+  endpoints: number;
+  endpointDelta: number;
+  mrc: number;
+  variable: number;
+  onceOff: number;
+  total: number;
+  isInternal: boolean;
+}
+
+export async function importAccess4Invoice(
+  invoiceNumber: string,
+  invoiceDate: string,
+  totalIncGst: number,
+  enterprises: Access4EnterpriseInput[],
+  importedBy: string
+): Promise<{
+  invoiceNumber: string;
+  totalEnterprises: number;
+  matched: number;
+  unmatched: number;
+  internal: number;
+  totalWholesaleExGst: number;
+  timestamp: string;
+}> {
+  const db = await getDb();
+  if (!db) throw new Error("[Database] Cannot import Access4 invoice: database not available");
+
+  const customerRows = await db.execute(sql`SELECT external_id, name, business_name FROM customers`);
+  const customers = (customerRows as any).rows || customerRows;
+
+  function normName(s: string) {
+    return s.toLowerCase().replace(/[^a-z0-9\s]/g, ' ').replace(/\s+/g, ' ').trim();
+  }
+
+  function fuzzyMatch(entName: string): string | null {
+    const norm = normName(entName);
+    let best: { id: string; score: number } | null = null;
+    for (const c of customers as any[]) {
+      const cNorm = normName(c.name || '');
+      const bNorm = normName(c.business_name || '');
+      // Exact match
+      if (cNorm === norm || bNorm === norm) return c.external_id;
+      // Substring match
+      const score = cNorm.includes(norm) || norm.includes(cNorm) ? 0.9
+        : bNorm.includes(norm) || norm.includes(bNorm) ? 0.85 : 0;
+      if (score > 0 && (!best || score > best.score)) {
+        best = { id: c.external_id, score };
+      }
+    }
+    return best && best.score >= 0.85 ? best.id : null;
+  }
+
+  let matched = 0;
+  let unmatched = 0;
+  let internal = 0;
+  let totalWholesaleExGst = 0;
+
+  // Record the invoice upload
+  await db.execute(sql`
+    INSERT INTO supplier_invoice_uploads
+      (supplier_name, invoice_number, invoice_date, total_inc_gst, total_ex_gst, imported_by, file_name, status)
+    VALUES
+      ('Access4', ${invoiceNumber}, ${invoiceDate}, ${totalIncGst}, ${Math.round(totalIncGst / 1.1 * 100) / 100},
+       ${importedBy}, ${'Access4-' + invoiceNumber + '.pdf'}, 'imported')
+    ON DUPLICATE KEY UPDATE
+      total_inc_gst = VALUES(total_inc_gst),
+      imported_by = VALUES(imported_by),
+      status = 'imported'
+  `);
+
+  for (const ent of enterprises) {
+    if (ent.isInternal) {
+      internal++;
+      continue;
+    }
+
+    const wholesaleExGst = Math.round(ent.mrc / 1.1 * 100) / 100;
+    totalWholesaleExGst += wholesaleExGst;
+
+    // Try to match to existing customer
+    const customerId = fuzzyMatch(ent.name);
+
+    // Check if a mapping rule already exists for this enterprise
+    const existingMap = await db.execute(sql`
+      SELECT id, customer_external_id FROM supplier_service_map
+      WHERE supplier_name = 'Access4' AND supplier_service_id = ${ent.name}
+      LIMIT 1
+    `);
+    const existingRows = (existingMap as any).rows || existingMap;
+
+    if (existingRows.length > 0) {
+      // Update the existing mapping with latest invoice data
+      await db.execute(sql`
+        UPDATE supplier_service_map
+        SET monthly_cost = ${wholesaleExGst},
+            monthly_revenue = ${Math.round(ent.mrc * 100) / 100},
+            last_invoice_date = ${invoiceDate},
+            notes = ${`Endpoints: ${ent.endpoints}, MRC: $${ent.mrc.toFixed(2)}, Variable: $${ent.variable.toFixed(2)}, Once-Off: $${ent.onceOff.toFixed(2)}`},
+            updated_at = NOW()
+        WHERE supplier_name = 'Access4' AND supplier_service_id = ${ent.name}
+      `);
+      matched++;
+    } else {
+      // Insert new mapping
+      await db.execute(sql`
+        INSERT INTO supplier_service_map
+          (supplier_name, supplier_service_id, supplier_service_name, customer_external_id,
+           monthly_cost, monthly_revenue, last_invoice_date, match_confidence, notes)
+        VALUES
+          ('Access4', ${ent.name}, ${ent.name}, ${customerId || ''},
+           ${wholesaleExGst}, ${Math.round(ent.mrc * 100) / 100},
+           ${invoiceDate}, ${customerId ? 'fuzzy' : 'unmatched'},
+           ${`Endpoints: ${ent.endpoints}, MRC: $${ent.mrc.toFixed(2)}, Variable: $${ent.variable.toFixed(2)}, Once-Off: $${ent.onceOff.toFixed(2)}`})
+      `);
+      if (customerId) matched++;
+      else unmatched++;
+    }
+  }
+
+  // Update supplier registry with latest invoice totals
+  await db.execute(sql`
+    INSERT INTO supplier_registry
+      (supplier_name, display_name, \`rank\`, total_monthly_cost, last_invoice_date, last_invoice_number, is_active)
+    VALUES
+      ('Access4', 'Access4 (SasBoss UCaaS)', 2, ${totalWholesaleExGst}, ${invoiceDate}, ${invoiceNumber}, 1)
+    ON DUPLICATE KEY UPDATE
+      total_monthly_cost = VALUES(total_monthly_cost),
+      last_invoice_date = VALUES(last_invoice_date),
+      last_invoice_number = VALUES(last_invoice_number)
+  `);
+
+  return {
+    invoiceNumber,
+    totalEnterprises: enterprises.length,
+    matched,
+    unmatched,
+    internal,
+    totalWholesaleExGst: Math.round(totalWholesaleExGst * 100) / 100,
+    timestamp: new Date().toISOString(),
+  };
+}

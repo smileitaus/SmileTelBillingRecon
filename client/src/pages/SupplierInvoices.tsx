@@ -53,13 +53,25 @@ interface ParsedPdfService {
   address?: string;
 }
 
+interface Access4Enterprise {
+  name: string;
+  endpoints: number;
+  endpointDelta: number;
+  mrc: number;
+  variable: number;
+  onceOff: number;
+  total: number;
+  isInternal: boolean;
+}
+
 interface ParsedPdfInvoice {
   type: "pdf";
-  supplier: "ChannelHaus" | "Legion" | "Tech-e" | "VineDirect" | "Infinet" | "Blitznet" | "Exetel";
+  supplier: "ChannelHaus" | "Legion" | "Tech-e" | "VineDirect" | "Infinet" | "Blitznet" | "Exetel" | "Access4";
   invoiceNumber: string;
   invoiceDate: string;
   totalIncGst: number;
   services: ParsedPdfService[];
+  enterprises?: Access4Enterprise[];
 }
 
 // ── SasBoss Workbook Types ────────────────────────────────────────────────────
@@ -457,6 +469,111 @@ function ExetelPreview({
   );
 }
 
+function Access4InvoicePreview({
+  invoice,
+  onConfirm,
+  isImporting,
+}: {
+  invoice: ParsedPdfInvoice;
+  onConfirm: () => void;
+  isImporting: boolean;
+}) {
+  const [showAll, setShowAll] = useState(false);
+  const enterprises = invoice.enterprises || [];
+  const external = enterprises.filter(e => !e.isInternal);
+  const internal = enterprises.filter(e => e.isInternal);
+  const totalWholesale = external.reduce((sum, e) => sum + e.mrc / 1.1, 0);
+  const displayList = showAll ? external : external.slice(0, 20);
+
+  return (
+    <div className="space-y-4">
+      {/* Summary header */}
+      <div className="flex items-center justify-between p-4 bg-card border border-border rounded-lg">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded bg-orange-100 flex items-center justify-center">
+            <BookOpen className="w-4 h-4 text-orange-700" />
+          </div>
+          <div>
+            <p className="text-sm font-semibold">Access4 Invoice {invoice.invoiceNumber}</p>
+            <p className="text-xs text-muted-foreground">
+              {invoice.invoiceDate} · {external.length} customer enterprises · {internal.length} internal (excluded)
+            </p>
+          </div>
+        </div>
+        <div className="text-right">
+          <p className="text-xs text-muted-foreground">Invoice total (inc-GST)</p>
+          <p className="text-lg font-bold font-mono">${invoice.totalIncGst.toFixed(2)}</p>
+          <p className="text-xs text-muted-foreground">Wholesale ex-GST: ${totalWholesale.toFixed(2)}</p>
+        </div>
+      </div>
+
+      {/* Enterprise table */}
+      <div className="border border-border rounded-lg overflow-hidden">
+        <div className="flex items-center justify-between p-3 bg-muted/30">
+          <span className="text-sm font-medium">Customer Enterprises ({external.length})</span>
+          {external.length > 20 && (
+            <button onClick={() => setShowAll(!showAll)} className="text-xs text-primary hover:underline">
+              {showAll ? 'Show less' : `Show all ${external.length}`}
+            </button>
+          )}
+        </div>
+        <div className="max-h-72 overflow-y-auto">
+          <table className="w-full text-xs">
+            <thead className="bg-muted/20 sticky top-0">
+              <tr>
+                <th className="text-left p-2 font-medium">Enterprise</th>
+                <th className="text-right p-2 font-medium">Endpoints</th>
+                <th className="text-right p-2 font-medium">MRC (inc-GST)</th>
+                <th className="text-right p-2 font-medium">Variable</th>
+                <th className="text-right p-2 font-medium">Wholesale ex-GST</th>
+              </tr>
+            </thead>
+            <tbody>
+              {displayList.map((ent, i) => (
+                <tr key={i} className="border-t border-border/50 hover:bg-muted/20">
+                  <td className="p-2 font-medium">{ent.name}</td>
+                  <td className="p-2 text-right text-muted-foreground">
+                    {ent.endpoints > 0 ? (
+                      <span>{ent.endpoints}{ent.endpointDelta !== 0 && <span className={ent.endpointDelta > 0 ? 'text-green-600' : 'text-red-600'}> ({ent.endpointDelta > 0 ? '+' : ''}{ent.endpointDelta})</span>}</span>
+                    ) : '—'}
+                  </td>
+                  <td className="p-2 text-right font-mono">${ent.mrc.toFixed(2)}</td>
+                  <td className="p-2 text-right font-mono text-muted-foreground">${ent.variable.toFixed(2)}</td>
+                  <td className="p-2 text-right font-mono text-orange-700">${(ent.mrc / 1.1).toFixed(2)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {internal.length > 0 && (
+        <p className="text-xs text-muted-foreground px-1">
+          {internal.length} internal SmileIT enterprise(s) excluded: {internal.map(e => e.name).join(', ')}
+        </p>
+      )}
+
+      {/* Confirm */}
+      <div className="flex items-center justify-between p-4 bg-orange-50 border border-orange-200 rounded-lg">
+        <div>
+          <p className="text-sm font-medium text-orange-900">Ready to import</p>
+          <p className="text-xs text-orange-700 mt-0.5">
+            Will update {external.length} enterprise mappings. Fuzzy matching will link to existing customers. Retail revenue stored as monthlyRevenue; wholesale cost from Diamond pricebook.
+          </p>
+        </div>
+        <button
+          onClick={onConfirm}
+          disabled={isImporting}
+          className="flex items-center gap-2 px-4 py-2 bg-orange-700 text-white text-sm font-medium rounded-md hover:bg-orange-800 disabled:opacity-50 transition-colors"
+        >
+          {isImporting ? <RefreshCw className="w-4 h-4 animate-spin" /> : <CheckCircle className="w-4 h-4" />}
+          {isImporting ? 'Importing…' : 'Confirm Import'}
+        </button>
+      </div>
+    </div>
+  );
+}
+
 function PdfInvoicePreview({
   invoice,
   onConfirm,
@@ -474,6 +591,7 @@ function PdfInvoicePreview({
     Infinet: "Infinet",
     Blitznet: "Blitznet",
     Exetel: "Exetel",
+    Access4: "Access4",
   };
 
   const typeColor: Record<string, string> = {
@@ -826,6 +944,32 @@ export default function SupplierInvoices() {
     onError: (err) => toast.error('SasBoss import failed: ' + err.message),
   });
 
+  const importAccess4Mutation = trpc.billing.importAccess4.useMutation({
+    onSuccess: (result) => {
+      setImportResults((prev) => [
+        {
+          invoiceNumber: result.invoiceNumber,
+          supplier: 'Access4',
+          created: result.matched,
+          updated: result.matched,
+          skipped: result.unmatched,
+          timestamp: new Date().toLocaleTimeString(),
+        },
+        ...prev,
+      ]);
+      setParsedInvoice(null);
+      toast.success(
+        `Access4 import complete: ${result.matched} matched, ${result.unmatched} unmatched, ${result.internal} internal (excluded)`
+      );
+      utils.billing.summary.invalidate();
+      utils.billing.services.list.invalidate();
+      utils.billing.margin.list.invalidate();
+      utils.billing.margin.grouped.invalidate();
+      utils.billing.customers.list.invalidate();
+    },
+    onError: (err) => toast.error('Access4 import failed: ' + err.message),
+  });
+
   const parsePdfMutation = trpc.billing.parsePdf.useMutation({
     onSuccess: (result) => {
       setParsedInvoice({ type: "pdf", ...result });
@@ -938,6 +1082,22 @@ export default function SupplierInvoices() {
           avcId: r.avcId,
         })),
       });
+    } else if (parsedInvoice.supplier === 'Access4' && parsedInvoice.enterprises) {
+      importAccess4Mutation.mutate({
+        invoiceNumber: parsedInvoice.invoiceNumber,
+        invoiceDate: parsedInvoice.invoiceDate,
+        totalIncGst: parsedInvoice.totalIncGst,
+        enterprises: parsedInvoice.enterprises.map((e) => ({
+          name: e.name,
+          endpoints: e.endpoints,
+          endpointDelta: e.endpointDelta,
+          mrc: e.mrc,
+          variable: e.variable,
+          onceOff: e.onceOff,
+          total: e.total,
+          isInternal: e.isInternal,
+        })),
+      });
     } else {
       importGenericMutation.mutate({
         supplier: parsedInvoice.supplier,
@@ -952,7 +1112,7 @@ export default function SupplierInvoices() {
     }
   };
 
-  const isImporting = importExetelMutation.isPending || importGenericMutation.isPending || importSasBossMutation.isPending;
+  const isImporting = importExetelMutation.isPending || importGenericMutation.isPending || importSasBossMutation.isPending || importAccess4Mutation.isPending;
 
   return (
     <div className="p-6 max-w-5xl mx-auto">
@@ -960,7 +1120,7 @@ export default function SupplierInvoices() {
       <div className="mb-6">
         <h1 className="text-xl font-bold">Supplier Invoices</h1>
         <p className="text-sm text-muted-foreground mt-1">
-          Upload supplier invoices to update service costs. Supports Exetel CSV and Channel Haus / Legion / Tech-e / Vine Direct / Infinet / Blitznet PDF formats.
+          Upload supplier invoices to update service costs. Supports Exetel CSV, SasBoss XLSX, and Channel Haus / Legion / Tech-e / Vine Direct / Infinet / Blitznet / Access4 PDF formats. Previous mappings are remembered and auto-applied on future uploads.
         </p>
       </div>
 
@@ -996,7 +1156,7 @@ export default function SupplierInvoices() {
           </div>
           <p className="text-sm font-medium">Drop a supplier invoice here</p>
           <p className="text-xs text-muted-foreground mt-1">
-            or click to browse · CSV (Exetel) · PDF (Channel Haus, Legion, Tech-e, Vine Direct, Infinet, Blitznet) · XLSX (SasBoss)
+            or click to browse · CSV (Exetel) · PDF (Channel Haus, Legion, Tech-e, Vine Direct, Infinet, Blitznet, Access4) · XLSX (SasBoss)
           </p>
         </div>
       )}
@@ -1043,6 +1203,12 @@ export default function SupplierInvoices() {
             />
           ) : parsedInvoice.type === "csv" ? (
             <ExetelPreview
+              invoice={parsedInvoice}
+              onConfirm={handleConfirmImport}
+              isImporting={isImporting}
+            />
+          ) : parsedInvoice.supplier === 'Access4' ? (
+            <Access4InvoicePreview
               invoice={parsedInvoice}
               onConfirm={handleConfirmImport}
               isImporting={isImporting}
