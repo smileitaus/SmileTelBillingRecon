@@ -1148,7 +1148,10 @@ export async function getServicesWithMargin(filters?: {
   // When cost = 0 (unknown), margin is NULL so the UI shows '—' rather than a misleading 100%.
   const computedMargin = sql<string>`CASE WHEN monthlyRevenue > 0 AND monthlyCost > 0 THEN ROUND((monthlyRevenue - monthlyCost) / monthlyRevenue * 100, 2) ELSE NULL END`;
   // For cost review mode, include services regardless of revenue (they may have $0 cost needing review)
-  const conditions: ReturnType<typeof sql>[] = filters?.costReviewNeeded ? [] : [sql`monthlyRevenue > 0`];
+  // Also include services that have a known cost (> 0) even if revenue is not yet set — these are
+  // supplier-cost-only services (e.g. AAPT) that haven't been linked to a Xero billing item yet.
+  // This allows them to appear in the Revenue & Margin page as "Revenue Unknown" rows.
+  const conditions: ReturnType<typeof sql>[] = filters?.costReviewNeeded ? [] : [sql`(monthlyRevenue > 0 OR monthlyCost > 0)`];
 
   if (filters?.marginFilter && filters.marginFilter !== 'all') {
     // All margin filters require both cost and revenue to be known
