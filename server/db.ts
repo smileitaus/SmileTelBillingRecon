@@ -7643,7 +7643,7 @@ export async function assignAaptServiceToCustomer(
           customerName,
           serviceExternalId,
           confirmedBy: 'manual',
-          useCount: sql`use_count + 1`,
+          useCount: sql`useCount + 1`,
           lastUsedAt: new Date(),
           updatedAt: new Date(),
         },
