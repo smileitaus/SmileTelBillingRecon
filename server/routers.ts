@@ -129,6 +129,12 @@ import {
   updateProductCostMapping,
   importAccess4Invoice,
 } from "./db";
+import {
+  importVocusMobileSims,
+  getVocusServices,
+  getVocusImportStats,
+  VOCUS_STANDARD_MOBILE_SIMS,
+} from "./db-vocus";
 
 export const appRouter = router({
   system: systemRouter,
@@ -1379,6 +1385,21 @@ export const appRouter = router({
       invoiceUploads: protectedProcedure.query(async () => {
         return await getSupplierInvoiceUploads('AAPT');
       }),
+    }),
+    // Vocus Standard Mobile SIMs
+    vocus: router({
+      stats: protectedProcedure.query(async () => {
+        return await getVocusImportStats();
+      }),
+      services: protectedProcedure
+        .input(z.object({ status: z.string().optional() }).optional())
+        .query(async ({ input }) => {
+          return await getVocusServices(input?.status);
+        }),
+      importStandardMobileSims: protectedProcedure
+        .mutation(async () => {
+          return await importVocusMobileSims(VOCUS_STANDARD_MOBILE_SIMS);
+        }),
     }),
     supplierRegistry: router({
       list: protectedProcedure.query(async () => {
