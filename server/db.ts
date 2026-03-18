@@ -597,10 +597,18 @@ export async function getSuggestedMatches(serviceExternalId: string) {
     }
   }
 
+  // 6. Direct customer contactPhone match (high confidence — matches mobile SIMs to customer records)
+  if (phone.length >= 8) {
+    const custPhoneMatches = await db.select().from(customers)
+      .where(sql`REPLACE(REPLACE(REPLACE(REPLACE(contactPhone, ' ', ''), '-', ''), '(', ''), ')', '') = ${phone} AND status = 'active'`)
+      .limit(5);
+    for (const cust of custPhoneMatches) {
+      await addSuggestion(cust.externalId, 'high', `Exact customer contact phone match (${svc.phoneNumber})`);
+    }
+  }
   // Sort: high > medium > low
   const confidenceOrder = { high: 0, medium: 1, low: 2 };
   suggestions.sort((a, b) => confidenceOrder[a.confidence] - confidenceOrder[b.confidence]);
-
   return suggestions.slice(0, 8);
 }
 

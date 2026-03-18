@@ -8,12 +8,13 @@
  *  3. If exactly one HIGH confidence match exists (no ambiguity), assign it
  *  4. If multiple HIGH confidence matches exist for the same service, skip (ambiguous)
  *  5. Recalculate customer counts after all assignments
- *  6. Return a detailed audit log
+ *  6. Refresh supplier_registry totals for all affected providers
+ *  7. Return a detailed audit log
  */
 
-import { eq, sql } from "drizzle-orm";
+import { eq, sql, count } from "drizzle-orm";
 import { getDb } from "./db";
-import { services, customers } from "../drizzle/schema";
+import { services, supplierRegistry } from "../drizzle/schema";
 import { getSuggestedMatches, assignServiceToCustomer } from "./db";
 
 export interface BulkAssignResult {
@@ -46,6 +47,36 @@ export interface ErrorItem {
   error: string;
 }
 
+/** Refresh supplier_registry totalServices and totalMonthlyCost for a given provider name */
+async function refreshSupplierRegistryForProvider(providerName: string): Promise<void> {
+  const db = await getDb();
+  if (!db) return;
+  const [totals] = await db
+    .select({
+      c: count(),
+      cost: sql<number>`COALESCE(SUM(monthlyCost), 0)`,
+    })
+    .from(services)
+    .where(eq(services.provider, providerName));
+  const totalServices = Number(totals?.c || 0);
+  const totalMonthlyCost = Number(totals?.cost || 0);
+  const [existing] = await db
+    .select({ id: supplierRegistry.id })
+    .from(supplierRegistry)
+    .where(eq(supplierRegistry.name, providerName))
+    .limit(1);
+  if (existing) {
+    await db
+      .update(supplierRegistry)
+      .set({
+        totalServices,
+        totalMonthlyCost: String(totalMonthlyCost.toFixed(2)) as any,
+        updatedAt: new Date(),
+      })
+      .where(eq(supplierRegistry.name, providerName));
+  }
+}
+
 export async function bulkAutoAssignHighConfidence(
   assignedBy: string = "Bulk Auto-Assign"
 ): Promise<BulkAssignResult> {
@@ -61,6 +92,7 @@ export async function bulkAutoAssignHighConfidence(
   const assigned: AssignedItem[] = [];
   const skipped: SkippedItem[] = [];
   const errors: ErrorItem[] = [];
+  const affectedProviders = new Set<string>();
 
   for (const svc of unmatchedServices) {
     try {
@@ -73,9 +105,10 @@ export async function bulkAutoAssignHighConfidence(
         skipped.push({
           serviceExternalId: svc.externalId,
           servicePhone: svc.phoneNumber || "",
-          reason: suggestions.length === 0
-            ? "No suggestions found"
-            : `Only ${suggestions[0].confidence} confidence matches available`,
+          reason:
+            suggestions.length === 0
+              ? "No suggestions found"
+              : `Only ${suggestions[0].confidence} confidence matches available`,
         });
         continue;
       }
@@ -94,6 +127,7 @@ export async function bulkAutoAssignHighConfidence(
       // Exactly one HIGH confidence match — assign it
       const match = highConfidence[0];
       await assignServiceToCustomer(svc.externalId, match.customer.externalId);
+      if (svc.provider) affectedProviders.add(svc.provider);
 
       assigned.push({
         serviceExternalId: svc.externalId,
@@ -109,6 +143,11 @@ export async function bulkAutoAssignHighConfidence(
         error: err.message || String(err),
       });
     }
+  }
+
+  // Refresh supplier registry totals for all providers that had services assigned
+  for (const provider of Array.from(affectedProviders)) {
+    await refreshSupplierRegistryForProvider(provider);
   }
 
   return {
@@ -145,9 +184,10 @@ export async function previewBulkAutoAssignHighConfidence(): Promise<BulkAssignR
         skipped.push({
           serviceExternalId: svc.externalId,
           servicePhone: svc.phoneNumber || "",
-          reason: suggestions.length === 0
-            ? "No suggestions found"
-            : `Only ${suggestions[0].confidence} confidence matches available`,
+          reason:
+            suggestions.length === 0
+              ? "No suggestions found"
+              : `Only ${suggestions[0].confidence} confidence matches available`,
         });
         continue;
       }
