@@ -1366,7 +1366,20 @@ function AvcInlineEditor({ service }: { service: any }) {
 export default function UnmatchedServices() {
   const { data: services, isLoading } =
     trpc.billing.unmatched.list.useQuery();
+  const utils = trpc.useUtils();
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [showBulkPreview, setShowBulkPreview] = useState(false);
+  const { data: bulkPreview, isLoading: bulkPreviewLoading, refetch: refetchPreview } =
+    trpc.billing.bulkHighConfidence.preview.useQuery(undefined, { enabled: showBulkPreview });
+  const bulkCommit = trpc.billing.bulkHighConfidence.commit.useMutation({
+    onSuccess: (result: any) => {
+      toast.success(`Bulk assign complete: ${result.totalAssigned} assigned, ${result.totalSkipped} skipped`);
+      utils.billing.unmatched.list.invalidate();
+      utils.billing.dashboardTotals.invalidate();
+      setShowBulkPreview(false);
+    },
+    onError: (e: any) => toast.error(`Bulk assign failed: ${e.message}`),
+  });
   const [typeFilter, setTypeFilter] = useState<
     "all" | "Internet" | "Mobile" | "Voice"
   >("all");
@@ -1535,7 +1548,17 @@ export default function UnmatchedServices() {
             each to see suggested matches, add notes, or flag for termination.
           </p>
         </div>
-        <button
+        <div className="flex items-center gap-2">
+          <Button
+            size="sm"
+            variant="outline"
+            className="border-emerald-300 text-emerald-800 hover:bg-emerald-50 gap-1.5"
+            onClick={() => { setShowBulkPreview(true); refetchPreview(); }}
+          >
+            <Zap className="w-3.5 h-3.5" />
+            Auto-Assign High Confidence
+          </Button>
+          <button
           onClick={() => exportToCSV(
             sorted.map((s: any) => ({
               "Service ID": s.externalId,
@@ -1554,8 +1577,85 @@ export default function UnmatchedServices() {
           <Download className="w-3.5 h-3.5" />
           Export CSV
         </button>
+        </div>
       </div>
-
+      {/* Bulk Auto-Assign Preview Dialog */}
+      {showBulkPreview && (
+        <Dialog open onOpenChange={() => setShowBulkPreview(false)}>
+          <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <Zap className="w-4 h-4 text-emerald-600" />
+                Auto-Assign High Confidence Matches
+              </DialogTitle>
+              <DialogDescription>
+                Preview the services that will be automatically assigned based on high-confidence suggestions. Review before committing.
+              </DialogDescription>
+            </DialogHeader>
+            {bulkPreviewLoading ? (
+              <div className="flex items-center justify-center py-10 gap-2 text-muted-foreground">
+                <Loader2 className="w-5 h-5 animate-spin" />Analysing {allServices.length} unmatched services…
+              </div>
+            ) : bulkPreview ? (
+              <div className="space-y-4">
+                <div className="grid grid-cols-3 gap-3">
+                  <div className="rounded-lg border bg-emerald-50 border-emerald-200 p-3 text-center">
+                    <div className="text-2xl font-bold text-emerald-700">{(bulkPreview as any).wouldAssign?.length ?? 0}</div>
+                    <div className="text-xs text-emerald-600 mt-0.5">Will be assigned</div>
+                  </div>
+                  <div className="rounded-lg border bg-amber-50 border-amber-200 p-3 text-center">
+                    <div className="text-2xl font-bold text-amber-700">{(bulkPreview as any).wouldSkip?.length ?? 0}</div>
+                    <div className="text-xs text-amber-600 mt-0.5">Will be skipped</div>
+                  </div>
+                  <div className="rounded-lg border bg-muted p-3 text-center">
+                    <div className="text-2xl font-bold">{(bulkPreview as any).totalUnmatched ?? 0}</div>
+                    <div className="text-xs text-muted-foreground mt-0.5">Total unmatched</div>
+                  </div>
+                </div>
+                {(bulkPreview as any).wouldAssign?.length > 0 && (
+                  <div>
+                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">Services to be assigned</p>
+                    <div className="rounded-md border overflow-hidden max-h-64 overflow-y-auto">
+                      <table className="w-full text-xs">
+                        <thead className="bg-muted/50 sticky top-0">
+                          <tr>
+                            <th className="text-left px-3 py-2 font-medium">Service</th>
+                            <th className="text-left px-3 py-2 font-medium">Customer</th>
+                            <th className="text-left px-3 py-2 font-medium">Reason</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y">
+                          {(bulkPreview as any).wouldAssign.map((item: any) => (
+                            <tr key={item.serviceExternalId} className="hover:bg-muted/30">
+                              <td className="px-3 py-2 font-mono text-muted-foreground">{item.servicePhone || item.serviceAddress || item.serviceExternalId}</td>
+                              <td className="px-3 py-2 font-medium">{item.customerName}</td>
+                              <td className="px-3 py-2 text-muted-foreground">{item.reason}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : null}
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setShowBulkPreview(false)}>Cancel</Button>
+              <Button
+                className="bg-emerald-600 hover:bg-emerald-700 text-white gap-1.5"
+                disabled={bulkCommit.isPending || bulkPreviewLoading || !((bulkPreview as any)?.wouldAssign?.length > 0)}
+                onClick={() => bulkCommit.mutate()}
+              >
+                {bulkCommit.isPending ? (
+                  <><Loader2 className="w-3.5 h-3.5 animate-spin" />Assigning…</>
+                ) : (
+                  <><Zap className="w-3.5 h-3.5" />Confirm & Assign {(bulkPreview as any)?.wouldAssign?.length ?? 0} Services</>
+                )}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
       {/* Triage Banner */}
       <div className="grid grid-cols-2 gap-3 mb-5">
         <button
