@@ -135,6 +135,10 @@ import {
   getVocusImportStats,
   VOCUS_STANDARD_MOBILE_SIMS,
 } from "./db-vocus";
+import {
+  bulkAutoAssignHighConfidence,
+  previewBulkAutoAssignHighConfidence,
+} from "./db-bulk-assign";
 
 export const appRouter = router({
   system: systemRouter,
@@ -1104,6 +1108,18 @@ export const appRouter = router({
       .mutation(async () => {
         return await recalculateAll();
       }),
+    // Bulk auto-assign HIGH confidence suggested matches
+    bulkHighConfidence: router({
+      preview: protectedProcedure
+        .query(async () => {
+          return await previewBulkAutoAssignHighConfidence();
+        }),
+      commit: protectedProcedure
+        .mutation(async ({ ctx }) => {
+          const assignedBy = ctx.user?.name || ctx.user?.email || 'Bulk Auto-Assign';
+          return await bulkAutoAssignHighConfidence(assignedBy);
+        }),
+    }),
     // Xero contact import workfloww
     xeroContacts: router({
       // Get fuzzy customer suggestions for a given Xero contact name
