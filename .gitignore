@@ -108,3 +108,11 @@ temp/
 
 # Webdev artifacts (checkpoint zips, migrations, etc.)
 .webdev/
+
+# Large data/import files (stored in webdev-static-assets, not in repo)
+*.xlsx
+*.pdf
+*.sql
+INV-*.csv
+scripts/*.json
+*.bak.json

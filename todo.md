@@ -877,3 +877,15 @@
 - [ ] Build drag-and-drop invoice uploader on Suppliers page (SasBoss panel)
 - [ ] Repeatable mapping engine: save product→customer mappings for future uploads
 - [ ] Pivot/Dispatch sheet upload: auto-store as retail (monthlyRevenue) not cost
+
+## ReconciliationBoard Improvements - March 2026
+
+- [x] Fix auto-match to trigger automatically at >=90% confidence on mount (was 100%)
+- [x] Add Re-run Auto-Match button to ReconciliationBoard header
+- [x] Add Sync Costs button to re-apply costs from latest SasBoss workbook
+- [x] Add recalculateCostsFromWorkbook() backend function + tRPC endpoint
+- [x] Add $0.00 cost warning badge on service cards (rose-red highlight)
+- [x] Add zero-cost warning banner when services have $0.00 supplier cost
+- [x] Add auto-match running indicator (blue spinner banner)
+- [x] Improve billing item tab filtering using description-based classification (not just category field)
+- [x] Lower auto-match threshold from 100% to 90% for better coverage
