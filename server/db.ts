@@ -6641,6 +6641,56 @@ export async function getBillingItemsWithAssignments(customerExternalId: string)
  * - Not in unbillable_services
  * - Not terminated
  */
+
+/**
+ * Derive a detailed service category from serviceType and planName.
+ * Used for grouping in the Billing Match UI and for auto-match scoring.
+ *
+ * Categories:
+ *   voice-licensing  — UCaaS seats, user licenses, PBX plans
+ *   voice-usage      — call charges, telephone usage (billed in arrears)
+ *   voice-numbers    — DIDs, phone numbers, porting
+ *   voice-features   — voicemail, call queues, hunt groups, IVR
+ *   data-mobile      — SIM cards, mobile data plans
+ *   data-nbn         — NBN, FTTN, FTTP, FTTC broadband
+ *   data-enterprise  — Fast Fibre, EE, IPWAN, Ethernet
+ *   data-usage       — excess data, usage charges (billed in arrears)
+ *   hardware         — handsets, routers, accessories
+ *   professional-services — setup, installation, consulting (non-recurring)
+ *   internal         — SmileTel internal costs
+ *   other            — everything else
+ */
+export function deriveServiceCategory(serviceType: string, planName: string, provider?: string): string {
+  const t = `${serviceType} ${planName} ${provider || ''}`.toLowerCase();
+  // Voice — licensing (seats, user plans, PBX)
+  if (t.match(/ucxcel|ucaas|user.*licen|licen.*user|premium.*user|executive.*user|basic.*user|standard.*user|pbx|hosted.*voice|sip.*trunk|sip.*user|call.*centre.*queue|queue.*agent|ring.*group|hunt.*group|auto.*attendant|ivr|time.*of.*day|time.*routing/)) return 'voice-licensing';
+  // Voice — numbers (DIDs, porting)
+  if (t.match(/did|direct.*in.*dial|phone.*number|number.*port|porting|geographic.*number|1300|1800/)) return 'voice-numbers';
+  // Voice — features (voicemail, call recording, etc)
+  if (t.match(/voicemail|call.*record|call.*park|call.*forward|conferenc|fax.*to.*email|fax2email|music.*on.*hold|moh|busy.*lamp|blf/)) return 'voice-features';
+  // Voice — usage (call charges, billed in arrears)
+  if (t.match(/telephone.*usage|voice.*usage|call.*usage|local.*call|national.*call|mobile.*call|international.*call|call.*pack|me.*3.*included|included.*call|minute.*pack|usage.*charge|call.*charge/)) return 'voice-usage';
+  // General voice catch-all (after specific voice sub-types)
+  if (t.match(/\bvoice\b|\bphone\b|\bsip\b|\btelephone\b/)) return 'voice-licensing';
+  // Data — mobile SIM
+  if (t.match(/mobile|sim|4g|5g|lte|handset.*plan|smartphone.*plan|data.*mobile|mobile.*data/)) return 'data-mobile';
+  // Data — NBN / broadband
+  if (t.match(/nbn|fttn|fttp|fttc|ftth|hfc|broadband|adsl|vdsl|opticomm|skymesh|aussie.*broadband/)) return 'data-nbn';
+  // Data — enterprise / fibre
+  if (t.match(/fast.*fibre|enterprise.*ethernet|\bee\b|ipwan|ip.*wan|\bwan\b|dark.*fibre|dedicated.*internet|\bgia\b|leased.*line/)) return 'data-enterprise';
+  // Data — usage (excess data, billed in arrears)
+  if (t.match(/excess.*data|data.*usage|usage.*data|data.*charge|overage/)) return 'data-usage';
+  // General internet/data catch-all
+  if (t.match(/internet|\bdata\b|fibre|fiber|broadband/)) return 'data-nbn';
+  // Hardware
+  if (t.match(/handset|router|modem|\bswitch\b|access.*point|\bwifi\b|hardware|yealink|cisco|polycom|grandstream/)) return 'hardware';
+  // Professional services
+  if (t.match(/setup|install|config|migration|consult|professional.*service|project|onboard|training|labour|labor/)) return 'professional-services';
+  // Internal
+  if (t.match(/internal|smiltel|smiletel/)) return 'internal';
+  return 'other';
+}
+
 export async function getUnassignedServicesForCustomer(customerExternalId: string) {
   const db = await getDb();
   if (!db) return [];
@@ -6684,6 +6734,8 @@ export async function getUnassignedServicesForCustomer(customerExternalId: strin
       locationAddress: s.locationAddress || '',
       phoneNumber: s.phoneNumber || '',
       status: s.status,
+      // Derived service category for grouping in UI
+      serviceCategory: deriveServiceCategory(s.serviceType, s.planName || '', s.provider || ''),
       // Extra context fields
       description: s.planName || '',  // use planName as description if no separate field
       avcId: s.avcId || '',
@@ -6707,7 +6759,8 @@ export async function assignServiceToBillingItem(
   customerExternalId: string,
   assignedBy: string,
   assignmentMethod: 'manual' | 'auto' | 'drag-drop' = 'drag-drop',
-  notes?: string
+  notes?: string,
+  assignmentBucket: 'standard' | 'usage-holding' | 'professional-services' | 'hardware-sales' | 'internal-cost' = 'standard'
 ) {
   const db = await getDb();
   if (!db) throw new Error('Database not available');
@@ -6733,6 +6786,7 @@ export async function assignServiceToBillingItem(
     customerExternalId,
     assignedBy,
     assignmentMethod,
+    assignmentBucket,
     notes: notes || null,
   });
 
@@ -7880,5 +7934,98 @@ export async function importAccess4Invoice(
     internal,
     totalWholesaleExGst: Math.round(totalWholesaleExGst * 100) / 100,
     timestamp: new Date().toISOString(),
+  };
+}
+
+/**
+ * Global Auto-Match Billing Items
+ *
+ * Runs across ALL customers without requiring the Billing Match screen to be opened.
+ * Applies 100%-confidence matches (exact planName + customerExternalId match) using
+ * saved rules from service_billing_match_log. Also applies fuzzy matching for
+ * high-confidence (>=90%) service-to-billing-item pairs.
+ *
+ * This ensures the Supplier Registry dashboard reflects accurate costs immediately
+ * after any import, without manual per-customer review.
+ */
+export async function globalAutoMatchBillingItems(
+  minConfidence: number = 90,
+  triggeredBy: string = 'system'
+): Promise<{
+  applied: number;
+  skipped: number;
+  customersProcessed: number;
+  errors: string[];
+}> {
+  const db = await getDb();
+  if (!db) return { applied: 0, skipped: 0, customersProcessed: 0, errors: ['Database not available'] };
+
+  let applied = 0;
+  let skipped = 0;
+  const errors: string[] = [];
+
+  // ── Step 1: Apply saved match rules (100% confidence) ──────────────────────
+  const ruleResult = await autoApplyMatchRules();
+  applied += ruleResult.applied;
+  skipped += ruleResult.skipped;
+
+  // ── Step 2: Apply fuzzy matching for high-confidence pairs ─────────────────
+  // Get all customers that have unassigned services AND billing items
+  const customersWithUnassigned = await db.execute(sql`
+    SELECT DISTINCT s.customerExternalId
+    FROM services s
+    WHERE s.status NOT IN ('terminated', 'flagged_for_termination')
+      AND s.customerExternalId IS NOT NULL
+      AND s.customerExternalId != ''
+      AND s.externalId NOT IN (
+        SELECT serviceExternalId FROM service_billing_assignments
+      )
+      AND s.externalId NOT IN (
+        SELECT serviceExternalId FROM unbillable_services
+      )
+  `);
+
+  const customerIds: string[] = ((customersWithUnassigned as any).rows || customersWithUnassigned)
+    .map((r: any) => r.customerExternalId || r[0])
+    .filter(Boolean);
+
+  for (const customerId of customerIds) {
+    try {
+      // Get fuzzy proposals for this customer
+      const proposals = await fuzzyMatchServicesAgainstBillingItems(customerId);
+
+      // Only auto-apply proposals at or above the confidence threshold
+      const highConfidence = proposals.filter(p => p.scorePercent >= minConfidence);
+
+      for (const proposal of highConfidence) {
+        try {
+          const result = await assignServiceToBillingItem(
+            proposal.billingItemExternalId,
+            proposal.serviceExternalId,
+            customerId,
+            triggeredBy,
+            'auto',
+            `Global auto-match (${proposal.scorePercent}% confidence)`,
+            'standard'
+          );
+          if (result.alreadyAssigned) {
+            skipped++;
+          } else {
+            applied++;
+          }
+        } catch (err) {
+          errors.push(`Failed to assign ${proposal.serviceExternalId}: ${err}`);
+        }
+      }
+    } catch (err) {
+      errors.push(`Failed to process customer ${customerId}: ${err}`);
+    }
+  }
+
+  return {
+    applied,
+    skipped,
+    customersProcessed: customerIds.length,
+    errors,
   };
 }

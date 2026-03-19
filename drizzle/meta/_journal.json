@@ -162,6 +162,13 @@
       "when": 1773656901132,
       "tag": "0022_cooing_vance_astro",
       "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "5",
+      "when": 1742349600000,
+      "tag": "0023_service_categories",
+      "breakpoints": true
     }
   ]
 }

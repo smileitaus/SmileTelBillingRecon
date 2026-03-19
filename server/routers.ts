@@ -128,6 +128,8 @@ import {
   getProductCostMappings,
   updateProductCostMapping,
   importAccess4Invoice,
+  globalAutoMatchBillingItems,
+  deriveServiceCategory,
 } from "./db";
 import {
   importVocusMobileSims,
@@ -373,6 +375,7 @@ export const appRouter = router({
             serviceExternalId: z.string(),
             customerExternalId: z.string(),
             assignmentMethod: z.enum(['manual', 'auto', 'drag-drop']).default('drag-drop'),
+            assignmentBucket: z.enum(['standard', 'usage-holding', 'professional-services', 'hardware-sales', 'internal-cost']).default('standard'),
             notes: z.string().optional(),
           }))
           .mutation(async ({ input, ctx }) => {
@@ -383,7 +386,8 @@ export const appRouter = router({
               input.customerExternalId,
               assignedBy,
               input.assignmentMethod,
-              input.notes
+              input.notes,
+              input.assignmentBucket
             );
           }),
 
@@ -1120,6 +1124,16 @@ export const appRouter = router({
           return await bulkAutoAssignHighConfidence(assignedBy);
         }),
     }),
+    // Global auto-match billing items across ALL customers (no screen required)
+    // Applies saved match rules (100% confidence) + fuzzy matching (>=minConfidence%)
+    globalAutoMatch: protectedProcedure
+      .input(z.object({
+        minConfidence: z.number().min(0).max(100).default(90),
+      }).optional())
+      .mutation(async ({ input, ctx }) => {
+        const triggeredBy = ctx.user?.name || ctx.user?.email || 'system';
+        return await globalAutoMatchBillingItems(input?.minConfidence ?? 90, triggeredBy);
+      }),
     // Xero contact import workfloww
     xeroContacts: router({
       // Get fuzzy customer suggestions for a given Xero contact name

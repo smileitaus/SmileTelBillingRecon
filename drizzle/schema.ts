@@ -112,6 +112,11 @@ export const services = mysqlTable("services", {
   dataPlanGb: varchar("dataPlanGb", { length: 32 }).default(""),
   purchaseDate: varchar("purchaseDate", { length: 64 }).default(""),
   dataSource: varchar("dataSource", { length: 256 }).default(""),
+  // Service category for grouping and matching
+  // voice-licensing | voice-usage | voice-numbers | voice-features |
+  // data-mobile | data-nbn | data-enterprise | data-usage |
+  // hardware | professional-services | internal | other
+  serviceCategory: varchar("serviceCategory", { length: 64 }).default("other").notNull(),
   // Provider identification
   provider: varchar("provider", { length: 64 }).default("Unknown"),
   // Carbon API fields (ABB)
@@ -534,6 +539,8 @@ export const serviceBillingAssignments = mysqlTable("service_billing_assignments
   customerExternalId: varchar("customerExternalId", { length: 32 }).notNull(),
   assignedBy: varchar("assignedBy", { length: 256 }).notNull(),
   assignmentMethod: varchar("assignmentMethod", { length: 32 }).default("manual").notNull(), // 'manual' | 'auto' | 'drag-drop'
+  // Assignment bucket: standard | usage-holding | professional-services | hardware-sales | internal-cost
+  assignmentBucket: varchar("assignmentBucket", { length: 64 }).default("standard").notNull(),
   notes: text("notes"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),

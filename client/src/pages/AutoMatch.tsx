@@ -1365,6 +1365,17 @@ export default function AutoMatch() {
   const [activeTab, setActiveTab] = useState<"alias" | "address" | "bulk" | "proposals">("bulk");
   const { data: pendingCount = 0 } = trpc.billing.customers.proposals.pendingCount.useQuery(undefined, { refetchInterval: 30_000 });
 
+  const globalBillingMatchMutation = trpc.billing.globalAutoMatch.useMutation({
+    onSuccess: (result: any) => {
+      toast.success(
+        `Billing auto-match complete: ${result?.matched ?? 0} service${
+          result?.matched !== 1 ? 's' : ''
+        } matched across ${result?.customersProcessed ?? 0} customers`
+      );
+    },
+    onError: (err: any) => toast.error(`Billing auto-match failed: ${err.message}`),
+  });
+
   return (
     <div className="p-6 lg:p-8">
       {/* Header */}
@@ -1379,6 +1390,19 @@ export default function AutoMatch() {
             logic.
           </p>
         </div>
+        {/* Global Billing Auto-Match — runs across ALL customers without opening each screen */}
+        <button
+          onClick={() => globalBillingMatchMutation.mutate({ minConfidence: 100 })}
+          disabled={globalBillingMatchMutation.isPending}
+          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold transition-colors disabled:opacity-60 disabled:cursor-not-allowed shadow-sm"
+          title="Auto-match 100% confident service → billing item links across all customers without opening each screen"
+        >
+          {globalBillingMatchMutation.isPending ? (
+            <><Loader2 className="w-4 h-4 animate-spin" />Running…</>
+          ) : (
+            <><Zap className="w-4 h-4" />Auto-Match Billing Items</>
+          )}
+        </button>
       </div>
 
       {/* Tabs */}
