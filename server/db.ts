@@ -8039,3 +8039,80 @@ export async function globalAutoMatchBillingItems(
     errors,
   };
 }
+
+/**
+ * Re-apply costs from the most recent confirmed SasBoss workbook to services
+ * for a specific customer (or all customers if customerExternalId is omitted).
+ *
+ * This is useful when services were created before costs were populated, or
+ * when a workbook was re-uploaded with corrected amounts.
+ */
+export async function recalculateCostsFromWorkbook(
+  customerExternalId?: string
+): Promise<{ updated: number; skipped: number; errors: string[] }> {
+  const db = await getDb();
+  if (!db) return { updated: 0, skipped: 0, errors: ['Database not available'] };
+
+  let updated = 0;
+  let skipped = 0;
+  const errors: string[] = [];
+
+  // Get the most recent workbook line items that have a matched service
+  const lineItems = await db
+    .select({
+      matchedServiceExternalId: supplierWorkbookLineItems.matchedServiceExternalId,
+      amountExGst: supplierWorkbookLineItems.amountExGst,
+      matchedCustomerExternalId: supplierWorkbookLineItems.matchedCustomerExternalId,
+      matchStatus: supplierWorkbookLineItems.matchStatus,
+      uploadId: supplierWorkbookLineItems.uploadId,
+    })
+    .from(supplierWorkbookLineItems)
+    .where(
+      and(
+        sql`${supplierWorkbookLineItems.matchStatus} IN ('matched', 'partial')`,
+        sql`${supplierWorkbookLineItems.amountExGst} > 0`,
+        sql`${supplierWorkbookLineItems.matchedServiceExternalId} != ''`,
+        customerExternalId
+          ? eq(supplierWorkbookLineItems.matchedCustomerExternalId, customerExternalId)
+          : sql`1=1`
+      )
+    )
+    .orderBy(desc(supplierWorkbookLineItems.uploadId));
+
+  // Deduplicate: keep only the most recent entry per service
+  const latestByService = new Map<string, typeof lineItems[0]>();
+  for (const item of lineItems) {
+    const svcId = item.matchedServiceExternalId || '';
+    if (!svcId) continue;
+    if (!latestByService.has(svcId)) {
+      latestByService.set(svcId, item);
+    }
+  }
+
+  // Apply costs in batches of 10
+  const entries = Array.from(latestByService.values());
+  for (let i = 0; i < entries.length; i += 10) {
+    const batch = entries.slice(i, i + 10);
+    await Promise.all(
+      batch.map(async (item) => {
+        try {
+          const cost = parseFloat(String(item.amountExGst));
+          if (cost <= 0) { skipped++; return; }
+          await db
+            .update(services)
+            .set({
+              monthlyCost: String(cost.toFixed(2)),
+              costSource: 'supplier_invoice',
+              updatedAt: new Date(),
+            })
+            .where(eq(services.externalId, item.matchedServiceExternalId!));
+          updated++;
+        } catch (err) {
+          errors.push(`Failed to update service ${item.matchedServiceExternalId}: ${err}`);
+        }
+      })
+    );
+  }
+
+  return { updated, skipped, errors };
+}

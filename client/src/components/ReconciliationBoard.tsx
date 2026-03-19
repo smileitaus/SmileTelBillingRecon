@@ -11,14 +11,14 @@
  *  - Drag-and-drop assignment
  */
 
-import { useState, useCallback, useRef, useEffect } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 import {
   Phone, Wifi, Smartphone, Globe, Package, Briefcase, Building2,
   Clock, ChevronDown, ChevronRight, GripVertical, X, CheckCircle2,
   Zap, TrendingUp, TrendingDown, AlertTriangle, Archive, Loader2,
-  RefreshCw, DollarSign, ArrowRight, Info, Inbox
+  RefreshCw, DollarSign, ArrowRight, Info, Inbox, Wand2, AlertCircle
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -187,7 +187,14 @@ function ServiceCard({
           )}
         </div>
         <div className="shrink-0 text-right">
-          <p className="text-sm font-semibold text-orange-600">${fmt(service.monthlyCost)}/mo</p>
+          <p className={cn("text-sm font-semibold", service.monthlyCost > 0 ? "text-orange-600" : "text-rose-500")}>
+            {service.monthlyCost > 0 ? `$${fmt(service.monthlyCost)}/mo` : (
+              <span className="flex items-center gap-0.5 justify-end">
+                <AlertCircle className="w-3 h-3" />
+                $0.00
+              </span>
+            )}
+          </p>
           <span className={cn(
             "inline-flex items-center gap-0.5 text-[9px] font-semibold uppercase tracking-wide px-1.5 py-0.5 rounded-full mt-0.5",
             billingType === "advance"       && "bg-blue-50 text-blue-700",
@@ -227,7 +234,11 @@ function AssignedServiceCard({
         <ProviderBadge provider={svc.provider} size="xs" />
         <span className={cn("shrink-0", cfg?.color ?? "text-gray-500")}>{cfg?.icon}</span>
         <span className="flex-1 text-xs font-medium truncate">{svc.serviceTypeDetail || svc.planName || svc.serviceType}</span>
-        <span className="text-xs font-semibold text-orange-600 shrink-0">${fmt(svc.monthlyCost)}/mo</span>
+        <span className={cn("text-xs font-semibold shrink-0", svc.monthlyCost > 0 ? "text-orange-600" : "text-rose-500 flex items-center gap-0.5")}>
+          {svc.monthlyCost > 0 ? `$${fmt(svc.monthlyCost)}/mo` : (
+            <><AlertCircle className="w-3 h-3" />$0.00</>
+          )}
+        </span>
         <span className={cn(
           "inline-flex items-center gap-0.5 text-[9px] font-semibold uppercase tracking-wide px-1.5 py-0.5 rounded-full shrink-0",
           billingType === "advance"       && "bg-blue-50 text-blue-700",
@@ -494,6 +505,8 @@ export function ReconciliationBoard({ customerExternalId }: { customerExternalId
     "internal-cost": [],
   });
   const [autoMatchRan, setAutoMatchRan] = useState(false);
+  const [autoMatchRunning, setAutoMatchRunning] = useState(false);
+  const [syncingCosts, setSyncingCosts] = useState(false);
 
   // ── Data queries ──────────────────────────────────────────────────────────
   const { data: unassignedServices = [], isLoading: loadingServices, refetch: refetchServices } =
@@ -544,28 +557,30 @@ export function ReconciliationBoard({ customerExternalId }: { customerExternalId
     onError: (err) => toast.error(`Failed: ${err.message}`),
   });
 
-  // ── Auto-match on mount ───────────────────────────────────────────────────
-  useEffect(() => {
-    if (autoMatchRan || loadingProposals || loadingItems || loadingServices) return;
-    if (fuzzyProposals.length === 0) { setAutoMatchRan(true); return; }
-
-    const perfectMatches = (fuzzyProposals as FuzzyProposal[]).filter(p => p.scorePercent >= 100);
-    if (perfectMatches.length === 0) { setAutoMatchRan(true); return; }
-
-    let applied = 0;
-    const applyNext = async (idx: number) => {
-      if (idx >= perfectMatches.length) {
-        if (applied > 0) {
-          toast.success(`Auto-matched ${applied} service${applied !== 1 ? "s" : ""} at 100% confidence`);
-          refetchServices();
-          refetchItems();
-          utils.billing.customers.byId.invalidate();
-          utils.billing.customers.unmatchedBillingServices.invalidate();
-        }
-        setAutoMatchRan(true);
-        return;
+  const syncCostsMutation = trpc.billing.recalculateCosts.useMutation({
+    onSuccess: (result) => {
+      setSyncingCosts(false);
+      if (result.updated > 0) {
+        toast.success(`Updated costs for ${result.updated} service${result.updated !== 1 ? 's' : ''} from workbook`);
+        refetchServices();
+        refetchItems();
+      } else {
+        toast.info('No cost updates found in workbook — costs may need to be re-imported');
       }
-      const p = perfectMatches[idx];
+    },
+    onError: (err) => {
+      setSyncingCosts(false);
+      toast.error(`Cost sync failed: ${err.message}`);
+    },
+  });
+
+  // ── Auto-match on mount ───────────────────────────────────────────────────
+  const runAutoMatch = useCallback(async (proposals: FuzzyProposal[], threshold = 90) => {
+    const highConfidence = proposals.filter(p => p.scorePercent >= threshold);
+    if (highConfidence.length === 0) return 0;
+    setAutoMatchRunning(true);
+    let applied = 0;
+    for (const p of highConfidence) {
       try {
         await assignMutation.mutateAsync({
           billingItemExternalId: p.billingItemExternalId,
@@ -576,13 +591,31 @@ export function ReconciliationBoard({ customerExternalId }: { customerExternalId
         });
         applied++;
       } catch {
-        // silently skip failed auto-matches
+        // silently skip failed auto-matches (e.g. already assigned)
       }
-      applyNext(idx + 1);
-    };
-    applyNext(0);
+    }
+    setAutoMatchRunning(false);
+    if (applied > 0) {
+      refetchServices();
+      refetchItems();
+      utils.billing.customers.byId.invalidate();
+      utils.billing.customers.unmatchedBillingServices.invalidate();
+    }
+    return applied;
+  }, [assignMutation, customerExternalId, refetchServices, refetchItems, utils]);
+
+  useEffect(() => {
+    if (autoMatchRan || loadingProposals || loadingItems || loadingServices) return;
+    if (fuzzyProposals.length === 0) { setAutoMatchRan(true); return; }
+    // Mark as ran immediately to prevent double-firing
     setAutoMatchRan(true);
-  }, [fuzzyProposals, loadingProposals, loadingItems, loadingServices, autoMatchRan]);
+    // Run all high-confidence matches (>=90%) automatically on mount
+    runAutoMatch(fuzzyProposals as FuzzyProposal[], 90).then(applied => {
+      if (applied > 0) {
+        toast.success(`Auto-matched ${applied} service${applied !== 1 ? 's' : ''} at ≥90% confidence`);
+      }
+    });
+  }, [fuzzyProposals, loadingProposals, loadingItems, loadingServices, autoMatchRan, runAutoMatch]);
 
   // ── Drag handlers ─────────────────────────────────────────────────────────
   const handleDragStart = useCallback((e: React.DragEvent, service: UnassignedService) => {
@@ -670,17 +703,30 @@ export function ReconciliationBoard({ customerExternalId }: { customerExternalId
     cat => CATEGORY_CONFIG[cat]?.billingType === activeTab
   );
 
+  // Classify a billing item description into a billing type
+  // Since all Xero billing items have category='recurring', we use description-based heuristics
+  function classifyBillingItemType(item: BillingItemWithAssignments): BillingType {
+    const desc = (item.description || '').toLowerCase();
+    const cat = (item.category || '').toLowerCase();
+    // Non-recurring: hardware, one-off, setup, installation, professional services
+    if (desc.match(/hardware|handset|device|router|modem|equipment|one.off|setup fee|installation|professional service|consulting|labour/)) return 'non-recurring';
+    if (cat.includes('hardware') || cat.includes('professional') || cat.includes('one-off')) return 'non-recurring';
+    // Arrears: usage, calls, data usage, excess
+    if (desc.match(/usage|calls|excess|overage|arrears|per.*call|call.*charge|miscellaneous call/)) return 'arrears';
+    if (cat.includes('usage') || cat.includes('arrears')) return 'arrears';
+    // Internal: internal, parked, absorbed
+    if (desc.match(/internal|parked|absorbed|smiletel/)) return 'internal';
+    if (cat.includes('internal')) return 'internal';
+    // Default: advance (recurring services)
+    return 'advance';
+  }
+
   // Billing items for the active tab
   const billingItemsForTab = (billingItems as BillingItemWithAssignments[]).filter(item => {
-    const cat = item.category?.toLowerCase() || "";
-    if (activeTab === "advance") return !cat.includes("usage") && !cat.includes("arrears") && !cat.includes("hardware") && !cat.includes("professional");
-    if (activeTab === "arrears") return cat.includes("usage") || cat.includes("arrears");
-    if (activeTab === "non-recurring") return cat.includes("hardware") || cat.includes("professional") || cat.includes("one-off");
-    if (activeTab === "internal") return cat.includes("internal");
-    return true;
+    return classifyBillingItemType(item) === activeTab;
   });
 
-  // For tabs with no category filter, show all billing items
+  // For the advance tab, if no items match the heuristic, show all items (fallback)
   const showAllBillingItems = billingItemsForTab.length === 0 && activeTab === "advance";
   const displayBillingItems = showAllBillingItems ? (billingItems as BillingItemWithAssignments[]) : billingItemsForTab;
 
@@ -690,6 +736,7 @@ export function ReconciliationBoard({ customerExternalId }: { customerExternalId
   const totalRevenue = (billingItems as BillingItemWithAssignments[]).reduce((sum, i) => sum + i.lineAmount, 0);
   const totalCost = (billingItems as BillingItemWithAssignments[]).reduce((sum, i) => sum + i.totalCost, 0);
   const netMargin = totalRevenue - totalCost;
+  const zeroCostServices = (unassignedServices as UnassignedService[]).filter(s => s.monthlyCost === 0).length;
 
   const isLoading = loadingServices || loadingItems;
 
@@ -726,6 +773,46 @@ export function ReconciliationBoard({ customerExternalId }: { customerExternalId
               Margin: {netMargin >= 0 ? "+" : ""}${fmt(netMargin)}
             </span>
           </div>
+          {/* Action buttons */}
+          <div className="flex items-center gap-1.5">
+            <Button
+              variant="outline"
+              size="sm"
+              className="h-7 text-xs gap-1.5 text-orange-700 border-orange-200 hover:bg-orange-50"
+              onClick={() => {
+                setSyncingCosts(true);
+                syncCostsMutation.mutate({ customerExternalId });
+              }}
+              disabled={syncingCosts}
+              title="Re-apply costs from the most recent SasBoss workbook upload"
+            >
+              {syncingCosts ? <Loader2 className="w-3 h-3 animate-spin" /> : <RefreshCw className="w-3 h-3" />}
+              Sync Costs
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              className="h-7 text-xs gap-1.5 text-blue-700 border-blue-200 hover:bg-blue-50"
+              onClick={() => {
+                if (fuzzyProposals.length === 0) {
+                  toast.info('No proposals available — all services may already be assigned');
+                  return;
+                }
+                runAutoMatch(fuzzyProposals as FuzzyProposal[], 90).then(applied => {
+                  if (applied > 0) {
+                    toast.success(`Auto-matched ${applied} service${applied !== 1 ? 's' : ''} at ≥90% confidence`);
+                  } else {
+                    toast.info('No new matches found — remaining services need manual assignment');
+                  }
+                });
+              }}
+              disabled={autoMatchRunning || loadingProposals}
+              title="Re-run auto-match for high-confidence pairs"
+            >
+              {autoMatchRunning ? <Loader2 className="w-3 h-3 animate-spin" /> : <Wand2 className="w-3 h-3" />}
+              Auto-Match
+            </Button>
+          </div>
           {totalUnassigned > 0 && (
             <span className="inline-flex items-center gap-1 text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200 rounded-full px-2 py-0.5">
               <AlertTriangle className="w-3 h-3" />
@@ -740,6 +827,24 @@ export function ReconciliationBoard({ customerExternalId }: { customerExternalId
           )}
         </div>
       </div>
+
+      {/* Auto-match running indicator */}
+      {autoMatchRunning && (
+        <div className="flex items-center gap-2 px-3 py-2 mb-3 bg-blue-50 border border-blue-200 rounded-lg text-xs">
+          <Loader2 className="w-3.5 h-3.5 text-blue-500 animate-spin shrink-0" />
+          <span className="text-blue-700">Auto-matching high-confidence service pairs…</span>
+        </div>
+      )}
+
+      {/* Zero cost warning banner */}
+      {zeroCostServices > 0 && (
+        <div className="flex items-center gap-2 px-3 py-2 mb-3 bg-rose-50 border border-rose-200 rounded-lg text-xs">
+          <AlertCircle className="w-3.5 h-3.5 text-rose-500 shrink-0" />
+          <span className="text-rose-700 flex-1">
+            <span className="font-semibold">{zeroCostServices} service{zeroCostServices !== 1 ? 's' : ''}</span> have <span className="font-semibold">$0.00 supplier cost</span> — margin calculations will be inaccurate. Use <span className="font-semibold">Sync Costs</span> to re-apply costs from the latest SasBoss workbook, or edit costs manually on each service.
+          </span>
+        </div>
+      )}
 
       {/* Billing Type Tabs */}
       <div className="flex gap-1 mb-4 bg-muted/40 rounded-lg p-1">

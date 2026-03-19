@@ -129,6 +129,7 @@ import {
   updateProductCostMapping,
   importAccess4Invoice,
   globalAutoMatchBillingItems,
+  recalculateCostsFromWorkbook,
   deriveServiceCategory,
 } from "./db";
 import {
@@ -1133,6 +1134,14 @@ export const appRouter = router({
       .mutation(async ({ input, ctx }) => {
         const triggeredBy = ctx.user?.name || ctx.user?.email || 'system';
         return await globalAutoMatchBillingItems(input?.minConfidence ?? 90, triggeredBy);
+      }),
+    // Recalculate costs from the most recent workbook line items
+    recalculateCosts: protectedProcedure
+      .input(z.object({
+        customerExternalId: z.string().optional(),
+      }).optional())
+      .mutation(async ({ input }) => {
+        return await recalculateCostsFromWorkbook(input?.customerExternalId);
       }),
     // Xero contact import workfloww
     xeroContacts: router({
