@@ -6568,6 +6568,8 @@ export async function getBillingItemsWithAssignments(customerExternalId: string)
       provider: services.provider,
       locationAddress: services.locationAddress,
       phoneNumber: services.phoneNumber,
+      avcId: services.avcId,
+      serviceCategory: services.serviceCategory,
       status: services.status,
     })
     .from(services)
@@ -6580,10 +6582,14 @@ export async function getBillingItemsWithAssignments(customerExternalId: string)
     assignmentId: number;
     serviceExternalId: string;
     serviceType: string;
+    serviceTypeDetail: string;
     planName: string;
     monthlyCost: number;
     provider: string;
     locationAddress: string;
+    phoneNumber: string;
+    avcId: string;
+    serviceCategory: string;
     assignedBy: string;
     assignmentMethod: string;
   }>>();
@@ -6598,10 +6604,14 @@ export async function getBillingItemsWithAssignments(customerExternalId: string)
       assignmentId: a.id,
       serviceExternalId: a.serviceExternalId,
       serviceType: svc.serviceType,
+      serviceTypeDetail: svc.serviceTypeDetail || '',
       planName: svc.planName || '',
       monthlyCost: parseFloat(String(svc.monthlyCost)),
       provider: svc.provider || 'Unknown',
       locationAddress: svc.locationAddress || '',
+      phoneNumber: svc.phoneNumber || '',
+      avcId: svc.avcId || '',
+      serviceCategory: svc.serviceCategory || 'other',
       assignedBy: a.assignedBy,
       assignmentMethod: a.assignmentMethod,
     });

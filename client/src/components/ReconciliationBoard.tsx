@@ -58,10 +58,14 @@ interface AssignedService {
   assignmentId: number;
   serviceExternalId: string;
   serviceType: string;
+  serviceTypeDetail: string;
   planName: string;
   monthlyCost: number;
   provider: string;
   locationAddress: string;
+  phoneNumber: string;
+  avcId: string;
+  serviceCategory: string;
   assignedBy: string;
   assignmentMethod: string;
 }
@@ -200,6 +204,97 @@ function ServiceCard({
   );
 }
 
+// ─── Assigned Service Card (expandable, inside billing item) ────────────────
+
+function AssignedServiceCard({
+  svc,
+  onRemove,
+}: {
+  svc: AssignedService;
+  onRemove: () => void;
+}) {
+  const [expanded, setExpanded] = useState(false);
+  const cfg = CATEGORY_CONFIG[svc.serviceCategory as ServiceCategory];
+  const billingType = getBillingTypeForCategory(svc.serviceCategory);
+
+  return (
+    <div className="rounded-md border border-teal-200 bg-white overflow-hidden">
+      {/* Collapsed row */}
+      <div
+        className="flex items-center gap-2 px-2.5 py-1.5 cursor-pointer hover:bg-teal-50/50 transition-colors"
+        onClick={() => setExpanded(v => !v)}
+      >
+        <ProviderBadge provider={svc.provider} size="xs" />
+        <span className={cn("shrink-0", cfg?.color ?? "text-gray-500")}>{cfg?.icon}</span>
+        <span className="flex-1 text-xs font-medium truncate">{svc.serviceTypeDetail || svc.planName || svc.serviceType}</span>
+        <span className="text-xs font-semibold text-orange-600 shrink-0">${fmt(svc.monthlyCost)}/mo</span>
+        <span className={cn(
+          "inline-flex items-center gap-0.5 text-[9px] font-semibold uppercase tracking-wide px-1.5 py-0.5 rounded-full shrink-0",
+          billingType === "advance"       && "bg-blue-50 text-blue-700",
+          billingType === "arrears"       && "bg-purple-50 text-purple-700",
+          billingType === "non-recurring" && "bg-amber-50 text-amber-700",
+          billingType === "internal"      && "bg-gray-100 text-gray-600",
+        )}>
+          {billingType === "arrears" && <Clock className="w-2.5 h-2.5" />}
+          {billingType === "advance" ? "ADV" : billingType === "arrears" ? "ARR" : billingType === "non-recurring" ? "1\u00d7" : "INT"}
+        </span>
+        <button
+          onClick={(e) => { e.stopPropagation(); onRemove(); }}
+          title="Unlink service"
+          className="ml-0.5 text-teal-300 hover:text-rose-500 transition-colors shrink-0"
+        >
+          <X className="w-3 h-3" />
+        </button>
+        {expanded
+          ? <ChevronDown className="w-3 h-3 text-muted-foreground/50 shrink-0" />
+          : <ChevronRight className="w-3 h-3 text-muted-foreground/50 shrink-0" />}
+      </div>
+
+      {/* Expanded detail */}
+      {expanded && (
+        <div className="border-t border-teal-100 bg-teal-50/30 px-3 py-2 grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
+          {svc.planName && (
+            <>
+              <span className="text-muted-foreground">Plan</span>
+              <span className="font-medium truncate">{svc.planName}</span>
+            </>
+          )}
+          {svc.serviceTypeDetail && svc.serviceTypeDetail !== svc.planName && (
+            <>
+              <span className="text-muted-foreground">Type Detail</span>
+              <span className="font-medium truncate">{svc.serviceTypeDetail}</span>
+            </>
+          )}
+          {svc.locationAddress && (
+            <>
+              <span className="text-muted-foreground">Location</span>
+              <span className="font-medium truncate">{svc.locationAddress}</span>
+            </>
+          )}
+          {svc.phoneNumber && (
+            <>
+              <span className="text-muted-foreground">Phone / SIM</span>
+              <span className="font-medium">{svc.phoneNumber}</span>
+            </>
+          )}
+          {svc.avcId && (
+            <>
+              <span className="text-muted-foreground">AVC ID</span>
+              <span className="font-medium font-mono text-[10px]">{svc.avcId}</span>
+            </>
+          )}
+          <span className="text-muted-foreground">Assigned by</span>
+          <span className="font-medium capitalize">{svc.assignedBy || 'auto'}</span>
+          <span className="text-muted-foreground">Method</span>
+          <span className="font-medium capitalize">{svc.assignmentMethod || '—'}</span>
+          <span className="text-muted-foreground">Supplier Ref</span>
+          <span className="font-mono text-[10px] text-muted-foreground truncate">{svc.serviceExternalId}</span>
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ─── Xero Billing Item Drop Target ───────────────────────────────────────────
 
 function BillingItemDropTarget({
@@ -258,24 +353,15 @@ function BillingItemDropTarget({
         </div>
       )}
 
-      {/* Assigned services chips */}
+      {/* Assigned services — expandable cards */}
       {hasAssignments && (
-        <div className="px-3 pb-2.5 flex flex-wrap gap-1.5">
+        <div className="px-3 pb-2.5 flex flex-col gap-1.5">
           {item.assignedServices.map((svc) => (
-            <div
+            <AssignedServiceCard
               key={svc.serviceExternalId}
-              className="inline-flex items-center gap-1 bg-white border border-teal-200 rounded-full px-2 py-0.5 text-xs text-teal-800"
-            >
-              <ProviderBadge provider={svc.provider} size="xs" />
-              <span className="truncate max-w-[120px]">{svc.planName || svc.serviceType}</span>
-              <span className="text-teal-600">${fmt(svc.monthlyCost)}</span>
-              <button
-                onClick={() => onRemoveAssignment(item.externalId, svc.serviceExternalId)}
-                className="ml-0.5 text-teal-400 hover:text-rose-500 transition-colors"
-              >
-                <X className="w-2.5 h-2.5" />
-              </button>
-            </div>
+              svc={svc}
+              onRemove={() => onRemoveAssignment(item.externalId, svc.serviceExternalId)}
+            />
           ))}
         </div>
       )}
