@@ -49,6 +49,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { ProviderBadge } from "@/components/ProviderBadge";
 import { Badge } from "@/components/ui/badge";
+import { ReconciliationBoard } from "@/components/ReconciliationBoard";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useMemo } from "react";
 
@@ -1147,80 +1148,9 @@ export default function CustomerDetail() {
         </div>
       )}
 
-      {/* Unmatched Billing Services */}
-      {(unmatchedBillingServices.length > 0 || isLoadingUnmatched) && (
-        <div className="mb-8">
-          <button
-            onClick={() => setShowUnmatchedBilling(v => !v)}
-            className="w-full flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-orange-700 mb-3 hover:text-orange-800 transition-colors"
-          >
-            <Receipt className="w-3.5 h-3.5 text-orange-600" />
-            Unmatched Billing
-            <span className="text-xs font-medium bg-orange-100 text-orange-700 border border-orange-200 px-2 py-0.5 rounded-full">
-              {unmatchedBillingServices.length} service{unmatchedBillingServices.length !== 1 ? 's' : ''}
-            </span>
-            <span className="ml-auto">
-              {showUnmatchedBilling ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-            </span>
-          </button>
-          {showUnmatchedBilling && (
-            <div className="bg-card border border-orange-200 rounded-lg overflow-hidden border-l-[3px] border-l-orange-500">
-              <div className="flex items-center gap-3 px-4 py-3 border-b border-orange-100 bg-orange-50/50">
-                <Receipt className="w-4 h-4 text-orange-600 shrink-0" />
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-orange-900">Services Without Billing Assignment</p>
-                  <p className="text-xs text-orange-600/80">
-                    These services are active but have no billing item linked. Assign a billing item or mark as intentionally unbilled.
-                  </p>
-                </div>
-                <span className="text-xs font-semibold text-orange-700 bg-orange-100 px-2 py-0.5 rounded-full">
-                  {unmatchedBillingServices.length} service{unmatchedBillingServices.length !== 1 ? 's' : ''}
-                </span>
-                <Link href={`/customers/${params.id}/billing-match`}>
-                  <Button size="sm" className="gap-1 text-xs bg-orange-600 hover:bg-orange-700 text-white shrink-0">
-                    <Link2 className="w-3.5 h-3.5" />
-                    Billing Match
-                  </Button>
-                </Link>
-                <Link href={`/customers/${params.id}/match-workbook`}>
-                  <Button size="sm" variant="outline" className="gap-1 text-xs border-orange-300 text-orange-700 hover:bg-orange-50 shrink-0">
-                    <Link2 className="w-3.5 h-3.5" />
-                    Match Workbook
-                  </Button>
-                </Link>
-              </div>
-              {isLoadingUnmatched ? (
-                <div className="flex items-center justify-center py-8">
-                  <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
-                </div>
-              ) : (
-                <div>
-                  {unmatchedBillingServices.map((svc: any) => (
-                    <UnmatchedBillingRow
-                      key={svc.externalId}
-                      service={svc}
-                      availableBillingItems={availableBillingItems}
-                      customerExternalId={customer?.externalId}
-                      onResolve={async (serviceExternalId: string, billingItemExternalId: string | null, resolution: 'linked' | 'intentionally-unbilled', notes?: string) => {
-                        try {
-                          await resolveServiceBilling.mutateAsync({
-                            serviceExternalId,
-                            billingItemExternalId,
-                            resolution,
-                            notes,
-                          });
-                          toast.success(resolution === 'linked' ? 'Billing item linked successfully' : 'Marked as intentionally unbilled');
-                        } catch (e: any) {
-                          toast.error(`Failed: ${e.message}`);
-                        }
-                      }}
-                    />
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
-        </div>
+      {/* Reconciliation Board — unified billing assignment, drag-and-drop, category grouping */}
+      {customer?.externalId && (
+        <ReconciliationBoard customerExternalId={customer.externalId} />
       )}
 
       {/* Locations & Services */}
