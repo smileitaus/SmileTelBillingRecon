@@ -83,8 +83,11 @@ interface BillingItemWithAssignments {
 interface FuzzyProposal {
   serviceExternalId: string;
   billingItemExternalId: string;
-  confidence: number;
-  reason: string;
+  score: number;
+  scorePercent: number;
+  servicePlanName: string;
+  serviceType: string;
+  billingDescription: string;
 }
 
 // ─── Category Config ──────────────────────────────────────────────────────────
@@ -408,25 +411,25 @@ export function ReconciliationBoard({ customerExternalId }: { customerExternalId
 
   // ── Data queries ──────────────────────────────────────────────────────────
   const { data: unassignedServices = [], isLoading: loadingServices, refetch: refetchServices } =
-    trpc.billing.billingAssignments.unassignedServices.useQuery(
+    trpc.billing.customers.billingAssignments.unassignedServices.useQuery(
       { customerExternalId },
       { enabled: !!customerExternalId, staleTime: 10_000 }
     );
 
   const { data: billingItems = [], isLoading: loadingItems, refetch: refetchItems } =
-    trpc.billing.billingAssignments.billingItemsWithAssignments.useQuery(
+    trpc.billing.customers.billingAssignments.billingItemsWithAssignments.useQuery(
       { customerExternalId },
       { enabled: !!customerExternalId, staleTime: 10_000 }
     );
 
   const { data: fuzzyProposals = [], isLoading: loadingProposals } =
-    trpc.billing.billingAssignments.fuzzyProposals.useQuery(
+    trpc.billing.customers.billingAssignments.fuzzyProposals.useQuery(
       { customerExternalId },
       { enabled: !!customerExternalId, staleTime: 30_000 }
     );
 
   // ── Mutations ─────────────────────────────────────────────────────────────
-  const assignMutation = trpc.billing.billingAssignments.assign.useMutation({
+  const assignMutation = trpc.billing.customers.billingAssignments.assign.useMutation({
     onSuccess: () => {
       refetchServices();
       refetchItems();
@@ -437,7 +440,7 @@ export function ReconciliationBoard({ customerExternalId }: { customerExternalId
     onError: (err) => toast.error(`Assignment failed: ${err.message}`),
   });
 
-  const removeAssignmentMutation = trpc.billing.billingAssignments.removeAssignment.useMutation({
+  const removeAssignmentMutation = trpc.billing.customers.billingAssignments.removeAssignment.useMutation({
     onSuccess: () => {
       refetchServices();
       refetchItems();
@@ -447,7 +450,7 @@ export function ReconciliationBoard({ customerExternalId }: { customerExternalId
     onError: (err) => toast.error(`Failed to remove: ${err.message}`),
   });
 
-  const markUnbillableMutation = trpc.billing.billingAssignments.markUnbillable.useMutation({
+  const markUnbillableMutation = trpc.billing.customers.billingAssignments.markUnbillable.useMutation({
     onSuccess: () => {
       refetchServices();
       utils.billing.customers.byId.invalidate();
@@ -460,7 +463,7 @@ export function ReconciliationBoard({ customerExternalId }: { customerExternalId
     if (autoMatchRan || loadingProposals || loadingItems || loadingServices) return;
     if (fuzzyProposals.length === 0) { setAutoMatchRan(true); return; }
 
-    const perfectMatches = (fuzzyProposals as FuzzyProposal[]).filter(p => p.confidence >= 100);
+    const perfectMatches = (fuzzyProposals as FuzzyProposal[]).filter(p => p.scorePercent >= 100);
     if (perfectMatches.length === 0) { setAutoMatchRan(true); return; }
 
     let applied = 0;
