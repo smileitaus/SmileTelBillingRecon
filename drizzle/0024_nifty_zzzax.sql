@@ -1,0 +1,2 @@
+ALTER TABLE `service_billing_assignments` ADD `assignmentBucket` varchar(64) DEFAULT 'standard' NOT NULL;--> statement-breakpoint
+ALTER TABLE `services` ADD `serviceCategory` varchar(64) DEFAULT 'other' NOT NULL;
