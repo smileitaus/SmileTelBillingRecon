@@ -1,0 +1,210 @@
+{
+  "query": "\n-- Look at ALL SasBoss services with UCXcel plans to understand the pattern\nSELECT \n  s.externalId, s.planName, s.serviceType, s.customerName, s.customerExternalId,\n  s.supplierAccount, s.serviceId, s.monthlyCost\nFROM services s\nWHERE s.supplierName = 'SasBoss' AND s.planName LIKE '%UCXcel%'\nORDER BY s.customerName, s.planName\nLIMIT 20;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Look at ALL SasBoss services with UCXcel plans to understand the pattern\nSELECT \n  s.externalId, s.planName, s.serviceType, s.customerName, s.customerExternalId,\n  s.supplierAccount, s.serviceId, s.monthlyCost\nFROM services s\nWHERE s.supplierName = 'SasBoss' AND s.planName LIKE '%UCXcel%'\nORDER BY s.customerName, s.planName\nLIMIT 20;\n",
+  "rows": [
+    {
+      "externalId": "SS4HTBPC",
+      "planName": "UCXcel Essential",
+      "serviceType": "Voice",
+      "customerName": "",
+      "customerExternalId": "NULL",
+      "supplierAccount": "2026-03",
+      "serviceId": "",
+      "monthlyCost": "9.00"
+    },
+    {
+      "externalId": "SSWJNY05",
+      "planName": "UCXcel Essential",
+      "serviceType": "Voice",
+      "customerName": "",
+      "customerExternalId": "NULL",
+      "supplierAccount": "2026-03",
+      "serviceId": "",
+      "monthlyCost": "9.00"
+    },
+    {
+      "externalId": "SSNHX6ZD",
+      "planName": "UCXcel Webex Basic",
+      "serviceType": "Voice",
+      "customerName": "",
+      "customerExternalId": "NULL",
+      "supplierAccount": "2026-03",
+      "serviceId": "",
+      "monthlyCost": "13.80"
+    },
+    {
+      "externalId": "SS011MSO",
+      "planName": "UCXcel Webex Basic",
+      "serviceType": "Voice",
+      "customerName": "",
+      "customerExternalId": "NULL",
+      "supplierAccount": "2026-03",
+      "serviceId": "",
+      "monthlyCost": "13.80"
+    },
+    {
+      "externalId": "SSER3ABI",
+      "planName": "UCXcel Basic Queue Agent",
+      "serviceType": "Voice",
+      "customerName": "Active Living - Allen Developments Pty Ltd",
+      "customerExternalId": "C0003",
+      "supplierAccount": "2026-03",
+      "serviceId": "",
+      "monthlyCost": "6.30"
+    },
+    {
+      "externalId": "SSK8SQ39",
+      "planName": "UCXcel Essential",
+      "serviceType": "Voice",
+      "customerName": "Active Living - Allen Developments Pty Ltd",
+      "customerExternalId": "C0003",
+      "supplierAccount": "2026-03",
+      "serviceId": "",
+      "monthlyCost": "60.00"
+    },
+    {
+      "externalId": "SS947FNZ",
+      "planName": "UCXcel Call Centre Queue",
+      "serviceType": "Voice",
+      "customerName": "ASG Hail Pty Ltd",
+      "customerExternalId": "C0015",
+      "supplierAccount": "2026-03",
+      "serviceId": "",
+      "monthlyCost": "6.30"
+    },
+    {
+      "externalId": "SS3VUZ0A",
+      "planName": "UCXcel Hunt Group",
+      "serviceType": "Voice",
+      "customerName": "ASG Hail Pty Ltd",
+      "customerExternalId": "C0015",
+      "supplierAccount": "2026-03",
+      "serviceId": "",
+      "monthlyCost": "9.00"
+    },
+    {
+      "externalId": "SS1Y445L",
+      "planName": "UCXcel Premium",
+      "serviceType": "Voice",
+      "customerName": "ASG Hail Pty Ltd",
+      "customerExternalId": "C0015",
+      "supplierAccount": "2026-03",
+      "serviceId": "",
+      "monthlyCost": "21.00"
+    },
+    {
+      "externalId": "SSK9RK0U",
+      "planName": "UCXcel Premium Queue Agent",
+      "serviceType": "Voice",
+      "customerName": "ASG Hail Pty Ltd",
+      "customerExternalId": "C0015",
+      "supplierAccount": "2026-03",
+      "serviceId": "",
+      "monthlyCost": "6.30"
+    },
+    {
+      "externalId": "SSF48BID",
+      "planName": "UCXcel Professional",
+      "serviceType": "Voice",
+      "customerName": "ASG Hail Pty Ltd",
+      "customerExternalId": "C0015",
+      "supplierAccount": "2026-03",
+      "serviceId": "",
+      "monthlyCost": "15.00"
+    },
+    {
+      "externalId": "SSHLN94F",
+      "planName": "UCXcel Webex Basic",
+      "serviceType": "Voice",
+      "customerName": "ASG Hail Pty Ltd",
+      "customerExternalId": "C0015",
+      "supplierAccount": "2026-03",
+      "serviceId": "",
+      "monthlyCost": "13.80"
+    },
+    {
+      "externalId": "SSYO23W9",
+      "planName": "UCXcel Essential",
+      "serviceType": "Voice",
+      "customerName": "Aus Ships",
+      "customerExternalId": "C7513",
+      "supplierAccount": "2026-03",
+      "serviceId": "",
+      "monthlyCost": "9.00"
+    },
+    {
+      "externalId": "SSA0ORL6",
+      "planName": "UCXcel Essential",
+      "serviceType": "Voice",
+      "customerName": "Aus Ships",
+      "customerExternalId": "C7513",
+      "supplierAccount": "2026-03",
+      "serviceId": "",
+      "monthlyCost": "9.00"
+    },
+    {
+      "externalId": "SSPXYRO0",
+      "planName": "UCXcel Essential",
+      "serviceType": "Voice",
+      "customerName": "Australian Air Science Pty Ltd",
+      "customerExternalId": "C0025",
+      "supplierAccount": "2026-03",
+      "serviceId": "",
+      "monthlyCost": "9.00"
+    },
+    {
+      "externalId": "SSO5PQZ4",
+      "planName": "UCXcel Webex Basic",
+      "serviceType": "Voice",
+      "customerName": "Australian Computer Traders",
+      "customerExternalId": "C0026",
+      "supplierAccount": "2026-03",
+      "serviceId": "",
+      "monthlyCost": "13.80"
+    },
+    {
+      "externalId": "SSCNOQWD",
+      "planName": "UCXcel Hunt Group",
+      "serviceType": "Voice",
+      "customerName": "Balanced Business Accounting",
+      "customerExternalId": "C0030",
+      "supplierAccount": "2026-03",
+      "serviceId": "",
+      "monthlyCost": "9.00"
+    },
+    {
+      "externalId": "SS9AAQFA",
+      "planName": "UCXcel Essential",
+      "serviceType": "Voice",
+      "customerName": "Balgra Shopping Centre Management Pty Ltd",
+      "customerExternalId": "C0031",
+      "supplierAccount": "2026-03",
+      "serviceId": "",
+      "monthlyCost": "9.00"
+    },
+    {
+      "externalId": "SS4OSQ4Z",
+      "planName": "UCXcel Call Centre Queue",
+      "serviceType": "Voice",
+      "customerName": "Bar Alto",
+      "customerExternalId": "C0034",
+      "supplierAccount": "2026-03",
+      "serviceId": "",
+      "monthlyCost": "6.30"
+    },
+    {
+      "externalId": "SS7XAK55",
+      "planName": "UCXcel Essential",
+      "serviceType": "Voice",
+      "customerName": "Bar Alto",
+      "customerExternalId": "C0034",
+      "supplierAccount": "2026-03",
+      "serviceId": "",
+      "monthlyCost": "9.00"
+    }
+  ],
+  "messages": [],
+  "stdout": "externalId\tplanName\tserviceType\tcustomerName\tcustomerExternalId\tsupplierAccount\tserviceId\tmonthlyCost\nSS4HTBPC\tUCXcel Essential\tVoice\t\tNULL\t2026-03\t\t9.00\nSSWJNY05\tUCXcel Essential\tVoice\t\tNULL\t2026-03\t\t9.00\nSSNHX6ZD\tUCXcel Webex Basic\tVoice\t\tNULL\t2026-03\t\t13.80\nSS011MSO\tUCXcel Webex Basic\tVoice\t\tNULL\t2026-03\t\t13.80\nSSER3ABI\tUCXcel Basic Queue Agent\tVoice\tActive Living - Allen Developments Pty Ltd\tC0003\t2026-03\t\t6.30\nSSK8SQ39\tUCXcel Essential\tVoice\tActive Living - Allen Developments Pty Ltd\tC0003\t2026-03\t\t60.00\nSS947FNZ\tUCXcel Call Centre Queue\tVoice\tASG Hail Pty Ltd\tC0015\t2026-03\t\t6.30\nSS3VUZ0A\tUCXcel Hunt Group\tVoice\tASG Hail Pty Ltd\tC0015\t2026-03\t\t9.00\nSS1Y445L\tUCXcel Premium\tVoice\tASG Hail Pty Ltd\tC0015\t2026-03\t\t21.00\nSSK9RK0U\tUCXcel Premium Queue Agent\tVoice\tASG Hail Pty Ltd\tC0015\t2026-03\t\t6.30\nSSF48BID\tUCXcel Professional\tVoice\tASG Hail Pty Ltd\tC0015\t2026-03\t\t15.00\nSSHLN94F\tUCXcel Webex Basic\tVoice\tASG Hail Pty Ltd\tC0015\t2026-03\t\t13.80\nSSYO23W9\tUCXcel Essential\tVoice\tAus Ships\tC7513\t2026-03\t\t9.00\nSSA0ORL6\tUCXcel Essential\tVoice\tAus Ships\tC7513\t2026-03\t\t9.00\nSSPXYRO0\tUCXcel Essential\tVoice\tAustralian Air Science Pty Ltd\tC0025\t2026-03\t\t9.00\nSSO5PQZ4\tUCXcel Webex Basic\tVoice\tAustralian Computer Traders\tC0026\t2026-03\t\t13.80\nSSCNOQWD\tUCXcel Hunt Group\tVoice\tBalanced Business Accounting\tC0030\t2026-03\t\t9.00\nSS9AAQFA\tUCXcel Essential\tVoice\tBalgra Shopping Centre Management Pty Ltd\tC0031\t2026-03\t\t9.00\nSS4OSQ4Z\tUCXcel Call Centre Queue\tVoice\tBar Alto\tC0034\t2026-03\t\t6.30\nSS7XAK55\tUCXcel Essential\tVoice\tBar Alto\tC0034\t2026-03\t\t9.00\n",
+  "stderr": "",
+  "execution_time_ms": 1499
+}

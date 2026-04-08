@@ -1,0 +1,210 @@
+{
+  "query": "\n-- Get services for DataGate customers - understand what services exist\nSELECT s.externalId, s.serviceType, s.serviceTypeDetail, s.planName, s.customerName, s.customerExternalId, s.monthlyRevenue, s.monthlyCost\nFROM services s\nJOIN customers c ON s.customerExternalId = c.externalId\nWHERE (c.billingPlatforms LIKE '%DataGate%' OR c.billingPlatforms LIKE '%DATAGATE%')\nAND s.status = 'active'\nORDER BY s.customerName, s.serviceType\nLIMIT 20;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Get services for DataGate customers - understand what services exist\nSELECT s.externalId, s.serviceType, s.serviceTypeDetail, s.planName, s.customerName, s.customerExternalId, s.monthlyRevenue, s.monthlyCost\nFROM services s\nJOIN customers c ON s.customerExternalId = c.externalId\nWHERE (c.billingPlatforms LIKE '%DataGate%' OR c.billingPlatforms LIKE '%DATAGATE%')\nAND s.status = 'active'\nORDER BY s.customerName, s.serviceType\nLIMIT 20;\n",
+  "rows": [
+    {
+      "externalId": "S7141",
+      "serviceType": "Data",
+      "serviceTypeDetail": "",
+      "planName": "4G Data Back up",
+      "customerName": "NULL",
+      "customerExternalId": "C2441",
+      "monthlyRevenue": "0.00",
+      "monthlyCost": "15.00"
+    },
+    {
+      "externalId": "VOCUS-MOB-13642698",
+      "serviceType": "Mobile",
+      "serviceTypeDetail": "Standard Mobile SIM",
+      "planName": "Vocus Mobile Service",
+      "customerName": "",
+      "customerExternalId": "C2441",
+      "monthlyRevenue": "0.00",
+      "monthlyCost": "0.00"
+    },
+    {
+      "externalId": "BLITZ-0484182767",
+      "serviceType": "Mobile",
+      "serviceTypeDetail": "",
+      "planName": "Business Data Plan S",
+      "customerName": "",
+      "customerExternalId": "C2441",
+      "monthlyRevenue": "0.00",
+      "monthlyCost": "27.27"
+    },
+    {
+      "externalId": "VOCUS-MOB-13642701",
+      "serviceType": "Mobile",
+      "serviceTypeDetail": "Standard Mobile SIM",
+      "planName": "Vocus Mobile Service",
+      "customerName": "",
+      "customerExternalId": "C2441",
+      "monthlyRevenue": "0.00",
+      "monthlyCost": "0.00"
+    },
+    {
+      "externalId": "VOCUS-MOB-13600115",
+      "serviceType": "Mobile",
+      "serviceTypeDetail": "Standard Mobile SIM",
+      "planName": "Vocus Mobile Service",
+      "customerName": "",
+      "customerExternalId": "C2441",
+      "monthlyRevenue": "0.00",
+      "monthlyCost": "0.00"
+    },
+    {
+      "externalId": "BLITZ-0497937748",
+      "serviceType": "Mobile",
+      "serviceTypeDetail": "",
+      "planName": "Business Data Plan S",
+      "customerName": "",
+      "customerExternalId": "C2441",
+      "monthlyRevenue": "0.00",
+      "monthlyCost": "27.27"
+    },
+    {
+      "externalId": "S7359",
+      "serviceType": "Voice",
+      "serviceTypeDetail": "",
+      "planName": "IP Tel Single Number",
+      "customerName": "",
+      "customerExternalId": "C2441",
+      "monthlyRevenue": "0.00",
+      "monthlyCost": "1.00"
+    },
+    {
+      "externalId": "S7278",
+      "serviceType": "Voice",
+      "serviceTypeDetail": "",
+      "planName": "IP Tel 100 Number Range",
+      "customerName": "",
+      "customerExternalId": "C0212",
+      "monthlyRevenue": "112.50",
+      "monthlyCost": "30.87"
+    },
+    {
+      "externalId": "S7273",
+      "serviceType": "Voice",
+      "serviceTypeDetail": "",
+      "planName": "IP Tel 10 Number Block",
+      "customerName": "",
+      "customerExternalId": "C2441",
+      "monthlyRevenue": "0.00",
+      "monthlyCost": "237.82"
+    },
+    {
+      "externalId": "S7311",
+      "serviceType": "Voice",
+      "serviceTypeDetail": "",
+      "planName": "IP Tel Single Number",
+      "customerName": "",
+      "customerExternalId": "C0287",
+      "monthlyRevenue": "24.00",
+      "monthlyCost": "8.33"
+    },
+    {
+      "externalId": "S7281",
+      "serviceType": "Voice",
+      "serviceTypeDetail": "",
+      "planName": "IP Tel Single Number",
+      "customerName": "",
+      "customerExternalId": "C0216",
+      "monthlyRevenue": "250.00",
+      "monthlyCost": "1.55"
+    },
+    {
+      "externalId": "S7277",
+      "serviceType": "Voice",
+      "serviceTypeDetail": "",
+      "planName": "Voice Access",
+      "customerName": "",
+      "customerExternalId": "C2650",
+      "monthlyRevenue": "0.00",
+      "monthlyCost": "0.01"
+    },
+    {
+      "externalId": "S7276",
+      "serviceType": "Voice",
+      "serviceTypeDetail": "",
+      "planName": "IP Tel 10 Number Block",
+      "customerName": "",
+      "customerExternalId": "C0216",
+      "monthlyRevenue": "323.80",
+      "monthlyCost": "99.34"
+    },
+    {
+      "externalId": "S7283",
+      "serviceType": "Voice",
+      "serviceTypeDetail": "",
+      "planName": "IP Tel 10 Number Block",
+      "customerName": "",
+      "customerExternalId": "C0208",
+      "monthlyRevenue": "153.60",
+      "monthlyCost": "95.00"
+    },
+    {
+      "externalId": "S7280",
+      "serviceType": "Voice",
+      "serviceTypeDetail": "",
+      "planName": "IP Tel Single Number",
+      "customerName": "",
+      "customerExternalId": "C2441",
+      "monthlyRevenue": "0.00",
+      "monthlyCost": "2.62"
+    },
+    {
+      "externalId": "S7326",
+      "serviceType": "Voice",
+      "serviceTypeDetail": "",
+      "planName": "IP Tel 10 Number Block",
+      "customerName": "",
+      "customerExternalId": "C0224",
+      "monthlyRevenue": "83.30",
+      "monthlyCost": "99.00"
+    },
+    {
+      "externalId": "S7272",
+      "serviceType": "Voice",
+      "serviceTypeDetail": "",
+      "planName": "IP Tel Single Number",
+      "customerName": "",
+      "customerExternalId": "C0134",
+      "monthlyRevenue": "797.42",
+      "monthlyCost": "149.16"
+    },
+    {
+      "externalId": "S7360",
+      "serviceType": "Voice",
+      "serviceTypeDetail": "",
+      "planName": "IP Tel Single Number",
+      "customerName": "",
+      "customerExternalId": "C2639",
+      "monthlyRevenue": "0.00",
+      "monthlyCost": "1.00"
+    },
+    {
+      "externalId": "S7275",
+      "serviceType": "Voice",
+      "serviceTypeDetail": "",
+      "planName": "IP Tel 100 Number Range",
+      "customerName": "",
+      "customerExternalId": "C0161",
+      "monthlyRevenue": "140.00",
+      "monthlyCost": "40.96"
+    },
+    {
+      "externalId": "S7274",
+      "serviceType": "Voice",
+      "serviceTypeDetail": "",
+      "planName": "IP Tel Single Number",
+      "customerName": "",
+      "customerExternalId": "C2669",
+      "monthlyRevenue": "0.00",
+      "monthlyCost": "8.73"
+    }
+  ],
+  "messages": [],
+  "stdout": "externalId\tserviceType\tserviceTypeDetail\tplanName\tcustomerName\tcustomerExternalId\tmonthlyRevenue\tmonthlyCost\nS7141\tData\t\t4G Data Back up\tNULL\tC2441\t0.00\t15.00\nVOCUS-MOB-13642698\tMobile\tStandard Mobile SIM\tVocus Mobile Service\t\tC2441\t0.00\t0.00\nBLITZ-0484182767\tMobile\t\tBusiness Data Plan S\t\tC2441\t0.00\t27.27\nVOCUS-MOB-13642701\tMobile\tStandard Mobile SIM\tVocus Mobile Service\t\tC2441\t0.00\t0.00\nVOCUS-MOB-13600115\tMobile\tStandard Mobile SIM\tVocus Mobile Service\t\tC2441\t0.00\t0.00\nBLITZ-0497937748\tMobile\t\tBusiness Data Plan S\t\tC2441\t0.00\t27.27\nS7359\tVoice\t\tIP Tel Single Number\t\tC2441\t0.00\t1.00\nS7278\tVoice\t\tIP Tel 100 Number Range\t\tC0212\t112.50\t30.87\nS7273\tVoice\t\tIP Tel 10 Number Block\t\tC2441\t0.00\t237.82\nS7311\tVoice\t\tIP Tel Single Number\t\tC0287\t24.00\t8.33\nS7281\tVoice\t\tIP Tel Single Number\t\tC0216\t250.00\t1.55\nS7277\tVoice\t\tVoice Access\t\tC2650\t0.00\t0.01\nS7276\tVoice\t\tIP Tel 10 Number Block\t\tC0216\t323.80\t99.34\nS7283\tVoice\t\tIP Tel 10 Number Block\t\tC0208\t153.60\t95.00\nS7280\tVoice\t\tIP Tel Single Number\t\tC2441\t0.00\t2.62\nS7326\tVoice\t\tIP Tel 10 Number Block\t\tC0224\t83.30\t99.00\nS7272\tVoice\t\tIP Tel Single Number\t\tC0134\t797.42\t149.16\nS7360\tVoice\t\tIP Tel Single Number\t\tC2639\t0.00\t1.00\nS7275\tVoice\t\tIP Tel 100 Number Range\t\tC0161\t140.00\t40.96\nS7274\tVoice\t\tIP Tel Single Number\t\tC2669\t0.00\t8.73\n",
+  "stderr": "",
+  "execution_time_ms": 1514
+}

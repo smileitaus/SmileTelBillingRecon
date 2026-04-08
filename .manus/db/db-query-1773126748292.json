@@ -1,0 +1,70 @@
+{
+  "query": "SELECT externalId, customerName, serviceTypeDetail, ipAddress FROM services WHERE serviceTypeDetail REGEXP '^[0-9]+\\\\.[0-9]+\\\\.[0-9]+\\\\.[0-9]+' LIMIT 10;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3M17pEiktKAmnzx.5240b4750712 --database 4LVfr96qhVoYSkLinpTZkt --execute SELECT externalId, customerName, serviceTypeDetail, ipAddress FROM services WHERE serviceTypeDetail REGEXP '^[0-9]+\\\\.[0-9]+\\\\.[0-9]+\\\\.[0-9]+' LIMIT 10;",
+  "rows": [
+    {
+      "externalId": "S0459",
+      "customerName": "Sparrow Early Learning Alkimos",
+      "serviceTypeDetail": "159.196.138.252",
+      "ipAddress": ""
+    },
+    {
+      "externalId": "S0460",
+      "customerName": "Healthy Dynamics",
+      "serviceTypeDetail": "167.179.181.116",
+      "ipAddress": ""
+    },
+    {
+      "externalId": "S0462",
+      "customerName": "Alan Powell",
+      "serviceTypeDetail": "167.179.164.35",
+      "ipAddress": ""
+    },
+    {
+      "externalId": "S0463",
+      "customerName": "Zambrero Mater",
+      "serviceTypeDetail": "120.88.126.249",
+      "ipAddress": ""
+    },
+    {
+      "externalId": "S0464",
+      "customerName": "The Yiros Shop - South Brisbane",
+      "serviceTypeDetail": "159.196.190.95",
+      "ipAddress": ""
+    },
+    {
+      "externalId": "S0465",
+      "customerName": "Sparrow Early Learning Malvern Springs",
+      "serviceTypeDetail": "159.196.136.21",
+      "ipAddress": ""
+    },
+    {
+      "externalId": "S0466",
+      "customerName": "Sparrow Early Learning Ellenbrook North",
+      "serviceTypeDetail": "159.196.136.23",
+      "ipAddress": ""
+    },
+    {
+      "externalId": "S0467",
+      "customerName": "Denim Co",
+      "serviceTypeDetail": "144.6.255.224",
+      "ipAddress": ""
+    },
+    {
+      "externalId": "S0469",
+      "customerName": "Renovo Solutions",
+      "serviceTypeDetail": "180.181.211.122",
+      "ipAddress": ""
+    },
+    {
+      "externalId": "S0470",
+      "customerName": "GBA Emerald",
+      "serviceTypeDetail": "180.181.210.204",
+      "ipAddress": ""
+    }
+  ],
+  "messages": [],
+  "stdout": "externalId\tcustomerName\tserviceTypeDetail\tipAddress\nS0459\tSparrow Early Learning Alkimos\t159.196.138.252\t\nS0460\tHealthy Dynamics\t167.179.181.116\t\nS0462\tAlan Powell\t167.179.164.35\t\nS0463\tZambrero Mater\t120.88.126.249\t\nS0464\tThe Yiros Shop - South Brisbane\t159.196.190.95\t\nS0465\tSparrow Early Learning Malvern Springs\t159.196.136.21\t\nS0466\tSparrow Early Learning Ellenbrook North\t159.196.136.23\t\nS0467\tDenim Co\t144.6.255.224\t\nS0469\tRenovo Solutions\t180.181.211.122\t\nS0470\tGBA Emerald\t180.181.210.204\t\n",
+  "stderr": "",
+  "execution_time_ms": 1573
+}

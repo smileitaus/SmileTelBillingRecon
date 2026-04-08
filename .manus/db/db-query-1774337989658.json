@@ -1,0 +1,17 @@
+{
+  "query": "\nSELECT serviceType, planName, COUNT(*) as cnt, MIN(monthlyCost) as min_cost, MAX(monthlyCost) as max_cost\nFROM services \nWHERE provider = 'TIAB'\nGROUP BY serviceType, planName\nORDER BY cnt DESC\nLIMIT 20;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \nSELECT serviceType, planName, COUNT(*) as cnt, MIN(monthlyCost) as min_cost, MAX(monthlyCost) as max_cost\nFROM services \nWHERE provider = 'TIAB'\nGROUP BY serviceType, planName\nORDER BY cnt DESC\nLIMIT 20;\n",
+  "rows": [
+    {
+      "serviceType": "Data",
+      "planName": "4G Data Back up",
+      "cnt": "113",
+      "min_cost": "0.00",
+      "max_cost": "0.00"
+    }
+  ],
+  "messages": [],
+  "stdout": "serviceType\tplanName\tcnt\tmin_cost\tmax_cost\nData\t4G Data Back up\t113\t0.00\t0.00\n",
+  "stderr": "",
+  "execution_time_ms": 1576
+}

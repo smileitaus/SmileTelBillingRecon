@@ -1,0 +1,106 @@
+{
+  "query": "-- Items 32384, 32385, 32386 are duplicates of 530, 531, 532 respectively\n-- BUT they are linked to S1131 (4G Internet) instead of the correct services\n-- 32384 duplicates 530 (4G Internet $360 → S1131) - same service, true duplicate\n-- 32385 duplicates 531 (Starlink $863 → S1134) - wrong service (S1131 vs S1134)\n-- 32386 duplicates 532 (500mb Fibre $4450 → S1132) - wrong service (S1131 vs S1132)\n\n-- S1131 currently has revenue from items 530 ($360) + 32384 ($360) + 32385 ($863) + 32386 ($4450) = $6,033\n-- Correct revenue for S1131 should only be from item 530 ($360) - the 4G Internet item\n-- Remove the 3 duplicates\nDELETE FROM billing_items WHERE id IN (32384, 32385, 32386);\n\n-- Recalculate S1131 revenue (should now only be $360 from item 530)\nUPDATE services s\nSET monthlyRevenue = (\n  SELECT COALESCE(SUM(bi.lineAmount), 0)\n  FROM billing_items bi\n  WHERE bi.serviceExternalId = s.externalId\n)\nWHERE s.externalId = 'S1131';\n\n-- Verify S1131 revenue\nSELECT externalId, planName, monthlyCost, monthlyRevenue FROM services WHERE externalId = 'S1131';\n\n-- Also check the ST-6817 duplicates - items 32830-32840 are extra Mobile items linked to S1125\n-- Check original Mobile items for S1125\nSELECT id, description, lineAmount, serviceExternalId FROM billing_items\nWHERE customerExternalId = 'C0161' AND description = 'Mobile'\nORDER BY id;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute -- Items 32384, 32385, 32386 are duplicates of 530, 531, 532 respectively\n-- BUT they are linked to S1131 (4G Internet) instead of the correct services\n-- 32384 duplicates 530 (4G Internet $360 → S1131) - same service, true duplicate\n-- 32385 duplicates 531 (Starlink $863 → S1134) - wrong service (S1131 vs S1134)\n-- 32386 duplicates 532 (500mb Fibre $4450 → S1132) - wrong service (S1131 vs S1132)\n\n-- S1131 currently has revenue from items 530 ($360) + 32384 ($360) + 32385 ($863) + 32386 ($4450) = $6,033\n-- Correct revenue for S1131 should only be from item 530 ($360) - the 4G Internet item\n-- Remove the 3 duplicates\nDELETE FROM billing_items WHERE id IN (32384, 32385, 32386);\n\n-- Recalculate S1131 revenue (should now only be $360 from item 530)\nUPDATE services s\nSET monthlyRevenue = (\n  SELECT COALESCE(SUM(bi.lineAmount), 0)\n  FROM billing_items bi\n  WHERE bi.serviceExternalId = s.externalId\n)\nWHERE s.externalId = 'S1131';\n\n-- Verify S1131 revenue\nSELECT externalId, planName, monthlyCost, monthlyRevenue FROM services WHERE externalId = 'S1131';\n\n-- Also check the ST-6817 duplicates - items 32830-32840 are extra Mobile items linked to S1125\n-- Check original Mobile items for S1125\nSELECT id, description, lineAmount, serviceExternalId FROM billing_items\nWHERE customerExternalId = 'C0161' AND description = 'Mobile'\nORDER BY id;",
+  "rows": [
+    {
+      "externalId": "S1131",
+      "planName": "4G Internet - 3 Sites - 125GB per Site Per MonthEach",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "360.00"
+    },
+    {
+      "externalId": "id",
+      "planName": "description",
+      "monthlyCost": "lineAmount",
+      "monthlyRevenue": "serviceExternalId"
+    },
+    {
+      "externalId": "988",
+      "planName": "Mobile",
+      "monthlyCost": "9.93",
+      "monthlyRevenue": "S1125"
+    },
+    {
+      "externalId": "989",
+      "planName": "Mobile",
+      "monthlyCost": "0.13",
+      "monthlyRevenue": "S1125"
+    },
+    {
+      "externalId": "991",
+      "planName": "Mobile",
+      "monthlyCost": "33.48",
+      "monthlyRevenue": "S1125"
+    },
+    {
+      "externalId": "992",
+      "planName": "Mobile",
+      "monthlyCost": "1.65",
+      "monthlyRevenue": "S1125"
+    },
+    {
+      "externalId": "993",
+      "planName": "Mobile",
+      "monthlyCost": "1.02",
+      "monthlyRevenue": "S1125"
+    },
+    {
+      "externalId": "995",
+      "planName": "Mobile",
+      "monthlyCost": "5.60",
+      "monthlyRevenue": "S1125"
+    },
+    {
+      "externalId": "998",
+      "planName": "Mobile",
+      "monthlyCost": "0.13",
+      "monthlyRevenue": "S1125"
+    },
+    {
+      "externalId": "32830",
+      "planName": "Mobile",
+      "monthlyCost": "9.93",
+      "monthlyRevenue": "S1125"
+    },
+    {
+      "externalId": "32831",
+      "planName": "Mobile",
+      "monthlyCost": "0.13",
+      "monthlyRevenue": "S1125"
+    },
+    {
+      "externalId": "32833",
+      "planName": "Mobile",
+      "monthlyCost": "33.48",
+      "monthlyRevenue": "S1125"
+    },
+    {
+      "externalId": "32834",
+      "planName": "Mobile",
+      "monthlyCost": "1.65",
+      "monthlyRevenue": "S1125"
+    },
+    {
+      "externalId": "32835",
+      "planName": "Mobile",
+      "monthlyCost": "1.02",
+      "monthlyRevenue": "S1125"
+    },
+    {
+      "externalId": "32837",
+      "planName": "Mobile",
+      "monthlyCost": "5.60",
+      "monthlyRevenue": "S1125"
+    },
+    {
+      "externalId": "32840",
+      "planName": "Mobile",
+      "monthlyCost": "0.13",
+      "monthlyRevenue": "S1125"
+    }
+  ],
+  "messages": [],
+  "stdout": "externalId\tplanName\tmonthlyCost\tmonthlyRevenue\nS1131\t4G Internet - 3 Sites - 125GB per Site Per MonthEach\t0.00\t360.00\nid\tdescription\tlineAmount\tserviceExternalId\n988\tMobile\t9.93\tS1125\n989\tMobile\t0.13\tS1125\n991\tMobile\t33.48\tS1125\n992\tMobile\t1.65\tS1125\n993\tMobile\t1.02\tS1125\n995\tMobile\t5.60\tS1125\n998\tMobile\t0.13\tS1125\n32830\tMobile\t9.93\tS1125\n32831\tMobile\t0.13\tS1125\n32833\tMobile\t33.48\tS1125\n32834\tMobile\t1.65\tS1125\n32835\tMobile\t1.02\tS1125\n32837\tMobile\t5.60\tS1125\n32840\tMobile\t0.13\tS1125\n",
+  "stderr": "",
+  "execution_time_ms": 2311
+}

@@ -1,0 +1,220 @@
+{
+  "query": "\n-- Check internet addresses from CSV against DB\nSELECT id, connectionId, locationAddress, serviceType, status\nFROM services\nWHERE locationAddress LIKE '%Maryborough%'\n   OR locationAddress LIKE '%Cleveland%'\n   OR locationAddress LIKE '%Kippa-Ring%'\n   OR locationAddress LIKE '%Brendale%'\n   OR locationAddress LIKE '%Coolum%'\n   OR locationAddress LIKE '%Sippy Downs%'\n   OR locationAddress LIKE '%Milton%'\n   OR locationAddress LIKE '%Torquay%'\n   OR locationAddress LIKE '%Tewantin%'\n   OR locationAddress LIKE '%Rockhampton%'\nLIMIT 30;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Check internet addresses from CSV against DB\nSELECT id, connectionId, locationAddress, serviceType, status\nFROM services\nWHERE locationAddress LIKE '%Maryborough%'\n   OR locationAddress LIKE '%Cleveland%'\n   OR locationAddress LIKE '%Kippa-Ring%'\n   OR locationAddress LIKE '%Brendale%'\n   OR locationAddress LIKE '%Coolum%'\n   OR locationAddress LIKE '%Sippy Downs%'\n   OR locationAddress LIKE '%Milton%'\n   OR locationAddress LIKE '%Torquay%'\n   OR locationAddress LIKE '%Tewantin%'\n   OR locationAddress LIKE '%Rockhampton%'\nLIMIT 30;\n",
+  "rows": [
+    {
+      "id": "60022",
+      "connectionId": "AVC000200419126",
+      "locationAddress": "SE 2, 74 VICTORIA PDE, ROCKHAMPTON CITY QLD",
+      "serviceType": "Internet",
+      "status": "active"
+    },
+    {
+      "id": "60025",
+      "connectionId": "AVC000219932822",
+      "locationAddress": "7 BARNSTAPLE ST, TORQUAY QLD",
+      "serviceType": "Internet",
+      "status": "active"
+    },
+    {
+      "id": "60058",
+      "connectionId": "AVC000195387109",
+      "locationAddress": "500 TORQUAY RD, ARMSTRONG CREEK VIC",
+      "serviceType": "Internet",
+      "status": "active"
+    },
+    {
+      "id": "60065",
+      "connectionId": "AVC000224723149",
+      "locationAddress": "SHOP IDF-3B, 108 OLD CLEVELAND RD, CAPALABA QLD",
+      "serviceType": "Internet",
+      "status": "active"
+    },
+    {
+      "id": "60066",
+      "connectionId": "AVC000221097507",
+      "locationAddress": "CHERMSIDE SHOPPING CENTRE SHOP R2A, 395 HAMILTON RD, CHERMSIDE QLD",
+      "serviceType": "Internet",
+      "status": "active"
+    },
+    {
+      "id": "60075",
+      "connectionId": "AVC000227195506",
+      "locationAddress": "21 BOLSOVER ST, ROCKHAMPTON CITY QLD",
+      "serviceType": "Internet",
+      "status": "active"
+    },
+    {
+      "id": "60095",
+      "connectionId": "AVC000185631148",
+      "locationAddress": "SEA COOLUM SHOP 2, 1796 DAVID LOW WAY, COOLUM BEACH QLD",
+      "serviceType": "Internet",
+      "status": "active"
+    },
+    {
+      "id": "60126",
+      "connectionId": "AVC000208334993",
+      "locationAddress": "TNCY 6, 123 SIPPY DOWNS DR, SIPPY DOWNS QLD",
+      "serviceType": "Internet",
+      "status": "active"
+    },
+    {
+      "id": "60183",
+      "connectionId": "",
+      "locationAddress": "SHOP 2, 1796 DAVID LOW WAY, COOLUM BEACH QLD",
+      "serviceType": "Data",
+      "status": "active"
+    },
+    {
+      "id": "90029",
+      "connectionId": "AVC000235994443",
+      "locationAddress": "53 HIPWOOD RD, HAMILTON QLD",
+      "serviceType": "Internet",
+      "status": "active"
+    },
+    {
+      "id": "90032",
+      "connectionId": "AVC000234036370",
+      "locationAddress": "TNCY 2, 85 GEELONG RD, TORQUAY VIC",
+      "serviceType": "Internet",
+      "status": "active"
+    },
+    {
+      "id": "90034",
+      "connectionId": "AVC000233612086",
+      "locationAddress": "72 BEAUMONT ST, HAMILTON NSW",
+      "serviceType": "Internet",
+      "status": "active"
+    },
+    {
+      "id": "120063",
+      "connectionId": "",
+      "locationAddress": "Shop 1  Ground Floor  76 Old Cleveland Rd, 76 Old Cleveland Road, CAPALABA, Queensland, 4157",
+      "serviceType": "Voice",
+      "status": "active"
+    },
+    {
+      "id": "120064",
+      "connectionId": "",
+      "locationAddress": "Shop 1  Ground Floor  76 Old Cleveland Rd, 76 Old Cleveland Road, CAPALABA, Queensland, 4157",
+      "serviceType": "Voice",
+      "status": "active"
+    },
+    {
+      "id": "120065",
+      "connectionId": "",
+      "locationAddress": "Shop 1  Ground Floor  76 Old Cleveland Rd, 76 Old Cleveland Road, CAPALABA, Queensland, 4157",
+      "serviceType": "Voice",
+      "status": "active"
+    },
+    {
+      "id": "120066",
+      "connectionId": "",
+      "locationAddress": "Shop 1  Ground Floor  76 Old Cleveland Rd, 76 Old Cleveland Road, CAPALABA, Queensland, 4157",
+      "serviceType": "Internet",
+      "status": "active"
+    },
+    {
+      "id": "120121",
+      "connectionId": "",
+      "locationAddress": "4/49 Park Rd, Milton, QLD, 4064",
+      "serviceType": "VoIP",
+      "status": "active"
+    },
+    {
+      "id": "120122",
+      "connectionId": "",
+      "locationAddress": "4/49 Park Rd, Milton, QLD, 4064",
+      "serviceType": "Mobile",
+      "status": "active"
+    },
+    {
+      "id": "120123",
+      "connectionId": "",
+      "locationAddress": "4/49 Park Rd, Milton, QLD, 4064",
+      "serviceType": "Internet",
+      "status": "active"
+    },
+    {
+      "id": "120143",
+      "connectionId": "",
+      "locationAddress": "Cleveland House Shop 2 120 Bloomfield St, CLEVELAND, QLD, 4163",
+      "serviceType": "Voice",
+      "status": "active"
+    },
+    {
+      "id": "120144",
+      "connectionId": "",
+      "locationAddress": "Cleveland House Shop 2 120 Bloomfield St, CLEVELAND, QLD, 4163",
+      "serviceType": "Internet",
+      "status": "active"
+    },
+    {
+      "id": "120154",
+      "connectionId": "",
+      "locationAddress": "129 Adelaide Street, Maryborough, Maryborough, QLD, 4650",
+      "serviceType": "Internet",
+      "status": "active"
+    },
+    {
+      "id": "120155",
+      "connectionId": "",
+      "locationAddress": "129 Adelaide Street, Maryborough, Maryborough, QLD, 4650",
+      "serviceType": "Other",
+      "status": "active"
+    },
+    {
+      "id": "120210",
+      "connectionId": "",
+      "locationAddress": "Unit 1 23 Terrence Rd, BRENDALE, QLD, 4500",
+      "serviceType": "Voice",
+      "status": "active"
+    },
+    {
+      "id": "120211",
+      "connectionId": "",
+      "locationAddress": "Unit 1 23 Terrence Rd, BRENDALE, QLD, 4500",
+      "serviceType": "VoIP",
+      "status": "active"
+    },
+    {
+      "id": "120212",
+      "connectionId": "",
+      "locationAddress": "Unit 1 23 Terrence Rd, BRENDALE, QLD, 4500",
+      "serviceType": "Voice",
+      "status": "active"
+    },
+    {
+      "id": "120213",
+      "connectionId": "",
+      "locationAddress": "Unit 1 23 Terrence Rd, BRENDALE, QLD, 4500",
+      "serviceType": "Internet",
+      "status": "active"
+    },
+    {
+      "id": "120214",
+      "connectionId": "",
+      "locationAddress": "Unit 1 23 Terrence Rd, BRENDALE, QLD, 4500",
+      "serviceType": "Internet",
+      "status": "active"
+    },
+    {
+      "id": "120262",
+      "connectionId": "gumdaledentist@wba.rvcict.com.au",
+      "locationAddress": "Shop 22 682-696 New Cleveland Rd, GUMDALE, QLD, 4154",
+      "serviceType": "Internet",
+      "status": "active"
+    },
+    {
+      "id": "120263",
+      "connectionId": "",
+      "locationAddress": "Shop 22 682-696 New Cleveland Rd, GUMDALE, QLD, 4154",
+      "serviceType": "Voice",
+      "status": "active"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tconnectionId\tlocationAddress\tserviceType\tstatus\n60022\tAVC000200419126\tSE 2, 74 VICTORIA PDE, ROCKHAMPTON CITY QLD\tInternet\tactive\n60025\tAVC000219932822\t7 BARNSTAPLE ST, TORQUAY QLD\tInternet\tactive\n60058\tAVC000195387109\t500 TORQUAY RD, ARMSTRONG CREEK VIC\tInternet\tactive\n60065\tAVC000224723149\tSHOP IDF-3B, 108 OLD CLEVELAND RD, CAPALABA QLD\tInternet\tactive\n60066\tAVC000221097507\tCHERMSIDE SHOPPING CENTRE SHOP R2A, 395 HAMILTON RD, CHERMSIDE QLD\tInternet\tactive\n60075\tAVC000227195506\t21 BOLSOVER ST, ROCKHAMPTON CITY QLD\tInternet\tactive\n60095\tAVC000185631148\tSEA COOLUM SHOP 2, 1796 DAVID LOW WAY, COOLUM BEACH QLD\tInternet\tactive\n60126\tAVC000208334993\tTNCY 6, 123 SIPPY DOWNS DR, SIPPY DOWNS QLD\tInternet\tactive\n60183\t\tSHOP 2, 1796 DAVID LOW WAY, COOLUM BEACH QLD\tData\tactive\n90029\tAVC000235994443\t53 HIPWOOD RD, HAMILTON QLD\tInternet\tactive\n90032\tAVC000234036370\tTNCY 2, 85 GEELONG RD, TORQUAY VIC\tInternet\tactive\n90034\tAVC000233612086\t72 BEAUMONT ST, HAMILTON NSW\tInternet\tactive\n120063\t\tShop 1  Ground Floor  76 Old Cleveland Rd, 76 Old Cleveland Road, CAPALABA, Queensland, 4157\tVoice\tactive\n120064\t\tShop 1  Ground Floor  76 Old Cleveland Rd, 76 Old Cleveland Road, CAPALABA, Queensland, 4157\tVoice\tactive\n120065\t\tShop 1  Ground Floor  76 Old Cleveland Rd, 76 Old Cleveland Road, CAPALABA, Queensland, 4157\tVoice\tactive\n120066\t\tShop 1  Ground Floor  76 Old Cleveland Rd, 76 Old Cleveland Road, CAPALABA, Queensland, 4157\tInternet\tactive\n120121\t\t4/49 Park Rd, Milton, QLD, 4064\tVoIP\tactive\n120122\t\t4/49 Park Rd, Milton, QLD, 4064\tMobile\tactive\n120123\t\t4/49 Park Rd, Milton, QLD, 4064\tInternet\tactive\n120143\t\tCleveland House Shop 2 120 Bloomfield St, CLEVELAND, QLD, 4163\tVoice\tactive\n120144\t\tCleveland House Shop 2 120 Bloomfield St, CLEVELAND, QLD, 4163\tInternet\tactive\n120154\t\t129 Adelaide Street, Maryborough, Maryborough, QLD, 4650\tInternet\tactive\n120155\t\t129 Adelaide Street, Maryborough, Maryborough, QLD, 4650\tOther\tactive\n120210\t\tUnit 1 23 Terrence Rd, BRENDALE, QLD, 4500\tVoice\tactive\n120211\t\tUnit 1 23 Terrence Rd, BRENDALE, QLD, 4500\tVoIP\tactive\n120212\t\tUnit 1 23 Terrence Rd, BRENDALE, QLD, 4500\tVoice\tactive\n120213\t\tUnit 1 23 Terrence Rd, BRENDALE, QLD, 4500\tInternet\tactive\n120214\t\tUnit 1 23 Terrence Rd, BRENDALE, QLD, 4500\tInternet\tactive\n120262\tgumdaledentist@wba.rvcict.com.au\tShop 22 682-696 New Cleveland Rd, GUMDALE, QLD, 4154\tInternet\tactive\n120263\t\tShop 22 682-696 New Cleveland Rd, GUMDALE, QLD, 4154\tVoice\tactive\n",
+  "stderr": "",
+  "execution_time_ms": 1612
+}

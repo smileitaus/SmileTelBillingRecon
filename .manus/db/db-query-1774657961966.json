@@ -1,0 +1,40 @@
+{
+  "query": "\n-- Test the LIKE filter directly\nSELECT COUNT(*) as matched_sasboss\nFROM services\nWHERE status != 'terminated'\n  AND billingPlatform LIKE '%SasBoss%';\n\n-- Check exact billingPlatform value\nSELECT DISTINCT billingPlatform \nFROM services \nWHERE billingPlatform IS NOT NULL \n  AND billingPlatform != ''\nLIMIT 10;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Test the LIKE filter directly\nSELECT COUNT(*) as matched_sasboss\nFROM services\nWHERE status != 'terminated'\n  AND billingPlatform LIKE '%SasBoss%';\n\n-- Check exact billingPlatform value\nSELECT DISTINCT billingPlatform \nFROM services \nWHERE billingPlatform IS NOT NULL \n  AND billingPlatform != ''\nLIMIT 10;\n",
+  "rows": [
+    {
+      "matched_sasboss": "1123"
+    },
+    {
+      "matched_sasboss": "billingPlatform"
+    },
+    {
+      "matched_sasboss": "[\"TIAB\"]"
+    },
+    {
+      "matched_sasboss": "[\"SasBoss\"]"
+    },
+    {
+      "matched_sasboss": "[\"OneBill\"]"
+    },
+    {
+      "matched_sasboss": "[\"Halo\"]"
+    },
+    {
+      "matched_sasboss": "DataGate"
+    },
+    {
+      "matched_sasboss": "[\"Xero\"]"
+    },
+    {
+      "matched_sasboss": "[\"Datagate\"]"
+    },
+    {
+      "matched_sasboss": "[]"
+    }
+  ],
+  "messages": [],
+  "stdout": "matched_sasboss\n1123\nbillingPlatform\n[\"TIAB\"]\n[\"SasBoss\"]\n[\"OneBill\"]\n[\"Halo\"]\nDataGate\n[\"Xero\"]\n[\"Datagate\"]\n[]\n",
+  "stderr": "",
+  "execution_time_ms": 1868
+}

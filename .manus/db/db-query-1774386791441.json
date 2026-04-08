@@ -1,0 +1,59 @@
+{
+  "query": "\n-- How many Telstra services have zero revenue?\nSELECT \n  serviceType,\n  COUNT(*) as count,\n  SUM(monthlyCost) as totalCost,\n  SUM(CASE WHEN monthlyRevenue = 0 OR monthlyRevenue IS NULL THEN 1 ELSE 0 END) as zeroRevenue,\n  SUM(CASE WHEN monthlyRevenue > 0 THEN 1 ELSE 0 END) as hasRevenue\nFROM services\nWHERE supplierName = 'Telstra'\nGROUP BY serviceType\nORDER BY count DESC;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- How many Telstra services have zero revenue?\nSELECT \n  serviceType,\n  COUNT(*) as count,\n  SUM(monthlyCost) as totalCost,\n  SUM(CASE WHEN monthlyRevenue = 0 OR monthlyRevenue IS NULL THEN 1 ELSE 0 END) as zeroRevenue,\n  SUM(CASE WHEN monthlyRevenue > 0 THEN 1 ELSE 0 END) as hasRevenue\nFROM services\nWHERE supplierName = 'Telstra'\nGROUP BY serviceType\nORDER BY count DESC;\n",
+  "rows": [
+    {
+      "serviceType": "Mobile",
+      "count": "403",
+      "totalCost": "5970.78",
+      "zeroRevenue": "401",
+      "hasRevenue": "2"
+    },
+    {
+      "serviceType": "Data",
+      "count": "160",
+      "totalCost": "9270.00",
+      "zeroRevenue": "145",
+      "hasRevenue": "15"
+    },
+    {
+      "serviceType": "VoIP",
+      "count": "74",
+      "totalCost": "5058.67",
+      "zeroRevenue": "72",
+      "hasRevenue": "2"
+    },
+    {
+      "serviceType": "Voice",
+      "count": "60",
+      "totalCost": "1344.43",
+      "zeroRevenue": "42",
+      "hasRevenue": "18"
+    },
+    {
+      "serviceType": "Internet",
+      "count": "53",
+      "totalCost": "4680.42",
+      "zeroRevenue": "41",
+      "hasRevenue": "12"
+    },
+    {
+      "serviceType": "Mobile Data",
+      "count": "16",
+      "totalCost": "42.13",
+      "zeroRevenue": "16",
+      "hasRevenue": "0"
+    },
+    {
+      "serviceType": "Other",
+      "count": "2",
+      "totalCost": "5.73",
+      "zeroRevenue": "2",
+      "hasRevenue": "0"
+    }
+  ],
+  "messages": [],
+  "stdout": "serviceType\tcount\ttotalCost\tzeroRevenue\thasRevenue\nMobile\t403\t5970.78\t401\t2\nData\t160\t9270.00\t145\t15\nVoIP\t74\t5058.67\t72\t2\nVoice\t60\t1344.43\t42\t18\nInternet\t53\t4680.42\t41\t12\nMobile Data\t16\t42.13\t16\t0\nOther\t2\t5.73\t2\t0\n",
+  "stderr": "",
+  "execution_time_ms": 2046
+}

@@ -1,0 +1,91 @@
+{
+  "query": "-- Check all SasBoss Collaboration services\nSELECT externalId, planName, provider, monthlyCost, monthlyRevenue, customerExternalId\nFROM services\nWHERE provider = 'SasBoss' AND planName LIKE '%Collaboration%'\nORDER BY monthlyCost DESC;\n\n-- Also check all SasBoss services with plan name 'Collaboration' specifically\nSELECT externalId, planName, provider, monthlyCost, monthlyRevenue\nFROM services\nWHERE planName = 'Collaboration'\nORDER BY monthlyCost DESC;\n\n-- Check S1123 details\nSELECT s.externalId, s.planName, s.provider, s.monthlyCost, s.monthlyRevenue, c.name as customerName\nFROM services s\nJOIN customers c ON c.externalId = s.customerExternalId\nWHERE s.externalId = 'S1123';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute -- Check all SasBoss Collaboration services\nSELECT externalId, planName, provider, monthlyCost, monthlyRevenue, customerExternalId\nFROM services\nWHERE provider = 'SasBoss' AND planName LIKE '%Collaboration%'\nORDER BY monthlyCost DESC;\n\n-- Also check all SasBoss services with plan name 'Collaboration' specifically\nSELECT externalId, planName, provider, monthlyCost, monthlyRevenue\nFROM services\nWHERE planName = 'Collaboration'\nORDER BY monthlyCost DESC;\n\n-- Check S1123 details\nSELECT s.externalId, s.planName, s.provider, s.monthlyCost, s.monthlyRevenue, c.name as customerName\nFROM services s\nJOIN customers c ON c.externalId = s.customerExternalId\nWHERE s.externalId = 'S1123';",
+  "rows": [
+    {
+      "externalId": "S0959",
+      "planName": "Collaboration",
+      "provider": "SasBoss",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "86.00",
+      "customerExternalId": "C0086"
+    },
+    {
+      "externalId": "S1048",
+      "planName": "Collaboration",
+      "provider": "SasBoss",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "69.00",
+      "customerExternalId": "C0134"
+    },
+    {
+      "externalId": "S1071",
+      "planName": "Collaboration",
+      "provider": "SasBoss",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "184.00",
+      "customerExternalId": "C0137"
+    },
+    {
+      "externalId": "S1123",
+      "planName": "Collaboration",
+      "provider": "SasBoss",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "138.00",
+      "customerExternalId": "C0161"
+    },
+    {
+      "externalId": "S1224",
+      "planName": "Collaboration",
+      "provider": "SasBoss",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "46.00",
+      "customerExternalId": "C0208"
+    },
+    {
+      "externalId": "S1262",
+      "planName": "Collaboration",
+      "provider": "SasBoss",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "23.00",
+      "customerExternalId": "C0212"
+    },
+    {
+      "externalId": "S1305",
+      "planName": "Collaboration",
+      "provider": "SasBoss",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "23.00",
+      "customerExternalId": "C0214"
+    },
+    {
+      "externalId": "externalId",
+      "planName": "planName",
+      "provider": "provider",
+      "monthlyCost": "monthlyCost",
+      "monthlyRevenue": "monthlyRevenue",
+      "customerExternalId": "customerName"
+    },
+    {
+      "externalId": "S1123",
+      "planName": "Collaboration",
+      "provider": "SasBoss",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "138.00",
+      "customerExternalId": "Middlemount Coal Pty Ltd"
+    }
+  ],
+  "messages": [
+    "externalId\tplanName\tprovider\tmonthlyCost\tmonthlyRevenue",
+    "S0959\tCollaboration\tSasBoss\t0.00\t86.00",
+    "S1048\tCollaboration\tSasBoss\t0.00\t69.00",
+    "S1071\tCollaboration\tSasBoss\t0.00\t184.00",
+    "S1123\tCollaboration\tSasBoss\t0.00\t138.00",
+    "S1224\tCollaboration\tSasBoss\t0.00\t46.00",
+    "S1262\tCollaboration\tSasBoss\t0.00\t23.00",
+    "S1305\tCollaboration\tSasBoss\t0.00\t23.00"
+  ],
+  "stdout": "externalId\tplanName\tprovider\tmonthlyCost\tmonthlyRevenue\tcustomerExternalId\nS0959\tCollaboration\tSasBoss\t0.00\t86.00\tC0086\nS1048\tCollaboration\tSasBoss\t0.00\t69.00\tC0134\nS1071\tCollaboration\tSasBoss\t0.00\t184.00\tC0137\nS1123\tCollaboration\tSasBoss\t0.00\t138.00\tC0161\nS1224\tCollaboration\tSasBoss\t0.00\t46.00\tC0208\nS1262\tCollaboration\tSasBoss\t0.00\t23.00\tC0212\nS1305\tCollaboration\tSasBoss\t0.00\t23.00\tC0214\nexternalId\tplanName\tprovider\tmonthlyCost\tmonthlyRevenue\nS0959\tCollaboration\tSasBoss\t0.00\t86.00\nS1048\tCollaboration\tSasBoss\t0.00\t69.00\nS1071\tCollaboration\tSasBoss\t0.00\t184.00\nS1123\tCollaboration\tSasBoss\t0.00\t138.00\nS1224\tCollaboration\tSasBoss\t0.00\t46.00\nS1262\tCollaboration\tSasBoss\t0.00\t23.00\nS1305\tCollaboration\tSasBoss\t0.00\t23.00\nexternalId\tplanName\tprovider\tmonthlyCost\tmonthlyRevenue\tcustomerName\nS1123\tCollaboration\tSasBoss\t0.00\t138.00\tMiddlemount Coal Pty Ltd\n",
+  "stderr": "",
+  "execution_time_ms": 1973
+}

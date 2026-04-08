@@ -1,0 +1,130 @@
+{
+  "query": "\nSELECT s.customerName, s.externalId AS serviceExternalId, s.customerExternalId, s.supplierName\nFROM services s\nWHERE s.customerName IN ('Spicers Retreats and Hotels', 'Smile IT', 'Air Restore', 'CPM', 'Gateway', 'Salter Brothers Luxury Collection', 'Wineology', 'Australian Computer Traders')\n   OR s.customerName LIKE '%Spicers%'\n   OR s.customerName LIKE '%Air Restore%'\n   OR s.customerName LIKE '%Salter%'\n   OR s.customerName LIKE '%Wineology%'\n   OR s.customerName LIKE '%Australian Computer%'\n   OR s.customerName LIKE '%CPM%'\n   OR s.customerName LIKE '%Gateway%'\nORDER BY s.customerName\nLIMIT 20;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \nSELECT s.customerName, s.externalId AS serviceExternalId, s.customerExternalId, s.supplierName\nFROM services s\nWHERE s.customerName IN ('Spicers Retreats and Hotels', 'Smile IT', 'Air Restore', 'CPM', 'Gateway', 'Salter Brothers Luxury Collection', 'Wineology', 'Australian Computer Traders')\n   OR s.customerName LIKE '%Spicers%'\n   OR s.customerName LIKE '%Air Restore%'\n   OR s.customerName LIKE '%Salter%'\n   OR s.customerName LIKE '%Wineology%'\n   OR s.customerName LIKE '%Australian Computer%'\n   OR s.customerName LIKE '%CPM%'\n   OR s.customerName LIKE '%Gateway%'\nORDER BY s.customerName\nLIMIT 20;\n",
+  "rows": [
+    {
+      "customerName": "Air Restore NBN EE 100MB",
+      "serviceExternalId": "SCC78",
+      "customerExternalId": "C2EBB",
+      "supplierName": "Exetel"
+    },
+    {
+      "customerName": "Australian Computer Traders",
+      "serviceExternalId": "S0795",
+      "customerExternalId": "C0026",
+      "supplierName": "SasBoss"
+    },
+    {
+      "customerName": "Australian Computer Traders",
+      "serviceExternalId": "S0794",
+      "customerExternalId": "C0026",
+      "supplierName": "SasBoss"
+    },
+    {
+      "customerName": "Australian Computer Traders",
+      "serviceExternalId": "SSO5PQZ4",
+      "customerExternalId": "C0026",
+      "supplierName": "SasBoss"
+    },
+    {
+      "customerName": "Australian Computer Traders",
+      "serviceExternalId": "S0793",
+      "customerExternalId": "C0026",
+      "supplierName": "SasBoss"
+    },
+    {
+      "customerName": "Australian Computer Traders",
+      "serviceExternalId": "S0792",
+      "customerExternalId": "C0026",
+      "supplierName": "SasBoss"
+    },
+    {
+      "customerName": "Australian Computer Traders",
+      "serviceExternalId": "S0789",
+      "customerExternalId": "C0026",
+      "supplierName": "SasBoss"
+    },
+    {
+      "customerName": "Australian Computer Traders",
+      "serviceExternalId": "S0798",
+      "customerExternalId": "C0026",
+      "supplierName": "SasBoss"
+    },
+    {
+      "customerName": "Australian Computer Traders",
+      "serviceExternalId": "SS1OGXW7",
+      "customerExternalId": "C0026",
+      "supplierName": "SasBoss"
+    },
+    {
+      "customerName": "Australian Computer Traders",
+      "serviceExternalId": "SST1B9PD",
+      "customerExternalId": "C0026",
+      "supplierName": "SasBoss"
+    },
+    {
+      "customerName": "Australian Computer Traders",
+      "serviceExternalId": "SSCLR2F4",
+      "customerExternalId": "C0026",
+      "supplierName": "SasBoss"
+    },
+    {
+      "customerName": "Australian Computer Traders",
+      "serviceExternalId": "S0791",
+      "customerExternalId": "C0026",
+      "supplierName": "SasBoss"
+    },
+    {
+      "customerName": "Australian Computer Traders",
+      "serviceExternalId": "S0796",
+      "customerExternalId": "C0026",
+      "supplierName": "SasBoss"
+    },
+    {
+      "customerName": "Australian Computer Traders",
+      "serviceExternalId": "SSN9N380",
+      "customerExternalId": "C0026",
+      "supplierName": "SasBoss"
+    },
+    {
+      "customerName": "Australian Computer Traders",
+      "serviceExternalId": "S0797",
+      "customerExternalId": "C0026",
+      "supplierName": "SasBoss"
+    },
+    {
+      "customerName": "Australian Computer Traders",
+      "serviceExternalId": "SS6C86YX",
+      "customerExternalId": "C0026",
+      "supplierName": "SasBoss"
+    },
+    {
+      "customerName": "Australian Computer Traders",
+      "serviceExternalId": "S0790",
+      "customerExternalId": "C0026",
+      "supplierName": "SasBoss"
+    },
+    {
+      "customerName": "Australian Computer Traders",
+      "serviceExternalId": "SSTGI2RC",
+      "customerExternalId": "C0026",
+      "supplierName": "SasBoss"
+    },
+    {
+      "customerName": "CPM",
+      "serviceExternalId": "IPTEL-AB057858",
+      "customerExternalId": "C2424",
+      "supplierName": "Vocus"
+    },
+    {
+      "customerName": "CPM Advisory and Project Management",
+      "serviceExternalId": "S0906",
+      "customerExternalId": "C0070",
+      "supplierName": "SasBoss"
+    }
+  ],
+  "messages": [],
+  "stdout": "customerName\tserviceExternalId\tcustomerExternalId\tsupplierName\nAir Restore NBN EE 100MB\tSCC78\tC2EBB\tExetel\nAustralian Computer Traders\tS0795\tC0026\tSasBoss\nAustralian Computer Traders\tS0794\tC0026\tSasBoss\nAustralian Computer Traders\tSSO5PQZ4\tC0026\tSasBoss\nAustralian Computer Traders\tS0793\tC0026\tSasBoss\nAustralian Computer Traders\tS0792\tC0026\tSasBoss\nAustralian Computer Traders\tS0789\tC0026\tSasBoss\nAustralian Computer Traders\tS0798\tC0026\tSasBoss\nAustralian Computer Traders\tSS1OGXW7\tC0026\tSasBoss\nAustralian Computer Traders\tSST1B9PD\tC0026\tSasBoss\nAustralian Computer Traders\tSSCLR2F4\tC0026\tSasBoss\nAustralian Computer Traders\tS0791\tC0026\tSasBoss\nAustralian Computer Traders\tS0796\tC0026\tSasBoss\nAustralian Computer Traders\tSSN9N380\tC0026\tSasBoss\nAustralian Computer Traders\tS0797\tC0026\tSasBoss\nAustralian Computer Traders\tSS6C86YX\tC0026\tSasBoss\nAustralian Computer Traders\tS0790\tC0026\tSasBoss\nAustralian Computer Traders\tSSTGI2RC\tC0026\tSasBoss\nCPM\tIPTEL-AB057858\tC2424\tVocus\nCPM Advisory and Project Management\tS0906\tC0070\tSasBoss\n",
+  "stderr": "",
+  "execution_time_ms": 1633
+}

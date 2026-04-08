@@ -1,0 +1,100 @@
+{
+  "query": "SELECT vocusServiceId, customerName, address, avcId, username, technology, speedTier FROM vocus_nbn_services WHERE serviceStatus = 'active' LIMIT 10;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute SELECT vocusServiceId, customerName, address, avcId, username, technology, speedTier FROM vocus_nbn_services WHERE serviceStatus = 'active' LIMIT 10;",
+  "rows": [
+    {
+      "vocusServiceId": "13360383",
+      "customerName": "N/A",
+      "address": "38 Sugarwood Street Bellbowrie QLD 4070",
+      "avcId": "AVC000191546910",
+      "username": "motherduckbellbowrie@wba.rvcict.com.au",
+      "technology": "100Mbps/40Mbps",
+      "speedTier": "NBN Reseller Connect"
+    },
+    {
+      "vocusServiceId": "13353950",
+      "customerName": "N/A",
+      "address": "Lot 9 31 Jones St Harlaxton QLD 4350",
+      "avcId": "AVC000191016024",
+      "username": "touringsolaust@wba.rvcict.com.au",
+      "technology": "100Mbps/40Mbps",
+      "speedTier": "NBN Reseller Connect"
+    },
+    {
+      "vocusServiceId": "13335564",
+      "customerName": "N/A",
+      "address": "Unit 3 33 Lorn Rd Crestwood NSW 2153",
+      "avcId": "AVC000189527266",
+      "username": "ecolifecanberra@wba.rvcict.com.au",
+      "technology": "50Mbps/20Mbps",
+      "speedTier": "NBN Reseller Connect"
+    },
+    {
+      "vocusServiceId": "13317997",
+      "customerName": "N/A",
+      "address": "Lot 148 11 Enterprise St Richlands QLD 4077",
+      "avcId": "AVC000188300054",
+      "username": "Kaleidosco15@wba.rvcict.com.au",
+      "technology": "50Mbps/20Mbps",
+      "speedTier": "NBN Reseller Connect"
+    },
+    {
+      "vocusServiceId": "13300275",
+      "customerName": "N/A",
+      "address": "Lot 518 14 Page St North Lakes QLD 4509",
+      "avcId": "AVC000186915715",
+      "username": "rvchome@wba.rvcict.com.au",
+      "technology": "100Mbps/40Mbps",
+      "speedTier": "NBN Reseller Connect"
+    },
+    {
+      "vocusServiceId": "13270902",
+      "customerName": "N/A",
+      "address": "Tncy 14 2875 Round Hill Rd Agnes Water QLD 4677",
+      "avcId": "AVC000183920492",
+      "username": "beautyhub@wba.rvcict.com.au",
+      "technology": "50Mbps/20Mbps",
+      "speedTier": "NBN Reseller Connect"
+    },
+    {
+      "vocusServiceId": "13264619",
+      "customerName": "N/A",
+      "address": "Se 5 169 Seventeen Mile Rocks Rd Oxley QLD 4075",
+      "avcId": "AVC000183261130",
+      "username": "canossamedpharmacy@wba.rvcict.com.au",
+      "technology": "100Mbps/40Mbps",
+      "speedTier": "NBN Reseller Connect FTTN"
+    },
+    {
+      "vocusServiceId": "13259230",
+      "customerName": "N/A",
+      "address": "Unit 1 Lot 1 1-3 Buderim Av Mooloolaba QLD 4557",
+      "avcId": "AVC000182740739",
+      "username": "ospreynbn2@wba.rvcict.com.au",
+      "technology": "100Mbps/40Mbps",
+      "speedTier": "NBN Reseller Connect FTTN"
+    },
+    {
+      "vocusServiceId": "13259229",
+      "customerName": "N/A",
+      "address": "Unit 1 Lot 1 1-3 Buderim Av Mooloolaba QLD 4557",
+      "avcId": "AVC000182740718",
+      "username": "ospreynbn1@wba.rvcict.com.au",
+      "technology": "100Mbps/40Mbps",
+      "speedTier": "NBN Reseller Connect FTTN"
+    },
+    {
+      "vocusServiceId": "13251072",
+      "customerName": "N/A",
+      "address": "Lot 1 34 Whyandra Cl Doonan QLD 4562",
+      "avcId": "AVC000182095955",
+      "username": "riocapursohm@wba.rvcict.com.au",
+      "technology": "100Mbps/40Mbps",
+      "speedTier": "NBN Reseller Connect FTTN"
+    }
+  ],
+  "messages": [],
+  "stdout": "vocusServiceId\tcustomerName\taddress\tavcId\tusername\ttechnology\tspeedTier\n13360383\tN/A\t38 Sugarwood Street Bellbowrie QLD 4070\tAVC000191546910\tmotherduckbellbowrie@wba.rvcict.com.au\t100Mbps/40Mbps\tNBN Reseller Connect\n13353950\tN/A\tLot 9 31 Jones St Harlaxton QLD 4350\tAVC000191016024\ttouringsolaust@wba.rvcict.com.au\t100Mbps/40Mbps\tNBN Reseller Connect\n13335564\tN/A\tUnit 3 33 Lorn Rd Crestwood NSW 2153\tAVC000189527266\tecolifecanberra@wba.rvcict.com.au\t50Mbps/20Mbps\tNBN Reseller Connect\n13317997\tN/A\tLot 148 11 Enterprise St Richlands QLD 4077\tAVC000188300054\tKaleidosco15@wba.rvcict.com.au\t50Mbps/20Mbps\tNBN Reseller Connect\n13300275\tN/A\tLot 518 14 Page St North Lakes QLD 4509\tAVC000186915715\trvchome@wba.rvcict.com.au\t100Mbps/40Mbps\tNBN Reseller Connect\n13270902\tN/A\tTncy 14 2875 Round Hill Rd Agnes Water QLD 4677\tAVC000183920492\tbeautyhub@wba.rvcict.com.au\t50Mbps/20Mbps\tNBN Reseller Connect\n13264619\tN/A\tSe 5 169 Seventeen Mile Rocks Rd Oxley QLD 4075\tAVC000183261130\tcanossamedpharmacy@wba.rvcict.com.au\t100Mbps/40Mbps\tNBN Reseller Connect FTTN\n13259230\tN/A\tUnit 1 Lot 1 1-3 Buderim Av Mooloolaba QLD 4557\tAVC000182740739\tospreynbn2@wba.rvcict.com.au\t100Mbps/40Mbps\tNBN Reseller Connect FTTN\n13259229\tN/A\tUnit 1 Lot 1 1-3 Buderim Av Mooloolaba QLD 4557\tAVC000182740718\tospreynbn1@wba.rvcict.com.au\t100Mbps/40Mbps\tNBN Reseller Connect FTTN\n13251072\tN/A\tLot 1 34 Whyandra Cl Doonan QLD 4562\tAVC000182095955\triocapursohm@wba.rvcict.com.au\t100Mbps/40Mbps\tNBN Reseller Connect FTTN\n",
+  "stderr": "",
+  "execution_time_ms": 1654
+}

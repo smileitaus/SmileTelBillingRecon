@@ -1,0 +1,210 @@
+{
+  "query": "SELECT externalId, planName, provider, status, monthlyCost, monthlyRevenue, customerExternalId, customerName\nFROM services \nWHERE (monthlyCost > 0 OR monthlyRevenue > 0)\n  AND (customerExternalId IS NULL OR customerExternalId = '')\n  AND (billingPeriod IS NULL OR billingPeriod != 'archived')\n  AND status != 'terminated'\n  AND status = 'active'\nLIMIT 20;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute SELECT externalId, planName, provider, status, monthlyCost, monthlyRevenue, customerExternalId, customerName\nFROM services \nWHERE (monthlyCost > 0 OR monthlyRevenue > 0)\n  AND (customerExternalId IS NULL OR customerExternalId = '')\n  AND (billingPeriod IS NULL OR billingPeriod != 'archived')\n  AND status != 'terminated'\n  AND status = 'active'\nLIMIT 20;",
+  "rows": [
+    {
+      "externalId": "S0703",
+      "planName": "Wholesale NBN 25Mbps/10Mbps",
+      "provider": "ABB",
+      "status": "active",
+      "monthlyCost": "67.50",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "NULL",
+      "customerName": "Unassigned"
+    },
+    {
+      "externalId": "S0726",
+      "planName": "Wholesale NBN 100Mbps/40Mbps",
+      "provider": "ABB",
+      "status": "active",
+      "monthlyCost": "84.70",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "NULL",
+      "customerName": "Unassigned"
+    },
+    {
+      "externalId": "BLITZ-0427406897",
+      "planName": "Business Data Plan - Small",
+      "provider": "Telstra",
+      "status": "active",
+      "monthlyCost": "30.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "",
+      "customerName": ""
+    },
+    {
+      "externalId": "BLITZ-0448277021",
+      "planName": "Business Data Plan - Small",
+      "provider": "Telstra",
+      "status": "active",
+      "monthlyCost": "30.30",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "",
+      "customerName": ""
+    },
+    {
+      "externalId": "BLITZ-0488084593",
+      "planName": "Business Data Plan - Small",
+      "provider": "Telstra",
+      "status": "active",
+      "monthlyCost": "30.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "",
+      "customerName": ""
+    },
+    {
+      "externalId": "BLITZ-0418974328",
+      "planName": "Business Data Plan - Medium",
+      "provider": "Telstra",
+      "status": "active",
+      "monthlyCost": "82.33",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "",
+      "customerName": ""
+    },
+    {
+      "externalId": "BLITZ-0477598450",
+      "planName": "Business Data Plan - Small",
+      "provider": "Telstra",
+      "status": "active",
+      "monthlyCost": "30.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "",
+      "customerName": ""
+    },
+    {
+      "externalId": "BLITZ-0447141510",
+      "planName": "Business Data Plan - Small",
+      "provider": "Telstra",
+      "status": "active",
+      "monthlyCost": "30.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "",
+      "customerName": ""
+    },
+    {
+      "externalId": "BLITZ-0439710741",
+      "planName": "Business Bundle Data Plan",
+      "provider": "Telstra",
+      "status": "active",
+      "monthlyCost": "15.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "",
+      "customerName": ""
+    },
+    {
+      "externalId": "BLITZ-0456014205",
+      "planName": "Business Bundle Data Plan",
+      "provider": "Telstra",
+      "status": "active",
+      "monthlyCost": "15.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "",
+      "customerName": ""
+    },
+    {
+      "externalId": "BLITZ-0429627604",
+      "planName": "Business Data Plan - Small",
+      "provider": "Telstra",
+      "status": "active",
+      "monthlyCost": "30.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "",
+      "customerName": ""
+    },
+    {
+      "externalId": "BLITZ-0427591732",
+      "planName": "Business Data Plan - Small",
+      "provider": "Telstra",
+      "status": "active",
+      "monthlyCost": "30.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "",
+      "customerName": ""
+    },
+    {
+      "externalId": "BLITZ-0428890186",
+      "planName": "Business Data Plan - Small",
+      "provider": "Telstra",
+      "status": "active",
+      "monthlyCost": "47.33",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "",
+      "customerName": ""
+    },
+    {
+      "externalId": "BLITZ-0428719575",
+      "planName": "Business Data Plan - Small",
+      "provider": "Telstra",
+      "status": "active",
+      "monthlyCost": "30.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "",
+      "customerName": ""
+    },
+    {
+      "externalId": "BLITZ-0438740842",
+      "planName": "Business Bundle Data Plan",
+      "provider": "Telstra",
+      "status": "active",
+      "monthlyCost": "15.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "",
+      "customerName": ""
+    },
+    {
+      "externalId": "BLITZ-0436922815",
+      "planName": "Business Bundle Data Plan",
+      "provider": "Telstra",
+      "status": "active",
+      "monthlyCost": "15.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "",
+      "customerName": ""
+    },
+    {
+      "externalId": "BLITZ-0498103659",
+      "planName": "Business Bundle Data Plan",
+      "provider": "Telstra",
+      "status": "active",
+      "monthlyCost": "15.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "",
+      "customerName": ""
+    },
+    {
+      "externalId": "BLITZ-0455342788",
+      "planName": "Business Data Plan - Small",
+      "provider": "Telstra",
+      "status": "active",
+      "monthlyCost": "30.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "",
+      "customerName": ""
+    },
+    {
+      "externalId": "BLITZ-0447193517",
+      "planName": "Business Data Plan - Small",
+      "provider": "Telstra",
+      "status": "active",
+      "monthlyCost": "47.33",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "",
+      "customerName": ""
+    },
+    {
+      "externalId": "BLITZ-0448496293",
+      "planName": "Business Data Plan - Small",
+      "provider": "Telstra",
+      "status": "active",
+      "monthlyCost": "30.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "",
+      "customerName": ""
+    }
+  ],
+  "messages": [],
+  "stdout": "externalId\tplanName\tprovider\tstatus\tmonthlyCost\tmonthlyRevenue\tcustomerExternalId\tcustomerName\nS0703\tWholesale NBN 25Mbps/10Mbps\tABB\tactive\t67.50\t0.00\tNULL\tUnassigned\nS0726\tWholesale NBN 100Mbps/40Mbps\tABB\tactive\t84.70\t0.00\tNULL\tUnassigned\nBLITZ-0427406897\tBusiness Data Plan - Small\tTelstra\tactive\t30.00\t0.00\t\t\nBLITZ-0448277021\tBusiness Data Plan - Small\tTelstra\tactive\t30.30\t0.00\t\t\nBLITZ-0488084593\tBusiness Data Plan - Small\tTelstra\tactive\t30.00\t0.00\t\t\nBLITZ-0418974328\tBusiness Data Plan - Medium\tTelstra\tactive\t82.33\t0.00\t\t\nBLITZ-0477598450\tBusiness Data Plan - Small\tTelstra\tactive\t30.00\t0.00\t\t\nBLITZ-0447141510\tBusiness Data Plan - Small\tTelstra\tactive\t30.00\t0.00\t\t\nBLITZ-0439710741\tBusiness Bundle Data Plan\tTelstra\tactive\t15.00\t0.00\t\t\nBLITZ-0456014205\tBusiness Bundle Data Plan\tTelstra\tactive\t15.00\t0.00\t\t\nBLITZ-0429627604\tBusiness Data Plan - Small\tTelstra\tactive\t30.00\t0.00\t\t\nBLITZ-0427591732\tBusiness Data Plan - Small\tTelstra\tactive\t30.00\t0.00\t\t\nBLITZ-0428890186\tBusiness Data Plan - Small\tTelstra\tactive\t47.33\t0.00\t\t\nBLITZ-0428719575\tBusiness Data Plan - Small\tTelstra\tactive\t30.00\t0.00\t\t\nBLITZ-0438740842\tBusiness Bundle Data Plan\tTelstra\tactive\t15.00\t0.00\t\t\nBLITZ-0436922815\tBusiness Bundle Data Plan\tTelstra\tactive\t15.00\t0.00\t\t\nBLITZ-0498103659\tBusiness Bundle Data Plan\tTelstra\tactive\t15.00\t0.00\t\t\nBLITZ-0455342788\tBusiness Data Plan - Small\tTelstra\tactive\t30.00\t0.00\t\t\nBLITZ-0447193517\tBusiness Data Plan - Small\tTelstra\tactive\t47.33\t0.00\t\t\nBLITZ-0448496293\tBusiness Data Plan - Small\tTelstra\tactive\t30.00\t0.00\t\t\n",
+  "stderr": "",
+  "execution_time_ms": 1676
+}

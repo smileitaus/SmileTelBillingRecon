@@ -1,0 +1,110 @@
+{
+  "query": "\n-- Get all distinct contact names in Xero billing items to find Aus Ships variant\nSELECT DISTINCT contactName, COUNT(*) as items, SUM(lineAmount) as revenue\nFROM billing_items\nWHERE (billingPlatform = '' OR billingPlatform IS NULL)\n  AND contactName LIKE '%Au%'\nGROUP BY contactName\nORDER BY contactName\nLIMIT 20;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Get all distinct contact names in Xero billing items to find Aus Ships variant\nSELECT DISTINCT contactName, COUNT(*) as items, SUM(lineAmount) as revenue\nFROM billing_items\nWHERE (billingPlatform = '' OR billingPlatform IS NULL)\n  AND contactName LIKE '%Au%'\nGROUP BY contactName\nORDER BY contactName\nLIMIT 20;\n",
+  "rows": [
+    {
+      "contactName": "Agnes Water Beauty Hub",
+      "items": "1",
+      "revenue": "100.00"
+    },
+    {
+      "contactName": "All Crops Haulage Pty Ltd",
+      "items": "2",
+      "revenue": "149.00"
+    },
+    {
+      "contactName": "Audem Electrical",
+      "items": "1",
+      "revenue": "220.00"
+    },
+    {
+      "contactName": "AUREE - Auriga Group",
+      "items": "1",
+      "revenue": "399.00"
+    },
+    {
+      "contactName": "Ausavo Corporation Pty Ltd",
+      "items": "1",
+      "revenue": "196.00"
+    },
+    {
+      "contactName": "Ausdocs Carindale Pty Ltd",
+      "items": "5",
+      "revenue": "363.36"
+    },
+    {
+      "contactName": "Aussie Traveller",
+      "items": "2",
+      "revenue": "1350.00"
+    },
+    {
+      "contactName": "Australian Air Science Pty Ltd",
+      "items": "7",
+      "revenue": "1020.23"
+    },
+    {
+      "contactName": "Australian Computer Traders",
+      "items": "10",
+      "revenue": "1231.08"
+    },
+    {
+      "contactName": "Australian Resort Management Pty Ltd",
+      "items": "4",
+      "revenue": "1524.75"
+    },
+    {
+      "contactName": "Autonomy and Asset Management Group (AAMG)",
+      "items": "3",
+      "revenue": "169.00"
+    },
+    {
+      "contactName": "CF Aust Pty Ltd",
+      "items": "20",
+      "revenue": "1887.80"
+    },
+    {
+      "contactName": "Graphene Manufacturing Australia",
+      "items": "1",
+      "revenue": "2.00"
+    },
+    {
+      "contactName": "Institute for Healthy Communities Australia",
+      "items": "4",
+      "revenue": "1040.84"
+    },
+    {
+      "contactName": "Kaleidoscope Australasia Pty Ltd",
+      "items": "4",
+      "revenue": "239.77"
+    },
+    {
+      "contactName": "LFF Australia",
+      "items": "4",
+      "revenue": "991.85"
+    },
+    {
+      "contactName": "Little Cha Bateau Bay",
+      "items": "1",
+      "revenue": "140.91"
+    },
+    {
+      "contactName": "Red Roo Australia",
+      "items": "4",
+      "revenue": "211.68"
+    },
+    {
+      "contactName": "Rumi Persian Restaurant",
+      "items": "1",
+      "revenue": "131.36"
+    },
+    {
+      "contactName": "S & K HOLDINGS AUS PTY LTD (for Zambrero Orange)",
+      "items": "1",
+      "revenue": "139.30"
+    }
+  ],
+  "messages": [],
+  "stdout": "contactName\titems\trevenue\nAgnes Water Beauty Hub\t1\t100.00\nAll Crops Haulage Pty Ltd\t2\t149.00\nAudem Electrical\t1\t220.00\nAUREE - Auriga Group\t1\t399.00\nAusavo Corporation Pty Ltd\t1\t196.00\nAusdocs Carindale Pty Ltd\t5\t363.36\nAussie Traveller\t2\t1350.00\nAustralian Air Science Pty Ltd\t7\t1020.23\nAustralian Computer Traders\t10\t1231.08\nAustralian Resort Management Pty Ltd\t4\t1524.75\nAutonomy and Asset Management Group (AAMG)\t3\t169.00\nCF Aust Pty Ltd\t20\t1887.80\nGraphene Manufacturing Australia\t1\t2.00\nInstitute for Healthy Communities Australia\t4\t1040.84\nKaleidoscope Australasia Pty Ltd\t4\t239.77\nLFF Australia\t4\t991.85\nLittle Cha Bateau Bay\t1\t140.91\nRed Roo Australia\t4\t211.68\nRumi Persian Restaurant\t1\t131.36\nS & K HOLDINGS AUS PTY LTD (for Zambrero Orange)\t1\t139.30\n",
+  "stderr": "",
+  "execution_time_ms": 1624
+}

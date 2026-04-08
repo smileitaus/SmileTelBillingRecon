@@ -1,0 +1,65 @@
+{
+  "query": "\n-- Check assignment status of invoice services\nSELECT \n  CASE WHEN customerExternalId IS NULL OR customerExternalId = '' OR customerExternalId = 'NULL' THEN 'Unassigned' ELSE customerExternalId END as assignment,\n  COUNT(*) as count,\n  SUM(monthlyCost) as totalCost\nFROM services\nWHERE provider = 'Telstra' AND serviceType = 'Mobile' AND supplierAccount = '586992900'\nGROUP BY assignment\nORDER BY count DESC;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Check assignment status of invoice services\nSELECT \n  CASE WHEN customerExternalId IS NULL OR customerExternalId = '' OR customerExternalId = 'NULL' THEN 'Unassigned' ELSE customerExternalId END as assignment,\n  COUNT(*) as count,\n  SUM(monthlyCost) as totalCost\nFROM services\nWHERE provider = 'Telstra' AND serviceType = 'Mobile' AND supplierAccount = '586992900'\nGROUP BY assignment\nORDER BY count DESC;\n",
+  "rows": [
+    {
+      "assignment": "Unassigned",
+      "count": "159",
+      "totalCost": "5094.43"
+    },
+    {
+      "assignment": "C0384",
+      "count": "1",
+      "totalCost": "27.27"
+    },
+    {
+      "assignment": "C2870",
+      "count": "1",
+      "totalCost": "27.27"
+    },
+    {
+      "assignment": "C7442",
+      "count": "1",
+      "totalCost": "93.00"
+    },
+    {
+      "assignment": "C0233",
+      "count": "1",
+      "totalCost": "0.00"
+    },
+    {
+      "assignment": "C0307",
+      "count": "1",
+      "totalCost": "27.27"
+    },
+    {
+      "assignment": "C0338",
+      "count": "1",
+      "totalCost": "27.27"
+    },
+    {
+      "assignment": "C0289",
+      "count": "1",
+      "totalCost": "109.00"
+    },
+    {
+      "assignment": "C0332",
+      "count": "1",
+      "totalCost": "27.27"
+    },
+    {
+      "assignment": "C2441",
+      "count": "1",
+      "totalCost": "72.73"
+    },
+    {
+      "assignment": "C0400",
+      "count": "1",
+      "totalCost": "27.27"
+    }
+  ],
+  "messages": [],
+  "stdout": "assignment\tcount\ttotalCost\nUnassigned\t159\t5094.43\nC0384\t1\t27.27\nC2870\t1\t27.27\nC7442\t1\t93.00\nC0233\t1\t0.00\nC0307\t1\t27.27\nC0338\t1\t27.27\nC0289\t1\t109.00\nC0332\t1\t27.27\nC2441\t1\t72.73\nC0400\t1\t27.27\n",
+  "stderr": "",
+  "execution_time_ms": 1576
+}

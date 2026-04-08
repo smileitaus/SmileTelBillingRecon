@@ -1,0 +1,9 @@
+{
+  "query": "\n-- Update monthlyRevenue on services from their billing assignments\nUPDATE services s\nSET monthlyRevenue = (\n  SELECT COALESCE(SUM(bi.lineAmount), 0)\n  FROM service_billing_assignments sba\n  JOIN billing_items bi ON bi.externalId = sba.billingItemExternalId\n  WHERE sba.serviceExternalId = s.externalId\n    AND bi.matchStatus = 'service-matched'\n)\nWHERE s.status NOT IN ('terminated', 'flagged_for_termination');\n\n-- Also update customer monthlyRevenue from their services\nUPDATE customers c\nSET monthlyRevenue = (\n  SELECT COALESCE(SUM(s.monthlyRevenue), 0)\n  FROM services s\n  WHERE s.customerExternalId = c.externalId\n    AND s.status NOT IN ('terminated', 'flagged_for_termination')\n);\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Update monthlyRevenue on services from their billing assignments\nUPDATE services s\nSET monthlyRevenue = (\n  SELECT COALESCE(SUM(bi.lineAmount), 0)\n  FROM service_billing_assignments sba\n  JOIN billing_items bi ON bi.externalId = sba.billingItemExternalId\n  WHERE sba.serviceExternalId = s.externalId\n    AND bi.matchStatus = 'service-matched'\n)\nWHERE s.status NOT IN ('terminated', 'flagged_for_termination');\n\n-- Also update customer monthlyRevenue from their services\nUPDATE customers c\nSET monthlyRevenue = (\n  SELECT COALESCE(SUM(s.monthlyRevenue), 0)\n  FROM services s\n  WHERE s.customerExternalId = c.externalId\n    AND s.status NOT IN ('terminated', 'flagged_for_termination')\n);\n",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 1966
+}

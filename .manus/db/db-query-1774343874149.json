@@ -1,0 +1,108 @@
+{
+  "query": "SELECT tiabCustomerId, companyName, firstName, lastName, internalCustomerExternalId\nFROM tiab_customers \nWHERE companyName NOT LIKE '%Zambrero%'\nORDER BY companyName\nLIMIT 20 OFFSET 17;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute SELECT tiabCustomerId, companyName, firstName, lastName, internalCustomerExternalId\nFROM tiab_customers \nWHERE companyName NOT LIKE '%Zambrero%'\nORDER BY companyName\nLIMIT 20 OFFSET 17;",
+  "rows": [
+    {
+      "tiabCustomerId": "527025",
+      "companyName": "Lyndarr Constructions Pty Ltd",
+      "firstName": "DJ Steel",
+      "lastName": "Monto",
+      "internalCustomerExternalId": "NULL"
+    },
+    {
+      "tiabCustomerId": "535123",
+      "companyName": "Mother Duck Childcare and Kindergarten Bracken Ridge",
+      "firstName": "Mother Duck",
+      "lastName": "Bracken Ridge",
+      "internalCustomerExternalId": "NULL"
+    },
+    {
+      "tiabCustomerId": "531874",
+      "companyName": "Nodo Pty Ltd",
+      "firstName": "Nodo West Village",
+      "lastName": "4G",
+      "internalCustomerExternalId": "NULL"
+    },
+    {
+      "tiabCustomerId": "528323",
+      "companyName": "Nodo Pty Ltd",
+      "firstName": "Nodo",
+      "lastName": "Carindale",
+      "internalCustomerExternalId": "NULL"
+    },
+    {
+      "tiabCustomerId": "531875",
+      "companyName": "Nodo Pty Ltd",
+      "firstName": "Nodo Camp Hill",
+      "lastName": "4G",
+      "internalCustomerExternalId": "NULL"
+    },
+    {
+      "tiabCustomerId": "531871",
+      "companyName": "Nodo Pty Ltd",
+      "firstName": "Nodo CBD",
+      "lastName": "4G",
+      "internalCustomerExternalId": "NULL"
+    },
+    {
+      "tiabCustomerId": "525207",
+      "companyName": "Orphan Services - SmileTel",
+      "firstName": "Peter",
+      "lastName": "Drummond",
+      "internalCustomerExternalId": "NULL"
+    },
+    {
+      "tiabCustomerId": "526902",
+      "companyName": "SmileTel",
+      "firstName": "SmileTel",
+      "lastName": "Test",
+      "internalCustomerExternalId": "NULL"
+    },
+    {
+      "tiabCustomerId": "532648",
+      "companyName": "Sparrow Group Pty Ltd",
+      "firstName": "Sparrow Group",
+      "lastName": "4G",
+      "internalCustomerExternalId": "NULL"
+    },
+    {
+      "tiabCustomerId": "531997",
+      "companyName": "The Trustee for the Collingwood Trust",
+      "firstName": "Haig St Cafe",
+      "lastName": "4G",
+      "internalCustomerExternalId": "NULL"
+    },
+    {
+      "tiabCustomerId": "527021",
+      "companyName": "The Trustee for the Fashion Cafe Trust",
+      "firstName": "Denim",
+      "lastName": "Co",
+      "internalCustomerExternalId": "NULL"
+    },
+    {
+      "tiabCustomerId": "534220",
+      "companyName": "THE YIROS SHOP PTY LTD",
+      "firstName": "TYS Factory Unit",
+      "lastName": "4G",
+      "internalCustomerExternalId": "NULL"
+    },
+    {
+      "tiabCustomerId": "531118",
+      "companyName": "Yiros Pty Ltd",
+      "firstName": "TYS Valley Metro",
+      "lastName": "4G",
+      "internalCustomerExternalId": "NULL"
+    },
+    {
+      "tiabCustomerId": "528800",
+      "companyName": "Yiros Pty Ltd",
+      "firstName": "The Yiros Shop",
+      "lastName": "Berrinba",
+      "internalCustomerExternalId": "NULL"
+    }
+  ],
+  "messages": [],
+  "stdout": "tiabCustomerId\tcompanyName\tfirstName\tlastName\tinternalCustomerExternalId\n527025\tLyndarr Constructions Pty Ltd\tDJ Steel\tMonto\tNULL\n535123\tMother Duck Childcare and Kindergarten Bracken Ridge\tMother Duck\tBracken Ridge\tNULL\n531874\tNodo Pty Ltd\tNodo West Village\t4G\tNULL\n528323\tNodo Pty Ltd\tNodo\tCarindale\tNULL\n531875\tNodo Pty Ltd\tNodo Camp Hill\t4G\tNULL\n531871\tNodo Pty Ltd\tNodo CBD\t4G\tNULL\n525207\tOrphan Services - SmileTel\tPeter\tDrummond\tNULL\n526902\tSmileTel\tSmileTel\tTest\tNULL\n532648\tSparrow Group Pty Ltd\tSparrow Group\t4G\tNULL\n531997\tThe Trustee for the Collingwood Trust\tHaig St Cafe\t4G\tNULL\n527021\tThe Trustee for the Fashion Cafe Trust\tDenim\tCo\tNULL\n534220\tTHE YIROS SHOP PTY LTD\tTYS Factory Unit\t4G\tNULL\n531118\tYiros Pty Ltd\tTYS Valley Metro\t4G\tNULL\n528800\tYiros Pty Ltd\tThe Yiros Shop\tBerrinba\tNULL\n",
+  "stderr": "",
+  "execution_time_ms": 1630
+}

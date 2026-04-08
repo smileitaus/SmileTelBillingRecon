@@ -1,0 +1,50 @@
+{
+  "query": "\nSELECT externalId, planName, serviceType, supplierName, customerName, customerExternalId, monthlyCost, status\nFROM services\nWHERE (customerExternalId IS NULL OR customerExternalId = '')\n  AND status NOT IN ('billing_platform_stub', 'terminated')\n  AND supplierName NOT IN ('Telstra', 'SasBoss', 'ABB', 'AAPT')\nLIMIT 10;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \nSELECT externalId, planName, serviceType, supplierName, customerName, customerExternalId, monthlyCost, status\nFROM services\nWHERE (customerExternalId IS NULL OR customerExternalId = '')\n  AND status NOT IN ('billing_platform_stub', 'terminated')\n  AND supplierName NOT IN ('Telstra', 'SasBoss', 'ABB', 'AAPT')\nLIMIT 10;\n",
+  "rows": [
+    {
+      "externalId": "SNQ0YHG",
+      "planName": "Business Internet",
+      "serviceType": "Internet",
+      "supplierName": "ChannelHaus",
+      "customerName": "NULL",
+      "customerExternalId": "NULL",
+      "monthlyCost": "175.00",
+      "status": "unmatched"
+    },
+    {
+      "externalId": "SX9ZEL1",
+      "planName": "Lab Tst Netcomm",
+      "serviceType": "Voice",
+      "supplierName": "ChannelHaus",
+      "customerName": "NULL",
+      "customerExternalId": "NULL",
+      "monthlyCost": "6.70",
+      "status": "flagged_for_termination"
+    },
+    {
+      "externalId": "S6956",
+      "planName": "Standard Mobile Service",
+      "serviceType": "Mobile",
+      "supplierName": "Vocus",
+      "customerName": "NULL",
+      "customerExternalId": "NULL",
+      "monthlyCost": "0.00",
+      "status": "unmatched"
+    },
+    {
+      "externalId": "S7150",
+      "planName": "4G Data Back up",
+      "serviceType": "Data",
+      "supplierName": "TIAB",
+      "customerName": "NULL",
+      "customerExternalId": "NULL",
+      "monthlyCost": "0.00",
+      "status": "flagged_for_termination"
+    }
+  ],
+  "messages": [],
+  "stdout": "externalId\tplanName\tserviceType\tsupplierName\tcustomerName\tcustomerExternalId\tmonthlyCost\tstatus\nSNQ0YHG\tBusiness Internet\tInternet\tChannelHaus\tNULL\tNULL\t175.00\tunmatched\nSX9ZEL1\tLab Tst Netcomm\tVoice\tChannelHaus\tNULL\tNULL\t6.70\tflagged_for_termination\nS6956\tStandard Mobile Service\tMobile\tVocus\tNULL\tNULL\t0.00\tunmatched\nS7150\t4G Data Back up\tData\tTIAB\tNULL\tNULL\t0.00\tflagged_for_termination\n",
+  "stderr": "",
+  "execution_time_ms": 1585
+}

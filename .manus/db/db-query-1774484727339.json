@@ -1,0 +1,9 @@
+{
+  "query": "\nALTER TABLE `billing_items` ADD `retailBundleComponent` varchar(32) DEFAULT '';\nALTER TABLE `customers` ADD `customerType` varchar(32) DEFAULT 'standard' NOT NULL;\nALTER TABLE `customers` ADD `retailBundleMonthlyCost` decimal(10,2) DEFAULT '0.00';\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \nALTER TABLE `billing_items` ADD `retailBundleComponent` varchar(32) DEFAULT '';\nALTER TABLE `customers` ADD `customerType` varchar(32) DEFAULT 'standard' NOT NULL;\nALTER TABLE `customers` ADD `retailBundleMonthlyCost` decimal(10,2) DEFAULT '0.00';\n",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 3218
+}

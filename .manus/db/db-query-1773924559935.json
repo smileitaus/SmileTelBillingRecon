@@ -1,0 +1,142 @@
+{
+  "query": "-- Zambrero Karratha (C2791) services\nSELECT externalId, planName, provider, monthlyCost, monthlyRevenue FROM services\nWHERE customerExternalId IN ('C2791', 'C2565');\n\n-- Zambrero Coomera Square (C0325) services\nSELECT externalId, planName, provider, monthlyCost, monthlyRevenue FROM services\nWHERE customerExternalId = 'C0325';\n\n-- Zambrero Baldivis (C0300) services\nSELECT externalId, planName, provider, monthlyCost, monthlyRevenue FROM services\nWHERE customerExternalId = 'C0300';\n\n-- TYS Molendinar (C2599 = The Yiros Shop MOLENDINAR) services\nSELECT externalId, planName, provider, monthlyCost, monthlyRevenue FROM services\nWHERE customerExternalId = 'C2599';\n\n-- Zam Marrickville (C0295) services\nSELECT externalId, planName, provider, monthlyCost, monthlyRevenue FROM services\nWHERE customerExternalId = 'C0295';\n\n-- Get remaining 18 billing items to see all\nSELECT bi.id, bi.contactName, bi.description, bi.lineAmount FROM billing_items bi\nWHERE (bi.serviceExternalId IS NULL OR bi.serviceExternalId = 'NULL')\nORDER BY bi.lineAmount DESC;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute -- Zambrero Karratha (C2791) services\nSELECT externalId, planName, provider, monthlyCost, monthlyRevenue FROM services\nWHERE customerExternalId IN ('C2791', 'C2565');\n\n-- Zambrero Coomera Square (C0325) services\nSELECT externalId, planName, provider, monthlyCost, monthlyRevenue FROM services\nWHERE customerExternalId = 'C0325';\n\n-- Zambrero Baldivis (C0300) services\nSELECT externalId, planName, provider, monthlyCost, monthlyRevenue FROM services\nWHERE customerExternalId = 'C0300';\n\n-- TYS Molendinar (C2599 = The Yiros Shop MOLENDINAR) services\nSELECT externalId, planName, provider, monthlyCost, monthlyRevenue FROM services\nWHERE customerExternalId = 'C2599';\n\n-- Zam Marrickville (C0295) services\nSELECT externalId, planName, provider, monthlyCost, monthlyRevenue FROM services\nWHERE customerExternalId = 'C0295';\n\n-- Get remaining 18 billing items to see all\nSELECT bi.id, bi.contactName, bi.description, bi.lineAmount FROM billing_items bi\nWHERE (bi.serviceExternalId IS NULL OR bi.serviceExternalId = 'NULL')\nORDER BY bi.lineAmount DESC;",
+  "rows": [
+    {
+      "externalId": "S0423",
+      "planName": "NBN 25/10",
+      "provider": "ABB",
+      "monthlyCost": "51.71",
+      "monthlyRevenue": "136.36"
+    },
+    {
+      "externalId": "S1540",
+      "planName": "SmileTel supplied NBN voice and internet bundle. 36 month plan. Includes:- 1xVoice phone line,1xInternet service,1x4G Back-up, S",
+      "provider": "SmileTel",
+      "monthlyCost": "84.70",
+      "monthlyRevenue": "0.00"
+    },
+    {
+      "externalId": "S6951",
+      "planName": "4G Back up",
+      "provider": "Vocus",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00"
+    },
+    {
+      "externalId": "externalId",
+      "planName": "planName",
+      "provider": "provider",
+      "monthlyCost": "monthlyCost",
+      "monthlyRevenue": "monthlyRevenue"
+    },
+    {
+      "externalId": "S0411",
+      "planName": "NBN 50/20",
+      "provider": "ABB",
+      "monthlyCost": "51.71",
+      "monthlyRevenue": "0.00"
+    },
+    {
+      "externalId": "S7005",
+      "planName": "4G Back up",
+      "provider": "Vocus",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00"
+    },
+    {
+      "externalId": "externalId",
+      "planName": "planName",
+      "provider": "provider",
+      "monthlyCost": "monthlyCost",
+      "monthlyRevenue": "monthlyRevenue"
+    },
+    {
+      "externalId": "S0013",
+      "planName": "Core Internet",
+      "provider": "Telstra",
+      "monthlyCost": "93.00",
+      "monthlyRevenue": "0.00"
+    },
+    {
+      "externalId": "externalId",
+      "planName": "planName",
+      "provider": "provider",
+      "monthlyCost": "monthlyCost",
+      "monthlyRevenue": "monthlyRevenue"
+    },
+    {
+      "externalId": "S6983",
+      "planName": "4G Back up",
+      "provider": "Vocus",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00"
+    },
+    {
+      "externalId": "externalId",
+      "planName": "planName",
+      "provider": "provider",
+      "monthlyCost": "monthlyCost",
+      "monthlyRevenue": "monthlyRevenue"
+    },
+    {
+      "externalId": "S6952",
+      "planName": "Standard Mobile Service",
+      "provider": "Vocus",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00"
+    },
+    {
+      "externalId": "S6953",
+      "planName": "Standard Mobile Service",
+      "provider": "Vocus",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00"
+    },
+    {
+      "externalId": "S7061",
+      "planName": "4G Data Back up",
+      "provider": "TIAB",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00"
+    },
+    {
+      "externalId": "VOCUS-MOB-13599000",
+      "planName": "Vocus Mobile Service",
+      "provider": "Vocus",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "176.64"
+    },
+    {
+      "externalId": "VOCUS-MOB-13619752",
+      "planName": "Vocus Mobile Service",
+      "provider": "Vocus",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00"
+    }
+  ],
+  "messages": [
+    "id\tcontactName\tdescription\tlineAmount",
+    "33174\tCompass Assurance Services Pty Ltd\tSmile Tel NBN Enterprise Ethernet Fibre 500mb up/down - 36 MonthsEach\t500.00",
+    "33173\tLead Education and Training Pty Ltd ATF the Piara\tFIBRE400/36\t399.00",
+    "33181\tNu-Dev Pty Ltd\tSmile It TPG Fibre 400 36 Months + InstallEach\t399.00",
+    "33176\tAUREE - Auriga Group\tFibre 400 Internet Service with AAPT\\, 36 mth commit\\, Effective 01/04/2022- Address  400 - Suite 2\\, 14 Argyle Street\\, Albion\\, QLD - Unlimited Data\\, Carrier SLA Service Restoration Target < 8Hrs\t399.00",
+    "33180\tStrata Dynamics Pty Ltd\t400/400 Fibre Internet Service (Renewal 05/03/2027)\t374.00",
+    "33168\tTYS MOLENDINAR PTY LTD\tSite Bundle - Recurring: 100/40 Connectivity - Suitable for Enterprise Grade, Premium Dedicated Support, Business Grade Hardware, 24/7 Connectivity Monitoring, 4G Backup, Enhanced Remote Assistance, Unlimited Phone Calls\t200.91",
+    "33178\tStrata Dynamics Pty Ltd\tTeams Voice SIP Trunk - Unlimited Local/National/Mobile\t180.00",
+    "33175\tJack Green\tPowerSheild 1200VA UPS - refurbished unit supplied to replace the failed APC 950VA unit.Two new Batteries installed and tested.No product warranty is available with this refurbished UPS unit.New Batteries provided with 12 Months Warranty.\t174.73",
+    "33170\tZam Marrickville Pty Ltd\tSmileTel supplied NBN voice and internet bundle. 36-month plan with 25/10 Mbps internet and hardware (omada router, Voip gateway and cordless phone)\t164.27",
+    "33169\tZam Coomera Square Pty Ltd\tSmileTel supplied NBN voice and internet bundle. 36-month plan with 25/10 Mbps internet and hardware (omada router, Voip gateway and cordless phone)\t142.30",
+    "33167\tZAMVIS PTY LTD for Zambrero Baldivis\tSmileTel supplied NBN voice and internet bundle. Month to month plan. Includes:- 1xVoice phone line,1xInternet service,1x4G Back-up, Static IP.  Unlimited calls to standard Australian numbers, Unlimited data allowance, Account management support.\t140.91",
+    "7\tZambrero Karratha (The Trustee for SURYAVEER UNIT TRUST)\tSmileTel supplied NBN voice and internet bundle. 36 month plan. Includes:- 1xVoice phone line,1xInternet service,1x4G Back-up, Static IP.  Unlimited calls to standard Australian numbers, Unlimited data allowance, Account management support.\t136.36",
+    "144\tZambrero Brabham (Surya Pty Ltd)\tSmileTel supplied NBN voice and internet bundle. Month to month plan. Includes:- 1xVoice phone line,1xInternet service,1x4G Back-up, Static IP.  Unlimited calls to standard Australian numbers, Unlimited data allowance, Account management support.\t136.36",
+    "162\tMa Pa Me\tSmileTel supplied mobile broadband. Month to month plan. Includes:- Unlimited data allowance, Account management support.\t131.36",
+    "33171\tZambrero West Pinjarra Southbound\tSmileTel supplied NBN voice and internet bundle. Month to month plan. Includes:- 1xVoice phone line,1xInternet service,1x4G Back-up, Static IP.  Unlimited calls to standard Australian numbers, Unlimited data allowance, Account management support.\t92.53",
+    "33172\tLittle Cha Tuggerah\tSmileTel supplied NBN voice and internet bundle. Month to month plan. Includes:- 1xVoice phone line,1xInternet service,1x4G Back-up, Static IP.  Unlimited calls to standard Australian numbers, Unlimited data allowance, Account management support.\t75.49",
+    "33179\tStrata Dynamics Pty Ltd\tTeams Voice SIP DID - 100 Range\t40.00",
+    "33177\tStrata Dynamics Pty Ltd\tTelstra Data SIM$30 per month for 100Gb + $1 per GB for additional usageTrimbles to pay all excess fees (Email 18/04/2024)\t30.00"
+  ],
+  "stdout": "externalId\tplanName\tprovider\tmonthlyCost\tmonthlyRevenue\nS0423\tNBN 25/10\tABB\t51.71\t136.36\nS1540\tSmileTel supplied NBN voice and internet bundle. 36 month plan. Includes:- 1xVoice phone line,1xInternet service,1x4G Back-up, S\tSmileTel\t84.70\t0.00\nS6951\t4G Back up\tVocus\t0.00\t0.00\nexternalId\tplanName\tprovider\tmonthlyCost\tmonthlyRevenue\nS0411\tNBN 50/20\tABB\t51.71\t0.00\nS7005\t4G Back up\tVocus\t0.00\t0.00\nexternalId\tplanName\tprovider\tmonthlyCost\tmonthlyRevenue\nS0013\tCore Internet\tTelstra\t93.00\t0.00\nexternalId\tplanName\tprovider\tmonthlyCost\tmonthlyRevenue\nS6983\t4G Back up\tVocus\t0.00\t0.00\nexternalId\tplanName\tprovider\tmonthlyCost\tmonthlyRevenue\nS6952\tStandard Mobile Service\tVocus\t0.00\t0.00\nS6953\tStandard Mobile Service\tVocus\t0.00\t0.00\nS7061\t4G Data Back up\tTIAB\t0.00\t0.00\nVOCUS-MOB-13599000\tVocus Mobile Service\tVocus\t0.00\t176.64\nVOCUS-MOB-13619752\tVocus Mobile Service\tVocus\t0.00\t0.00\nid\tcontactName\tdescription\tlineAmount\n33174\tCompass Assurance Services Pty Ltd\tSmile Tel NBN Enterprise Ethernet Fibre 500mb up/down - 36 MonthsEach\t500.00\n33173\tLead Education and Training Pty Ltd ATF the Piara\tFIBRE400/36\t399.00\n33181\tNu-Dev Pty Ltd\tSmile It TPG Fibre 400 36 Months + InstallEach\t399.00\n33176\tAUREE - Auriga Group\tFibre 400 Internet Service with AAPT\\, 36 mth commit\\, Effective 01/04/2022- Address  400 - Suite 2\\, 14 Argyle Street\\, Albion\\, QLD - Unlimited Data\\, Carrier SLA Service Restoration Target < 8Hrs\t399.00\n33180\tStrata Dynamics Pty Ltd\t400/400 Fibre Internet Service (Renewal 05/03/2027)\t374.00\n33168\tTYS MOLENDINAR PTY LTD\tSite Bundle - Recurring: 100/40 Connectivity - Suitable for Enterprise Grade, Premium Dedicated Support, Business Grade Hardware, 24/7 Connectivity Monitoring, 4G Backup, Enhanced Remote Assistance, Unlimited Phone Calls\t200.91\n33178\tStrata Dynamics Pty Ltd\tTeams Voice SIP Trunk - Unlimited Local/National/Mobile\t180.00\n33175\tJack Green\tPowerSheild 1200VA UPS - refurbished unit supplied to replace the failed APC 950VA unit.Two new Batteries installed and tested.No product warranty is available with this refurbished UPS unit.New Batteries provided with 12 Months Warranty.\t174.73\n33170\tZam Marrickville Pty Ltd\tSmileTel supplied NBN voice and internet bundle. 36-month plan with 25/10 Mbps internet and hardware (omada router, Voip gateway and cordless phone)\t164.27\n33169\tZam Coomera Square Pty Ltd\tSmileTel supplied NBN voice and internet bundle. 36-month plan with 25/10 Mbps internet and hardware (omada router, Voip gateway and cordless phone)\t142.30\n33167\tZAMVIS PTY LTD for Zambrero Baldivis\tSmileTel supplied NBN voice and internet bundle. Month to month plan. Includes:- 1xVoice phone line,1xInternet service,1x4G Back-up, Static IP.  Unlimited calls to standard Australian numbers, Unlimited data allowance, Account management support.\t140.91\n7\tZambrero Karratha (The Trustee for SURYAVEER UNIT TRUST)\tSmileTel supplied NBN voice and internet bundle. 36 month plan. Includes:- 1xVoice phone line,1xInternet service,1x4G Back-up, Static IP.  Unlimited calls to standard Australian numbers, Unlimited data allowance, Account management support.\t136.36\n144\tZambrero Brabham (Surya Pty Ltd)\tSmileTel supplied NBN voice and internet bundle. Month to month plan. Includes:- 1xVoice phone line,1xInternet service,1x4G Back-up, Static IP.  Unlimited calls to standard Australian numbers, Unlimited data allowance, Account management support.\t136.36\n162\tMa Pa Me\tSmileTel supplied mobile broadband. Month to month plan. Includes:- Unlimited data allowance, Account management support.\t131.36\n33171\tZambrero West Pinjarra Southbound\tSmileTel supplied NBN voice and internet bundle. Month to month plan. Includes:- 1xVoice phone line,1xInternet service,1x4G Back-up, Static IP.  Unlimited calls to standard Australian numbers, Unlimited data allowance, Account management support.\t92.53\n33172\tLittle Cha Tuggerah\tSmileTel supplied NBN voice and internet bundle. Month to month plan. Includes:- 1xVoice phone line,1xInternet service,1x4G Back-up, Static IP.  Unlimited calls to standard Australian numbers, Unlimited data allowance, Account management support.\t75.49\n33179\tStrata Dynamics Pty Ltd\tTeams Voice SIP DID - 100 Range\t40.00\n33177\tStrata Dynamics Pty Ltd\tTelstra Data SIM$30 per month for 100Gb + $1 per GB for additional usageTrimbles to pay all excess fees (Email 18/04/2024)\t30.00\n",
+  "stderr": "",
+  "execution_time_ms": 2674
+}

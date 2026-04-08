@@ -1,0 +1,25 @@
+{
+  "query": "\nSELECT COLUMN_NAME, COLUMN_TYPE, COLUMN_DEFAULT \nFROM INFORMATION_SCHEMA.COLUMNS \nWHERE TABLE_NAME = 'services' \nAND TABLE_SCHEMA = DATABASE()\nAND (COLUMN_NAME LIKE '%flag%' OR COLUMN_NAME LIKE '%review%' OR COLUMN_NAME LIKE '%status%' OR COLUMN_NAME LIKE '%note%')\nORDER BY ORDINAL_POSITION;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \nSELECT COLUMN_NAME, COLUMN_TYPE, COLUMN_DEFAULT \nFROM INFORMATION_SCHEMA.COLUMNS \nWHERE TABLE_NAME = 'services' \nAND TABLE_SCHEMA = DATABASE()\nAND (COLUMN_NAME LIKE '%flag%' OR COLUMN_NAME LIKE '%review%' OR COLUMN_NAME LIKE '%status%' OR COLUMN_NAME LIKE '%note%')\nORDER BY ORDINAL_POSITION;\n",
+  "rows": [
+    {
+      "COLUMN_NAME": "status",
+      "COLUMN_TYPE": "varchar(32)",
+      "COLUMN_DEFAULT": "active"
+    },
+    {
+      "COLUMN_NAME": "notesAuthor",
+      "COLUMN_TYPE": "varchar(256)",
+      "COLUMN_DEFAULT": ""
+    },
+    {
+      "COLUMN_NAME": "notesUpdatedAt",
+      "COLUMN_TYPE": "varchar(64)",
+      "COLUMN_DEFAULT": ""
+    }
+  ],
+  "messages": [],
+  "stdout": "COLUMN_NAME\tCOLUMN_TYPE\tCOLUMN_DEFAULT\nstatus\tvarchar(32)\tactive\nnotesAuthor\tvarchar(256)\t\nnotesUpdatedAt\tvarchar(64)\t\n",
+  "stderr": "",
+  "execution_time_ms": 1571
+}

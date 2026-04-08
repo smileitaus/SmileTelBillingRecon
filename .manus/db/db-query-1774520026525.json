@@ -1,0 +1,58 @@
+{
+  "query": "\nSELECT c.externalId, c.name, s.serviceId, s.planName, s.monthlyCost, s.monthlyRevenue\nFROM customers c\nJOIN services s ON s.customerExternalId = c.externalId\nWHERE c.externalId IN (\n  SELECT externalId FROM customers \n  WHERE name LIKE '%Active Living%' \n    OR name LIKE '%True Metal%' \n    OR name LIKE '%Swara%' \n    OR name LIKE '%Fast Cut%' \n    OR name LIKE '%Bracken Ridge%'\n    OR name LIKE '%Mooloolaba%'\n    OR name LIKE '%Nicki%'\n)\nAND s.monthlyCost = 49.00;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \nSELECT c.externalId, c.name, s.serviceId, s.planName, s.monthlyCost, s.monthlyRevenue\nFROM customers c\nJOIN services s ON s.customerExternalId = c.externalId\nWHERE c.externalId IN (\n  SELECT externalId FROM customers \n  WHERE name LIKE '%Active Living%' \n    OR name LIKE '%True Metal%' \n    OR name LIKE '%Swara%' \n    OR name LIKE '%Fast Cut%' \n    OR name LIKE '%Bracken Ridge%'\n    OR name LIKE '%Mooloolaba%'\n    OR name LIKE '%Nicki%'\n)\nAND s.monthlyCost = 49.00;\n",
+  "rows": [
+    {
+      "externalId": "C0003",
+      "name": "Active Living - Allen Developments Pty Ltd",
+      "serviceId": "",
+      "planName": "Other",
+      "monthlyCost": "49.00",
+      "monthlyRevenue": "20.00"
+    },
+    {
+      "externalId": "C0044",
+      "name": "Bracken Ridge Family Practice",
+      "serviceId": "",
+      "planName": "Other",
+      "monthlyCost": "49.00",
+      "monthlyRevenue": "35.00"
+    },
+    {
+      "externalId": "C0091",
+      "name": "Fast Cut Qld Pty Ltd",
+      "serviceId": "",
+      "planName": "4G Data Backup Service",
+      "monthlyCost": "49.00",
+      "monthlyRevenue": "30.00"
+    },
+    {
+      "externalId": "C0235",
+      "name": "Swara",
+      "serviceId": "",
+      "planName": "Other",
+      "monthlyCost": "49.00",
+      "monthlyRevenue": "25.00"
+    },
+    {
+      "externalId": "C0271",
+      "name": "True Metal Solutions",
+      "serviceId": "",
+      "planName": "Other",
+      "monthlyCost": "49.00",
+      "monthlyRevenue": "35.00"
+    },
+    {
+      "externalId": "C2893",
+      "name": "NICKI'S PROFESSIONAL SECURITY SCREENS AND BLINDS",
+      "serviceId": "",
+      "planName": "Other",
+      "monthlyCost": "49.00",
+      "monthlyRevenue": "39.00"
+    }
+  ],
+  "messages": [],
+  "stdout": "externalId\tname\tserviceId\tplanName\tmonthlyCost\tmonthlyRevenue\nC0003\tActive Living - Allen Developments Pty Ltd\t\tOther\t49.00\t20.00\nC0044\tBracken Ridge Family Practice\t\tOther\t49.00\t35.00\nC0091\tFast Cut Qld Pty Ltd\t\t4G Data Backup Service\t49.00\t30.00\nC0235\tSwara\t\tOther\t49.00\t25.00\nC0271\tTrue Metal Solutions\t\tOther\t49.00\t35.00\nC2893\tNICKI'S PROFESSIONAL SECURITY SCREENS AND BLINDS\t\tOther\t49.00\t39.00\n",
+  "stderr": "",
+  "execution_time_ms": 1630
+}

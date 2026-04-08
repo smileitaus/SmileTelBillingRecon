@@ -1,0 +1,74 @@
+{
+  "query": "SELECT s.planName, s.monthlyCost, s.monthlyRevenue, s.marginPercent, s.billingPlatform, s.provider FROM services s WHERE s.billingPlatform LIKE '%SasBoss%' AND s.monthlyRevenue > 0 LIMIT 8;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute SELECT s.planName, s.monthlyCost, s.monthlyRevenue, s.marginPercent, s.billingPlatform, s.provider FROM services s WHERE s.billingPlatform LIKE '%SasBoss%' AND s.monthlyRevenue > 0 LIMIT 8;",
+  "rows": [
+    {
+      "planName": "Voice - Direct In Dial Numbers",
+      "monthlyCost": "0.33",
+      "monthlyRevenue": "2.00",
+      "marginPercent": "83.50",
+      "billingPlatform": "[\"SasBoss\"]",
+      "provider": "SasBoss"
+    },
+    {
+      "planName": "Voice - Services",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "30.00",
+      "marginPercent": "NULL",
+      "billingPlatform": "[\"SasBoss\"]",
+      "provider": "SasBoss"
+    },
+    {
+      "planName": "Voice - Telephone Usage",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "6.38",
+      "marginPercent": "NULL",
+      "billingPlatform": "[\"SasBoss\"]",
+      "provider": "SasBoss"
+    },
+    {
+      "planName": "Data - Internet",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "183.36",
+      "marginPercent": "NULL",
+      "billingPlatform": "[\"SasBoss\"]",
+      "provider": "SasBoss"
+    },
+    {
+      "planName": "Data - Internet",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "98.00",
+      "marginPercent": "NULL",
+      "billingPlatform": "[\"SasBoss\"]",
+      "provider": "Vocus"
+    },
+    {
+      "planName": "Voice - Direct In Dial Numbers",
+      "monthlyCost": "0.66",
+      "monthlyRevenue": "4.00",
+      "marginPercent": "83.50",
+      "billingPlatform": "[\"SasBoss\"]",
+      "provider": "SasBoss"
+    },
+    {
+      "planName": "Voice - Services",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "60.00",
+      "marginPercent": "NULL",
+      "billingPlatform": "[\"SasBoss\"]",
+      "provider": "SasBoss"
+    },
+    {
+      "planName": "Voice - Telephone Usage",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.90",
+      "marginPercent": "NULL",
+      "billingPlatform": "[\"SasBoss\"]",
+      "provider": "SasBoss"
+    }
+  ],
+  "messages": [],
+  "stdout": "planName\tmonthlyCost\tmonthlyRevenue\tmarginPercent\tbillingPlatform\tprovider\nVoice - Direct In Dial Numbers\t0.33\t2.00\t83.50\t[\"SasBoss\"]\tSasBoss\nVoice - Services\t0.00\t30.00\tNULL\t[\"SasBoss\"]\tSasBoss\nVoice - Telephone Usage\t0.00\t6.38\tNULL\t[\"SasBoss\"]\tSasBoss\nData - Internet\t0.00\t183.36\tNULL\t[\"SasBoss\"]\tSasBoss\nData - Internet\t0.00\t98.00\tNULL\t[\"SasBoss\"]\tVocus\nVoice - Direct In Dial Numbers\t0.66\t4.00\t83.50\t[\"SasBoss\"]\tSasBoss\nVoice - Services\t0.00\t60.00\tNULL\t[\"SasBoss\"]\tSasBoss\nVoice - Telephone Usage\t0.00\t0.90\tNULL\t[\"SasBoss\"]\tSasBoss\n",
+  "stderr": "",
+  "execution_time_ms": 1626
+}

@@ -1,0 +1,18 @@
+{
+  "query": "\nSELECT \n  COUNT(*) as total_telstra_services,\n  SUM(CASE WHEN connectionId IS NOT NULL AND connectionId != '' THEN 1 ELSE 0 END) as has_connection_id,\n  SUM(CASE WHEN externalId IS NOT NULL AND externalId != '' THEN 1 ELSE 0 END) as has_external_id,\n  SUM(CASE WHEN status = 'flagged' THEN 1 ELSE 0 END) as flagged,\n  SUM(CASE WHEN status = 'active' THEN 1 ELSE 0 END) as active,\n  SUM(CASE WHEN status = 'cancelled' THEN 1 ELSE 0 END) as cancelled\nFROM services \nWHERE supplierName = 'Telstra';\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \nSELECT \n  COUNT(*) as total_telstra_services,\n  SUM(CASE WHEN connectionId IS NOT NULL AND connectionId != '' THEN 1 ELSE 0 END) as has_connection_id,\n  SUM(CASE WHEN externalId IS NOT NULL AND externalId != '' THEN 1 ELSE 0 END) as has_external_id,\n  SUM(CASE WHEN status = 'flagged' THEN 1 ELSE 0 END) as flagged,\n  SUM(CASE WHEN status = 'active' THEN 1 ELSE 0 END) as active,\n  SUM(CASE WHEN status = 'cancelled' THEN 1 ELSE 0 END) as cancelled\nFROM services \nWHERE supplierName = 'Telstra';\n",
+  "rows": [
+    {
+      "total_telstra_services": "768",
+      "has_connection_id": "22",
+      "has_external_id": "768",
+      "flagged": "0",
+      "active": "389",
+      "cancelled": "0"
+    }
+  ],
+  "messages": [],
+  "stdout": "total_telstra_services\thas_connection_id\thas_external_id\tflagged\tactive\tcancelled\n768\t22\t768\t0\t389\t0\n",
+  "stderr": "",
+  "execution_time_ms": 2170
+}

@@ -1,0 +1,610 @@
+{
+  "query": "SELECT externalId, planName, serviceType, provider, monthlyCost, monthlyRevenue, customerExternalId,\n  (SELECT name FROM customers WHERE externalId = s.customerExternalId) as customerName\nFROM services s\nWHERE provider = 'SasBoss' \n  AND monthlyCost = 0\n  AND (status IS NULL OR status != 'terminated')\n  AND customerExternalId IS NOT NULL AND customerExternalId != ''\nORDER BY planName\nLIMIT 60;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute SELECT externalId, planName, serviceType, provider, monthlyCost, monthlyRevenue, customerExternalId,\n  (SELECT name FROM customers WHERE externalId = s.customerExternalId) as customerName\nFROM services s\nWHERE provider = 'SasBoss' \n  AND monthlyCost = 0\n  AND (status IS NULL OR status != 'terminated')\n  AND customerExternalId IS NOT NULL AND customerExternalId != ''\nORDER BY planName\nLIMIT 60;",
+  "rows": [
+    {
+      "externalId": "S1351",
+      "planName": "- 4G Failover Sim 7.5Gb p/site p/month",
+      "serviceType": "Mobile",
+      "provider": "SasBoss",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "1520.00",
+      "customerExternalId": "C0222",
+      "customerName": "Sparrow Group Management Pty Ltd"
+    },
+    {
+      "externalId": "S1352",
+      "planName": "- ALKIMOS - 3/3 BULWARK AVE, ALKIMOS WA 6038, AUSTRALIA - 100/20Mbps ABB Unlimited Data (Opticomm FTTP)",
+      "serviceType": "Internet",
+      "provider": "SasBoss",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "1931.88",
+      "customerExternalId": "C0222",
+      "customerName": "Sparrow Group Management Pty Ltd"
+    },
+    {
+      "externalId": "S1353",
+      "planName": "- BENTLEY - 81B MANNING RD, BENTLEY WA 6102, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data",
+      "serviceType": "Internet",
+      "provider": "SasBoss",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C0222",
+      "customerName": "Sparrow Group Management Pty Ltd"
+    },
+    {
+      "externalId": "S1354",
+      "planName": "- CANNING VALE - 2 FORUM AVE, CANNING VALE WA 6155, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data",
+      "serviceType": "Internet",
+      "provider": "SasBoss",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C0222",
+      "customerName": "Sparrow Group Management Pty Ltd"
+    },
+    {
+      "externalId": "S1355",
+      "planName": "- ELLENBROOK - 1 DELMAGE CIR, ELLENBROOK WA 6069, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data",
+      "serviceType": "Internet",
+      "provider": "SasBoss",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C0222",
+      "customerName": "Sparrow Group Management Pty Ltd"
+    },
+    {
+      "externalId": "S1356",
+      "planName": "- GREENWOOD - 65 WANNEROO RD, GREENWOOD WA 6024, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data",
+      "serviceType": "Internet",
+      "provider": "SasBoss",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C0222",
+      "customerName": "Sparrow Group Management Pty Ltd"
+    },
+    {
+      "externalId": "S1357",
+      "planName": "- HIGH WYCOMBE - 1 BERLE WAY, HIGH WYCOMBE WA 6057, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data",
+      "serviceType": "Internet",
+      "provider": "SasBoss",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C0222",
+      "customerName": "Sparrow Group Management Pty Ltd"
+    },
+    {
+      "externalId": "S1358",
+      "planName": "- HILTON - 299 SOUTH ST, HILTON WA 6163, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data",
+      "serviceType": "Internet",
+      "provider": "SasBoss",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C0222",
+      "customerName": "Sparrow Group Management Pty Ltd"
+    },
+    {
+      "externalId": "S1102",
+      "planName": "- KELMSCOTT - 84 WESTFIELD RD, KELMSCOTT WA 6111, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data",
+      "serviceType": "Internet",
+      "provider": "SasBoss",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "227.28",
+      "customerExternalId": "C0153",
+      "customerName": "Love to Learn Childcare Pty Ltd"
+    },
+    {
+      "externalId": "S1359",
+      "planName": "- MORLEY - CHERRY COURT CHILD CARE CENTRE, 10 CHERRY CT, MORLEY WA 6062, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data",
+      "serviceType": "Internet",
+      "provider": "SasBoss",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C0222",
+      "customerName": "Sparrow Group Management Pty Ltd"
+    },
+    {
+      "externalId": "S1360",
+      "planName": "- NEDLANDS - 73 STIRLING HWY, NEDLANDS WA 6009, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data",
+      "serviceType": "Internet",
+      "provider": "SasBoss",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C0222",
+      "customerName": "Sparrow Group Management Pty Ltd"
+    },
+    {
+      "externalId": "S1361",
+      "planName": "- NORTHAM - 8 DUKE ST E, NORTHAM WA 6401, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data",
+      "serviceType": "Internet",
+      "provider": "SasBoss",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C0222",
+      "customerName": "Sparrow Group Management Pty Ltd"
+    },
+    {
+      "externalId": "S1362",
+      "planName": "- SEVILLE GROVE - 11 LISBON WAY, SEVILLE GROVE WA 6112, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data",
+      "serviceType": "Internet",
+      "provider": "SasBoss",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C0222",
+      "customerName": "Sparrow Group Management Pty Ltd"
+    },
+    {
+      "externalId": "S1363",
+      "planName": "- SWANBOURNE - 153 CLAREMONT CRES, SWANBOURNE WA 6010, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data",
+      "serviceType": "Internet",
+      "provider": "SasBoss",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C0222",
+      "customerName": "Sparrow Group Management Pty Ltd"
+    },
+    {
+      "externalId": "S1364",
+      "planName": "- THORNLIE - 190 YALE RD, THORNLIE WA 6108, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data",
+      "serviceType": "Internet",
+      "provider": "SasBoss",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C0222",
+      "customerName": "Sparrow Group Management Pty Ltd"
+    },
+    {
+      "externalId": "S1365",
+      "planName": "- WANNEROO - 32 MULWARRIE CIR, WANNEROO WA 6065, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data",
+      "serviceType": "Internet",
+      "provider": "SasBoss",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C0222",
+      "customerName": "Sparrow Group Management Pty Ltd"
+    },
+    {
+      "externalId": "S1366",
+      "planName": "- WANNEROO - 42 SCOTT RD, WANNEROO WA 6065, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data",
+      "serviceType": "Internet",
+      "provider": "SasBoss",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C0222",
+      "customerName": "Sparrow Group Management Pty Ltd"
+    },
+    {
+      "externalId": "S1367",
+      "planName": "- WARWICK - 121 ELLERSDALE AVE, WARWICK WA 6024, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data",
+      "serviceType": "Internet",
+      "provider": "SasBoss",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C0222",
+      "customerName": "Sparrow Group Management Pty Ltd"
+    },
+    {
+      "externalId": "S1368",
+      "planName": "- WEST LEEDERVILLE - 170 RAILWAY PARADE, WEST LEEDERVILLE WA 6007, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data",
+      "serviceType": "Internet",
+      "provider": "SasBoss",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C0222",
+      "customerName": "Sparrow Group Management Pty Ltd"
+    },
+    {
+      "externalId": "SS17UWN3",
+      "planName": "(blank)",
+      "serviceType": "Voice",
+      "provider": "SasBoss",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C0126",
+      "customerName": "Jayden Adams"
+    },
+    {
+      "externalId": "SSGZFLI4",
+      "planName": "(blank)",
+      "serviceType": "Voice",
+      "provider": "SasBoss",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "136.36",
+      "customerExternalId": "C0296",
+      "customerName": "Zambrero Albion"
+    },
+    {
+      "externalId": "SSQ1OQVA",
+      "planName": "(blank)",
+      "serviceType": "Voice",
+      "provider": "SasBoss",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C0183",
+      "customerName": "PD Capital"
+    },
+    {
+      "externalId": "SSDIH5KL",
+      "planName": "(blank)",
+      "serviceType": "Voice",
+      "provider": "SasBoss",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C0276",
+      "customerName": "UMC North Lakes"
+    },
+    {
+      "externalId": "SS50FT94",
+      "planName": "(blank)",
+      "serviceType": "Voice",
+      "provider": "SasBoss",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C0060",
+      "customerName": "Clear Insurance"
+    },
+    {
+      "externalId": "SSJ39VBK",
+      "planName": "(blank)",
+      "serviceType": "Voice",
+      "provider": "SasBoss",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C0283",
+      "customerName": "W&T Parcel & Freight"
+    },
+    {
+      "externalId": "SSFDAAB6",
+      "planName": "(blank)",
+      "serviceType": "Voice",
+      "provider": "SasBoss",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C2892",
+      "customerName": "Renovo Solutions Pty Ltd"
+    },
+    {
+      "externalId": "SSPZSKOT",
+      "planName": "(blank)",
+      "serviceType": "Voice",
+      "provider": "SasBoss",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C0178",
+      "customerName": "Oakhurst Gun Works"
+    },
+    {
+      "externalId": "SS53G7N0",
+      "planName": "(blank)",
+      "serviceType": "Voice",
+      "provider": "SasBoss",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C7513",
+      "customerName": "Aus Ships"
+    },
+    {
+      "externalId": "SSECUVVH",
+      "planName": "(blank)",
+      "serviceType": "Voice",
+      "provider": "SasBoss",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C0068",
+      "customerName": "Core Glass & Aluminium"
+    },
+    {
+      "externalId": "SSKQ6G8O",
+      "planName": "(blank)",
+      "serviceType": "Voice",
+      "provider": "SasBoss",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C0002",
+      "customerName": "A M Emerick & T J Morrice"
+    },
+    {
+      "externalId": "SSZGO9Z5",
+      "planName": "(blank)",
+      "serviceType": "Voice",
+      "provider": "SasBoss",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C0110",
+      "customerName": "Greg & Jan Taylor"
+    },
+    {
+      "externalId": "SS9W8482",
+      "planName": "(blank)",
+      "serviceType": "Voice",
+      "provider": "SasBoss",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C0199",
+      "customerName": "RND Pilates Pty Ltd"
+    },
+    {
+      "externalId": "SSG6UD9K",
+      "planName": "(blank)",
+      "serviceType": "Voice",
+      "provider": "SasBoss",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C7513",
+      "customerName": "Aus Ships"
+    },
+    {
+      "externalId": "SSO5142U",
+      "planName": "(blank)",
+      "serviceType": "Voice",
+      "provider": "SasBoss",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C0036",
+      "customerName": "BELL CRIMINAL LAWYERS PTY LTD"
+    },
+    {
+      "externalId": "SSL83PNY",
+      "planName": "(blank)",
+      "serviceType": "Voice",
+      "provider": "SasBoss",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C0152",
+      "customerName": "London Fire And Safe"
+    },
+    {
+      "externalId": "SSZOUSOK",
+      "planName": "(blank)",
+      "serviceType": "Voice",
+      "provider": "SasBoss",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C0053",
+      "customerName": "Canossa Medical Centre Pharmacy"
+    },
+    {
+      "externalId": "SSMWZFNX",
+      "planName": "(blank)",
+      "serviceType": "Voice",
+      "provider": "SasBoss",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C0277",
+      "customerName": "Urban Garden"
+    },
+    {
+      "externalId": "SS8CSUZN",
+      "planName": "(blank)",
+      "serviceType": "Voice",
+      "provider": "SasBoss",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C0073",
+      "customerName": "CU@N8S"
+    },
+    {
+      "externalId": "SS5H2FJO",
+      "planName": "(blank)",
+      "serviceType": "Voice",
+      "provider": "SasBoss",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C0051",
+      "customerName": "Cala Luna Rental"
+    },
+    {
+      "externalId": "SS19QKBZ",
+      "planName": "(blank)",
+      "serviceType": "Voice",
+      "provider": "SasBoss",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C2891",
+      "customerName": "Travellers Rockhampton Pty Ltd (CityVille Apartments & Motel)"
+    },
+    {
+      "externalId": "SSDQ48J6",
+      "planName": "(blank)",
+      "serviceType": "Voice",
+      "provider": "SasBoss",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C0021",
+      "customerName": "Ausavo Corporation Pty Ltd"
+    },
+    {
+      "externalId": "SSJVMS2X",
+      "planName": "(blank)",
+      "serviceType": "Voice",
+      "provider": "SasBoss",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C0006",
+      "customerName": "Agnes Water Beauty Hub"
+    },
+    {
+      "externalId": "SSNO0NYY",
+      "planName": "(blank)",
+      "serviceType": "Voice",
+      "provider": "SasBoss",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C0190",
+      "customerName": "Red Ridge Produce"
+    },
+    {
+      "externalId": "SSA7C4ZZ",
+      "planName": "(blank)",
+      "serviceType": "Voice",
+      "provider": "SasBoss",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C2887",
+      "customerName": "Accountant Ready Services"
+    },
+    {
+      "externalId": "SSSK1RXA",
+      "planName": "(blank)",
+      "serviceType": "Voice",
+      "provider": "SasBoss",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C0172",
+      "customerName": "Noma Themba"
+    },
+    {
+      "externalId": "SS4LWMWJ",
+      "planName": "(blank)",
+      "serviceType": "Voice",
+      "provider": "SasBoss",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C0085",
+      "customerName": "Edens Landing Doctors"
+    },
+    {
+      "externalId": "SS5Q2IT8",
+      "planName": "(blank)",
+      "serviceType": "Voice",
+      "provider": "SasBoss",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C2903",
+      "customerName": "Hemmingway Financial Pty Ltd"
+    },
+    {
+      "externalId": "SSPDB80F",
+      "planName": "(blank)",
+      "serviceType": "Voice",
+      "provider": "SasBoss",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "100.00",
+      "customerExternalId": "C0119",
+      "customerName": "Hervey Bay Garden Centre"
+    },
+    {
+      "externalId": "S1212",
+      "planName": "1 Channels Business SIP. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "serviceType": "VoIP",
+      "provider": "SasBoss",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "314.00",
+      "customerExternalId": "C0204",
+      "customerName": "Rode Medical Clinic"
+    },
+    {
+      "externalId": "S0971",
+      "planName": "1 Channels Business SIP. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "serviceType": "VoIP",
+      "provider": "SasBoss",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "133.00",
+      "customerExternalId": "C0093",
+      "customerName": "Firstcare Doctors Pty Ltd"
+    },
+    {
+      "externalId": "S1140",
+      "planName": "1 Miscellaneous Calls :  For the period ending 31-Jan-2026",
+      "serviceType": "Voice",
+      "provider": "SasBoss",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "98.70",
+      "customerExternalId": "C0165",
+      "customerName": "Mother Duck Enoggera Pty Ltd"
+    },
+    {
+      "externalId": "S0760",
+      "planName": "1 Mobile Calls :  For the period ending 31-Jan-2026",
+      "serviceType": "Mobile",
+      "provider": "SasBoss",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "289.10",
+      "customerExternalId": "C0009",
+      "customerName": "Albany Family Doctors"
+    },
+    {
+      "externalId": "S1028",
+      "planName": "1# Rental. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "serviceType": "Voice",
+      "provider": "SasBoss",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "339.00",
+      "customerExternalId": "C0127",
+      "customerName": "Jema Clinic"
+    },
+    {
+      "externalId": "S1013",
+      "planName": "1# Rental. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "serviceType": "Voice",
+      "provider": "SasBoss",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "191.03",
+      "customerExternalId": "C0118",
+      "customerName": "Havilah Medical Centre Doreen"
+    },
+    {
+      "externalId": "S1400",
+      "planName": "1# Rental. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "serviceType": "Voice",
+      "provider": "SasBoss",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "240.10",
+      "customerExternalId": "C0229",
+      "customerName": "Stafford Heights Medical Practice"
+    },
+    {
+      "externalId": "S1163",
+      "planName": "1# Rental. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "serviceType": "Voice",
+      "provider": "SasBoss",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "235.90",
+      "customerExternalId": "C0174",
+      "customerName": "North West Hospital Cardiology"
+    },
+    {
+      "externalId": "S1173",
+      "planName": "1# Rental. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "serviceType": "Voice",
+      "provider": "SasBoss",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "247.00",
+      "customerExternalId": "C0179",
+      "customerName": "OceanMed Enterprises Pty Ltd"
+    },
+    {
+      "externalId": "S1190",
+      "planName": "1# Rental. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "serviceType": "Voice",
+      "provider": "SasBoss",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "196.10",
+      "customerExternalId": "C0195",
+      "customerName": "Rickys Noosa"
+    },
+    {
+      "externalId": "S1094",
+      "planName": "1# Rental. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "serviceType": "Voice",
+      "provider": "SasBoss",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "148.70",
+      "customerExternalId": "C0150",
+      "customerName": "Locanda Pty Ltd"
+    },
+    {
+      "externalId": "S1475",
+      "planName": "1# Rental. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "serviceType": "Voice",
+      "provider": "SasBoss",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "141.00",
+      "customerExternalId": "C0284",
+      "customerName": "Warwick Medical Centre"
+    }
+  ],
+  "messages": [],
+  "stdout": "externalId\tplanName\tserviceType\tprovider\tmonthlyCost\tmonthlyRevenue\tcustomerExternalId\tcustomerName\nS1351\t- 4G Failover Sim 7.5Gb p/site p/month\tMobile\tSasBoss\t0.00\t1520.00\tC0222\tSparrow Group Management Pty Ltd\nS1352\t- ALKIMOS - 3/3 BULWARK AVE, ALKIMOS WA 6038, AUSTRALIA - 100/20Mbps ABB Unlimited Data (Opticomm FTTP)\tInternet\tSasBoss\t0.00\t1931.88\tC0222\tSparrow Group Management Pty Ltd\nS1353\t- BENTLEY - 81B MANNING RD, BENTLEY WA 6102, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data\tInternet\tSasBoss\t0.00\t0.00\tC0222\tSparrow Group Management Pty Ltd\nS1354\t- CANNING VALE - 2 FORUM AVE, CANNING VALE WA 6155, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data\tInternet\tSasBoss\t0.00\t0.00\tC0222\tSparrow Group Management Pty Ltd\nS1355\t- ELLENBROOK - 1 DELMAGE CIR, ELLENBROOK WA 6069, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data\tInternet\tSasBoss\t0.00\t0.00\tC0222\tSparrow Group Management Pty Ltd\nS1356\t- GREENWOOD - 65 WANNEROO RD, GREENWOOD WA 6024, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data\tInternet\tSasBoss\t0.00\t0.00\tC0222\tSparrow Group Management Pty Ltd\nS1357\t- HIGH WYCOMBE - 1 BERLE WAY, HIGH WYCOMBE WA 6057, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data\tInternet\tSasBoss\t0.00\t0.00\tC0222\tSparrow Group Management Pty Ltd\nS1358\t- HILTON - 299 SOUTH ST, HILTON WA 6163, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data\tInternet\tSasBoss\t0.00\t0.00\tC0222\tSparrow Group Management Pty Ltd\nS1102\t- KELMSCOTT - 84 WESTFIELD RD, KELMSCOTT WA 6111, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data\tInternet\tSasBoss\t0.00\t227.28\tC0153\tLove to Learn Childcare Pty Ltd\nS1359\t- MORLEY - CHERRY COURT CHILD CARE CENTRE, 10 CHERRY CT, MORLEY WA 6062, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data\tInternet\tSasBoss\t0.00\t0.00\tC0222\tSparrow Group Management Pty Ltd\nS1360\t- NEDLANDS - 73 STIRLING HWY, NEDLANDS WA 6009, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data\tInternet\tSasBoss\t0.00\t0.00\tC0222\tSparrow Group Management Pty Ltd\nS1361\t- NORTHAM - 8 DUKE ST E, NORTHAM WA 6401, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data\tInternet\tSasBoss\t0.00\t0.00\tC0222\tSparrow Group Management Pty Ltd\nS1362\t- SEVILLE GROVE - 11 LISBON WAY, SEVILLE GROVE WA 6112, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data\tInternet\tSasBoss\t0.00\t0.00\tC0222\tSparrow Group Management Pty Ltd\nS1363\t- SWANBOURNE - 153 CLAREMONT CRES, SWANBOURNE WA 6010, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data\tInternet\tSasBoss\t0.00\t0.00\tC0222\tSparrow Group Management Pty Ltd\nS1364\t- THORNLIE - 190 YALE RD, THORNLIE WA 6108, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data\tInternet\tSasBoss\t0.00\t0.00\tC0222\tSparrow Group Management Pty Ltd\nS1365\t- WANNEROO - 32 MULWARRIE CIR, WANNEROO WA 6065, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data\tInternet\tSasBoss\t0.00\t0.00\tC0222\tSparrow Group Management Pty Ltd\nS1366\t- WANNEROO - 42 SCOTT RD, WANNEROO WA 6065, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data\tInternet\tSasBoss\t0.00\t0.00\tC0222\tSparrow Group Management Pty Ltd\nS1367\t- WARWICK - 121 ELLERSDALE AVE, WARWICK WA 6024, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data\tInternet\tSasBoss\t0.00\t0.00\tC0222\tSparrow Group Management Pty Ltd\nS1368\t- WEST LEEDERVILLE - 170 RAILWAY PARADE, WEST LEEDERVILLE WA 6007, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data\tInternet\tSasBoss\t0.00\t0.00\tC0222\tSparrow Group Management Pty Ltd\nSS17UWN3\t(blank)\tVoice\tSasBoss\t0.00\t0.00\tC0126\tJayden Adams\nSSGZFLI4\t(blank)\tVoice\tSasBoss\t0.00\t136.36\tC0296\tZambrero Albion\nSSQ1OQVA\t(blank)\tVoice\tSasBoss\t0.00\t0.00\tC0183\tPD Capital\nSSDIH5KL\t(blank)\tVoice\tSasBoss\t0.00\t0.00\tC0276\tUMC North Lakes\nSS50FT94\t(blank)\tVoice\tSasBoss\t0.00\t0.00\tC0060\tClear Insurance\nSSJ39VBK\t(blank)\tVoice\tSasBoss\t0.00\t0.00\tC0283\tW&T Parcel & Freight\nSSFDAAB6\t(blank)\tVoice\tSasBoss\t0.00\t0.00\tC2892\tRenovo Solutions Pty Ltd\nSSPZSKOT\t(blank)\tVoice\tSasBoss\t0.00\t0.00\tC0178\tOakhurst Gun Works\nSS53G7N0\t(blank)\tVoice\tSasBoss\t0.00\t0.00\tC7513\tAus Ships\nSSECUVVH\t(blank)\tVoice\tSasBoss\t0.00\t0.00\tC0068\tCore Glass & Aluminium\nSSKQ6G8O\t(blank)\tVoice\tSasBoss\t0.00\t0.00\tC0002\tA M Emerick & T J Morrice\nSSZGO9Z5\t(blank)\tVoice\tSasBoss\t0.00\t0.00\tC0110\tGreg & Jan Taylor\nSS9W8482\t(blank)\tVoice\tSasBoss\t0.00\t0.00\tC0199\tRND Pilates Pty Ltd\nSSG6UD9K\t(blank)\tVoice\tSasBoss\t0.00\t0.00\tC7513\tAus Ships\nSSO5142U\t(blank)\tVoice\tSasBoss\t0.00\t0.00\tC0036\tBELL CRIMINAL LAWYERS PTY LTD\nSSL83PNY\t(blank)\tVoice\tSasBoss\t0.00\t0.00\tC0152\tLondon Fire And Safe\nSSZOUSOK\t(blank)\tVoice\tSasBoss\t0.00\t0.00\tC0053\tCanossa Medical Centre Pharmacy\nSSMWZFNX\t(blank)\tVoice\tSasBoss\t0.00\t0.00\tC0277\tUrban Garden\nSS8CSUZN\t(blank)\tVoice\tSasBoss\t0.00\t0.00\tC0073\tCU@N8S\nSS5H2FJO\t(blank)\tVoice\tSasBoss\t0.00\t0.00\tC0051\tCala Luna Rental\nSS19QKBZ\t(blank)\tVoice\tSasBoss\t0.00\t0.00\tC2891\tTravellers Rockhampton Pty Ltd (CityVille Apartments & Motel)\nSSDQ48J6\t(blank)\tVoice\tSasBoss\t0.00\t0.00\tC0021\tAusavo Corporation Pty Ltd\nSSJVMS2X\t(blank)\tVoice\tSasBoss\t0.00\t0.00\tC0006\tAgnes Water Beauty Hub\nSSNO0NYY\t(blank)\tVoice\tSasBoss\t0.00\t0.00\tC0190\tRed Ridge Produce\nSSA7C4ZZ\t(blank)\tVoice\tSasBoss\t0.00\t0.00\tC2887\tAccountant Ready Services\nSSSK1RXA\t(blank)\tVoice\tSasBoss\t0.00\t0.00\tC0172\tNoma Themba\nSS4LWMWJ\t(blank)\tVoice\tSasBoss\t0.00\t0.00\tC0085\tEdens Landing Doctors\nSS5Q2IT8\t(blank)\tVoice\tSasBoss\t0.00\t0.00\tC2903\tHemmingway Financial Pty Ltd\nSSPDB80F\t(blank)\tVoice\tSasBoss\t0.00\t100.00\tC0119\tHervey Bay Garden Centre\nS1212\t1 Channels Business SIP. Starting: 01-Feb-2026. Ending: 28-Feb-2026\tVoIP\tSasBoss\t0.00\t314.00\tC0204\tRode Medical Clinic\nS0971\t1 Channels Business SIP. Starting: 01-Feb-2026. Ending: 28-Feb-2026\tVoIP\tSasBoss\t0.00\t133.00\tC0093\tFirstcare Doctors Pty Ltd\nS1140\t1 Miscellaneous Calls :  For the period ending 31-Jan-2026\tVoice\tSasBoss\t0.00\t98.70\tC0165\tMother Duck Enoggera Pty Ltd\nS0760\t1 Mobile Calls :  For the period ending 31-Jan-2026\tMobile\tSasBoss\t0.00\t289.10\tC0009\tAlbany Family Doctors\nS1028\t1# Rental. Starting: 01-Feb-2026. Ending: 28-Feb-2026\tVoice\tSasBoss\t0.00\t339.00\tC0127\tJema Clinic\nS1013\t1# Rental. Starting: 01-Feb-2026. Ending: 28-Feb-2026\tVoice\tSasBoss\t0.00\t191.03\tC0118\tHavilah Medical Centre Doreen\nS1400\t1# Rental. Starting: 01-Feb-2026. Ending: 28-Feb-2026\tVoice\tSasBoss\t0.00\t240.10\tC0229\tStafford Heights Medical Practice\nS1163\t1# Rental. Starting: 01-Feb-2026. Ending: 28-Feb-2026\tVoice\tSasBoss\t0.00\t235.90\tC0174\tNorth West Hospital Cardiology\nS1173\t1# Rental. Starting: 01-Feb-2026. Ending: 28-Feb-2026\tVoice\tSasBoss\t0.00\t247.00\tC0179\tOceanMed Enterprises Pty Ltd\nS1190\t1# Rental. Starting: 01-Feb-2026. Ending: 28-Feb-2026\tVoice\tSasBoss\t0.00\t196.10\tC0195\tRickys Noosa\nS1094\t1# Rental. Starting: 01-Feb-2026. Ending: 28-Feb-2026\tVoice\tSasBoss\t0.00\t148.70\tC0150\tLocanda Pty Ltd\nS1475\t1# Rental. Starting: 01-Feb-2026. Ending: 28-Feb-2026\tVoice\tSasBoss\t0.00\t141.00\tC0284\tWarwick Medical Centre\n",
+  "stderr": "",
+  "execution_time_ms": 1656
+}

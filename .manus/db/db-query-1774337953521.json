@@ -1,0 +1,82 @@
+{
+  "query": "SELECT * FROM supplier_accounts ORDER BY supplierName;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute SELECT * FROM supplier_accounts ORDER BY supplierName;",
+  "rows": [
+    {
+      "id": "1",
+      "accountNumber": "",
+      "supplierName": "Telstra",
+      "serviceCount": "8",
+      "monthlyCost": "792.00",
+      "createdAt": "2026-03-10 04:08:53",
+      "updatedAt": "2026-03-10 04:08:53"
+    },
+    {
+      "id": "2",
+      "accountNumber": "192549800",
+      "supplierName": "Telstra",
+      "serviceCount": "64",
+      "monthlyCost": "0.00",
+      "createdAt": "2026-03-10 04:08:53",
+      "updatedAt": "2026-03-10 04:08:53"
+    },
+    {
+      "id": "3",
+      "accountNumber": "2000703186948",
+      "supplierName": "Telstra",
+      "serviceCount": "3",
+      "monthlyCost": "279.00",
+      "createdAt": "2026-03-10 04:08:54",
+      "updatedAt": "2026-03-10 04:08:54"
+    },
+    {
+      "id": "4",
+      "accountNumber": "2000703916450",
+      "supplierName": "Telstra",
+      "serviceCount": "1",
+      "monthlyCost": "93.00",
+      "createdAt": "2026-03-10 04:08:54",
+      "updatedAt": "2026-03-10 04:08:54"
+    },
+    {
+      "id": "5",
+      "accountNumber": "2000719405571",
+      "supplierName": "Telstra",
+      "serviceCount": "23",
+      "monthlyCost": "2179.00",
+      "createdAt": "2026-03-10 04:08:54",
+      "updatedAt": "2026-03-10 04:08:54"
+    },
+    {
+      "id": "6",
+      "accountNumber": "2000719405639",
+      "supplierName": "Telstra",
+      "serviceCount": "2",
+      "monthlyCost": "186.00",
+      "createdAt": "2026-03-10 04:08:54",
+      "updatedAt": "2026-03-10 04:08:54"
+    },
+    {
+      "id": "7",
+      "accountNumber": "586992900",
+      "supplierName": "Telstra",
+      "serviceCount": "170",
+      "monthlyCost": "606.00",
+      "createdAt": "2026-03-10 04:08:55",
+      "updatedAt": "2026-03-10 04:08:55"
+    },
+    {
+      "id": "8",
+      "accountNumber": "9466986800",
+      "supplierName": "Telstra",
+      "serviceCount": "37",
+      "monthlyCost": "3441.00",
+      "createdAt": "2026-03-10 04:08:55",
+      "updatedAt": "2026-03-10 04:08:55"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\taccountNumber\tsupplierName\tserviceCount\tmonthlyCost\tcreatedAt\tupdatedAt\n1\t\tTelstra\t8\t792.00\t2026-03-10 04:08:53\t2026-03-10 04:08:53\n2\t192549800\tTelstra\t64\t0.00\t2026-03-10 04:08:53\t2026-03-10 04:08:53\n3\t2000703186948\tTelstra\t3\t279.00\t2026-03-10 04:08:54\t2026-03-10 04:08:54\n4\t2000703916450\tTelstra\t1\t93.00\t2026-03-10 04:08:54\t2026-03-10 04:08:54\n5\t2000719405571\tTelstra\t23\t2179.00\t2026-03-10 04:08:54\t2026-03-10 04:08:54\n6\t2000719405639\tTelstra\t2\t186.00\t2026-03-10 04:08:54\t2026-03-10 04:08:54\n7\t586992900\tTelstra\t170\t606.00\t2026-03-10 04:08:55\t2026-03-10 04:08:55\n8\t9466986800\tTelstra\t37\t3441.00\t2026-03-10 04:08:55\t2026-03-10 04:08:55\n",
+  "stderr": "",
+  "execution_time_ms": 1585
+}

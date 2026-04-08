@@ -1,0 +1,19 @@
+{
+  "query": "\n-- SBH (IPTEL-AB038552) → Salter Brothers Hospitality (C7554)\nUPDATE services SET customerExternalId = 'C7554' WHERE externalId = 'IPTEL-AB038552' AND (customerExternalId IS NULL OR customerExternalId = '');\n\n-- Action Smart End 2 End (IPTEL-AB056135) → Action Smart Group (cust-action-smart-group)\nUPDATE services SET customerExternalId = 'cust-action-smart-group' WHERE externalId = 'IPTEL-AB056135' AND (customerExternalId IS NULL OR customerExternalId = '');\n\n-- Kate Mobile, Ian Mobile, Cindy Mobile, Caitlin Mobile, Ian-T14 → Smile IT internal (C2441)\nUPDATE services SET customerExternalId = 'C2441' WHERE externalId IN ('S0313','S0310','S0312','S0315','S0311') AND (customerExternalId IS NULL OR customerExternalId = '');\n\n-- Shenanigans (S0314) → need to find customer; check phone 0457857453 against matched services\nUPDATE services AS u\nJOIN (\n  SELECT customerExternalId FROM services \n  WHERE REPLACE(phoneNumber,' ','') = '0457857453' AND customerExternalId IS NOT NULL AND customerExternalId != ''\n  LIMIT 1\n) AS m SET u.customerExternalId = m.customerExternalId\nWHERE u.externalId = 'S0314' AND (u.customerExternalId IS NULL OR u.customerExternalId = '');\n\nSELECT ROW_COUNT() AS shenanigans_phone_match;\n\n-- Count total updated so far\nSELECT COUNT(*) AS still_unmatched FROM services WHERE customerExternalId IS NULL OR customerExternalId = '';\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- SBH (IPTEL-AB038552) → Salter Brothers Hospitality (C7554)\nUPDATE services SET customerExternalId = 'C7554' WHERE externalId = 'IPTEL-AB038552' AND (customerExternalId IS NULL OR customerExternalId = '');\n\n-- Action Smart End 2 End (IPTEL-AB056135) → Action Smart Group (cust-action-smart-group)\nUPDATE services SET customerExternalId = 'cust-action-smart-group' WHERE externalId = 'IPTEL-AB056135' AND (customerExternalId IS NULL OR customerExternalId = '');\n\n-- Kate Mobile, Ian Mobile, Cindy Mobile, Caitlin Mobile, Ian-T14 → Smile IT internal (C2441)\nUPDATE services SET customerExternalId = 'C2441' WHERE externalId IN ('S0313','S0310','S0312','S0315','S0311') AND (customerExternalId IS NULL OR customerExternalId = '');\n\n-- Shenanigans (S0314) → need to find customer; check phone 0457857453 against matched services\nUPDATE services AS u\nJOIN (\n  SELECT customerExternalId FROM services \n  WHERE REPLACE(phoneNumber,' ','') = '0457857453' AND customerExternalId IS NOT NULL AND customerExternalId != ''\n  LIMIT 1\n) AS m SET u.customerExternalId = m.customerExternalId\nWHERE u.externalId = 'S0314' AND (u.customerExternalId IS NULL OR u.customerExternalId = '');\n\nSELECT ROW_COUNT() AS shenanigans_phone_match;\n\n-- Count total updated so far\nSELECT COUNT(*) AS still_unmatched FROM services WHERE customerExternalId IS NULL OR customerExternalId = '';\n",
+  "rows": [
+    {
+      "shenanigans_phone_match": "0"
+    },
+    {
+      "shenanigans_phone_match": "still_unmatched"
+    },
+    {
+      "shenanigans_phone_match": "514"
+    }
+  ],
+  "messages": [],
+  "stdout": "shenanigans_phone_match\n0\nstill_unmatched\n514\n",
+  "stderr": "",
+  "execution_time_ms": 2789
+}

@@ -1,0 +1,8 @@
+{
+  "query": "\nSELECT \n  s.externalId, s.planName, s.serviceType, s.provider, s.monthlyCost,\n  s.customerName, s.phoneNumber, s.quantity,\n  c.name as customerDisplayName\nFROM services s\nLEFT JOIN customers c ON c.externalId = s.customerExternalId\nWHERE s.provider = 'ChannelHaus'\n  AND s.status NOT IN ('terminated','archived')\nORDER BY CAST(s.monthlyCost AS DECIMAL) DESC\nLIMIT 20;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \nSELECT \n  s.externalId, s.planName, s.serviceType, s.provider, s.monthlyCost,\n  s.customerName, s.phoneNumber, s.quantity,\n  c.name as customerDisplayName\nFROM services s\nLEFT JOIN customers c ON c.externalId = s.customerExternalId\nWHERE s.provider = 'ChannelHaus'\n  AND s.status NOT IN ('terminated','archived')\nORDER BY CAST(s.monthlyCost AS DECIMAL) DESC\nLIMIT 20;\n",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1054 (42S22) at line 2: Unknown column 's.quantity' in 'field list'"
+  ]
+}

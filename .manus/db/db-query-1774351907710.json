@@ -1,0 +1,19 @@
+{
+  "query": "\n-- Total revenue now\nSELECT \n  COUNT(DISTINCT s.externalId) as services_with_revenue,\n  SUM(s.monthlyRevenue) as total_revenue\nFROM services s\nWHERE s.monthlyRevenue > 0\n  AND s.status NOT IN ('terminated', 'flagged_for_termination');\n\n-- New assignments created (total was 2718 after backfill, now 3198)\nSELECT 3198 - 2718 as new_assignments_from_automatch;\n\n-- Check if monthlyRevenue needs to be recalculated from new assignments\nSELECT COUNT(*) as unmatched_services_remaining\nFROM services s\nWHERE s.status NOT IN ('terminated', 'flagged_for_termination')\n  AND s.customerExternalId IS NOT NULL\n  AND s.externalId NOT IN (SELECT serviceExternalId FROM service_billing_assignments)\n  AND s.externalId NOT IN (SELECT serviceExternalId FROM unbillable_services);\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Total revenue now\nSELECT \n  COUNT(DISTINCT s.externalId) as services_with_revenue,\n  SUM(s.monthlyRevenue) as total_revenue\nFROM services s\nWHERE s.monthlyRevenue > 0\n  AND s.status NOT IN ('terminated', 'flagged_for_termination');\n\n-- New assignments created (total was 2718 after backfill, now 3198)\nSELECT 3198 - 2718 as new_assignments_from_automatch;\n\n-- Check if monthlyRevenue needs to be recalculated from new assignments\nSELECT COUNT(*) as unmatched_services_remaining\nFROM services s\nWHERE s.status NOT IN ('terminated', 'flagged_for_termination')\n  AND s.customerExternalId IS NOT NULL\n  AND s.externalId NOT IN (SELECT serviceExternalId FROM service_billing_assignments)\n  AND s.externalId NOT IN (SELECT serviceExternalId FROM unbillable_services);\n",
+  "rows": [
+    {
+      "services_with_revenue": "1166",
+      "total_revenue": "317201.61"
+    }
+  ],
+  "messages": [
+    "new_assignments_from_automatch",
+    "480",
+    "unmatched_services_remaining",
+    "1048"
+  ],
+  "stdout": "services_with_revenue\ttotal_revenue\n1166\t317201.61\nnew_assignments_from_automatch\n480\nunmatched_services_remaining\n1048\n",
+  "stderr": "",
+  "execution_time_ms": 2043
+}

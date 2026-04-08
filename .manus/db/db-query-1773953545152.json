@@ -1,0 +1,28 @@
+{
+  "query": "-- Check S1530 details\nSELECT externalId, planName, provider, serviceType, monthlyCost, monthlyRevenue, customerExternalId\nFROM services WHERE externalId = 'S1530';\n\n-- Find all ABB services with $0 cost but have revenue (these are the ones missing cost)\nSELECT externalId, planName, monthlyCost, monthlyRevenue\nFROM services\nWHERE provider = 'ABB' AND monthlyCost = 0 AND monthlyRevenue > 0\nORDER BY monthlyRevenue DESC;\n\n-- Also check all ABB services with $0 cost regardless of revenue\nSELECT planName, COUNT(*) as cnt, SUM(monthlyRevenue) as totalRevenue\nFROM services\nWHERE provider = 'ABB' AND monthlyCost = 0\nGROUP BY planName\nORDER BY totalRevenue DESC\nLIMIT 30;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute -- Check S1530 details\nSELECT externalId, planName, provider, serviceType, monthlyCost, monthlyRevenue, customerExternalId\nFROM services WHERE externalId = 'S1530';\n\n-- Find all ABB services with $0 cost but have revenue (these are the ones missing cost)\nSELECT externalId, planName, monthlyCost, monthlyRevenue\nFROM services\nWHERE provider = 'ABB' AND monthlyCost = 0 AND monthlyRevenue > 0\nORDER BY monthlyRevenue DESC;\n\n-- Also check all ABB services with $0 cost regardless of revenue\nSELECT planName, COUNT(*) as cnt, SUM(monthlyRevenue) as totalRevenue\nFROM services\nWHERE provider = 'ABB' AND monthlyCost = 0\nGROUP BY planName\nORDER BY totalRevenue DESC\nLIMIT 30;",
+  "rows": [
+    {
+      "externalId": "S1530",
+      "planName": "Up to 200Mbps/100Mbps - Month to Month - Aussie Broadband BackboneEach",
+      "provider": "Unknown",
+      "serviceType": "Internet",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "350.00",
+      "customerExternalId": "C2615"
+    }
+  ],
+  "messages": [
+    "externalId\tplanName\tmonthlyCost\tmonthlyRevenue",
+    "S0496\t4G Broadband Backup\t0.00\t187.27",
+    "S0494\t4G Broadband Backup\t0.00\t139.30",
+    "S0498\t4G Broadband Backup\t0.00\t139.30",
+    "planName\tcnt\ttotalRevenue",
+    "4G Broadband Backup\t15\t465.87",
+    "1000Mbps Low CoS\t1\t0.00",
+    "\t4\t0.00"
+  ],
+  "stdout": "externalId\tplanName\tprovider\tserviceType\tmonthlyCost\tmonthlyRevenue\tcustomerExternalId\nS1530\tUp to 200Mbps/100Mbps - Month to Month - Aussie Broadband BackboneEach\tUnknown\tInternet\t0.00\t350.00\tC2615\nexternalId\tplanName\tmonthlyCost\tmonthlyRevenue\nS0496\t4G Broadband Backup\t0.00\t187.27\nS0494\t4G Broadband Backup\t0.00\t139.30\nS0498\t4G Broadband Backup\t0.00\t139.30\nplanName\tcnt\ttotalRevenue\n4G Broadband Backup\t15\t465.87\n1000Mbps Low CoS\t1\t0.00\n\t4\t0.00\n",
+  "stderr": "",
+  "execution_time_ms": 2097
+}

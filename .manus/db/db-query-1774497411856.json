@@ -1,0 +1,34 @@
+{
+  "query": "\n-- Total Xero revenue for Salter Brothers\nSELECT \n  SUM(lineAmount) as totalRevenue,\n  COUNT(*) as billingItemCount\nFROM billing_items \nWHERE customerExternalId = 'C0214';\n\n-- Total supplier costs (sum of all assigned service costs)\nSELECT \n  SUM(DISTINCT s.monthlyCost) as totalCost,\n  COUNT(DISTINCT s.externalId) as serviceCount\nFROM service_billing_assignments sba\nJOIN services s ON sba.serviceExternalId = s.externalId\nWHERE sba.billingItemExternalId IN (\n  SELECT externalId FROM billing_items WHERE customerExternalId = 'C0214'\n);\n\n-- What does the Revenue & Margin page query look like? Check how it groups\n-- Show per-billing-item cost vs revenue for the top 5 items\nSELECT \n  bi.externalId,\n  bi.description,\n  bi.lineAmount as revenue,\n  COALESCE(SUM(s.monthlyCost), 0) as cost,\n  bi.lineAmount - COALESCE(SUM(s.monthlyCost), 0) as margin\nFROM billing_items bi\nLEFT JOIN service_billing_assignments sba ON sba.billingItemExternalId = bi.externalId\nLEFT JOIN services s ON sba.serviceExternalId = s.externalId\nWHERE bi.customerExternalId = 'C0214'\nGROUP BY bi.externalId, bi.description, bi.lineAmount\nORDER BY bi.lineAmount DESC\nLIMIT 10;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Total Xero revenue for Salter Brothers\nSELECT \n  SUM(lineAmount) as totalRevenue,\n  COUNT(*) as billingItemCount\nFROM billing_items \nWHERE customerExternalId = 'C0214';\n\n-- Total supplier costs (sum of all assigned service costs)\nSELECT \n  SUM(DISTINCT s.monthlyCost) as totalCost,\n  COUNT(DISTINCT s.externalId) as serviceCount\nFROM service_billing_assignments sba\nJOIN services s ON sba.serviceExternalId = s.externalId\nWHERE sba.billingItemExternalId IN (\n  SELECT externalId FROM billing_items WHERE customerExternalId = 'C0214'\n);\n\n-- What does the Revenue & Margin page query look like? Check how it groups\n-- Show per-billing-item cost vs revenue for the top 5 items\nSELECT \n  bi.externalId,\n  bi.description,\n  bi.lineAmount as revenue,\n  COALESCE(SUM(s.monthlyCost), 0) as cost,\n  bi.lineAmount - COALESCE(SUM(s.monthlyCost), 0) as margin\nFROM billing_items bi\nLEFT JOIN service_billing_assignments sba ON sba.billingItemExternalId = bi.externalId\nLEFT JOIN services s ON sba.serviceExternalId = s.externalId\nWHERE bi.customerExternalId = 'C0214'\nGROUP BY bi.externalId, bi.description, bi.lineAmount\nORDER BY bi.lineAmount DESC\nLIMIT 10;\n",
+  "rows": [
+    {
+      "totalRevenue": "3189.96",
+      "billingItemCount": "105"
+    },
+    {
+      "totalRevenue": "totalCost",
+      "billingItemCount": "serviceCount"
+    },
+    {
+      "totalRevenue": "84.11",
+      "billingItemCount": "39"
+    }
+  ],
+  "messages": [
+    "externalId\tdescription\trevenue\tcost\tmargin",
+    "BI00573\t100mb Business Grade Fibre Up and Down - 36 Month ContractEach\t877.50\t0.00\t877.50",
+    "BI00854\t13 Number ACMA High Volume\t565.00\t0.00\t565.00",
+    "BI00945\tMobile\t246.32\t0.07\t246.25",
+    "BI00960\tPremium\t182.00\t9.00\t173.00",
+    "BI00963\tWebex Basic\t138.00\t0.00\t138.00",
+    "BI00958\tStandard\t112.00\t6.00\t106.00",
+    "BI00873\tMobile\t103.05\t0.07\t102.98",
+    "BI00897\tMobile\t97.04\t0.07\t96.97",
+    "BI00870\tManaged Voice Support 1 - 10 Users\t75.00\t0.00\t75.00",
+    "BI00906\tMobile\t70.28\t0.07\t70.21"
+  ],
+  "stdout": "totalRevenue\tbillingItemCount\n3189.96\t105\ntotalCost\tserviceCount\n84.11\t39\nexternalId\tdescription\trevenue\tcost\tmargin\nBI00573\t100mb Business Grade Fibre Up and Down - 36 Month ContractEach\t877.50\t0.00\t877.50\nBI00854\t13 Number ACMA High Volume\t565.00\t0.00\t565.00\nBI00945\tMobile\t246.32\t0.07\t246.25\nBI00960\tPremium\t182.00\t9.00\t173.00\nBI00963\tWebex Basic\t138.00\t0.00\t138.00\nBI00958\tStandard\t112.00\t6.00\t106.00\nBI00873\tMobile\t103.05\t0.07\t102.98\nBI00897\tMobile\t97.04\t0.07\t96.97\nBI00870\tManaged Voice Support 1 - 10 Users\t75.00\t0.00\t75.00\nBI00906\tMobile\t70.28\t0.07\t70.21\n",
+  "stderr": "",
+  "execution_time_ms": 2018
+}

@@ -1,0 +1,282 @@
+{
+  "query": "\nSELECT \n  c.name as customerName,\n  bi.externalId as biId,\n  bi.description,\n  bi.lineAmount,\n  bi.quantity,\n  COUNT(sba.serviceExternalId) as assignedCount\nFROM billing_items bi\nJOIN customers c ON c.externalId = bi.customerExternalId\nLEFT JOIN service_billing_assignments sba ON sba.billingItemExternalId = bi.externalId\nWHERE bi.customerExternalId IN (\n  SELECT DISTINCT customerExternalId FROM services \n  WHERE externalId IN ('S8JR3KM','SHB64AC','S72C54J','SHU42OX','SGVQT30','S1UMC04','SEEV150','SKY3MLC','SSE3JV7','SZR96SE','SGBHVJV','S66U54A')\n)\nAND bi.lineAmount > 10\nGROUP BY c.name, bi.externalId, bi.description, bi.lineAmount, bi.quantity\nORDER BY c.name, bi.lineAmount DESC;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \nSELECT \n  c.name as customerName,\n  bi.externalId as biId,\n  bi.description,\n  bi.lineAmount,\n  bi.quantity,\n  COUNT(sba.serviceExternalId) as assignedCount\nFROM billing_items bi\nJOIN customers c ON c.externalId = bi.customerExternalId\nLEFT JOIN service_billing_assignments sba ON sba.billingItemExternalId = bi.externalId\nWHERE bi.customerExternalId IN (\n  SELECT DISTINCT customerExternalId FROM services \n  WHERE externalId IN ('S8JR3KM','SHB64AC','S72C54J','SHU42OX','SGVQT30','S1UMC04','SEEV150','SKY3MLC','SSE3JV7','SZR96SE','SGBHVJV','S66U54A')\n)\nAND bi.lineAmount > 10\nGROUP BY c.name, bi.externalId, bi.description, bi.lineAmount, bi.quantity\nORDER BY c.name, bi.lineAmount DESC;\n",
+  "rows": [
+    {
+      "customerName": "Albany Family Doctors",
+      "biId": "BI00601",
+      "description": "4 Channels Business SIP. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "lineAmount": "212.00",
+      "quantity": "1.00",
+      "assignedCount": "1"
+    },
+    {
+      "customerName": "Albany Family Doctors",
+      "biId": "BI00604",
+      "description": "NBN 100/40 Unlimited - 13197601. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "lineAmount": "114.00",
+      "quantity": "1.00",
+      "assignedCount": "1"
+    },
+    {
+      "customerName": "Albany Family Doctors",
+      "biId": "BI00598",
+      "description": "4 Channels Business SIP. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "lineAmount": "36.00",
+      "quantity": "1.00",
+      "assignedCount": "3"
+    },
+    {
+      "customerName": "Albany Family Doctors",
+      "biId": "BI00603",
+      "description": "eFax Service. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "lineAmount": "35.00",
+      "quantity": "1.00",
+      "assignedCount": "1"
+    },
+    {
+      "customerName": "Ausdocs Carindale Pty Ltd",
+      "biId": "BI00621",
+      "description": "4 Channels Business SIP. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "lineAmount": "192.00",
+      "quantity": "1.00",
+      "assignedCount": "1"
+    },
+    {
+      "customerName": "Ausdocs Carindale Pty Ltd",
+      "biId": "BI00617",
+      "description": "NBN 100/40 Unlimited. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "lineAmount": "114.00",
+      "quantity": "1.00",
+      "assignedCount": "1"
+    },
+    {
+      "customerName": "Ausdocs Carindale Pty Ltd",
+      "biId": "BI00618",
+      "description": "4 Channels Business SIP. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "lineAmount": "36.00",
+      "quantity": "1.00",
+      "assignedCount": "3"
+    },
+    {
+      "customerName": "Ausdocs Carindale Pty Ltd",
+      "biId": "BI00620",
+      "description": "158 National Calls :  For the period ending 31-Jan-2026",
+      "lineAmount": "19.36",
+      "quantity": "1.00",
+      "assignedCount": "1"
+    },
+    {
+      "customerName": "Coastal Dental Specialists",
+      "biId": "BI00685",
+      "description": "5 Users Capped. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "lineAmount": "150.00",
+      "quantity": "1.00",
+      "assignedCount": "1"
+    },
+    {
+      "customerName": "Coastal Dental Specialists",
+      "biId": "BI00683",
+      "description": "NBN 100/40 Unlimited. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "lineAmount": "114.00",
+      "quantity": "1.00",
+      "assignedCount": "1"
+    },
+    {
+      "customerName": "Doctors at Samford Valley",
+      "biId": "BI00608",
+      "description": "3 Channels Business SIP. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "lineAmount": "159.00",
+      "quantity": "1.00",
+      "assignedCount": "1"
+    },
+    {
+      "customerName": "Doctors at Samford Valley",
+      "biId": "BI00610",
+      "description": "NBN 100/40 Unlimited - 13146570. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "lineAmount": "114.00",
+      "quantity": "1.00",
+      "assignedCount": "1"
+    },
+    {
+      "customerName": "Doctors at Samford Valley",
+      "biId": "BI00607",
+      "description": "eFax Service. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "lineAmount": "35.00",
+      "quantity": "1.00",
+      "assignedCount": "1"
+    },
+    {
+      "customerName": "Doctors at Samford Valley",
+      "biId": "BI00611",
+      "description": "4G Backup (10GB). Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "lineAmount": "35.00",
+      "quantity": "1.00",
+      "assignedCount": "1"
+    },
+    {
+      "customerName": "Doctors at Samford Valley",
+      "biId": "BI00605",
+      "description": "2 Channels Business SIP. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "lineAmount": "18.00",
+      "quantity": "1.00",
+      "assignedCount": "3"
+    },
+    {
+      "customerName": "Gumdale Medical Center",
+      "biId": "BI00746",
+      "description": "6 Channels Business SIP. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "lineAmount": "288.00",
+      "quantity": "1.00",
+      "assignedCount": "1"
+    },
+    {
+      "customerName": "Gumdale Medical Center",
+      "biId": "BI00744",
+      "description": "NBN 50/20 Unlimited. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "lineAmount": "98.00",
+      "quantity": "1.00",
+      "assignedCount": "1"
+    },
+    {
+      "customerName": "Gumdale Medical Center",
+      "biId": "BI00745",
+      "description": "eFax Service Flat Rate. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "lineAmount": "35.00",
+      "quantity": "1.00",
+      "assignedCount": "2"
+    },
+    {
+      "customerName": "Havilah Medical Centre Doreen",
+      "biId": "BI00643",
+      "description": "NBN 100/40 Unlimited. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "lineAmount": "114.00",
+      "quantity": "1.00",
+      "assignedCount": "1"
+    },
+    {
+      "customerName": "Havilah Medical Centre Doreen",
+      "biId": "BI00648",
+      "description": "2 Channels Business SIP Outbound. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "lineAmount": "106.00",
+      "quantity": "1.00",
+      "assignedCount": "1"
+    },
+    {
+      "customerName": "Havilah Medical Centre Doreen",
+      "biId": "BI00650",
+      "description": "eFax - Unlimited. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "lineAmount": "48.00",
+      "quantity": "1.00",
+      "assignedCount": "1"
+    },
+    {
+      "customerName": "Havilah Medical Centre Doreen",
+      "biId": "BI00644",
+      "description": "3 Channels Business SIP Inbound. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "lineAmount": "27.00",
+      "quantity": "1.00",
+      "assignedCount": "3"
+    },
+    {
+      "customerName": "Havilah Medical Centre Doreen",
+      "biId": "BI00647",
+      "description": "47 Mobile Calls :  For the period ending 31-Jan-2026",
+      "lineAmount": "11.08",
+      "quantity": "1.00",
+      "assignedCount": "1"
+    },
+    {
+      "customerName": "Kawana Family Clinic",
+      "biId": "BI00653",
+      "description": "4 Channels Business SIP. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "lineAmount": "212.00",
+      "quantity": "1.00",
+      "assignedCount": "1"
+    },
+    {
+      "customerName": "Kawana Family Clinic",
+      "biId": "BI00656",
+      "description": "NBN 100/40 Vocus Unlimited. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "lineAmount": "114.00",
+      "quantity": "1.00",
+      "assignedCount": "1"
+    },
+    {
+      "customerName": "Kawana Family Clinic",
+      "biId": "BI00651",
+      "description": "4 Channels Business SIP. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "lineAmount": "36.00",
+      "quantity": "1.00",
+      "assignedCount": "2"
+    },
+    {
+      "customerName": "Kawana Family Clinic",
+      "biId": "BI00655",
+      "description": "eFax Service. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "lineAmount": "35.00",
+      "quantity": "1.00",
+      "assignedCount": "1"
+    },
+    {
+      "customerName": "Kawana Family Clinic",
+      "biId": "BI00657",
+      "description": "4G Backup SIM Service. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "lineAmount": "35.00",
+      "quantity": "1.00",
+      "assignedCount": "1"
+    },
+    {
+      "customerName": "Mount Cotton Medical Centre",
+      "biId": "BI00660",
+      "description": "2 Channels Business SIP Outbound. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "lineAmount": "106.00",
+      "quantity": "1.00",
+      "assignedCount": "1"
+    },
+    {
+      "customerName": "Mount Cotton Medical Centre",
+      "biId": "BI00658",
+      "description": "3 Channels Business SIP Inbound. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "lineAmount": "27.00",
+      "quantity": "1.00",
+      "assignedCount": "3"
+    },
+    {
+      "customerName": "Stafford Heights Medical Practice",
+      "biId": "BI00736",
+      "description": "4 Channels Business SIP. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "lineAmount": "192.00",
+      "quantity": "1.00",
+      "assignedCount": "1"
+    },
+    {
+      "customerName": "Stafford Heights Medical Practice",
+      "biId": "BI00735",
+      "description": "eFax Service Flat Rate. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "lineAmount": "35.00",
+      "quantity": "1.00",
+      "assignedCount": "2"
+    },
+    {
+      "customerName": "Warwick Medical Centre",
+      "biId": "BI00629",
+      "description": "2 Channels Business SIP Outbound. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "lineAmount": "106.00",
+      "quantity": "1.00",
+      "assignedCount": "1"
+    },
+    {
+      "customerName": "Warwick Medical Centre",
+      "biId": "BI00627",
+      "description": "3 Channels Business SIP Inbound. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "lineAmount": "27.00",
+      "quantity": "1.00",
+      "assignedCount": "3"
+    }
+  ],
+  "messages": [],
+  "stdout": "customerName\tbiId\tdescription\tlineAmount\tquantity\tassignedCount\nAlbany Family Doctors\tBI00601\t4 Channels Business SIP. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t212.00\t1.00\t1\nAlbany Family Doctors\tBI00604\tNBN 100/40 Unlimited - 13197601. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t114.00\t1.00\t1\nAlbany Family Doctors\tBI00598\t4 Channels Business SIP. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t36.00\t1.00\t3\nAlbany Family Doctors\tBI00603\teFax Service. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t35.00\t1.00\t1\nAusdocs Carindale Pty Ltd\tBI00621\t4 Channels Business SIP. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t192.00\t1.00\t1\nAusdocs Carindale Pty Ltd\tBI00617\tNBN 100/40 Unlimited. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t114.00\t1.00\t1\nAusdocs Carindale Pty Ltd\tBI00618\t4 Channels Business SIP. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t36.00\t1.00\t3\nAusdocs Carindale Pty Ltd\tBI00620\t158 National Calls :  For the period ending 31-Jan-2026\t19.36\t1.00\t1\nCoastal Dental Specialists\tBI00685\t5 Users Capped. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t150.00\t1.00\t1\nCoastal Dental Specialists\tBI00683\tNBN 100/40 Unlimited. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t114.00\t1.00\t1\nDoctors at Samford Valley\tBI00608\t3 Channels Business SIP. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t159.00\t1.00\t1\nDoctors at Samford Valley\tBI00610\tNBN 100/40 Unlimited - 13146570. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t114.00\t1.00\t1\nDoctors at Samford Valley\tBI00607\teFax Service. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t35.00\t1.00\t1\nDoctors at Samford Valley\tBI00611\t4G Backup (10GB). Starting: 01-Feb-2026. Ending: 28-Feb-2026\t35.00\t1.00\t1\nDoctors at Samford Valley\tBI00605\t2 Channels Business SIP. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t18.00\t1.00\t3\nGumdale Medical Center\tBI00746\t6 Channels Business SIP. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t288.00\t1.00\t1\nGumdale Medical Center\tBI00744\tNBN 50/20 Unlimited. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t98.00\t1.00\t1\nGumdale Medical Center\tBI00745\teFax Service Flat Rate. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t35.00\t1.00\t2\nHavilah Medical Centre Doreen\tBI00643\tNBN 100/40 Unlimited. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t114.00\t1.00\t1\nHavilah Medical Centre Doreen\tBI00648\t2 Channels Business SIP Outbound. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t106.00\t1.00\t1\nHavilah Medical Centre Doreen\tBI00650\teFax - Unlimited. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t48.00\t1.00\t1\nHavilah Medical Centre Doreen\tBI00644\t3 Channels Business SIP Inbound. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t27.00\t1.00\t3\nHavilah Medical Centre Doreen\tBI00647\t47 Mobile Calls :  For the period ending 31-Jan-2026\t11.08\t1.00\t1\nKawana Family Clinic\tBI00653\t4 Channels Business SIP. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t212.00\t1.00\t1\nKawana Family Clinic\tBI00656\tNBN 100/40 Vocus Unlimited. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t114.00\t1.00\t1\nKawana Family Clinic\tBI00651\t4 Channels Business SIP. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t36.00\t1.00\t2\nKawana Family Clinic\tBI00655\teFax Service. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t35.00\t1.00\t1\nKawana Family Clinic\tBI00657\t4G Backup SIM Service. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t35.00\t1.00\t1\nMount Cotton Medical Centre\tBI00660\t2 Channels Business SIP Outbound. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t106.00\t1.00\t1\nMount Cotton Medical Centre\tBI00658\t3 Channels Business SIP Inbound. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t27.00\t1.00\t3\nStafford Heights Medical Practice\tBI00736\t4 Channels Business SIP. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t192.00\t1.00\t1\nStafford Heights Medical Practice\tBI00735\teFax Service Flat Rate. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t35.00\t1.00\t2\nWarwick Medical Centre\tBI00629\t2 Channels Business SIP Outbound. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t106.00\t1.00\t1\nWarwick Medical Centre\tBI00627\t3 Channels Business SIP Inbound. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t27.00\t1.00\t3\n",
+  "stderr": "",
+  "execution_time_ms": 1604
+}

@@ -1,0 +1,55 @@
+{
+  "query": "-- Jack Green (C0125) services\nSELECT externalId, planName, provider, monthlyCost, monthlyRevenue FROM services\nWHERE customerExternalId = 'C0125';\n\n-- Zam Marrickville (C0295) services\nSELECT externalId, planName, provider, monthlyCost, monthlyRevenue FROM services\nWHERE customerExternalId = 'C0295';\n\n-- TYS Molendinar - check if customer exists\nSELECT externalId, name FROM customers WHERE name LIKE '%TYS%' OR name LIKE '%Molendinar%';\n\n-- Zam Coomera Square - check if customer exists\nSELECT externalId, name FROM customers WHERE name LIKE '%Zam Coomera%' OR name LIKE '%Coomera Square%';\n\n-- ZAMVIS - check if customer exists\nSELECT externalId, name FROM customers WHERE name LIKE '%ZAMVIS%' OR name LIKE '%Zambrero Baldivis%';\n\n-- Zambrero Karratha - check if customer exists\nSELECT externalId, name FROM customers WHERE name LIKE '%Karratha%' OR name LIKE '%SURYAVEER%';\n\n-- Compass Assurance (C0065) services\nSELECT externalId, planName, provider, monthlyCost, monthlyRevenue FROM services\nWHERE customerExternalId = 'C0065';\n\n-- Nu-Dev (C0176) services\nSELECT externalId, planName, provider, monthlyCost, monthlyRevenue FROM services\nWHERE customerExternalId = 'C0176';\n\n-- Lead Education (C0135) services\nSELECT externalId, planName, provider, monthlyCost, monthlyRevenue FROM services\nWHERE customerExternalId IN ('C0135', 'C2431');",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute -- Jack Green (C0125) services\nSELECT externalId, planName, provider, monthlyCost, monthlyRevenue FROM services\nWHERE customerExternalId = 'C0125';\n\n-- Zam Marrickville (C0295) services\nSELECT externalId, planName, provider, monthlyCost, monthlyRevenue FROM services\nWHERE customerExternalId = 'C0295';\n\n-- TYS Molendinar - check if customer exists\nSELECT externalId, name FROM customers WHERE name LIKE '%TYS%' OR name LIKE '%Molendinar%';\n\n-- Zam Coomera Square - check if customer exists\nSELECT externalId, name FROM customers WHERE name LIKE '%Zam Coomera%' OR name LIKE '%Coomera Square%';\n\n-- ZAMVIS - check if customer exists\nSELECT externalId, name FROM customers WHERE name LIKE '%ZAMVIS%' OR name LIKE '%Zambrero Baldivis%';\n\n-- Zambrero Karratha - check if customer exists\nSELECT externalId, name FROM customers WHERE name LIKE '%Karratha%' OR name LIKE '%SURYAVEER%';\n\n-- Compass Assurance (C0065) services\nSELECT externalId, planName, provider, monthlyCost, monthlyRevenue FROM services\nWHERE customerExternalId = 'C0065';\n\n-- Nu-Dev (C0176) services\nSELECT externalId, planName, provider, monthlyCost, monthlyRevenue FROM services\nWHERE customerExternalId = 'C0176';\n\n-- Lead Education (C0135) services\nSELECT externalId, planName, provider, monthlyCost, monthlyRevenue FROM services\nWHERE customerExternalId IN ('C0135', 'C2431');",
+  "rows": [
+    {
+      "externalId": "S6952",
+      "planName": "Standard Mobile Service",
+      "provider": "Vocus",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00"
+    },
+    {
+      "externalId": "S6953",
+      "planName": "Standard Mobile Service",
+      "provider": "Vocus",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00"
+    },
+    {
+      "externalId": "S7061",
+      "planName": "4G Data Back up",
+      "provider": "TIAB",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00"
+    },
+    {
+      "externalId": "VOCUS-MOB-13599000",
+      "planName": "Vocus Mobile Service",
+      "provider": "Vocus",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "176.64"
+    },
+    {
+      "externalId": "VOCUS-MOB-13619752",
+      "planName": "Vocus Mobile Service",
+      "provider": "Vocus",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00"
+    }
+  ],
+  "messages": [
+    "externalId\tname",
+    "C2599\tThe Yiros Shop MOLENDINAR",
+    "externalId\tname",
+    "C0325\tZambrero Coomera Square",
+    "externalId\tname",
+    "C0300\tZambrero Baldivis",
+    "externalId\tname",
+    "C2565\tKARRATHA CITY SHOPPING CENTRE SHOP 1, 16 SHARPE AV, KARRATHA WA",
+    "C2791\tZambrero - Karratha"
+  ],
+  "stdout": "externalId\tplanName\tprovider\tmonthlyCost\tmonthlyRevenue\nS6952\tStandard Mobile Service\tVocus\t0.00\t0.00\nS6953\tStandard Mobile Service\tVocus\t0.00\t0.00\nS7061\t4G Data Back up\tTIAB\t0.00\t0.00\nVOCUS-MOB-13599000\tVocus Mobile Service\tVocus\t0.00\t176.64\nVOCUS-MOB-13619752\tVocus Mobile Service\tVocus\t0.00\t0.00\nexternalId\tname\nC2599\tThe Yiros Shop MOLENDINAR\nexternalId\tname\nC0325\tZambrero Coomera Square\nexternalId\tname\nC0300\tZambrero Baldivis\nexternalId\tname\nC2565\tKARRATHA CITY SHOPPING CENTRE SHOP 1, 16 SHARPE AV, KARRATHA WA\nC2791\tZambrero - Karratha\n",
+  "stderr": "",
+  "execution_time_ms": 3316
+}

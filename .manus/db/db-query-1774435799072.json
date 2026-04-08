@@ -1,0 +1,13 @@
+{
+  "query": "\nSELECT COUNT(DISTINCT s1.externalId) AS sasboss_with_real_counterpart\nFROM services s1\nWHERE s1.supplierName = 'SasBoss' AND s1.serviceType = 'Internet'\n  AND EXISTS (\n    SELECT 1 FROM services s2\n    WHERE s2.customerExternalId = s1.customerExternalId\n      AND s2.supplierName != 'SasBoss'\n      AND s2.serviceType = 'Internet'\n  );\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \nSELECT COUNT(DISTINCT s1.externalId) AS sasboss_with_real_counterpart\nFROM services s1\nWHERE s1.supplierName = 'SasBoss' AND s1.serviceType = 'Internet'\n  AND EXISTS (\n    SELECT 1 FROM services s2\n    WHERE s2.customerExternalId = s1.customerExternalId\n      AND s2.supplierName != 'SasBoss'\n      AND s2.serviceType = 'Internet'\n  );\n",
+  "rows": [
+    {
+      "sasboss_with_real_counterpart": "69"
+    }
+  ],
+  "messages": [],
+  "stdout": "sasboss_with_real_counterpart\n69\n",
+  "stderr": "",
+  "execution_time_ms": 1573
+}

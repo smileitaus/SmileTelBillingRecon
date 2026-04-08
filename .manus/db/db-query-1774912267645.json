@@ -1,0 +1,160 @@
+{
+  "query": "SELECT sheet_name, product_name, buy_name, partner_buy_price, partner_sell_price, nfr_partner_price, product_code, product_type FROM sasboss_pricebook_items WHERE sheet_name IN ('UCaaS','Managed Voice','Managed Voice - DID Hosting') ORDER BY sheet_name, product_name LIMIT 15;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute SELECT sheet_name, product_name, buy_name, partner_buy_price, partner_sell_price, nfr_partner_price, product_code, product_type FROM sasboss_pricebook_items WHERE sheet_name IN ('UCaaS','Managed Voice','Managed Voice - DID Hosting') ORDER BY sheet_name, product_name LIMIT 15;",
+  "rows": [
+    {
+      "sheet_name": "Managed Voice",
+      "product_name": "CS - 3 Included Local National Mobile Call Pack",
+      "buy_name": "CS - 3 Included Local National Mobile Call Pack (Smile IT) - 572329",
+      "partner_buy_price": "0.000000",
+      "partner_sell_price": "0.000000",
+      "nfr_partner_price": "NULL",
+      "product_code": "NULL",
+      "product_type": "NULL"
+    },
+    {
+      "sheet_name": "Managed Voice",
+      "product_name": "ME - 3 Included Local National Mobile Call Pack",
+      "buy_name": "ME-3 Included Local National Mobile (Smile IT) - 571049",
+      "partner_buy_price": "0.000000",
+      "partner_sell_price": "0.000000",
+      "nfr_partner_price": "NULL",
+      "product_code": "NULL",
+      "product_type": "NULL"
+    },
+    {
+      "sheet_name": "Managed Voice",
+      "product_name": "Premium-1",
+      "buy_name": "ME-1 PAYG (Smile IT) - 570909",
+      "partner_buy_price": "0.000000",
+      "partner_sell_price": "0.000000",
+      "nfr_partner_price": "NULL",
+      "product_code": "NULL",
+      "product_type": "NULL"
+    },
+    {
+      "sheet_name": "Managed Voice",
+      "product_name": "Premium-1",
+      "buy_name": "CS - 1 PAYG (Smile IT) - 571057",
+      "partner_buy_price": "0.000000",
+      "partner_sell_price": "0.000000",
+      "nfr_partner_price": "NULL",
+      "product_code": "NULL",
+      "product_type": "NULL"
+    },
+    {
+      "sheet_name": "Managed Voice",
+      "product_name": "Premium-1",
+      "buy_name": "XP - 1 PAYG (Smile IT) - 571984",
+      "partner_buy_price": "0.000000",
+      "partner_sell_price": "0.000000",
+      "nfr_partner_price": "NULL",
+      "product_code": "NULL",
+      "product_type": "NULL"
+    },
+    {
+      "sheet_name": "Managed Voice",
+      "product_name": "Premium-2",
+      "buy_name": "CS - 1 PAYG (Smile IT) - 571057",
+      "partner_buy_price": "0.000000",
+      "partner_sell_price": "0.000000",
+      "nfr_partner_price": "NULL",
+      "product_code": "NULL",
+      "product_type": "NULL"
+    },
+    {
+      "sheet_name": "Managed Voice",
+      "product_name": "Premium-2",
+      "buy_name": "ME-1 PAYG (Smile IT) - 570909",
+      "partner_buy_price": "0.000000",
+      "partner_sell_price": "0.000000",
+      "nfr_partner_price": "NULL",
+      "product_code": "NULL",
+      "product_type": "NULL"
+    },
+    {
+      "sheet_name": "Managed Voice",
+      "product_name": "Premium-2",
+      "buy_name": "XP - 1 PAYG (Smile IT) - 571984",
+      "partner_buy_price": "0.000000",
+      "partner_sell_price": "0.000000",
+      "nfr_partner_price": "NULL",
+      "product_code": "NULL",
+      "product_type": "NULL"
+    },
+    {
+      "sheet_name": "Managed Voice",
+      "product_name": "Premium-3",
+      "buy_name": "CS - 1 PAYG (Smile IT) - 571057",
+      "partner_buy_price": "0.000000",
+      "partner_sell_price": "0.000000",
+      "nfr_partner_price": "NULL",
+      "product_code": "NULL",
+      "product_type": "NULL"
+    },
+    {
+      "sheet_name": "Managed Voice",
+      "product_name": "Premium-3",
+      "buy_name": "XP - 1 PAYG (Smile IT) - 571984",
+      "partner_buy_price": "0.000000",
+      "partner_sell_price": "0.000000",
+      "nfr_partner_price": "NULL",
+      "product_code": "NULL",
+      "product_type": "NULL"
+    },
+    {
+      "sheet_name": "Managed Voice",
+      "product_name": "Premium-3",
+      "buy_name": "ME-1 PAYG (Smile IT) - 570909",
+      "partner_buy_price": "0.000000",
+      "partner_sell_price": "0.000000",
+      "nfr_partner_price": "NULL",
+      "product_code": "NULL",
+      "product_type": "NULL"
+    },
+    {
+      "sheet_name": "Managed Voice",
+      "product_name": "XP - 3 Included Local National Mobile Call Pack",
+      "buy_name": "XP - 3 Included Local National Mobile Call Pack (Smile IT) - 571994",
+      "partner_buy_price": "0.000000",
+      "partner_sell_price": "0.000000",
+      "nfr_partner_price": "NULL",
+      "product_code": "NULL",
+      "product_type": "NULL"
+    },
+    {
+      "sheet_name": "Managed Voice - DID Hosting",
+      "product_name": "DID Australia (1)",
+      "buy_name": "DID Australia (1) - 28135",
+      "partner_buy_price": "0.200000",
+      "partner_sell_price": "2.000000",
+      "nfr_partner_price": "NULL",
+      "product_code": "NULL",
+      "product_type": "DID hosting"
+    },
+    {
+      "sheet_name": "Managed Voice - DID Hosting",
+      "product_name": "DID Australia (10)",
+      "buy_name": "DID Australia (10) - 28138",
+      "partner_buy_price": "2.000000",
+      "partner_sell_price": "20.000000",
+      "nfr_partner_price": "NULL",
+      "product_code": "NULL",
+      "product_type": "DID hosting"
+    },
+    {
+      "sheet_name": "Managed Voice - DID Hosting",
+      "product_name": "DID Australia (100)",
+      "buy_name": "DID Australia (100) - 28141",
+      "partner_buy_price": "20.000000",
+      "partner_sell_price": "55.000000",
+      "nfr_partner_price": "NULL",
+      "product_code": "NULL",
+      "product_type": "DID hosting"
+    }
+  ],
+  "messages": [],
+  "stdout": "sheet_name\tproduct_name\tbuy_name\tpartner_buy_price\tpartner_sell_price\tnfr_partner_price\tproduct_code\tproduct_type\nManaged Voice\tCS - 3 Included Local National Mobile Call Pack\tCS - 3 Included Local National Mobile Call Pack (Smile IT) - 572329\t0.000000\t0.000000\tNULL\tNULL\tNULL\nManaged Voice\tME - 3 Included Local National Mobile Call Pack\tME-3 Included Local National Mobile (Smile IT) - 571049\t0.000000\t0.000000\tNULL\tNULL\tNULL\nManaged Voice\tPremium-1\tME-1 PAYG (Smile IT) - 570909\t0.000000\t0.000000\tNULL\tNULL\tNULL\nManaged Voice\tPremium-1\tCS - 1 PAYG (Smile IT) - 571057\t0.000000\t0.000000\tNULL\tNULL\tNULL\nManaged Voice\tPremium-1\tXP - 1 PAYG (Smile IT) - 571984\t0.000000\t0.000000\tNULL\tNULL\tNULL\nManaged Voice\tPremium-2\tCS - 1 PAYG (Smile IT) - 571057\t0.000000\t0.000000\tNULL\tNULL\tNULL\nManaged Voice\tPremium-2\tME-1 PAYG (Smile IT) - 570909\t0.000000\t0.000000\tNULL\tNULL\tNULL\nManaged Voice\tPremium-2\tXP - 1 PAYG (Smile IT) - 571984\t0.000000\t0.000000\tNULL\tNULL\tNULL\nManaged Voice\tPremium-3\tCS - 1 PAYG (Smile IT) - 571057\t0.000000\t0.000000\tNULL\tNULL\tNULL\nManaged Voice\tPremium-3\tXP - 1 PAYG (Smile IT) - 571984\t0.000000\t0.000000\tNULL\tNULL\tNULL\nManaged Voice\tPremium-3\tME-1 PAYG (Smile IT) - 570909\t0.000000\t0.000000\tNULL\tNULL\tNULL\nManaged Voice\tXP - 3 Included Local National Mobile Call Pack\tXP - 3 Included Local National Mobile Call Pack (Smile IT) - 571994\t0.000000\t0.000000\tNULL\tNULL\tNULL\nManaged Voice - DID Hosting\tDID Australia (1)\tDID Australia (1) - 28135\t0.200000\t2.000000\tNULL\tNULL\tDID hosting\nManaged Voice - DID Hosting\tDID Australia (10)\tDID Australia (10) - 28138\t2.000000\t20.000000\tNULL\tNULL\tDID hosting\nManaged Voice - DID Hosting\tDID Australia (100)\tDID Australia (100) - 28141\t20.000000\t55.000000\tNULL\tNULL\tDID hosting\n",
+  "stderr": "",
+  "execution_time_ms": 1632
+}

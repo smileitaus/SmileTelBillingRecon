@@ -1,0 +1,14 @@
+{
+  "query": "\n-- Billing items with serviceExternalId set but no service_billing_assignment\nSELECT COUNT(*) as bi_with_service_no_assignment,\n       SUM(lineAmount) as total_revenue\nFROM billing_items bi\nWHERE bi.serviceExternalId IS NOT NULL \n  AND bi.serviceExternalId != ''\n  AND bi.matchStatus = 'service-matched'\n  AND NOT EXISTS (\n    SELECT 1 FROM service_billing_assignments sba \n    WHERE sba.billingItemExternalId = bi.externalId\n  );\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Billing items with serviceExternalId set but no service_billing_assignment\nSELECT COUNT(*) as bi_with_service_no_assignment,\n       SUM(lineAmount) as total_revenue\nFROM billing_items bi\nWHERE bi.serviceExternalId IS NOT NULL \n  AND bi.serviceExternalId != ''\n  AND bi.matchStatus = 'service-matched'\n  AND NOT EXISTS (\n    SELECT 1 FROM service_billing_assignments sba \n    WHERE sba.billingItemExternalId = bi.externalId\n  );\n",
+  "rows": [
+    {
+      "bi_with_service_no_assignment": "2531",
+      "total_revenue": "265299.52"
+    }
+  ],
+  "messages": [],
+  "stdout": "bi_with_service_no_assignment\ttotal_revenue\n2531\t265299.52\n",
+  "stderr": "",
+  "execution_time_ms": 1589
+}

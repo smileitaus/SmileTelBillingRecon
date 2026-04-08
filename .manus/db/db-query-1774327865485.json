@@ -1,0 +1,210 @@
+{
+  "query": "SELECT externalId, connectionId, locationAddress, phoneNumber, serviceType, planName, customerExternalId, provider\nFROM services \nWHERE (connectionId LIKE 'AVC%' OR provider = 'Vocus' OR supplierName LIKE '%Vocus%')\nAND status != 'terminated'\nLIMIT 20;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute SELECT externalId, connectionId, locationAddress, phoneNumber, serviceType, planName, customerExternalId, provider\nFROM services \nWHERE (connectionId LIKE 'AVC%' OR provider = 'Vocus' OR supplierName LIKE '%Vocus%')\nAND status != 'terminated'\nLIMIT 20;",
+  "rows": [
+    {
+      "externalId": "S0016",
+      "connectionId": "AVC000231188749",
+      "locationAddress": "BG 1, G, SHOP TNCY8, 100 EVERGLADES AVE, BRABHAM WA 6055",
+      "phoneNumber": "08 6296 9780",
+      "serviceType": "Internet",
+      "planName": "Unlimited Internet",
+      "customerExternalId": "C1405",
+      "provider": "ABB"
+    },
+    {
+      "externalId": "S0027",
+      "connectionId": "AVC000139404256",
+      "locationAddress": "BATEAU BAY SQUARE, BG 1, G, SHOP 8, BATEAU BAY NSW 2261",
+      "phoneNumber": "02 4379 0174",
+      "serviceType": "Internet",
+      "planName": "Upfront Internet Plan Basic",
+      "customerExternalId": "C0140",
+      "provider": "ABB"
+    },
+    {
+      "externalId": "S0028",
+      "connectionId": "AVC000178025232",
+      "locationAddress": "1120 MT ALEXANDER RD, ESSENDON VIC 3040",
+      "phoneNumber": "03 9374 2425",
+      "serviceType": "Internet",
+      "planName": "Telstra Upfront Internet Plan Basic",
+      "customerExternalId": "C0336",
+      "provider": "Telstra"
+    },
+    {
+      "externalId": "S0029",
+      "connectionId": "AVC000157988192",
+      "locationAddress": "SHOP 2, 8 NORTH ST, BATEMANS BAY NSW 2536",
+      "phoneNumber": "02 4472 4158",
+      "serviceType": "Internet",
+      "planName": "Upfront Internet Plan Basic",
+      "customerExternalId": "C0304",
+      "provider": "ABB"
+    },
+    {
+      "externalId": "S0030",
+      "connectionId": "AVC000114665989",
+      "locationAddress": "SHOP 1 4 CHURCH ST, KELMSCOTT, WA 6111",
+      "phoneNumber": "08 9390 8284",
+      "serviceType": "Internet",
+      "planName": "Upfront Internet Plan Basic",
+      "customerExternalId": "C0352",
+      "provider": "ABB"
+    },
+    {
+      "externalId": "S0031",
+      "connectionId": "AVC400038259684",
+      "locationAddress": "U 2, 21A SUNSHINE BVD, BROADBEACH WATERS, QLD, 4218",
+      "phoneNumber": "07 5538 0557",
+      "serviceType": "Internet",
+      "planName": "Telstra Upfront Internet Plan Basic",
+      "customerExternalId": "C0206",
+      "provider": "Telstra"
+    },
+    {
+      "externalId": "S0062",
+      "connectionId": "AVC000118249414",
+      "locationAddress": "461 Dean St,, Albury, Nsw, 2640",
+      "phoneNumber": "02 6041 2870",
+      "serviceType": "Voice",
+      "planName": "Main Business Number",
+      "customerExternalId": "C0297",
+      "provider": "Telstra"
+    },
+    {
+      "externalId": "S0063",
+      "connectionId": "AVC000126102023",
+      "locationAddress": "Shop 33, 18-26 Spitfire Avenue, Canberra Airport, ACT 2609 (MAJURA PARK SHOPPING CENTRE)",
+      "phoneNumber": "02 6247 3170",
+      "serviceType": "Internet",
+      "planName": "Unlimited Business Internet",
+      "customerExternalId": "C0357",
+      "provider": "ABB"
+    },
+    {
+      "externalId": "S0064",
+      "connectionId": "AVC000126102023",
+      "locationAddress": "Shop 33, 18-26 Spitfire Avenue, Canberra Airport, ACT 2609 (MAJURA PARK SHOPPING CENTRE)",
+      "phoneNumber": "02 6257 0012",
+      "serviceType": "Voice",
+      "planName": "Main Business Number",
+      "customerExternalId": "C0357",
+      "provider": "Telstra"
+    },
+    {
+      "externalId": "S0065",
+      "connectionId": "AVC000037231418",
+      "locationAddress": "46 192 BANNA AVE GRIFFITH",
+      "phoneNumber": "02 6962 2841",
+      "serviceType": "Internet",
+      "planName": "Unlimited Business Internet",
+      "customerExternalId": "C0344",
+      "provider": "Telstra"
+    },
+    {
+      "externalId": "S0066",
+      "connectionId": "AVC000037231418",
+      "locationAddress": "46 192 BANNA AVE GRIFFITH",
+      "phoneNumber": "02 6962 6495",
+      "serviceType": "Voice",
+      "planName": "Main Business Number",
+      "customerExternalId": "C0344",
+      "provider": "Telstra"
+    },
+    {
+      "externalId": "S0067",
+      "connectionId": "AVC000125042715",
+      "locationAddress": "281 King Street, Newtown, NSW 2042",
+      "phoneNumber": "02 9550 3018",
+      "serviceType": "Voice",
+      "planName": "Main Business Number",
+      "customerExternalId": "C0370",
+      "provider": "Telstra"
+    },
+    {
+      "externalId": "S0068",
+      "connectionId": "AVC000125042715",
+      "locationAddress": "281 King Street, Newtown, NSW 2042",
+      "phoneNumber": "02 9550 3025",
+      "serviceType": "Internet",
+      "planName": "Unlimited Business Internet",
+      "customerExternalId": "C0370",
+      "provider": "ABB"
+    },
+    {
+      "externalId": "S0069",
+      "connectionId": "AVC000129630844",
+      "locationAddress": "Shop 8, 95-103 Pakington Street, Geelong West, VIC 3218",
+      "phoneNumber": "03 5221 5595",
+      "serviceType": "Internet",
+      "planName": "Unlimited Business Internet",
+      "customerExternalId": "C0341",
+      "provider": "ABB"
+    },
+    {
+      "externalId": "S0070",
+      "connectionId": "AVC000037209743",
+      "locationAddress": "Unit 1, 56 Griffith St, Coolangatta, QLD",
+      "phoneNumber": "07 5536 4319",
+      "serviceType": "Voice",
+      "planName": "Main Business Number",
+      "customerExternalId": "C0323",
+      "provider": "Telstra"
+    },
+    {
+      "externalId": "S0071",
+      "connectionId": "AVC400032011362",
+      "locationAddress": "Unit 3, Lot 0, 2-10 Riverview Road, Nerang, QLD 4211",
+      "phoneNumber": "07 5596 0114",
+      "serviceType": "Internet",
+      "planName": "Unlimited Business Internet",
+      "customerExternalId": "C0369",
+      "provider": "ABB"
+    },
+    {
+      "externalId": "S0072",
+      "connectionId": "AVC400032011362",
+      "locationAddress": "Unit 3, Lot 0, 2-10 Riverview Road, Nerang, QLD 4211",
+      "phoneNumber": "07 5596 5232",
+      "serviceType": "Voice",
+      "planName": "Main Business Number",
+      "customerExternalId": "C0369",
+      "provider": "Telstra"
+    },
+    {
+      "externalId": "S0073",
+      "connectionId": "AVC000037209743",
+      "locationAddress": "Unit 1, 56 Griffith St, Coolangatta, QLD",
+      "phoneNumber": "07 5599 4711",
+      "serviceType": "Internet",
+      "planName": "Unlimited Business Internet",
+      "customerExternalId": "C0323",
+      "provider": "ABB"
+    },
+    {
+      "externalId": "S0074",
+      "connectionId": "AVC000068152861",
+      "locationAddress": "Unit 1, 2-8 Throssell Road, South Hedland, WA 6722",
+      "phoneNumber": "08 9140 2933",
+      "serviceType": "Internet",
+      "planName": "Unlimited Business Internet",
+      "customerExternalId": "C0385",
+      "provider": "Telstra"
+    },
+    {
+      "externalId": "S0075",
+      "connectionId": "AVC000068152861",
+      "locationAddress": "Unit 1, 2-8 Throssell Road, South Hedland, WA 6722",
+      "phoneNumber": "08 9172 4119",
+      "serviceType": "Voice",
+      "planName": "Main Business Number",
+      "customerExternalId": "C0385",
+      "provider": "Telstra"
+    }
+  ],
+  "messages": [],
+  "stdout": "externalId\tconnectionId\tlocationAddress\tphoneNumber\tserviceType\tplanName\tcustomerExternalId\tprovider\nS0016\tAVC000231188749\tBG 1, G, SHOP TNCY8, 100 EVERGLADES AVE, BRABHAM WA 6055\t08 6296 9780\tInternet\tUnlimited Internet\tC1405\tABB\nS0027\tAVC000139404256\tBATEAU BAY SQUARE, BG 1, G, SHOP 8, BATEAU BAY NSW 2261\t02 4379 0174\tInternet\tUpfront Internet Plan Basic\tC0140\tABB\nS0028\tAVC000178025232\t1120 MT ALEXANDER RD, ESSENDON VIC 3040\t03 9374 2425\tInternet\tTelstra Upfront Internet Plan Basic\tC0336\tTelstra\nS0029\tAVC000157988192\tSHOP 2, 8 NORTH ST, BATEMANS BAY NSW 2536\t02 4472 4158\tInternet\tUpfront Internet Plan Basic\tC0304\tABB\nS0030\tAVC000114665989\tSHOP 1 4 CHURCH ST, KELMSCOTT, WA 6111\t08 9390 8284\tInternet\tUpfront Internet Plan Basic\tC0352\tABB\nS0031\tAVC400038259684\tU 2, 21A SUNSHINE BVD, BROADBEACH WATERS, QLD, 4218\t07 5538 0557\tInternet\tTelstra Upfront Internet Plan Basic\tC0206\tTelstra\nS0062\tAVC000118249414\t461 Dean St,, Albury, Nsw, 2640\t02 6041 2870\tVoice\tMain Business Number\tC0297\tTelstra\nS0063\tAVC000126102023\tShop 33, 18-26 Spitfire Avenue, Canberra Airport, ACT 2609 (MAJURA PARK SHOPPING CENTRE)\t02 6247 3170\tInternet\tUnlimited Business Internet\tC0357\tABB\nS0064\tAVC000126102023\tShop 33, 18-26 Spitfire Avenue, Canberra Airport, ACT 2609 (MAJURA PARK SHOPPING CENTRE)\t02 6257 0012\tVoice\tMain Business Number\tC0357\tTelstra\nS0065\tAVC000037231418\t46 192 BANNA AVE GRIFFITH\t02 6962 2841\tInternet\tUnlimited Business Internet\tC0344\tTelstra\nS0066\tAVC000037231418\t46 192 BANNA AVE GRIFFITH\t02 6962 6495\tVoice\tMain Business Number\tC0344\tTelstra\nS0067\tAVC000125042715\t281 King Street, Newtown, NSW 2042\t02 9550 3018\tVoice\tMain Business Number\tC0370\tTelstra\nS0068\tAVC000125042715\t281 King Street, Newtown, NSW 2042\t02 9550 3025\tInternet\tUnlimited Business Internet\tC0370\tABB\nS0069\tAVC000129630844\tShop 8, 95-103 Pakington Street, Geelong West, VIC 3218\t03 5221 5595\tInternet\tUnlimited Business Internet\tC0341\tABB\nS0070\tAVC000037209743\tUnit 1, 56 Griffith St, Coolangatta, QLD\t07 5536 4319\tVoice\tMain Business Number\tC0323\tTelstra\nS0071\tAVC400032011362\tUnit 3, Lot 0, 2-10 Riverview Road, Nerang, QLD 4211\t07 5596 0114\tInternet\tUnlimited Business Internet\tC0369\tABB\nS0072\tAVC400032011362\tUnit 3, Lot 0, 2-10 Riverview Road, Nerang, QLD 4211\t07 5596 5232\tVoice\tMain Business Number\tC0369\tTelstra\nS0073\tAVC000037209743\tUnit 1, 56 Griffith St, Coolangatta, QLD\t07 5599 4711\tInternet\tUnlimited Business Internet\tC0323\tABB\nS0074\tAVC000068152861\tUnit 1, 2-8 Throssell Road, South Hedland, WA 6722\t08 9140 2933\tInternet\tUnlimited Business Internet\tC0385\tTelstra\nS0075\tAVC000068152861\tUnit 1, 2-8 Throssell Road, South Hedland, WA 6722\t08 9172 4119\tVoice\tMain Business Number\tC0385\tTelstra\n",
+  "stderr": "",
+  "execution_time_ms": 1639
+}

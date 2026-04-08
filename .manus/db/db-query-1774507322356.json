@@ -1,0 +1,110 @@
+{
+  "query": "\nSELECT DISTINCT dataSource, supplierName, COUNT(*) as cnt\nFROM services\nGROUP BY dataSource, supplierName\nORDER BY cnt DESC\nLIMIT 20;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \nSELECT DISTINCT dataSource, supplierName, COUNT(*) as cnt\nFROM services\nGROUP BY dataSource, supplierName\nORDER BY cnt DESC\nLIMIT 20;\n",
+  "rows": [
+    {
+      "dataSource": "Xero Feb 2026 Invoice",
+      "supplierName": "SasBoss",
+      "cnt": "646"
+    },
+    {
+      "dataSource": "",
+      "supplierName": "SasBoss",
+      "cnt": "486"
+    },
+    {
+      "dataSource": "",
+      "supplierName": "Telstra",
+      "cnt": "225"
+    },
+    {
+      "dataSource": "SM Import (Ella)",
+      "supplierName": "Telstra",
+      "cnt": "200"
+    },
+    {
+      "dataSource": "2025 Blitz Report",
+      "supplierName": "Telstra",
+      "cnt": "199"
+    },
+    {
+      "dataSource": "",
+      "supplierName": "Vocus",
+      "cnt": "128"
+    },
+    {
+      "dataSource": "SmileTel Internet Services - ABB Sheet; Carbon API",
+      "supplierName": "ABB",
+      "cnt": "126"
+    },
+    {
+      "dataSource": "Vocus IPTel Import",
+      "supplierName": "Telstra",
+      "cnt": "121"
+    },
+    {
+      "dataSource": "Xero Feb 2026 Invoice",
+      "supplierName": "Unknown",
+      "cnt": "114"
+    },
+    {
+      "dataSource": "SM Import (Ella)",
+      "supplierName": "TIAB",
+      "cnt": "113"
+    },
+    {
+      "dataSource": "SM Import (Ella)",
+      "supplierName": "Vocus",
+      "cnt": "92"
+    },
+    {
+      "dataSource": "Carbon API",
+      "supplierName": "ABB",
+      "cnt": "87"
+    },
+    {
+      "dataSource": "Vocus Standard Mobile SIMs CSV import",
+      "supplierName": "Vocus",
+      "cnt": "75"
+    },
+    {
+      "dataSource": "",
+      "supplierName": "ChannelHaus",
+      "cnt": "67"
+    },
+    {
+      "dataSource": "AAPT Invoice 23258566",
+      "supplierName": "AAPT",
+      "cnt": "64"
+    },
+    {
+      "dataSource": "Xero Feb 2026 Invoice",
+      "supplierName": "SmileTel",
+      "cnt": "63"
+    },
+    {
+      "dataSource": "Xero Feb 2026 Invoice",
+      "supplierName": "Vocus",
+      "cnt": "24"
+    },
+    {
+      "dataSource": "SmileTel Internet Services - ABB Sheet",
+      "supplierName": "ABB",
+      "cnt": "19"
+    },
+    {
+      "dataSource": "SmileTel Internet Services - ABB Sheet; Carbon API; Carbon API",
+      "supplierName": "ABB",
+      "cnt": "17"
+    },
+    {
+      "dataSource": "SM Import (Ella)",
+      "supplierName": "ABB",
+      "cnt": "17"
+    }
+  ],
+  "messages": [],
+  "stdout": "dataSource\tsupplierName\tcnt\nXero Feb 2026 Invoice\tSasBoss\t646\n\tSasBoss\t486\n\tTelstra\t225\nSM Import (Ella)\tTelstra\t200\n2025 Blitz Report\tTelstra\t199\n\tVocus\t128\nSmileTel Internet Services - ABB Sheet; Carbon API\tABB\t126\nVocus IPTel Import\tTelstra\t121\nXero Feb 2026 Invoice\tUnknown\t114\nSM Import (Ella)\tTIAB\t113\nSM Import (Ella)\tVocus\t92\nCarbon API\tABB\t87\nVocus Standard Mobile SIMs CSV import\tVocus\t75\n\tChannelHaus\t67\nAAPT Invoice 23258566\tAAPT\t64\nXero Feb 2026 Invoice\tSmileTel\t63\nXero Feb 2026 Invoice\tVocus\t24\nSmileTel Internet Services - ABB Sheet\tABB\t19\nSmileTel Internet Services - ABB Sheet; Carbon API; Carbon API\tABB\t17\nSM Import (Ella)\tABB\t17\n",
+  "stderr": "",
+  "execution_time_ms": 1556
+}

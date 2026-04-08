@@ -1,0 +1,8 @@
+{
+  "query": "\n-- Look for services matching the BU numbers from the screenshot by address keywords\nSELECT \n  s.externalId, s.planName, s.serviceType, s.supplierName, s.status,\n  s.monthlyCost, s.monthlyRevenue, s.dataSource,\n  s.customerExternalId,\n  c.name as customerName,\n  s.sipId\nFROM services s\nLEFT JOIN customers c ON c.externalId = s.customerExternalId\nWHERE (s.dataSource LIKE '%Vocus SP%' OR s.supplierName LIKE '%Vocus%')\n  AND s.serviceType IN ('Internet', 'Data', 'Broadband')\nORDER BY s.status, c.name\nLIMIT 20;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Look for services matching the BU numbers from the screenshot by address keywords\nSELECT \n  s.externalId, s.planName, s.serviceType, s.supplierName, s.status,\n  s.monthlyCost, s.monthlyRevenue, s.dataSource,\n  s.customerExternalId,\n  c.name as customerName,\n  s.sipId\nFROM services s\nLEFT JOIN customers c ON c.externalId = s.customerExternalId\nWHERE (s.dataSource LIKE '%Vocus SP%' OR s.supplierName LIKE '%Vocus%')\n  AND s.serviceType IN ('Internet', 'Data', 'Broadband')\nORDER BY s.status, c.name\nLIMIT 20;\n",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1054 (42S22) at line 3: Unknown column 's.sipid' in 'field list'"
+  ]
+}

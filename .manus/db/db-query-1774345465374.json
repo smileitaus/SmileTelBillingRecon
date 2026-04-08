@@ -1,0 +1,109 @@
+{
+  "query": "-- Find Mega Electrics customer\nSELECT id, externalId, name, businessName, billingPlatforms, serviceCount, monthlyCost, notes\nFROM customers WHERE name LIKE '%Mega%' OR name LIKE '%Electric%';\n\n-- Check what Xero billing tables exist\nSELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES \nWHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME LIKE '%xero%' OR TABLE_NAME LIKE '%billing%' OR TABLE_NAME LIKE '%invoice%' OR TABLE_NAME LIKE '%revenue%'\nORDER BY TABLE_NAME;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute -- Find Mega Electrics customer\nSELECT id, externalId, name, businessName, billingPlatforms, serviceCount, monthlyCost, notes\nFROM customers WHERE name LIKE '%Mega%' OR name LIKE '%Electric%';\n\n-- Check what Xero billing tables exist\nSELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES \nWHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME LIKE '%xero%' OR TABLE_NAME LIKE '%billing%' OR TABLE_NAME LIKE '%invoice%' OR TABLE_NAME LIKE '%revenue%'\nORDER BY TABLE_NAME;",
+  "rows": [
+    {
+      "id": "75",
+      "externalId": "C0019",
+      "name": "Audem Electrical",
+      "businessName": "",
+      "billingPlatforms": "[]",
+      "serviceCount": "1",
+      "monthlyCost": "77.00",
+      "notes": "NULL"
+    },
+    {
+      "id": "151",
+      "externalId": "C0075",
+      "name": "DanKel Electrical Pty Ltd",
+      "businessName": "",
+      "billingPlatforms": "[\"Sasboss\", \"OneBill\"]",
+      "serviceCount": "7",
+      "monthlyCost": "56.66",
+      "notes": "NULL"
+    },
+    {
+      "id": "166",
+      "externalId": "C0089",
+      "name": "Energy Pro Electrical",
+      "businessName": "",
+      "billingPlatforms": "[\"Sasboss\", \"DataGate\"]",
+      "serviceCount": "3",
+      "monthlyCost": "95.05",
+      "notes": "DataGate Code: 142-12441 | Legacy Code: ENE1 | Identification: Energy Pro Electrical"
+    },
+    {
+      "id": "242",
+      "externalId": "C0149",
+      "name": "Livingstone Low Electrical Pty Ltd (94171)",
+      "businessName": "",
+      "billingPlatforms": "[\"OneBill\"]",
+      "serviceCount": "10",
+      "monthlyCost": "18.53",
+      "notes": "NULL"
+    },
+    {
+      "id": "252",
+      "externalId": "C0159",
+      "name": "Mega Electrics",
+      "businessName": "",
+      "billingPlatforms": "[\"Sasboss\", \"OneBill\", \"DataGate\"]",
+      "serviceCount": "16",
+      "monthlyCost": "348.94",
+      "notes": "DataGate Code: 142-8618 | Legacy Code: MEG2 | Identification: Mega Electrics"
+    },
+    {
+      "id": "408",
+      "externalId": "C2451",
+      "name": "T2 Electrical",
+      "businessName": "",
+      "billingPlatforms": "[]",
+      "serviceCount": "0",
+      "monthlyCost": "0.00",
+      "notes": "NULL"
+    },
+    {
+      "id": "409",
+      "externalId": "C0236",
+      "name": "T2 Electrical and Data",
+      "businessName": "",
+      "billingPlatforms": "[\"DATAGATE\", \"Sasboss\", \"OneBill\"]",
+      "serviceCount": "3",
+      "monthlyCost": "235.68",
+      "notes": "DataGate Code: 142-8593 | Legacy Code: TEAD | Identification: T2 Electrical and Data"
+    },
+    {
+      "id": "30010",
+      "externalId": "C2647",
+      "name": "Goodhew Electrical & Solar",
+      "businessName": "",
+      "billingPlatforms": "[\"DATAGATE\"]",
+      "serviceCount": "0",
+      "monthlyCost": "0.00",
+      "notes": "DataGate Code: 142-8938 | Legacy Code: GOO5 | Identification: Goodhew Solar"
+    },
+    {
+      "id": "360024",
+      "externalId": "C9027",
+      "name": "Expert Electrical Aus Pty Ltd",
+      "businessName": "Expert Electrical Aus Pty Ltd",
+      "billingPlatforms": "NULL",
+      "serviceCount": "0",
+      "monthlyCost": "0.00",
+      "notes": "Created from Vocus RVC-STUB-003 import. Unit 6, 20 Kenworth Pl, BRENDALE QLD 4500. FTTN 100/40Mbps."
+    }
+  ],
+  "messages": [
+    "TABLE_NAME",
+    "billing_items",
+    "billing_platform_checks",
+    "service_billing_assignments",
+    "service_billing_match_log",
+    "supplier_invoice_uploads",
+    "tiab_supplier_invoice_line_items",
+    "tiab_supplier_invoices"
+  ],
+  "stdout": "id\texternalId\tname\tbusinessName\tbillingPlatforms\tserviceCount\tmonthlyCost\tnotes\n75\tC0019\tAudem Electrical\t\t[]\t1\t77.00\tNULL\n151\tC0075\tDanKel Electrical Pty Ltd\t\t[\"Sasboss\", \"OneBill\"]\t7\t56.66\tNULL\n166\tC0089\tEnergy Pro Electrical\t\t[\"Sasboss\", \"DataGate\"]\t3\t95.05\tDataGate Code: 142-12441 | Legacy Code: ENE1 | Identification: Energy Pro Electrical\n242\tC0149\tLivingstone Low Electrical Pty Ltd (94171)\t\t[\"OneBill\"]\t10\t18.53\tNULL\n252\tC0159\tMega Electrics\t\t[\"Sasboss\", \"OneBill\", \"DataGate\"]\t16\t348.94\tDataGate Code: 142-8618 | Legacy Code: MEG2 | Identification: Mega Electrics\n408\tC2451\tT2 Electrical\t\t[]\t0\t0.00\tNULL\n409\tC0236\tT2 Electrical and Data\t\t[\"DATAGATE\", \"Sasboss\", \"OneBill\"]\t3\t235.68\tDataGate Code: 142-8593 | Legacy Code: TEAD | Identification: T2 Electrical and Data\n30010\tC2647\tGoodhew Electrical & Solar\t\t[\"DATAGATE\"]\t0\t0.00\tDataGate Code: 142-8938 | Legacy Code: GOO5 | Identification: Goodhew Solar\n360024\tC9027\tExpert Electrical Aus Pty Ltd\tExpert Electrical Aus Pty Ltd\tNULL\t0\t0.00\tCreated from Vocus RVC-STUB-003 import. Unit 6, 20 Kenworth Pl, BRENDALE QLD 4500. FTTN 100/40Mbps.\nTABLE_NAME\nbilling_items\nbilling_platform_checks\nservice_billing_assignments\nservice_billing_match_log\nsupplier_invoice_uploads\ntiab_supplier_invoice_line_items\ntiab_supplier_invoices\n",
+  "stderr": "",
+  "execution_time_ms": 1759
+}

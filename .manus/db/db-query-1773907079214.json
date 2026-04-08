@@ -1,0 +1,59 @@
+{
+  "query": "-- Insert SmileTel Lite User License (Common Phone non-MC variant: Buy $3.90, Sell $9.00)\nINSERT INTO supplier_product_cost_map (supplier, productName, wholesaleCost, defaultRetailPrice, rrp, notes, source)\nVALUES ('SasBoss', 'SmileTel Lite User License', 3.90, 9.00, 9.00,\n  'Common Phone non-MC variant: Buy $3.90, Sell $9.00 (Access4 pricebook)', 'Access4 Pricebook 2026');\n\n-- Now fix services using these products\n-- MC - SmileTel Lite User License: $3.90/seat\nUPDATE services SET monthlyCost=3.90, costSource='product_map'\nWHERE planName='MC - SmileTel Lite User License';\n\n-- SmileTel Lite user / SmileTel Lite User: $6.00/seat\nUPDATE services SET monthlyCost=6.00, costSource='product_map'\nWHERE planName IN ('SmileTel Lite user', 'SmileTel Lite User', 'UCXcel Lite');\n\n-- SmileTel Professional User License: $18.00/seat (Executive User - Included Calls)\nUPDATE services SET monthlyCost=18.00, costSource='product_map'\nWHERE planName='SmileTel Professional User License';\n\n-- MC - SmileTel Premium User License: $19.34/seat\nUPDATE services SET monthlyCost=19.34, costSource='product_map'\nWHERE planName='MC - SmileTel Premium User License';\n\n-- SmileTel Essential user: $9.00/seat (already correct, but update costSource)\nUPDATE services SET monthlyCost=9.00, costSource='product_map'\nWHERE planName IN ('SmileTel Essential user', 'SmileTel Essential User', 'UCXcel Essential');\n\n-- Business Trunk (PAYG): $2.00/trunk\nUPDATE services SET monthlyCost=2.00, costSource='product_map'\nWHERE planName='Business Trunk (PAYG)';\n\n-- SmileTel Lite User License (non-MC Common Phone): $3.90/seat\nUPDATE services SET monthlyCost=3.90, costSource='product_map'\nWHERE planName='SmileTel Lite User License';\n\n-- Verify counts\nSELECT planName, COUNT(*) as cnt, SUM(monthlyCost) as total, MIN(monthlyCost) as minCost, MAX(monthlyCost) as maxCost\nFROM services\nWHERE planName IN (\n  'MC - SmileTel Lite User License', 'SmileTel Lite user', 'SmileTel Lite User',\n  'UCXcel Lite', 'SmileTel Professional User License', 'MC - SmileTel Premium User License',\n  'SmileTel Essential user', 'SmileTel Essential User', 'UCXcel Essential',\n  'Business Trunk (PAYG)', 'SmileTel Lite User License'\n)\nGROUP BY planName ORDER BY planName;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute -- Insert SmileTel Lite User License (Common Phone non-MC variant: Buy $3.90, Sell $9.00)\nINSERT INTO supplier_product_cost_map (supplier, productName, wholesaleCost, defaultRetailPrice, rrp, notes, source)\nVALUES ('SasBoss', 'SmileTel Lite User License', 3.90, 9.00, 9.00,\n  'Common Phone non-MC variant: Buy $3.90, Sell $9.00 (Access4 pricebook)', 'Access4 Pricebook 2026');\n\n-- Now fix services using these products\n-- MC - SmileTel Lite User License: $3.90/seat\nUPDATE services SET monthlyCost=3.90, costSource='product_map'\nWHERE planName='MC - SmileTel Lite User License';\n\n-- SmileTel Lite user / SmileTel Lite User: $6.00/seat\nUPDATE services SET monthlyCost=6.00, costSource='product_map'\nWHERE planName IN ('SmileTel Lite user', 'SmileTel Lite User', 'UCXcel Lite');\n\n-- SmileTel Professional User License: $18.00/seat (Executive User - Included Calls)\nUPDATE services SET monthlyCost=18.00, costSource='product_map'\nWHERE planName='SmileTel Professional User License';\n\n-- MC - SmileTel Premium User License: $19.34/seat\nUPDATE services SET monthlyCost=19.34, costSource='product_map'\nWHERE planName='MC - SmileTel Premium User License';\n\n-- SmileTel Essential user: $9.00/seat (already correct, but update costSource)\nUPDATE services SET monthlyCost=9.00, costSource='product_map'\nWHERE planName IN ('SmileTel Essential user', 'SmileTel Essential User', 'UCXcel Essential');\n\n-- Business Trunk (PAYG): $2.00/trunk\nUPDATE services SET monthlyCost=2.00, costSource='product_map'\nWHERE planName='Business Trunk (PAYG)';\n\n-- SmileTel Lite User License (non-MC Common Phone): $3.90/seat\nUPDATE services SET monthlyCost=3.90, costSource='product_map'\nWHERE planName='SmileTel Lite User License';\n\n-- Verify counts\nSELECT planName, COUNT(*) as cnt, SUM(monthlyCost) as total, MIN(monthlyCost) as minCost, MAX(monthlyCost) as maxCost\nFROM services\nWHERE planName IN (\n  'MC - SmileTel Lite User License', 'SmileTel Lite user', 'SmileTel Lite User',\n  'UCXcel Lite', 'SmileTel Professional User License', 'MC - SmileTel Premium User License',\n  'SmileTel Essential user', 'SmileTel Essential User', 'UCXcel Essential',\n  'Business Trunk (PAYG)', 'SmileTel Lite User License'\n)\nGROUP BY planName ORDER BY planName;",
+  "rows": [
+    {
+      "planName": "Business Trunk (PAYG)",
+      "cnt": "1",
+      "total": "2.00",
+      "minCost": "2.00",
+      "maxCost": "2.00"
+    },
+    {
+      "planName": "MC - SmileTel Lite User License",
+      "cnt": "2",
+      "total": "7.80",
+      "minCost": "3.90",
+      "maxCost": "3.90"
+    },
+    {
+      "planName": "MC - SmileTel Premium User License",
+      "cnt": "9",
+      "total": "174.06",
+      "minCost": "19.34",
+      "maxCost": "19.34"
+    },
+    {
+      "planName": "SmileTel Essential user",
+      "cnt": "4",
+      "total": "36.00",
+      "minCost": "9.00",
+      "maxCost": "9.00"
+    },
+    {
+      "planName": "SmileTel Lite user",
+      "cnt": "1",
+      "total": "6.00",
+      "minCost": "6.00",
+      "maxCost": "6.00"
+    },
+    {
+      "planName": "UCXcel Essential",
+      "cnt": "21",
+      "total": "189.00",
+      "minCost": "9.00",
+      "maxCost": "9.00"
+    },
+    {
+      "planName": "UCXcel Lite",
+      "cnt": "2",
+      "total": "12.00",
+      "minCost": "6.00",
+      "maxCost": "6.00"
+    }
+  ],
+  "messages": [],
+  "stdout": "planName\tcnt\ttotal\tminCost\tmaxCost\nBusiness Trunk (PAYG)\t1\t2.00\t2.00\t2.00\nMC - SmileTel Lite User License\t2\t7.80\t3.90\t3.90\nMC - SmileTel Premium User License\t9\t174.06\t19.34\t19.34\nSmileTel Essential user\t4\t36.00\t9.00\t9.00\nSmileTel Lite user\t1\t6.00\t6.00\t6.00\nUCXcel Essential\t21\t189.00\t9.00\t9.00\nUCXcel Lite\t2\t12.00\t6.00\t6.00\n",
+  "stderr": "",
+  "execution_time_ms": 3613
+}

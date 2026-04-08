@@ -1,0 +1,34 @@
+{
+  "query": "SELECT \n  bucketId,\n  realm,\n  bucketType,\n  ROUND(dataQuotaMb / 1024.0, 1) as quotaGb,\n  ROUND(dataUsedMb / 1024.0, 2) as usedGb,\n  ROUND(dataUsedMb * 100.0 / dataQuotaMb, 1) as pctUsed,\n  isOverQuota,\n  simCount,\n  snapshotDate,\n  lastSyncedAt\nFROM vocus_buckets\nORDER BY lastSyncedAt DESC;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute SELECT \n  bucketId,\n  realm,\n  bucketType,\n  ROUND(dataQuotaMb / 1024.0, 1) as quotaGb,\n  ROUND(dataUsedMb / 1024.0, 2) as usedGb,\n  ROUND(dataUsedMb * 100.0 / dataQuotaMb, 1) as pctUsed,\n  isOverQuota,\n  simCount,\n  snapshotDate,\n  lastSyncedAt\nFROM vocus_buckets\nORDER BY lastSyncedAt DESC;",
+  "rows": [
+    {
+      "bucketId": "data.smileit.com-4gbackup",
+      "realm": "data.smileit.com",
+      "bucketType": "DATA-HOSTED",
+      "quotaGb": "100.0",
+      "usedGb": "187.38",
+      "pctUsed": "187.4",
+      "isOverQuota": "1",
+      "simCount": "18",
+      "snapshotDate": "2026-03-24",
+      "lastSyncedAt": "2026-03-24 04:32:38"
+    },
+    {
+      "bucketId": "mobile.smileit.com-standard",
+      "realm": "mobile.smileit.com",
+      "bucketType": "STANDARD-POSTPAID",
+      "quotaGb": "100.0",
+      "usedGb": "188.69",
+      "pctUsed": "188.7",
+      "isOverQuota": "1",
+      "simCount": "75",
+      "snapshotDate": "2026-03-24",
+      "lastSyncedAt": "2026-03-24 04:32:37"
+    }
+  ],
+  "messages": [],
+  "stdout": "bucketId\trealm\tbucketType\tquotaGb\tusedGb\tpctUsed\tisOverQuota\tsimCount\tsnapshotDate\tlastSyncedAt\ndata.smileit.com-4gbackup\tdata.smileit.com\tDATA-HOSTED\t100.0\t187.38\t187.4\t1\t18\t2026-03-24\t2026-03-24 04:32:38\nmobile.smileit.com-standard\tmobile.smileit.com\tSTANDARD-POSTPAID\t100.0\t188.69\t188.7\t1\t75\t2026-03-24\t2026-03-24 04:32:37\n",
+  "stderr": "",
+  "execution_time_ms": 1521
+}

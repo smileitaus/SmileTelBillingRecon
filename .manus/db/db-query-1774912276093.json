@@ -1,0 +1,106 @@
+{
+  "query": "SELECT product_name, buy_name, partner_buy_price, partner_sell_price, nfr_partner_price, product_code FROM sasboss_pricebook_items WHERE sheet_name = 'UCaaS' ORDER BY product_name LIMIT 12;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute SELECT product_name, buy_name, partner_buy_price, partner_sell_price, nfr_partner_price, product_code FROM sasboss_pricebook_items WHERE sheet_name = 'UCaaS' ORDER BY product_name LIMIT 12;",
+  "rows": [
+    {
+      "product_name": "Agent Web App",
+      "buy_name": "Agent Web App - 1995",
+      "partner_buy_price": "14.400000",
+      "partner_sell_price": "24.000000",
+      "nfr_partner_price": "14.500000",
+      "product_code": "NULL"
+    },
+    {
+      "product_name": "Auto Attendant with Time of Day Routing",
+      "buy_name": "Auto Attendant with Time of Day Routing - 7174",
+      "partner_buy_price": "9.000000",
+      "partner_sell_price": "15.000000",
+      "nfr_partner_price": "7.000000",
+      "product_code": "NULL"
+    },
+    {
+      "product_name": "Basic Call Queue",
+      "buy_name": "Basic Call Queue - 214",
+      "partner_buy_price": "6.300000",
+      "partner_sell_price": "10.500000",
+      "nfr_partner_price": "5.500000",
+      "product_code": "NULL"
+    },
+    {
+      "product_name": "Business Trunk (PAYG)",
+      "buy_name": "Business Trunk - 4839",
+      "partner_buy_price": "2.000000",
+      "partner_sell_price": "9.000000",
+      "nfr_partner_price": "2.000000",
+      "product_code": "NULL"
+    },
+    {
+      "product_name": "Call Centre Queue with Time of Day Routing",
+      "buy_name": "Call Centre Queue with Time of Day Routing - 7178",
+      "partner_buy_price": "0.000000",
+      "partner_sell_price": "0.000000",
+      "nfr_partner_price": "0.000000",
+      "product_code": "NULL"
+    },
+    {
+      "product_name": "Call Recording - Lite",
+      "buy_name": "Call Recording - Lite - 48762",
+      "partner_buy_price": "2.000000",
+      "partner_sell_price": "3.000000",
+      "nfr_partner_price": "1.500000",
+      "product_code": "NULL"
+    },
+    {
+      "product_name": "Call Recording - Unlimited",
+      "buy_name": "Call Recording - Unlimited - 1450",
+      "partner_buy_price": "9.500000",
+      "partner_sell_price": "13.000000",
+      "nfr_partner_price": "9.000000",
+      "product_code": "NULL"
+    },
+    {
+      "product_name": "CCXP Connector",
+      "buy_name": "CCXP Connector - 505460",
+      "partner_buy_price": "5.970173",
+      "partner_sell_price": "9.950000",
+      "nfr_partner_price": "4.980000",
+      "product_code": "NULL"
+    },
+    {
+      "product_name": "Collaborate Basic User with Cisco Webex",
+      "buy_name": "Collaborate Basic User with Cisco Webex - 91746",
+      "partner_buy_price": "13.803697",
+      "partner_sell_price": "23.000000",
+      "nfr_partner_price": "11.500000",
+      "product_code": "NULL"
+    },
+    {
+      "product_name": "Collaborate Premium User with Cisco Webex",
+      "buy_name": "Collaborate Premium User with Cisco Webex - 91766",
+      "partner_buy_price": "29.999935",
+      "partner_sell_price": "50.000000",
+      "nfr_partner_price": "25.000000",
+      "product_code": "NULL"
+    },
+    {
+      "product_name": "Collaborate Standard User with Cisco Webex",
+      "buy_name": "Collaborate Standard User with Cisco Webex - 91756",
+      "partner_buy_price": "17.999961",
+      "partner_sell_price": "30.000000",
+      "nfr_partner_price": "15.000000",
+      "product_code": "NULL"
+    },
+    {
+      "product_name": "CX One Connector",
+      "buy_name": "CX One Connector - 461173",
+      "partner_buy_price": "5.970173",
+      "partner_sell_price": "9.950000",
+      "nfr_partner_price": "4.980000",
+      "product_code": "NULL"
+    }
+  ],
+  "messages": [],
+  "stdout": "product_name\tbuy_name\tpartner_buy_price\tpartner_sell_price\tnfr_partner_price\tproduct_code\nAgent Web App\tAgent Web App - 1995\t14.400000\t24.000000\t14.500000\tNULL\nAuto Attendant with Time of Day Routing\tAuto Attendant with Time of Day Routing - 7174\t9.000000\t15.000000\t7.000000\tNULL\nBasic Call Queue\tBasic Call Queue - 214\t6.300000\t10.500000\t5.500000\tNULL\nBusiness Trunk (PAYG)\tBusiness Trunk - 4839\t2.000000\t9.000000\t2.000000\tNULL\nCall Centre Queue with Time of Day Routing\tCall Centre Queue with Time of Day Routing - 7178\t0.000000\t0.000000\t0.000000\tNULL\nCall Recording - Lite\tCall Recording - Lite - 48762\t2.000000\t3.000000\t1.500000\tNULL\nCall Recording - Unlimited\tCall Recording - Unlimited - 1450\t9.500000\t13.000000\t9.000000\tNULL\nCCXP Connector\tCCXP Connector - 505460\t5.970173\t9.950000\t4.980000\tNULL\nCollaborate Basic User with Cisco Webex\tCollaborate Basic User with Cisco Webex - 91746\t13.803697\t23.000000\t11.500000\tNULL\nCollaborate Premium User with Cisco Webex\tCollaborate Premium User with Cisco Webex - 91766\t29.999935\t50.000000\t25.000000\tNULL\nCollaborate Standard User with Cisco Webex\tCollaborate Standard User with Cisco Webex - 91756\t17.999961\t30.000000\t15.000000\tNULL\nCX One Connector\tCX One Connector - 461173\t5.970173\t9.950000\t4.980000\tNULL\n",
+  "stderr": "",
+  "execution_time_ms": 1586
+}

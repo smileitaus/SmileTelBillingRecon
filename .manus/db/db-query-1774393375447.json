@@ -1,0 +1,46 @@
+{
+  "query": "\nSHOW TABLES LIKE '%vocus%';\nSHOW TABLES LIKE '%usage%';\nSHOW TABLES LIKE '%alert%';\nSHOW TABLES LIKE '%bucket%';\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \nSHOW TABLES LIKE '%vocus%';\nSHOW TABLES LIKE '%usage%';\nSHOW TABLES LIKE '%alert%';\nSHOW TABLES LIKE '%bucket%';\n",
+  "rows": [
+    {
+      "Tables_in_SkibUwiSvPndpvTSJv52KC (%vocus%)": "vocus_buckets"
+    },
+    {
+      "Tables_in_SkibUwiSvPndpvTSJv52KC (%vocus%)": "vocus_mobile_services"
+    },
+    {
+      "Tables_in_SkibUwiSvPndpvTSJv52KC (%vocus%)": "vocus_nbn_services"
+    },
+    {
+      "Tables_in_SkibUwiSvPndpvTSJv52KC (%vocus%)": "vocus_sync_log"
+    },
+    {
+      "Tables_in_SkibUwiSvPndpvTSJv52KC (%vocus%)": "Tables_in_SkibUwiSvPndpvTSJv52KC (%usage%)"
+    },
+    {
+      "Tables_in_SkibUwiSvPndpvTSJv52KC (%vocus%)": "customer_usage_summaries"
+    },
+    {
+      "Tables_in_SkibUwiSvPndpvTSJv52KC (%vocus%)": "service_usage_snapshots"
+    },
+    {
+      "Tables_in_SkibUwiSvPndpvTSJv52KC (%vocus%)": "usage_threshold_alerts"
+    },
+    {
+      "Tables_in_SkibUwiSvPndpvTSJv52KC (%vocus%)": "Tables_in_SkibUwiSvPndpvTSJv52KC (%alert%)"
+    },
+    {
+      "Tables_in_SkibUwiSvPndpvTSJv52KC (%vocus%)": "usage_threshold_alerts"
+    },
+    {
+      "Tables_in_SkibUwiSvPndpvTSJv52KC (%vocus%)": "Tables_in_SkibUwiSvPndpvTSJv52KC (%bucket%)"
+    },
+    {
+      "Tables_in_SkibUwiSvPndpvTSJv52KC (%vocus%)": "vocus_buckets"
+    }
+  ],
+  "messages": [],
+  "stdout": "Tables_in_SkibUwiSvPndpvTSJv52KC (%vocus%)\nvocus_buckets\nvocus_mobile_services\nvocus_nbn_services\nvocus_sync_log\nTables_in_SkibUwiSvPndpvTSJv52KC (%usage%)\ncustomer_usage_summaries\nservice_usage_snapshots\nusage_threshold_alerts\nTables_in_SkibUwiSvPndpvTSJv52KC (%alert%)\nusage_threshold_alerts\nTables_in_SkibUwiSvPndpvTSJv52KC (%bucket%)\nvocus_buckets\n",
+  "stderr": "",
+  "execution_time_ms": 2316
+}

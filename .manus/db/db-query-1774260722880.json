@@ -1,0 +1,314 @@
+{
+  "query": "\nSELECT id, connectionId, locationAddress, serviceType, supplierName, customerName\nFROM services\nWHERE (\n  locationAddress LIKE '%MARYBOROUGH%'\n  OR locationAddress LIKE '%CLEVELAND%'\n  OR locationAddress LIKE '%KIPPA%'\n  OR locationAddress LIKE '%BRENDALE%'\n  OR locationAddress LIKE '%TORQUAY%'\n  OR locationAddress LIKE '%COOLUM%'\n  OR locationAddress LIKE '%SIPPY%'\n  OR locationAddress LIKE '%CREEK ST%'\n  OR locationAddress LIKE '%CORONATION%'\n  OR locationAddress LIKE '%SOUTH BRISBANE%'\n  OR locationAddress LIKE '%MELBOURNE ST%'\n)\nAND serviceType IN ('Internet', 'Data', 'Broadband')\nORDER BY id;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \nSELECT id, connectionId, locationAddress, serviceType, supplierName, customerName\nFROM services\nWHERE (\n  locationAddress LIKE '%MARYBOROUGH%'\n  OR locationAddress LIKE '%CLEVELAND%'\n  OR locationAddress LIKE '%KIPPA%'\n  OR locationAddress LIKE '%BRENDALE%'\n  OR locationAddress LIKE '%TORQUAY%'\n  OR locationAddress LIKE '%COOLUM%'\n  OR locationAddress LIKE '%SIPPY%'\n  OR locationAddress LIKE '%CREEK ST%'\n  OR locationAddress LIKE '%CORONATION%'\n  OR locationAddress LIKE '%SOUTH BRISBANE%'\n  OR locationAddress LIKE '%MELBOURNE ST%'\n)\nAND serviceType IN ('Internet', 'Data', 'Broadband')\nORDER BY id;\n",
+  "rows": [
+    {
+      "id": "60025",
+      "connectionId": "AVC000219932822",
+      "locationAddress": "7 BARNSTAPLE ST, TORQUAY QLD",
+      "serviceType": "Internet",
+      "supplierName": "ABB",
+      "customerName": "Hervey Bay Garden Centre"
+    },
+    {
+      "id": "60042",
+      "connectionId": "AVC000227694702",
+      "locationAddress": "36 CORONATION AV, NAMBOUR QLD",
+      "serviceType": "Internet",
+      "supplierName": "ABB",
+      "customerName": "North Coast Mower Centre"
+    },
+    {
+      "id": "60058",
+      "connectionId": "AVC000195387109",
+      "locationAddress": "500 TORQUAY RD, ARMSTRONG CREEK VIC",
+      "serviceType": "Internet",
+      "supplierName": "ABB",
+      "customerName": "The Cheesecake Shop"
+    },
+    {
+      "id": "60065",
+      "connectionId": "AVC000224723149",
+      "locationAddress": "SHOP IDF-3B, 108 OLD CLEVELAND RD, CAPALABA QLD",
+      "serviceType": "Internet",
+      "supplierName": "ABB",
+      "customerName": "The Yiros Shop Capalaba"
+    },
+    {
+      "id": "60071",
+      "connectionId": "AVC000182418751",
+      "locationAddress": "SHOP 2.1, 74 TRIBUNE ST, SOUTH BRISBANE QLD",
+      "serviceType": "Internet",
+      "supplierName": "ABB",
+      "customerName": "The Yiros Shop Head Office"
+    },
+    {
+      "id": "60095",
+      "connectionId": "AVC000185631148",
+      "locationAddress": "SEA COOLUM SHOP 2, 1796 DAVID LOW WAY, COOLUM BEACH QLD",
+      "serviceType": "Internet",
+      "supplierName": "ABB",
+      "customerName": "Zambrero Coolum"
+    },
+    {
+      "id": "60126",
+      "connectionId": "AVC000208334993",
+      "locationAddress": "TNCY 6, 123 SIPPY DOWNS DR, SIPPY DOWNS QLD",
+      "serviceType": "Internet",
+      "supplierName": "ABB",
+      "customerName": "Zambrero Sippy Downs"
+    },
+    {
+      "id": "60146",
+      "connectionId": "",
+      "locationAddress": "Shop 65, 114 GREY STREET, SOUTH BRISBANE QLD",
+      "serviceType": "Internet",
+      "supplierName": "ABB",
+      "customerName": "Nodo Southbank"
+    },
+    {
+      "id": "60148",
+      "connectionId": "",
+      "locationAddress": "Shop 2, 537 Stanley Street, South Brisbane QLD",
+      "serviceType": "Internet",
+      "supplierName": "ABB",
+      "customerName": "Zambrero Mater"
+    },
+    {
+      "id": "60149",
+      "connectionId": "",
+      "locationAddress": "Shop 1, 189 Grey Street, South Brisbane QLD",
+      "serviceType": "Internet",
+      "supplierName": "ABB",
+      "customerName": "The Yiros Shop - South Brisbane"
+    },
+    {
+      "id": "60152",
+      "connectionId": "",
+      "locationAddress": "Shop 9A, 170 Grey Street, South Brisbane QLD",
+      "serviceType": "Internet",
+      "supplierName": "ABB",
+      "customerName": "Denim Co"
+    },
+    {
+      "id": "60154",
+      "connectionId": "",
+      "locationAddress": "42 MANNING ST, SOUTH BRISBANE QLD",
+      "serviceType": "Internet",
+      "supplierName": "ABB",
+      "customerName": "Renovo Solutions Pty Ltd"
+    },
+    {
+      "id": "60167",
+      "connectionId": "",
+      "locationAddress": "STE 2, LEVEL 8, 100 Creek ST Brisbane QLD 4000 Brisbane",
+      "serviceType": "Internet",
+      "supplierName": "ABB",
+      "customerName": "CPM Brisbane Office"
+    },
+    {
+      "id": "60180",
+      "connectionId": "",
+      "locationAddress": "Shop 65, 114 GREY STREET, SOUTH BRISBANE QLD",
+      "serviceType": "Data",
+      "supplierName": "ABB",
+      "customerName": "Nodo Southbank"
+    },
+    {
+      "id": "60183",
+      "connectionId": "",
+      "locationAddress": "SHOP 2, 1796 DAVID LOW WAY, COOLUM BEACH QLD",
+      "serviceType": "Data",
+      "supplierName": "ABB",
+      "customerName": "Zambrero Coolum"
+    },
+    {
+      "id": "60185",
+      "connectionId": "",
+      "locationAddress": "SHOP 2.1, 74 TRIBUNE ST, SOUTH BRISBANE QLD",
+      "serviceType": "Data",
+      "supplierName": "ABB",
+      "customerName": "The Yiros Shop Head Office"
+    },
+    {
+      "id": "90006",
+      "connectionId": "AVC000239799549",
+      "locationAddress": "SHOP 7, 40 CREEK ST, BRISBANE CITY QLD",
+      "serviceType": "Internet",
+      "supplierName": "Vocus",
+      "customerName": "Nodo CBD"
+    },
+    {
+      "id": "90032",
+      "connectionId": "AVC000234036370",
+      "locationAddress": "TNCY 2, 85 GEELONG RD, TORQUAY VIC",
+      "serviceType": "Internet",
+      "supplierName": "ABB",
+      "customerName": "Zambrero Torquay"
+    },
+    {
+      "id": "120066",
+      "connectionId": "",
+      "locationAddress": "Shop 1  Ground Floor  76 Old Cleveland Rd, 76 Old Cleveland Road, CAPALABA, Queensland, 4157",
+      "serviceType": "Internet",
+      "supplierName": "SasBoss",
+      "customerName": "Balanced Business Accounting"
+    },
+    {
+      "id": "120144",
+      "connectionId": "",
+      "locationAddress": "Cleveland House Shop 2 120 Bloomfield St, CLEVELAND, QLD, 4163",
+      "serviceType": "Internet",
+      "supplierName": "SasBoss",
+      "customerName": "Cleveland Medical"
+    },
+    {
+      "id": "120154",
+      "connectionId": "",
+      "locationAddress": "129 Adelaide Street, Maryborough, Maryborough, QLD, 4650",
+      "serviceType": "Internet",
+      "supplierName": "SasBoss",
+      "customerName": "Community Lifestyle Agency Inc"
+    },
+    {
+      "id": "120171",
+      "connectionId": "",
+      "locationAddress": "Shop 1 Ground Floor, 40 Creek Street, Brisbane, QLD, 4000",
+      "serviceType": "Internet",
+      "supplierName": "SasBoss",
+      "customerName": "Creek St Pharmacy"
+    },
+    {
+      "id": "120213",
+      "connectionId": "",
+      "locationAddress": "Unit 1 23 Terrence Rd, BRENDALE, QLD, 4500",
+      "serviceType": "Internet",
+      "supplierName": "Unknown",
+      "customerName": "EcoLife Solutions"
+    },
+    {
+      "id": "120214",
+      "connectionId": "",
+      "locationAddress": "Unit 1 23 Terrence Rd, BRENDALE, QLD, 4500",
+      "serviceType": "Internet",
+      "supplierName": "Unknown",
+      "customerName": "EcoLife Solutions"
+    },
+    {
+      "id": "120262",
+      "connectionId": "gumdaledentist@wba.rvcict.com.au",
+      "locationAddress": "Shop 22 682-696 New Cleveland Rd, GUMDALE, QLD, 4154",
+      "serviceType": "Internet",
+      "supplierName": "Vocus",
+      "customerName": "Gumdale Dentists"
+    },
+    {
+      "id": "120267",
+      "connectionId": "",
+      "locationAddress": "Shop 22 682-696 New Cleveland Rd, GUMDALE, QLD, 4154",
+      "serviceType": "Internet",
+      "supplierName": "SasBoss",
+      "customerName": "Gumdale Medical Center"
+    },
+    {
+      "id": "120291",
+      "connectionId": "",
+      "locationAddress": "Shop 6 133 Lennox St, MARYBOROUGH, QLD, 4650",
+      "serviceType": "Internet",
+      "supplierName": "SasBoss",
+      "customerName": "Jema Clinic"
+    },
+    {
+      "id": "120678",
+      "connectionId": "",
+      "locationAddress": "1/242 New Cleveland Road, Tingalpa, Queensland, 4173",
+      "serviceType": "Internet",
+      "supplierName": "Unknown",
+      "customerName": "Tennis Direct Australia"
+    },
+    {
+      "id": "120725",
+      "connectionId": "",
+      "locationAddress": "8 Varsityview Court, Sippy Downs, QLD, 4556",
+      "serviceType": "Internet",
+      "supplierName": "Unknown",
+      "customerName": "Varsity Apartments SC Pty Ltd"
+    },
+    {
+      "id": "120730",
+      "connectionId": "",
+      "locationAddress": "Shop M2 284 Anzac Av, Kippa-Ring, QLD, 4021",
+      "serviceType": "Internet",
+      "supplierName": "SasBoss",
+      "customerName": "Viribus Kippa-Ring Pty Ltd (Golds Gym)"
+    },
+    {
+      "id": "120793",
+      "connectionId": "",
+      "locationAddress": "Shop 5, Salmon Building, Mater Hospital, SOUTH BRISBANE, QLD, 4101",
+      "serviceType": "Internet",
+      "supplierName": "Unknown",
+      "customerName": "Zambrero - Brisbane Mater Hospital"
+    },
+    {
+      "id": "120794",
+      "connectionId": "",
+      "locationAddress": "Shop 5, Salmon Building, Mater Hospital, SOUTH BRISBANE, QLD, 4101",
+      "serviceType": "Internet",
+      "supplierName": "Unknown",
+      "customerName": "Zambrero - Brisbane Mater Hospital"
+    },
+    {
+      "id": "120810",
+      "connectionId": "",
+      "locationAddress": "468 The Esplanade, TORQUAY, Queensland, Australia, 4655",
+      "serviceType": "Internet",
+      "supplierName": "SasBoss",
+      "customerName": "Serenity Escapes Pty Ltd"
+    },
+    {
+      "id": "120812",
+      "connectionId": "",
+      "locationAddress": "42 Manning Street, South Brisbane, QLD, 4101",
+      "serviceType": "Internet",
+      "supplierName": "SasBoss",
+      "customerName": "Renovo Solutions Pty Ltd"
+    },
+    {
+      "id": "120843",
+      "connectionId": "",
+      "locationAddress": "36 Coronation Ave, Nambour, NAMBOUR, QLD, 4560",
+      "serviceType": "Internet",
+      "supplierName": "SasBoss",
+      "customerName": "North Coast Mower Centre"
+    },
+    {
+      "id": "120845",
+      "connectionId": "",
+      "locationAddress": "265 Coronation Dr, Milton, Queensland, Australia, 4064",
+      "serviceType": "Internet",
+      "supplierName": "SasBoss",
+      "customerName": "Employment Office"
+    },
+    {
+      "id": "450124",
+      "connectionId": "00010986979015@wba.rvcict.com.au",
+      "locationAddress": "Shed 7 17 Kingston Dr, MARYBOROUGH WEST QLD 4650",
+      "serviceType": "Internet",
+      "supplierName": "Vocus",
+      "customerName": "NULL"
+    },
+    {
+      "id": "450125",
+      "connectionId": "00002021959741@wba.rvcict.com.au",
+      "locationAddress": "Lot 6 Unit 6 20 Kenworth Pl, BRENDALE QLD 4500",
+      "serviceType": "Internet",
+      "supplierName": "Vocus",
+      "customerName": "NULL"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tconnectionId\tlocationAddress\tserviceType\tsupplierName\tcustomerName\n60025\tAVC000219932822\t7 BARNSTAPLE ST, TORQUAY QLD\tInternet\tABB\tHervey Bay Garden Centre\n60042\tAVC000227694702\t36 CORONATION AV, NAMBOUR QLD\tInternet\tABB\tNorth Coast Mower Centre\n60058\tAVC000195387109\t500 TORQUAY RD, ARMSTRONG CREEK VIC\tInternet\tABB\tThe Cheesecake Shop\n60065\tAVC000224723149\tSHOP IDF-3B, 108 OLD CLEVELAND RD, CAPALABA QLD\tInternet\tABB\tThe Yiros Shop Capalaba\n60071\tAVC000182418751\tSHOP 2.1, 74 TRIBUNE ST, SOUTH BRISBANE QLD\tInternet\tABB\tThe Yiros Shop Head Office\n60095\tAVC000185631148\tSEA COOLUM SHOP 2, 1796 DAVID LOW WAY, COOLUM BEACH QLD\tInternet\tABB\tZambrero Coolum\n60126\tAVC000208334993\tTNCY 6, 123 SIPPY DOWNS DR, SIPPY DOWNS QLD\tInternet\tABB\tZambrero Sippy Downs\n60146\t\tShop 65, 114 GREY STREET, SOUTH BRISBANE QLD\tInternet\tABB\tNodo Southbank\n60148\t\tShop 2, 537 Stanley Street, South Brisbane QLD\tInternet\tABB\tZambrero Mater\n60149\t\tShop 1, 189 Grey Street, South Brisbane QLD\tInternet\tABB\tThe Yiros Shop - South Brisbane\n60152\t\tShop 9A, 170 Grey Street, South Brisbane QLD\tInternet\tABB\tDenim Co\n60154\t\t42 MANNING ST, SOUTH BRISBANE QLD\tInternet\tABB\tRenovo Solutions Pty Ltd\n60167\t\tSTE 2, LEVEL 8, 100 Creek ST Brisbane QLD 4000 Brisbane\tInternet\tABB\tCPM Brisbane Office\n60180\t\tShop 65, 114 GREY STREET, SOUTH BRISBANE QLD\tData\tABB\tNodo Southbank\n60183\t\tSHOP 2, 1796 DAVID LOW WAY, COOLUM BEACH QLD\tData\tABB\tZambrero Coolum\n60185\t\tSHOP 2.1, 74 TRIBUNE ST, SOUTH BRISBANE QLD\tData\tABB\tThe Yiros Shop Head Office\n90006\tAVC000239799549\tSHOP 7, 40 CREEK ST, BRISBANE CITY QLD\tInternet\tVocus\tNodo CBD\n90032\tAVC000234036370\tTNCY 2, 85 GEELONG RD, TORQUAY VIC\tInternet\tABB\tZambrero Torquay\n120066\t\tShop 1  Ground Floor  76 Old Cleveland Rd, 76 Old Cleveland Road, CAPALABA, Queensland, 4157\tInternet\tSasBoss\tBalanced Business Accounting\n120144\t\tCleveland House Shop 2 120 Bloomfield St, CLEVELAND, QLD, 4163\tInternet\tSasBoss\tCleveland Medical\n120154\t\t129 Adelaide Street, Maryborough, Maryborough, QLD, 4650\tInternet\tSasBoss\tCommunity Lifestyle Agency Inc\n120171\t\tShop 1 Ground Floor, 40 Creek Street, Brisbane, QLD, 4000\tInternet\tSasBoss\tCreek St Pharmacy\n120213\t\tUnit 1 23 Terrence Rd, BRENDALE, QLD, 4500\tInternet\tUnknown\tEcoLife Solutions\n120214\t\tUnit 1 23 Terrence Rd, BRENDALE, QLD, 4500\tInternet\tUnknown\tEcoLife Solutions\n120262\tgumdaledentist@wba.rvcict.com.au\tShop 22 682-696 New Cleveland Rd, GUMDALE, QLD, 4154\tInternet\tVocus\tGumdale Dentists\n120267\t\tShop 22 682-696 New Cleveland Rd, GUMDALE, QLD, 4154\tInternet\tSasBoss\tGumdale Medical Center\n120291\t\tShop 6 133 Lennox St, MARYBOROUGH, QLD, 4650\tInternet\tSasBoss\tJema Clinic\n120678\t\t1/242 New Cleveland Road, Tingalpa, Queensland, 4173\tInternet\tUnknown\tTennis Direct Australia\n120725\t\t8 Varsityview Court, Sippy Downs, QLD, 4556\tInternet\tUnknown\tVarsity Apartments SC Pty Ltd\n120730\t\tShop M2 284 Anzac Av, Kippa-Ring, QLD, 4021\tInternet\tSasBoss\tViribus Kippa-Ring Pty Ltd (Golds Gym)\n120793\t\tShop 5, Salmon Building, Mater Hospital, SOUTH BRISBANE, QLD, 4101\tInternet\tUnknown\tZambrero - Brisbane Mater Hospital\n120794\t\tShop 5, Salmon Building, Mater Hospital, SOUTH BRISBANE, QLD, 4101\tInternet\tUnknown\tZambrero - Brisbane Mater Hospital\n120810\t\t468 The Esplanade, TORQUAY, Queensland, Australia, 4655\tInternet\tSasBoss\tSerenity Escapes Pty Ltd\n120812\t\t42 Manning Street, South Brisbane, QLD, 4101\tInternet\tSasBoss\tRenovo Solutions Pty Ltd\n120843\t\t36 Coronation Ave, Nambour, NAMBOUR, QLD, 4560\tInternet\tSasBoss\tNorth Coast Mower Centre\n120845\t\t265 Coronation Dr, Milton, Queensland, Australia, 4064\tInternet\tSasBoss\tEmployment Office\n450124\t00010986979015@wba.rvcict.com.au\tShed 7 17 Kingston Dr, MARYBOROUGH WEST QLD 4650\tInternet\tVocus\tNULL\n450125\t00002021959741@wba.rvcict.com.au\tLot 6 Unit 6 20 Kenworth Pl, BRENDALE QLD 4500\tInternet\tVocus\tNULL\n",
+  "stderr": "",
+  "execution_time_ms": 1658
+}

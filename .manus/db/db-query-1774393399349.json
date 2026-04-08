@@ -1,0 +1,24 @@
+{
+  "query": "\nSELECT \n  bucketId,\n  bucketType,\n  realm,\n  planId,\n  ROUND(dataQuotaMb / 1024, 2) AS quota_gb,\n  ROUND(dataUsedMb / 1024, 2) AS used_gb,\n  ROUND(overageDataMb / 1024, 2) AS overage_gb,\n  isOverQuota,\n  simCount,\n  snapshotDate,\n  lastSyncedAt,\n  updatedAt\nFROM vocus_buckets\nWHERE bucketType LIKE '%STANDARD%' OR bucketId LIKE '%STANDARD%' OR planId LIKE '%STANDARD%'\nORDER BY updatedAt DESC\nLIMIT 10;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \nSELECT \n  bucketId,\n  bucketType,\n  realm,\n  planId,\n  ROUND(dataQuotaMb / 1024, 2) AS quota_gb,\n  ROUND(dataUsedMb / 1024, 2) AS used_gb,\n  ROUND(overageDataMb / 1024, 2) AS overage_gb,\n  isOverQuota,\n  simCount,\n  snapshotDate,\n  lastSyncedAt,\n  updatedAt\nFROM vocus_buckets\nWHERE bucketType LIKE '%STANDARD%' OR bucketId LIKE '%STANDARD%' OR planId LIKE '%STANDARD%'\nORDER BY updatedAt DESC\nLIMIT 10;\n",
+  "rows": [
+    {
+      "bucketId": "mobile.smileit.com-standard",
+      "bucketType": "STANDARD-POSTPAID",
+      "realm": "mobile.smileit.com",
+      "planId": "NULL",
+      "quota_gb": "100.00",
+      "used_gb": "188.69",
+      "overage_gb": "88.69",
+      "isOverQuota": "1",
+      "simCount": "75",
+      "snapshotDate": "2026-03-24",
+      "lastSyncedAt": "2026-03-24 04:32:37",
+      "updatedAt": "2026-03-24 04:32:37"
+    }
+  ],
+  "messages": [],
+  "stdout": "bucketId\tbucketType\trealm\tplanId\tquota_gb\tused_gb\toverage_gb\tisOverQuota\tsimCount\tsnapshotDate\tlastSyncedAt\tupdatedAt\nmobile.smileit.com-standard\tSTANDARD-POSTPAID\tmobile.smileit.com\tNULL\t100.00\t188.69\t88.69\t1\t75\t2026-03-24\t2026-03-24 04:32:37\t2026-03-24 04:32:37\n",
+  "stderr": "",
+  "execution_time_ms": 1604
+}

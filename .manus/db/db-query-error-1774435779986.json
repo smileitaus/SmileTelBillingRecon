@@ -1,0 +1,8 @@
+{
+  "query": "SELECT sb.customerExternalId, sb.externalId AS sasboss_id, real.externalId AS real_id, real.supplierName AS real_supplier, real.monthlyCost AS real_cost FROM services sb JOIN services real ON real.customerExternalId = sb.customerExternalId AND real.supplierName != 'SasBoss' AND real.serviceType = 'Internet' WHERE sb.supplierName = 'SasBoss' AND sb.serviceType = 'Internet' LIMIT 10;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute SELECT sb.customerExternalId, sb.externalId AS sasboss_id, real.externalId AS real_id, real.supplierName AS real_supplier, real.monthlyCost AS real_cost FROM services sb JOIN services real ON real.customerExternalId = sb.customerExternalId AND real.supplierName != 'SasBoss' AND real.serviceType = 'Internet' WHERE sb.supplierName = 'SasBoss' AND sb.serviceType = 'Internet' LIMIT 10;",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1064 (42000) at line 1: You have an error in your SQL syntax; check the manual that corresponds to your TiDB version for the right syntax to use line 1 column 188 near \"real ON real.customerExternalId = sb.customerExternalId AND real.supplierName != 'SasBoss' AND real.serviceType = 'Internet' WHERE sb.supplierName = 'SasBoss' AND sb.serviceType = 'Internet' LIMIT 10\""
+  ]
+}

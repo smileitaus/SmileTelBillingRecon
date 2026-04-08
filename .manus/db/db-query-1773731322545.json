@@ -1,0 +1,146 @@
+{
+  "query": "SHOW COLUMNS FROM supplier_service_map;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3M17pEiktKAmnzx.5240b4750712 --database 4LVfr96qhVoYSkLinpTZkt --execute SHOW COLUMNS FROM supplier_service_map;",
+  "rows": [
+    {
+      "Field": "id",
+      "Type": "int",
+      "Null": "NO",
+      "Key": "PRI",
+      "Default": "NULL",
+      "Extra": "auto_increment"
+    },
+    {
+      "Field": "supplierName",
+      "Type": "varchar(128)",
+      "Null": "NO",
+      "Key": "MUL",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "matchKeyType",
+      "Type": "varchar(32)",
+      "Null": "NO",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "matchKeyValue",
+      "Type": "varchar(512)",
+      "Null": "NO",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "productType",
+      "Type": "varchar(128)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "",
+      "Extra": ""
+    },
+    {
+      "Field": "description",
+      "Type": "text",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "customerExternalId",
+      "Type": "varchar(32)",
+      "Null": "NO",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "customerName",
+      "Type": "varchar(512)",
+      "Null": "NO",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "serviceExternalId",
+      "Type": "varchar(32)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "",
+      "Extra": ""
+    },
+    {
+      "Field": "confirmedBy",
+      "Type": "varchar(64)",
+      "Null": "NO",
+      "Key": "",
+      "Default": "manual",
+      "Extra": ""
+    },
+    {
+      "Field": "confidence",
+      "Type": "decimal(4,2)",
+      "Null": "NO",
+      "Key": "",
+      "Default": "1.00",
+      "Extra": ""
+    },
+    {
+      "Field": "lastUsedAt",
+      "Type": "timestamp",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "useCount",
+      "Type": "int",
+      "Null": "NO",
+      "Key": "",
+      "Default": "0",
+      "Extra": ""
+    },
+    {
+      "Field": "isActive",
+      "Type": "int",
+      "Null": "NO",
+      "Key": "",
+      "Default": "1",
+      "Extra": ""
+    },
+    {
+      "Field": "notes",
+      "Type": "text",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "createdAt",
+      "Type": "timestamp",
+      "Null": "NO",
+      "Key": "",
+      "Default": "CURRENT_TIMESTAMP",
+      "Extra": ""
+    },
+    {
+      "Field": "updatedAt",
+      "Type": "timestamp",
+      "Null": "NO",
+      "Key": "",
+      "Default": "CURRENT_TIMESTAMP",
+      "Extra": "DEFAULT_GENERATED on update CURRENT_TIMESTAMP"
+    }
+  ],
+  "messages": [],
+  "stdout": "Field\tType\tNull\tKey\tDefault\tExtra\nid\tint\tNO\tPRI\tNULL\tauto_increment\nsupplierName\tvarchar(128)\tNO\tMUL\tNULL\t\nmatchKeyType\tvarchar(32)\tNO\t\tNULL\t\nmatchKeyValue\tvarchar(512)\tNO\t\tNULL\t\nproductType\tvarchar(128)\tYES\t\t\t\ndescription\ttext\tYES\t\tNULL\t\ncustomerExternalId\tvarchar(32)\tNO\t\tNULL\t\ncustomerName\tvarchar(512)\tNO\t\tNULL\t\nserviceExternalId\tvarchar(32)\tYES\t\t\t\nconfirmedBy\tvarchar(64)\tNO\t\tmanual\t\nconfidence\tdecimal(4,2)\tNO\t\t1.00\t\nlastUsedAt\ttimestamp\tYES\t\tNULL\t\nuseCount\tint\tNO\t\t0\t\nisActive\tint\tNO\t\t1\t\nnotes\ttext\tYES\t\tNULL\t\ncreatedAt\ttimestamp\tNO\t\tCURRENT_TIMESTAMP\t\nupdatedAt\ttimestamp\tNO\t\tCURRENT_TIMESTAMP\tDEFAULT_GENERATED on update CURRENT_TIMESTAMP\n",
+  "stderr": "",
+  "execution_time_ms": 1673
+}

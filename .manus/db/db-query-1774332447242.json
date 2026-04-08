@@ -1,0 +1,15 @@
+{
+  "query": "SELECT 'services' AS tbl, locationAddress AS addr, customerName FROM services WHERE locationAddress LIKE '%Helensvale%' LIMIT 5;\nSELECT 'customers' AS tbl, siteAddress AS addr, name FROM customers WHERE siteAddress LIKE '%Helensvale%' LIMIT 5;\nSELECT 'vocus_nbn' AS tbl, address AS addr, username FROM vocus_nbn_services WHERE address LIKE '%Helensvale%' LIMIT 5;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute SELECT 'services' AS tbl, locationAddress AS addr, customerName FROM services WHERE locationAddress LIKE '%Helensvale%' LIMIT 5;\nSELECT 'customers' AS tbl, siteAddress AS addr, name FROM customers WHERE siteAddress LIKE '%Helensvale%' LIMIT 5;\nSELECT 'vocus_nbn' AS tbl, address AS addr, username FROM vocus_nbn_services WHERE address LIKE '%Helensvale%' LIMIT 5;",
+  "rows": [
+    {
+      "tbl": "vocus_nbn",
+      "addr": "Lot 27 74 Helensvale Rd Helensvale QLD 4212",
+      "username": "oceanmed@wba.rvcict.com.au"
+    }
+  ],
+  "messages": [],
+  "stdout": "tbl\taddr\tusername\nvocus_nbn\tLot 27 74 Helensvale Rd Helensvale QLD 4212\toceanmed@wba.rvcict.com.au\n",
+  "stderr": "",
+  "execution_time_ms": 1965
+}

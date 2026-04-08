@@ -1,0 +1,610 @@
+{
+  "query": "\n-- Get all octane customer links and their current match status\nSELECT \n  octaneCustomerId,\n  octaneCustomerName,\n  octaneServiceName,\n  internalCustomerExternalId,\n  internalCustomerName,\n  matchType,\n  matchConfidence,\n  isZambreroService\nFROM octane_customer_links\nORDER BY matchType, octaneCustomerName\nLIMIT 60;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Get all octane customer links and their current match status\nSELECT \n  octaneCustomerId,\n  octaneCustomerName,\n  octaneServiceName,\n  internalCustomerExternalId,\n  internalCustomerName,\n  matchType,\n  matchConfidence,\n  isZambreroService\nFROM octane_customer_links\nORDER BY matchType, octaneCustomerName\nLIMIT 60;\n",
+  "rows": [
+    {
+      "octaneCustomerId": "530235",
+      "octaneCustomerName": "Accountant Ready Services",
+      "octaneServiceName": "",
+      "internalCustomerExternalId": "C2887",
+      "internalCustomerName": "Accountant Ready Services",
+      "matchType": "fuzzy_name",
+      "matchConfidence": "100.00",
+      "isZambreroService": "0"
+    },
+    {
+      "octaneCustomerId": "527604",
+      "octaneCustomerName": "Bar Alto Pty Ltd",
+      "octaneServiceName": "",
+      "internalCustomerExternalId": "C0034",
+      "internalCustomerName": "Bar Alto",
+      "matchType": "fuzzy_name",
+      "matchConfidence": "100.00",
+      "isZambreroService": "0"
+    },
+    {
+      "octaneCustomerId": "531868",
+      "octaneCustomerName": "Booroodabin Community & Recreation Club Inc",
+      "octaneServiceName": "",
+      "internalCustomerExternalId": "C0042",
+      "internalCustomerName": "Booroodabin",
+      "matchType": "fuzzy_name",
+      "matchConfidence": "85.00",
+      "isZambreroService": "0"
+    },
+    {
+      "octaneCustomerId": "529664",
+      "octaneCustomerName": "Bracken Ridge Family Practice",
+      "octaneServiceName": "",
+      "internalCustomerExternalId": "C0044",
+      "internalCustomerName": "Bracken Ridge Family Practice",
+      "matchType": "fuzzy_name",
+      "matchConfidence": "100.00",
+      "isZambreroService": "0"
+    },
+    {
+      "octaneCustomerId": "526985",
+      "octaneCustomerName": "CF Aust Pty Ltd",
+      "octaneServiceName": "",
+      "internalCustomerExternalId": "C0058",
+      "internalCustomerName": "CF Aust Pty Ltd",
+      "matchType": "fuzzy_name",
+      "matchConfidence": "100.00",
+      "isZambreroService": "0"
+    },
+    {
+      "octaneCustomerId": "531872",
+      "octaneCustomerName": "Fritzenberger (South Brisbane) Pty Ltd",
+      "octaneServiceName": "",
+      "internalCustomerExternalId": "C0097",
+      "internalCustomerName": "Fritzenberger Southbank",
+      "matchType": "fuzzy_name",
+      "matchConfidence": "79.00",
+      "isZambreroService": "0"
+    },
+    {
+      "octaneCustomerId": "531993",
+      "octaneCustomerName": "GORMAN & CO CONTRACTORS PTY LTD",
+      "octaneServiceName": "",
+      "internalCustomerExternalId": "C0105",
+      "internalCustomerName": "Gorman & Co",
+      "matchType": "fuzzy_name",
+      "matchConfidence": "85.00",
+      "isZambreroService": "0"
+    },
+    {
+      "octaneCustomerId": "531804",
+      "octaneCustomerName": "Holy Shot Cafe Pty Ltd",
+      "octaneServiceName": "",
+      "internalCustomerExternalId": "C0122",
+      "internalCustomerName": "Holy Shot",
+      "matchType": "fuzzy_name",
+      "matchConfidence": "85.00",
+      "isZambreroService": "0"
+    },
+    {
+      "octaneCustomerId": "531876",
+      "octaneCustomerName": "KHM Group Investments Pty Ltd",
+      "octaneServiceName": "",
+      "internalCustomerExternalId": "C0133",
+      "internalCustomerName": "KHM Group Investments",
+      "matchType": "fuzzy_name",
+      "matchConfidence": "100.00",
+      "isZambreroService": "0"
+    },
+    {
+      "octaneCustomerId": "527025",
+      "octaneCustomerName": "Lyndarr Constructions Pty Ltd",
+      "octaneServiceName": "",
+      "internalCustomerExternalId": "C0077",
+      "internalCustomerName": "DJ Steel - Lyndarr Constructions Pty Ltd",
+      "matchType": "fuzzy_name",
+      "matchConfidence": "85.00",
+      "isZambreroService": "0"
+    },
+    {
+      "octaneCustomerId": "531874",
+      "octaneCustomerName": "Nodo Pty Ltd",
+      "octaneServiceName": "",
+      "internalCustomerExternalId": "C0171",
+      "internalCustomerName": "Nodo Pty Ltd",
+      "matchType": "fuzzy_name",
+      "matchConfidence": "100.00",
+      "isZambreroService": "0"
+    },
+    {
+      "octaneCustomerId": "531871",
+      "octaneCustomerName": "Nodo Pty Ltd",
+      "octaneServiceName": "",
+      "internalCustomerExternalId": "C0171",
+      "internalCustomerName": "Nodo Pty Ltd",
+      "matchType": "fuzzy_name",
+      "matchConfidence": "100.00",
+      "isZambreroService": "0"
+    },
+    {
+      "octaneCustomerId": "531875",
+      "octaneCustomerName": "Nodo Pty Ltd",
+      "octaneServiceName": "",
+      "internalCustomerExternalId": "C0171",
+      "internalCustomerName": "Nodo Pty Ltd",
+      "matchType": "fuzzy_name",
+      "matchConfidence": "100.00",
+      "isZambreroService": "0"
+    },
+    {
+      "octaneCustomerId": "528323",
+      "octaneCustomerName": "Nodo Pty Ltd",
+      "octaneServiceName": "",
+      "internalCustomerExternalId": "C0171",
+      "internalCustomerName": "Nodo Pty Ltd",
+      "matchType": "fuzzy_name",
+      "matchConfidence": "100.00",
+      "isZambreroService": "0"
+    },
+    {
+      "octaneCustomerId": "532648",
+      "octaneCustomerName": "Sparrow Group Pty Ltd",
+      "octaneServiceName": "",
+      "internalCustomerExternalId": "C2443",
+      "internalCustomerName": "Sparrow Group Management",
+      "matchType": "fuzzy_name",
+      "matchConfidence": "85.00",
+      "isZambreroService": "0"
+    },
+    {
+      "octaneCustomerId": "531997",
+      "octaneCustomerName": "The Trustee for the Collingwood Trust",
+      "octaneServiceName": "",
+      "internalCustomerExternalId": "C2723",
+      "internalCustomerName": "Zambrero - Blackwood",
+      "matchType": "fuzzy_name",
+      "matchConfidence": "68.00",
+      "isZambreroService": "0"
+    },
+    {
+      "octaneCustomerId": "527021",
+      "octaneCustomerName": "The Trustee for the Fashion Cafe Trust",
+      "octaneServiceName": "",
+      "internalCustomerExternalId": "C0248",
+      "internalCustomerName": "The Trustee for Ferguson Family Trust",
+      "matchType": "fuzzy_name",
+      "matchConfidence": "68.00",
+      "isZambreroService": "0"
+    },
+    {
+      "octaneCustomerId": "534220",
+      "octaneCustomerName": "THE YIROS SHOP PTY LTD",
+      "octaneServiceName": "",
+      "internalCustomerExternalId": "C2599",
+      "internalCustomerName": "The Yiros Shop MOLENDINAR",
+      "matchType": "fuzzy_name",
+      "matchConfidence": "85.00",
+      "isZambreroService": "0"
+    },
+    {
+      "octaneCustomerId": "531118",
+      "octaneCustomerName": "Yiros Pty Ltd",
+      "octaneServiceName": "",
+      "internalCustomerExternalId": "C2599",
+      "internalCustomerName": "The Yiros Shop MOLENDINAR",
+      "matchType": "fuzzy_name",
+      "matchConfidence": "85.00",
+      "isZambreroService": "0"
+    },
+    {
+      "octaneCustomerId": "528800",
+      "octaneCustomerName": "Yiros Pty Ltd",
+      "octaneServiceName": "",
+      "internalCustomerExternalId": "C2599",
+      "internalCustomerName": "The Yiros Shop MOLENDINAR",
+      "matchType": "fuzzy_name",
+      "matchConfidence": "85.00",
+      "isZambreroService": "0"
+    },
+    {
+      "octaneCustomerId": "528133",
+      "octaneCustomerName": "Zambrero (AHJ Pty Ltd)",
+      "octaneServiceName": "Zambrero Ascot 4G",
+      "internalCustomerExternalId": "C0298",
+      "internalCustomerName": "Zambrero Ascot",
+      "matchType": "fuzzy_name",
+      "matchConfidence": "85.00",
+      "isZambreroService": "1"
+    },
+    {
+      "octaneCustomerId": "528133",
+      "octaneCustomerName": "Zambrero (AHJ Pty Ltd)",
+      "octaneServiceName": "Zambrero Yuilles Rd (Mornington) 4G",
+      "internalCustomerExternalId": "C0407",
+      "internalCustomerName": "Zambrero Yuilles Rd (Mornington)",
+      "matchType": "fuzzy_name",
+      "matchConfidence": "85.00",
+      "isZambreroService": "1"
+    },
+    {
+      "octaneCustomerId": "528133",
+      "octaneCustomerName": "Zambrero (AHJ Pty Ltd)",
+      "octaneServiceName": "Zambrero Coopers Plains",
+      "internalCustomerExternalId": "C0326",
+      "internalCustomerName": "Zambrero Coopers Plains",
+      "matchType": "fuzzy_name",
+      "matchConfidence": "100.00",
+      "isZambreroService": "1"
+    },
+    {
+      "octaneCustomerId": "528133",
+      "octaneCustomerName": "Zambrero (AHJ Pty Ltd)",
+      "octaneServiceName": "Zambrero Currumbin",
+      "internalCustomerExternalId": "C0329",
+      "internalCustomerName": "Zambrero Currumbin",
+      "matchType": "fuzzy_name",
+      "matchConfidence": "100.00",
+      "isZambreroService": "1"
+    },
+    {
+      "octaneCustomerId": "528133",
+      "octaneCustomerName": "Zambrero (AHJ Pty Ltd)",
+      "octaneServiceName": "Zambrero Warragul 4G",
+      "internalCustomerExternalId": "C0396",
+      "internalCustomerName": "Zambrero Warragul",
+      "matchType": "fuzzy_name",
+      "matchConfidence": "85.00",
+      "isZambreroService": "1"
+    },
+    {
+      "octaneCustomerId": "528133",
+      "octaneCustomerName": "Zambrero (AHJ Pty Ltd)",
+      "octaneServiceName": "Zambrero South Yarra",
+      "internalCustomerExternalId": "C0386",
+      "internalCustomerName": "Zambrero South Yarra",
+      "matchType": "fuzzy_name",
+      "matchConfidence": "100.00",
+      "isZambreroService": "1"
+    },
+    {
+      "octaneCustomerId": "528133",
+      "octaneCustomerName": "Zambrero (AHJ Pty Ltd)",
+      "octaneServiceName": "Zambrero North Penrith",
+      "internalCustomerExternalId": "C0371",
+      "internalCustomerName": "Zambrero North Penrith",
+      "matchType": "fuzzy_name",
+      "matchConfidence": "100.00",
+      "isZambreroService": "1"
+    },
+    {
+      "octaneCustomerId": "528133",
+      "octaneCustomerName": "Zambrero (AHJ Pty Ltd)",
+      "octaneServiceName": "Zam Nundah 4G",
+      "internalCustomerExternalId": "C0374",
+      "internalCustomerName": "Zambrero Nundah",
+      "matchType": "fuzzy_name",
+      "matchConfidence": "85.00",
+      "isZambreroService": "1"
+    },
+    {
+      "octaneCustomerId": "528133",
+      "octaneCustomerName": "Zambrero (AHJ Pty Ltd)",
+      "octaneServiceName": "Zambrero Eaton Fair",
+      "internalCustomerExternalId": "C0333",
+      "internalCustomerName": "Zambrero Eaton Fair",
+      "matchType": "fuzzy_name",
+      "matchConfidence": "100.00",
+      "isZambreroService": "1"
+    },
+    {
+      "octaneCustomerId": "528133",
+      "octaneCustomerName": "Zambrero (AHJ Pty Ltd)",
+      "octaneServiceName": "Zambrero Bassendean",
+      "internalCustomerExternalId": "C0303",
+      "internalCustomerName": "Zambrero Bassendean",
+      "matchType": "fuzzy_name",
+      "matchConfidence": "100.00",
+      "isZambreroService": "1"
+    },
+    {
+      "octaneCustomerId": "528133",
+      "octaneCustomerName": "Zambrero (AHJ Pty Ltd)",
+      "octaneServiceName": "Zambrero Kelmscott 4G",
+      "internalCustomerExternalId": "C0352",
+      "internalCustomerName": "Zambrero Kelmscott",
+      "matchType": "fuzzy_name",
+      "matchConfidence": "85.00",
+      "isZambreroService": "1"
+    },
+    {
+      "octaneCustomerId": "528133",
+      "octaneCustomerName": "Zambrero (AHJ Pty Ltd)",
+      "octaneServiceName": "Zambrero Cloverdale",
+      "internalCustomerExternalId": "C0321",
+      "internalCustomerName": "Zambrero Cloverdale",
+      "matchType": "fuzzy_name",
+      "matchConfidence": "100.00",
+      "isZambreroService": "1"
+    },
+    {
+      "octaneCustomerId": "528133",
+      "octaneCustomerName": "Zambrero (AHJ Pty Ltd)",
+      "octaneServiceName": "Zambrero Cloisters Square",
+      "internalCustomerExternalId": "C0320",
+      "internalCustomerName": "Zambrero Cloisters Square",
+      "matchType": "fuzzy_name",
+      "matchConfidence": "100.00",
+      "isZambreroService": "1"
+    },
+    {
+      "octaneCustomerId": "528133",
+      "octaneCustomerName": "Zambrero (AHJ Pty Ltd)",
+      "octaneServiceName": "Zambrero Echuca 4G",
+      "internalCustomerExternalId": "C0334",
+      "internalCustomerName": "Zambrero Echuca",
+      "matchType": "fuzzy_name",
+      "matchConfidence": "85.00",
+      "isZambreroService": "1"
+    },
+    {
+      "octaneCustomerId": "528133",
+      "octaneCustomerName": "Zambrero (AHJ Pty Ltd)",
+      "octaneServiceName": "Zambrero Albion",
+      "internalCustomerExternalId": "C0296",
+      "internalCustomerName": "Zambrero Albion",
+      "matchType": "fuzzy_name",
+      "matchConfidence": "100.00",
+      "isZambreroService": "1"
+    },
+    {
+      "octaneCustomerId": "528133",
+      "octaneCustomerName": "Zambrero (AHJ Pty Ltd)",
+      "octaneServiceName": "Zambrero Hamilton",
+      "internalCustomerExternalId": "C2779",
+      "internalCustomerName": "Zambrero - Hamilton",
+      "matchType": "fuzzy_name",
+      "matchConfidence": "100.00",
+      "isZambreroService": "1"
+    },
+    {
+      "octaneCustomerId": "528133",
+      "octaneCustomerName": "Zambrero (AHJ Pty Ltd)",
+      "octaneServiceName": "Zambrero Crowsnest",
+      "internalCustomerExternalId": "C0327",
+      "internalCustomerName": "Zambrero Crowsnest",
+      "matchType": "fuzzy_name",
+      "matchConfidence": "100.00",
+      "isZambreroService": "1"
+    },
+    {
+      "octaneCustomerId": "528133",
+      "octaneCustomerName": "Zambrero (AHJ Pty Ltd)",
+      "octaneServiceName": "Zambrero Geelong West 4G",
+      "internalCustomerExternalId": "C0341",
+      "internalCustomerName": "Zambrero Geelong West",
+      "matchType": "fuzzy_name",
+      "matchConfidence": "85.00",
+      "isZambreroService": "1"
+    },
+    {
+      "octaneCustomerId": "528133",
+      "octaneCustomerName": "Zambrero (AHJ Pty Ltd)",
+      "octaneServiceName": "Zambrero Trinity Arcade 4G",
+      "internalCustomerExternalId": "C1410",
+      "internalCustomerName": "Zambrero Trinity",
+      "matchType": "fuzzy_name",
+      "matchConfidence": "85.00",
+      "isZambreroService": "1"
+    },
+    {
+      "octaneCustomerId": "528133",
+      "octaneCustomerName": "Zambrero (AHJ Pty Ltd)",
+      "octaneServiceName": "Zambrero Nerang 4G",
+      "internalCustomerExternalId": "C0369",
+      "internalCustomerName": "Zambrero Nerang",
+      "matchType": "fuzzy_name",
+      "matchConfidence": "85.00",
+      "isZambreroService": "1"
+    },
+    {
+      "octaneCustomerId": "528133",
+      "octaneCustomerName": "Zambrero (AHJ Pty Ltd)",
+      "octaneServiceName": "Zambrero Rockingham 4G",
+      "internalCustomerExternalId": "C0380",
+      "internalCustomerName": "Zambrero Rockingham",
+      "matchType": "fuzzy_name",
+      "matchConfidence": "85.00",
+      "isZambreroService": "1"
+    },
+    {
+      "octaneCustomerId": "528133",
+      "octaneCustomerName": "Zambrero (AHJ Pty Ltd)",
+      "octaneServiceName": "Zambrero Frankston",
+      "internalCustomerExternalId": "C7571",
+      "internalCustomerName": "Zambrero Frankston",
+      "matchType": "fuzzy_name",
+      "matchConfidence": "100.00",
+      "isZambreroService": "1"
+    },
+    {
+      "octaneCustomerId": "528133",
+      "octaneCustomerName": "Zambrero (AHJ Pty Ltd)",
+      "octaneServiceName": "Zambrero Majura Park 4G",
+      "internalCustomerExternalId": "C0357",
+      "internalCustomerName": "Zambrero Majura Park",
+      "matchType": "fuzzy_name",
+      "matchConfidence": "85.00",
+      "isZambreroService": "1"
+    },
+    {
+      "octaneCustomerId": "528133",
+      "octaneCustomerName": "Zambrero (AHJ Pty Ltd)",
+      "octaneServiceName": "Zambrero Canning Vale",
+      "internalCustomerExternalId": "C0316",
+      "internalCustomerName": "Zambrero Canning Vale",
+      "matchType": "fuzzy_name",
+      "matchConfidence": "100.00",
+      "isZambreroService": "1"
+    },
+    {
+      "octaneCustomerId": "528133",
+      "octaneCustomerName": "Zambrero (AHJ Pty Ltd)",
+      "octaneServiceName": "Zambrero Woodvale 4G",
+      "internalCustomerExternalId": "C0402",
+      "internalCustomerName": "Zambrero Woodvale",
+      "matchType": "fuzzy_name",
+      "matchConfidence": "85.00",
+      "isZambreroService": "1"
+    },
+    {
+      "octaneCustomerId": "528133",
+      "octaneCustomerName": "Zambrero (AHJ Pty Ltd)",
+      "octaneServiceName": "Zambrero Innaloo",
+      "internalCustomerExternalId": "C0347",
+      "internalCustomerName": "Zambrero Innaloo",
+      "matchType": "fuzzy_name",
+      "matchConfidence": "100.00",
+      "isZambreroService": "1"
+    },
+    {
+      "octaneCustomerId": "528133",
+      "octaneCustomerName": "Zambrero (AHJ Pty Ltd)",
+      "octaneServiceName": "Zambrero Northpoint 4G",
+      "internalCustomerExternalId": "C0373",
+      "internalCustomerName": "Zambrero Northpoint",
+      "matchType": "fuzzy_name",
+      "matchConfidence": "85.00",
+      "isZambreroService": "1"
+    },
+    {
+      "octaneCustomerId": "528133",
+      "octaneCustomerName": "Zambrero (AHJ Pty Ltd)",
+      "octaneServiceName": "Zambrero South Hedland 4G",
+      "internalCustomerExternalId": "C0385",
+      "internalCustomerName": "Zambrero South Hedland",
+      "matchType": "fuzzy_name",
+      "matchConfidence": "85.00",
+      "isZambreroService": "1"
+    },
+    {
+      "octaneCustomerId": "528133",
+      "octaneCustomerName": "Zambrero (AHJ Pty Ltd)",
+      "octaneServiceName": "Zambrero Marrickville",
+      "internalCustomerExternalId": "C7567",
+      "internalCustomerName": "Zambrero Marrickville",
+      "matchType": "fuzzy_name",
+      "matchConfidence": "100.00",
+      "isZambreroService": "1"
+    },
+    {
+      "octaneCustomerId": "528133",
+      "octaneCustomerName": "Zambrero (AHJ Pty Ltd)",
+      "octaneServiceName": "Zambrero Bullsbrook",
+      "internalCustomerExternalId": "C2731",
+      "internalCustomerName": "Zambrero - Bullsbrook",
+      "matchType": "fuzzy_name",
+      "matchConfidence": "100.00",
+      "isZambreroService": "1"
+    },
+    {
+      "octaneCustomerId": "528133",
+      "octaneCustomerName": "Zambrero (AHJ Pty Ltd)",
+      "octaneServiceName": "Zambrero Bundoora",
+      "internalCustomerExternalId": "C2734",
+      "internalCustomerName": "Zambrero - Bundoora",
+      "matchType": "fuzzy_name",
+      "matchConfidence": "100.00",
+      "isZambreroService": "1"
+    },
+    {
+      "octaneCustomerId": "528133",
+      "octaneCustomerName": "Zambrero (AHJ Pty Ltd)",
+      "octaneServiceName": "Zambrero Geraldton",
+      "internalCustomerExternalId": "C0342",
+      "internalCustomerName": "Zambrero Geraldton",
+      "matchType": "fuzzy_name",
+      "matchConfidence": "100.00",
+      "isZambreroService": "1"
+    },
+    {
+      "octaneCustomerId": "528133",
+      "octaneCustomerName": "Zambrero (AHJ Pty Ltd)",
+      "octaneServiceName": "Zambrero Townsville",
+      "internalCustomerExternalId": "C0393",
+      "internalCustomerName": "Zambrero Townsville",
+      "matchType": "fuzzy_name",
+      "matchConfidence": "100.00",
+      "isZambreroService": "1"
+    },
+    {
+      "octaneCustomerId": "528133",
+      "octaneCustomerName": "Zambrero (AHJ Pty Ltd)",
+      "octaneServiceName": "Zambrero Balnarring 4G",
+      "internalCustomerExternalId": "C0301",
+      "internalCustomerName": "Zambrero Balnarring",
+      "matchType": "fuzzy_name",
+      "matchConfidence": "85.00",
+      "isZambreroService": "1"
+    },
+    {
+      "octaneCustomerId": "528133",
+      "octaneCustomerName": "Zambrero (AHJ Pty Ltd)",
+      "octaneServiceName": "Zambrero Ulladulla",
+      "internalCustomerExternalId": "C0395",
+      "internalCustomerName": "Zambrero Ulladulla",
+      "matchType": "fuzzy_name",
+      "matchConfidence": "100.00",
+      "isZambreroService": "1"
+    },
+    {
+      "octaneCustomerId": "528133",
+      "octaneCustomerName": "Zambrero (AHJ Pty Ltd)",
+      "octaneServiceName": "Zambrero Morley 4G",
+      "internalCustomerExternalId": "C0365",
+      "internalCustomerName": "Zambrero Morley",
+      "matchType": "fuzzy_name",
+      "matchConfidence": "85.00",
+      "isZambreroService": "1"
+    },
+    {
+      "octaneCustomerId": "528133",
+      "octaneCustomerName": "Zambrero (AHJ Pty Ltd)",
+      "octaneServiceName": "Zambrero Mornington Main St 4G",
+      "internalCustomerExternalId": "C0366",
+      "internalCustomerName": "Zambrero Mornington (Main St)",
+      "matchType": "fuzzy_name",
+      "matchConfidence": "85.00",
+      "isZambreroService": "1"
+    },
+    {
+      "octaneCustomerId": "528133",
+      "octaneCustomerName": "Zambrero (AHJ Pty Ltd)",
+      "octaneServiceName": "Zambrero Belmont",
+      "internalCustomerExternalId": "C2719",
+      "internalCustomerName": "Zambrero - Belmont",
+      "matchType": "fuzzy_name",
+      "matchConfidence": "100.00",
+      "isZambreroService": "1"
+    },
+    {
+      "octaneCustomerId": "528133",
+      "octaneCustomerName": "Zambrero (AHJ Pty Ltd)",
+      "octaneServiceName": "Zambrero Sanctuary Lakes",
+      "internalCustomerExternalId": "C0381",
+      "internalCustomerName": "Zambrero Sanctuary Lakes",
+      "matchType": "fuzzy_name",
+      "matchConfidence": "100.00",
+      "isZambreroService": "1"
+    },
+    {
+      "octaneCustomerId": "528133",
+      "octaneCustomerName": "Zambrero (AHJ Pty Ltd)",
+      "octaneServiceName": "Zambrero Kwinana 4G",
+      "internalCustomerExternalId": "C0354",
+      "internalCustomerName": "Zambrero Kwinana",
+      "matchType": "fuzzy_name",
+      "matchConfidence": "85.00",
+      "isZambreroService": "1"
+    }
+  ],
+  "messages": [],
+  "stdout": "octaneCustomerId\toctaneCustomerName\toctaneServiceName\tinternalCustomerExternalId\tinternalCustomerName\tmatchType\tmatchConfidence\tisZambreroService\n530235\tAccountant Ready Services\t\tC2887\tAccountant Ready Services\tfuzzy_name\t100.00\t0\n527604\tBar Alto Pty Ltd\t\tC0034\tBar Alto\tfuzzy_name\t100.00\t0\n531868\tBooroodabin Community & Recreation Club Inc\t\tC0042\tBooroodabin\tfuzzy_name\t85.00\t0\n529664\tBracken Ridge Family Practice\t\tC0044\tBracken Ridge Family Practice\tfuzzy_name\t100.00\t0\n526985\tCF Aust Pty Ltd\t\tC0058\tCF Aust Pty Ltd\tfuzzy_name\t100.00\t0\n531872\tFritzenberger (South Brisbane) Pty Ltd\t\tC0097\tFritzenberger Southbank\tfuzzy_name\t79.00\t0\n531993\tGORMAN & CO CONTRACTORS PTY LTD\t\tC0105\tGorman & Co\tfuzzy_name\t85.00\t0\n531804\tHoly Shot Cafe Pty Ltd\t\tC0122\tHoly Shot\tfuzzy_name\t85.00\t0\n531876\tKHM Group Investments Pty Ltd\t\tC0133\tKHM Group Investments\tfuzzy_name\t100.00\t0\n527025\tLyndarr Constructions Pty Ltd\t\tC0077\tDJ Steel - Lyndarr Constructions Pty Ltd\tfuzzy_name\t85.00\t0\n531874\tNodo Pty Ltd\t\tC0171\tNodo Pty Ltd\tfuzzy_name\t100.00\t0\n531871\tNodo Pty Ltd\t\tC0171\tNodo Pty Ltd\tfuzzy_name\t100.00\t0\n531875\tNodo Pty Ltd\t\tC0171\tNodo Pty Ltd\tfuzzy_name\t100.00\t0\n528323\tNodo Pty Ltd\t\tC0171\tNodo Pty Ltd\tfuzzy_name\t100.00\t0\n532648\tSparrow Group Pty Ltd\t\tC2443\tSparrow Group Management\tfuzzy_name\t85.00\t0\n531997\tThe Trustee for the Collingwood Trust\t\tC2723\tZambrero - Blackwood\tfuzzy_name\t68.00\t0\n527021\tThe Trustee for the Fashion Cafe Trust\t\tC0248\tThe Trustee for Ferguson Family Trust\tfuzzy_name\t68.00\t0\n534220\tTHE YIROS SHOP PTY LTD\t\tC2599\tThe Yiros Shop MOLENDINAR\tfuzzy_name\t85.00\t0\n531118\tYiros Pty Ltd\t\tC2599\tThe Yiros Shop MOLENDINAR\tfuzzy_name\t85.00\t0\n528800\tYiros Pty Ltd\t\tC2599\tThe Yiros Shop MOLENDINAR\tfuzzy_name\t85.00\t0\n528133\tZambrero (AHJ Pty Ltd)\tZambrero Ascot 4G\tC0298\tZambrero Ascot\tfuzzy_name\t85.00\t1\n528133\tZambrero (AHJ Pty Ltd)\tZambrero Yuilles Rd (Mornington) 4G\tC0407\tZambrero Yuilles Rd (Mornington)\tfuzzy_name\t85.00\t1\n528133\tZambrero (AHJ Pty Ltd)\tZambrero Coopers Plains\tC0326\tZambrero Coopers Plains\tfuzzy_name\t100.00\t1\n528133\tZambrero (AHJ Pty Ltd)\tZambrero Currumbin\tC0329\tZambrero Currumbin\tfuzzy_name\t100.00\t1\n528133\tZambrero (AHJ Pty Ltd)\tZambrero Warragul 4G\tC0396\tZambrero Warragul\tfuzzy_name\t85.00\t1\n528133\tZambrero (AHJ Pty Ltd)\tZambrero South Yarra\tC0386\tZambrero South Yarra\tfuzzy_name\t100.00\t1\n528133\tZambrero (AHJ Pty Ltd)\tZambrero North Penrith\tC0371\tZambrero North Penrith\tfuzzy_name\t100.00\t1\n528133\tZambrero (AHJ Pty Ltd)\tZam Nundah 4G\tC0374\tZambrero Nundah\tfuzzy_name\t85.00\t1\n528133\tZambrero (AHJ Pty Ltd)\tZambrero Eaton Fair\tC0333\tZambrero Eaton Fair\tfuzzy_name\t100.00\t1\n528133\tZambrero (AHJ Pty Ltd)\tZambrero Bassendean\tC0303\tZambrero Bassendean\tfuzzy_name\t100.00\t1\n528133\tZambrero (AHJ Pty Ltd)\tZambrero Kelmscott 4G\tC0352\tZambrero Kelmscott\tfuzzy_name\t85.00\t1\n528133\tZambrero (AHJ Pty Ltd)\tZambrero Cloverdale\tC0321\tZambrero Cloverdale\tfuzzy_name\t100.00\t1\n528133\tZambrero (AHJ Pty Ltd)\tZambrero Cloisters Square\tC0320\tZambrero Cloisters Square\tfuzzy_name\t100.00\t1\n528133\tZambrero (AHJ Pty Ltd)\tZambrero Echuca 4G\tC0334\tZambrero Echuca\tfuzzy_name\t85.00\t1\n528133\tZambrero (AHJ Pty Ltd)\tZambrero Albion\tC0296\tZambrero Albion\tfuzzy_name\t100.00\t1\n528133\tZambrero (AHJ Pty Ltd)\tZambrero Hamilton\tC2779\tZambrero - Hamilton\tfuzzy_name\t100.00\t1\n528133\tZambrero (AHJ Pty Ltd)\tZambrero Crowsnest\tC0327\tZambrero Crowsnest\tfuzzy_name\t100.00\t1\n528133\tZambrero (AHJ Pty Ltd)\tZambrero Geelong West 4G\tC0341\tZambrero Geelong West\tfuzzy_name\t85.00\t1\n528133\tZambrero (AHJ Pty Ltd)\tZambrero Trinity Arcade 4G\tC1410\tZambrero Trinity\tfuzzy_name\t85.00\t1\n528133\tZambrero (AHJ Pty Ltd)\tZambrero Nerang 4G\tC0369\tZambrero Nerang\tfuzzy_name\t85.00\t1\n528133\tZambrero (AHJ Pty Ltd)\tZambrero Rockingham 4G\tC0380\tZambrero Rockingham\tfuzzy_name\t85.00\t1\n528133\tZambrero (AHJ Pty Ltd)\tZambrero Frankston\tC7571\tZambrero Frankston\tfuzzy_name\t100.00\t1\n528133\tZambrero (AHJ Pty Ltd)\tZambrero Majura Park 4G\tC0357\tZambrero Majura Park\tfuzzy_name\t85.00\t1\n528133\tZambrero (AHJ Pty Ltd)\tZambrero Canning Vale\tC0316\tZambrero Canning Vale\tfuzzy_name\t100.00\t1\n528133\tZambrero (AHJ Pty Ltd)\tZambrero Woodvale 4G\tC0402\tZambrero Woodvale\tfuzzy_name\t85.00\t1\n528133\tZambrero (AHJ Pty Ltd)\tZambrero Innaloo\tC0347\tZambrero Innaloo\tfuzzy_name\t100.00\t1\n528133\tZambrero (AHJ Pty Ltd)\tZambrero Northpoint 4G\tC0373\tZambrero Northpoint\tfuzzy_name\t85.00\t1\n528133\tZambrero (AHJ Pty Ltd)\tZambrero South Hedland 4G\tC0385\tZambrero South Hedland\tfuzzy_name\t85.00\t1\n528133\tZambrero (AHJ Pty Ltd)\tZambrero Marrickville\tC7567\tZambrero Marrickville\tfuzzy_name\t100.00\t1\n528133\tZambrero (AHJ Pty Ltd)\tZambrero Bullsbrook\tC2731\tZambrero - Bullsbrook\tfuzzy_name\t100.00\t1\n528133\tZambrero (AHJ Pty Ltd)\tZambrero Bundoora\tC2734\tZambrero - Bundoora\tfuzzy_name\t100.00\t1\n528133\tZambrero (AHJ Pty Ltd)\tZambrero Geraldton\tC0342\tZambrero Geraldton\tfuzzy_name\t100.00\t1\n528133\tZambrero (AHJ Pty Ltd)\tZambrero Townsville\tC0393\tZambrero Townsville\tfuzzy_name\t100.00\t1\n528133\tZambrero (AHJ Pty Ltd)\tZambrero Balnarring 4G\tC0301\tZambrero Balnarring\tfuzzy_name\t85.00\t1\n528133\tZambrero (AHJ Pty Ltd)\tZambrero Ulladulla\tC0395\tZambrero Ulladulla\tfuzzy_name\t100.00\t1\n528133\tZambrero (AHJ Pty Ltd)\tZambrero Morley 4G\tC0365\tZambrero Morley\tfuzzy_name\t85.00\t1\n528133\tZambrero (AHJ Pty Ltd)\tZambrero Mornington Main St 4G\tC0366\tZambrero Mornington (Main St)\tfuzzy_name\t85.00\t1\n528133\tZambrero (AHJ Pty Ltd)\tZambrero Belmont\tC2719\tZambrero - Belmont\tfuzzy_name\t100.00\t1\n528133\tZambrero (AHJ Pty Ltd)\tZambrero Sanctuary Lakes\tC0381\tZambrero Sanctuary Lakes\tfuzzy_name\t100.00\t1\n528133\tZambrero (AHJ Pty Ltd)\tZambrero Kwinana 4G\tC0354\tZambrero Kwinana\tfuzzy_name\t85.00\t1\n",
+  "stderr": "",
+  "execution_time_ms": 1498
+}

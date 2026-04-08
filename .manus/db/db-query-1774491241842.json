@@ -1,0 +1,46 @@
+{
+  "query": "\n-- Check all services for C2753 now\nSELECT s.externalId, s.planName, s.serviceType, s.provider, s.monthlyCost, s.status,\n  sba.billingItemExternalId as assignedTo\nFROM services s\nLEFT JOIN service_billing_assignments sba ON sba.serviceExternalId = s.externalId\nWHERE s.customerExternalId = 'C2753'\nORDER BY s.serviceType;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Check all services for C2753 now\nSELECT s.externalId, s.planName, s.serviceType, s.provider, s.monthlyCost, s.status,\n  sba.billingItemExternalId as assignedTo\nFROM services s\nLEFT JOIN service_billing_assignments sba ON sba.serviceExternalId = s.externalId\nWHERE s.customerExternalId = 'C2753'\nORDER BY s.serviceType;\n",
+  "rows": [
+    {
+      "externalId": "S0412",
+      "planName": "NBN 25/10",
+      "serviceType": "Internet",
+      "provider": "ABB",
+      "monthlyCost": "47.01",
+      "status": "active",
+      "assignedTo": "BI001356"
+    },
+    {
+      "externalId": "S6950",
+      "planName": "Standard Mobile Service",
+      "serviceType": "Mobile",
+      "provider": "Vocus",
+      "monthlyCost": "0.00",
+      "status": "active",
+      "assignedTo": "NULL"
+    },
+    {
+      "externalId": "VOCUS-MOB-13635300",
+      "planName": "Vocus Mobile Service",
+      "serviceType": "Mobile",
+      "provider": "Vocus",
+      "monthlyCost": "0.00",
+      "status": "active",
+      "assignedTo": "NULL"
+    },
+    {
+      "externalId": "S1444",
+      "planName": "SmileTel supplied NBN voice and internet bundle. 24 month plan. Includes:- 1xVoice phone line,1xInternet service,1x4G Back-up, S",
+      "serviceType": "VoIP",
+      "provider": "SmileTel",
+      "monthlyCost": "84.70",
+      "status": "active",
+      "assignedTo": "BI00018"
+    }
+  ],
+  "messages": [],
+  "stdout": "externalId\tplanName\tserviceType\tprovider\tmonthlyCost\tstatus\tassignedTo\nS0412\tNBN 25/10\tInternet\tABB\t47.01\tactive\tBI001356\nS6950\tStandard Mobile Service\tMobile\tVocus\t0.00\tactive\tNULL\nVOCUS-MOB-13635300\tVocus Mobile Service\tMobile\tVocus\t0.00\tactive\tNULL\nS1444\tSmileTel supplied NBN voice and internet bundle. 24 month plan. Includes:- 1xVoice phone line,1xInternet service,1x4G Back-up, S\tVoIP\tSmileTel\t84.70\tactive\tBI00018\n",
+  "stderr": "",
+  "execution_time_ms": 1580
+}

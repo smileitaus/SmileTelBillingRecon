@@ -1,0 +1,24 @@
+{
+  "query": "\n-- Compute groupTotalCost for ALL revenue groups\nUPDATE revenue_groups rg\nJOIN (\n  SELECT revenueGroupId, SUM(monthlyCost) AS grpCost\n  FROM services\n  WHERE revenueGroupId IS NOT NULL AND revenueGroupId != ''\n  GROUP BY revenueGroupId\n) costs ON rg.groupId = costs.revenueGroupId\nSET rg.totalCost = costs.grpCost;\n\n-- Verify final state\nSELECT\n  rg.type,\n  COUNT(*) AS groupCount,\n  SUM(rg.totalRevenue) AS totalRev,\n  SUM(rg.totalCost) AS totalCost,\n  SUM(CASE WHEN rg.totalCost > rg.totalRevenue THEN 1 ELSE 0 END) AS lossGroups\nFROM revenue_groups rg\nGROUP BY rg.type;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Compute groupTotalCost for ALL revenue groups\nUPDATE revenue_groups rg\nJOIN (\n  SELECT revenueGroupId, SUM(monthlyCost) AS grpCost\n  FROM services\n  WHERE revenueGroupId IS NOT NULL AND revenueGroupId != ''\n  GROUP BY revenueGroupId\n) costs ON rg.groupId = costs.revenueGroupId\nSET rg.totalCost = costs.grpCost;\n\n-- Verify final state\nSELECT\n  rg.type,\n  COUNT(*) AS groupCount,\n  SUM(rg.totalRevenue) AS totalRev,\n  SUM(rg.totalCost) AS totalCost,\n  SUM(CASE WHEN rg.totalCost > rg.totalRevenue THEN 1 ELSE 0 END) AS lossGroups\nFROM revenue_groups rg\nGROUP BY rg.type;\n",
+  "rows": [
+    {
+      "type": "data_bundle",
+      "groupCount": "68",
+      "totalRev": "19319.81",
+      "totalCost": "9981.54",
+      "lossGroups": "5"
+    },
+    {
+      "type": "voice_pack",
+      "groupCount": "86",
+      "totalRev": "15355.52",
+      "totalCost": "1839.17",
+      "lossGroups": "7"
+    }
+  ],
+  "messages": [],
+  "stdout": "type\tgroupCount\ttotalRev\ttotalCost\tlossGroups\ndata_bundle\t68\t19319.81\t9981.54\t5\nvoice_pack\t86\t15355.52\t1839.17\t7\n",
+  "stderr": "",
+  "execution_time_ms": 1794
+}

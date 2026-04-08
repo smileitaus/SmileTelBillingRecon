@@ -1,0 +1,82 @@
+{
+  "query": "\nSELECT \n  phoneNumber,\n  planName,\n  serviceType,\n  customerName,\n  supplierAccount,\n  monthlyCost,\n  monthlyRevenue,\n  status,\n  terminationNote,\n  archivedAt\nFROM services\nWHERE supplierName = 'Telstra'\n  AND status = 'terminated'\nORDER BY monthlyCost DESC;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \nSELECT \n  phoneNumber,\n  planName,\n  serviceType,\n  customerName,\n  supplierAccount,\n  monthlyCost,\n  monthlyRevenue,\n  status,\n  terminationNote,\n  archivedAt\nFROM services\nWHERE supplierName = 'Telstra'\n  AND status = 'terminated'\nORDER BY monthlyCost DESC;\n",
+  "rows": [
+    {
+      "phoneNumber": "08 9534 1274",
+      "planName": "Core Internet",
+      "serviceType": "Internet",
+      "customerName": "Zambrero West Pinjarra Southbound",
+      "supplierAccount": "2000719405571",
+      "monthlyCost": "93.00",
+      "monthlyRevenue": "92.53",
+      "status": "terminated",
+      "terminationNote": "NULL",
+      "archivedAt": "NULL"
+    },
+    {
+      "phoneNumber": "0497 937 748",
+      "planName": "Business Data Plan S",
+      "serviceType": "Data",
+      "customerName": "Unassigned",
+      "supplierAccount": "586992900",
+      "monthlyCost": "25.00",
+      "monthlyRevenue": "0.00",
+      "status": "terminated",
+      "terminationNote": "NULL",
+      "archivedAt": "NULL"
+    },
+    {
+      "phoneNumber": "07 4725 1209",
+      "planName": "Core Internet",
+      "serviceType": "Internet",
+      "customerName": "Zambrero Townsville",
+      "supplierAccount": "2000719405571",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00",
+      "status": "terminated",
+      "terminationNote": "NULL",
+      "archivedAt": "NULL"
+    },
+    {
+      "phoneNumber": "08 9375 1160",
+      "planName": "NBN Internet Service",
+      "serviceType": "Internet",
+      "customerName": "Zambrero Morley",
+      "supplierAccount": "9466986800",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00",
+      "status": "terminated",
+      "terminationNote": "NULL",
+      "archivedAt": "NULL"
+    },
+    {
+      "phoneNumber": "02 4353 4004",
+      "planName": "NBN Internet Service",
+      "serviceType": "Internet",
+      "customerName": "Little Cha Tuggerah",
+      "supplierAccount": "9466986800",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "75.49",
+      "status": "terminated",
+      "terminationNote": "NULL",
+      "archivedAt": "NULL"
+    },
+    {
+      "phoneNumber": "02 4367 2348  / 0243650249",
+      "planName": "NBN Internet Service",
+      "serviceType": "Internet",
+      "customerName": "Little Cha Erina Fair",
+      "supplierAccount": "9466986800",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "75.49",
+      "status": "terminated",
+      "terminationNote": "NULL",
+      "archivedAt": "NULL"
+    }
+  ],
+  "messages": [],
+  "stdout": "phoneNumber\tplanName\tserviceType\tcustomerName\tsupplierAccount\tmonthlyCost\tmonthlyRevenue\tstatus\tterminationNote\tarchivedAt\n08 9534 1274\tCore Internet\tInternet\tZambrero West Pinjarra Southbound\t2000719405571\t93.00\t92.53\tterminated\tNULL\tNULL\n0497 937 748\tBusiness Data Plan S\tData\tUnassigned\t586992900\t25.00\t0.00\tterminated\tNULL\tNULL\n07 4725 1209\tCore Internet\tInternet\tZambrero Townsville\t2000719405571\t0.00\t0.00\tterminated\tNULL\tNULL\n08 9375 1160\tNBN Internet Service\tInternet\tZambrero Morley\t9466986800\t0.00\t0.00\tterminated\tNULL\tNULL\n02 4353 4004\tNBN Internet Service\tInternet\tLittle Cha Tuggerah\t9466986800\t0.00\t75.49\tterminated\tNULL\tNULL\n02 4367 2348  / 0243650249\tNBN Internet Service\tInternet\tLittle Cha Erina Fair\t9466986800\t0.00\t75.49\tterminated\tNULL\tNULL\n",
+  "stderr": "",
+  "execution_time_ms": 128
+}

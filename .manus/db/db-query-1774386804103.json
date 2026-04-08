@@ -1,0 +1,15 @@
+{
+  "query": "\n-- What billing platforms are in use?\nSELECT billingPlatform, COUNT(*) as count, SUM(lineAmount) as totalAmount\nFROM billing_items\nGROUP BY billingPlatform\nORDER BY count DESC;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- What billing platforms are in use?\nSELECT billingPlatform, COUNT(*) as count, SUM(lineAmount) as totalAmount\nFROM billing_items\nGROUP BY billingPlatform\nORDER BY count DESC;\n",
+  "rows": [
+    {
+      "billingPlatform": "",
+      "count": "2671",
+      "totalAmount": "293610.51"
+    }
+  ],
+  "messages": [],
+  "stdout": "billingPlatform\tcount\ttotalAmount\n\t2671\t293610.51\n",
+  "stderr": "",
+  "execution_time_ms": 1623
+}

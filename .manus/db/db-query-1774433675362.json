@@ -1,0 +1,210 @@
+{
+  "query": "\n-- Find unmatched services whose supplierAccount matches a supplierAccount on an already-matched service\nSELECT \n  u.externalId AS unmatched_svc,\n  u.supplierName,\n  u.supplierAccount,\n  u.serviceType,\n  u.phoneNumber,\n  m.customerExternalId AS match_customer,\n  m.customerName AS match_customer_name,\n  COUNT(*) OVER (PARTITION BY u.supplierAccount) AS account_count\nFROM services u\nJOIN services m ON m.supplierAccount = u.supplierAccount\n  AND m.supplierName = u.supplierName\n  AND (m.customerExternalId IS NOT NULL AND m.customerExternalId != '')\nWHERE (u.customerExternalId IS NULL OR u.customerExternalId = '')\n  AND u.supplierAccount IS NOT NULL AND u.supplierAccount != ''\nORDER BY account_count DESC, u.supplierAccount\nLIMIT 20;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Find unmatched services whose supplierAccount matches a supplierAccount on an already-matched service\nSELECT \n  u.externalId AS unmatched_svc,\n  u.supplierName,\n  u.supplierAccount,\n  u.serviceType,\n  u.phoneNumber,\n  m.customerExternalId AS match_customer,\n  m.customerName AS match_customer_name,\n  COUNT(*) OVER (PARTITION BY u.supplierAccount) AS account_count\nFROM services u\nJOIN services m ON m.supplierAccount = u.supplierAccount\n  AND m.supplierName = u.supplierName\n  AND (m.customerExternalId IS NOT NULL AND m.customerExternalId != '')\nWHERE (u.customerExternalId IS NULL OR u.customerExternalId = '')\n  AND u.supplierAccount IS NOT NULL AND u.supplierAccount != ''\nORDER BY account_count DESC, u.supplierAccount\nLIMIT 20;\n",
+  "rows": [
+    {
+      "unmatched_svc": "S0250",
+      "supplierName": "Telstra",
+      "supplierAccount": "586992900",
+      "serviceType": "Data",
+      "phoneNumber": "0491 971 621",
+      "match_customer": "C2441",
+      "match_customer_name": "Smile IT",
+      "account_count": "12540"
+    },
+    {
+      "unmatched_svc": "S0261",
+      "supplierName": "Telstra",
+      "supplierAccount": "586992900",
+      "serviceType": "Data",
+      "phoneNumber": "0499 301 756",
+      "match_customer": "C2441",
+      "match_customer_name": "Smile IT",
+      "account_count": "12540"
+    },
+    {
+      "unmatched_svc": "S0251",
+      "supplierName": "Telstra",
+      "supplierAccount": "586992900",
+      "serviceType": "Data",
+      "phoneNumber": "0492 215 630",
+      "match_customer": "C2441",
+      "match_customer_name": "Smile IT",
+      "account_count": "12540"
+    },
+    {
+      "unmatched_svc": "S0663",
+      "supplierName": "Telstra",
+      "supplierAccount": "586992900",
+      "serviceType": "Mobile",
+      "phoneNumber": "0472800727",
+      "match_customer": "C2441",
+      "match_customer_name": "Smile IT",
+      "account_count": "12540"
+    },
+    {
+      "unmatched_svc": "S0262",
+      "supplierName": "Telstra",
+      "supplierAccount": "586992900",
+      "serviceType": "Data",
+      "phoneNumber": "0499 334 785",
+      "match_customer": "C2441",
+      "match_customer_name": "Smile IT",
+      "account_count": "12540"
+    },
+    {
+      "unmatched_svc": "S0257",
+      "supplierName": "Telstra",
+      "supplierAccount": "586992900",
+      "serviceType": "Mobile",
+      "phoneNumber": "0498 188 366",
+      "match_customer": "C2441",
+      "match_customer_name": "Smile IT",
+      "account_count": "12540"
+    },
+    {
+      "unmatched_svc": "S0252",
+      "supplierName": "Telstra",
+      "supplierAccount": "586992900",
+      "serviceType": "Data",
+      "phoneNumber": "0492 418 872",
+      "match_customer": "C2441",
+      "match_customer_name": "Smile IT",
+      "account_count": "12540"
+    },
+    {
+      "unmatched_svc": "BLITZ-0448277021",
+      "supplierName": "Telstra",
+      "supplierAccount": "586992900",
+      "serviceType": "Mobile",
+      "phoneNumber": "0448277021",
+      "match_customer": "C2441",
+      "match_customer_name": "Smile IT",
+      "account_count": "12540"
+    },
+    {
+      "unmatched_svc": "S0664",
+      "supplierName": "Telstra",
+      "supplierAccount": "586992900",
+      "serviceType": "Mobile",
+      "phoneNumber": "0484138666",
+      "match_customer": "C2441",
+      "match_customer_name": "Smile IT",
+      "account_count": "12540"
+    },
+    {
+      "unmatched_svc": "S0264",
+      "supplierName": "Telstra",
+      "supplierAccount": "586992900",
+      "serviceType": "Data",
+      "phoneNumber": "0499 800 300",
+      "match_customer": "C2441",
+      "match_customer_name": "Smile IT",
+      "account_count": "12540"
+    },
+    {
+      "unmatched_svc": "S0263",
+      "supplierName": "Telstra",
+      "supplierAccount": "586992900",
+      "serviceType": "Data",
+      "phoneNumber": "0499 598 409",
+      "match_customer": "C2441",
+      "match_customer_name": "Smile IT",
+      "account_count": "12540"
+    },
+    {
+      "unmatched_svc": "S0260",
+      "supplierName": "Telstra",
+      "supplierAccount": "586992900",
+      "serviceType": "Mobile",
+      "phoneNumber": "0499 022 296",
+      "match_customer": "C2441",
+      "match_customer_name": "Smile IT",
+      "account_count": "12540"
+    },
+    {
+      "unmatched_svc": "S0259",
+      "supplierName": "Telstra",
+      "supplierAccount": "586992900",
+      "serviceType": "Data",
+      "phoneNumber": "0498 780 941",
+      "match_customer": "C2441",
+      "match_customer_name": "Smile IT",
+      "account_count": "12540"
+    },
+    {
+      "unmatched_svc": "S0255",
+      "supplierName": "Telstra",
+      "supplierAccount": "586992900",
+      "serviceType": "Data",
+      "phoneNumber": "0498 083 600",
+      "match_customer": "C2441",
+      "match_customer_name": "Smile IT",
+      "account_count": "12540"
+    },
+    {
+      "unmatched_svc": "S0254",
+      "supplierName": "Telstra",
+      "supplierAccount": "586992900",
+      "serviceType": "Data",
+      "phoneNumber": "0498 012 701",
+      "match_customer": "C2441",
+      "match_customer_name": "Smile IT",
+      "account_count": "12540"
+    },
+    {
+      "unmatched_svc": "BLITZ-0492418872",
+      "supplierName": "Telstra",
+      "supplierAccount": "586992900",
+      "serviceType": "Mobile",
+      "phoneNumber": "0492418872",
+      "match_customer": "C0233",
+      "match_customer_name": "Sustainable Catering Company Pty Ltd",
+      "account_count": "12540"
+    },
+    {
+      "unmatched_svc": "S0161",
+      "supplierName": "Telstra",
+      "supplierAccount": "586992900",
+      "serviceType": "Data",
+      "phoneNumber": "0429 627 604",
+      "match_customer": "C0233",
+      "match_customer_name": "Sustainable Catering Company Pty Ltd",
+      "account_count": "12540"
+    },
+    {
+      "unmatched_svc": "BLITZ-0472817749",
+      "supplierName": "Telstra",
+      "supplierAccount": "586992900",
+      "serviceType": "Mobile",
+      "phoneNumber": "0472817749",
+      "match_customer": "C2441",
+      "match_customer_name": "Smile IT",
+      "account_count": "12540"
+    },
+    {
+      "unmatched_svc": "BLITZ-0427406897",
+      "supplierName": "Telstra",
+      "supplierAccount": "586992900",
+      "serviceType": "Mobile",
+      "phoneNumber": "0427406897",
+      "match_customer": "C2441",
+      "match_customer_name": "Smile IT",
+      "account_count": "12540"
+    },
+    {
+      "unmatched_svc": "S0265",
+      "supplierName": "Telstra",
+      "supplierAccount": "586992900",
+      "serviceType": "Data",
+      "phoneNumber": "0499 833 743",
+      "match_customer": "C2441",
+      "match_customer_name": "Smile IT",
+      "account_count": "12540"
+    }
+  ],
+  "messages": [],
+  "stdout": "unmatched_svc\tsupplierName\tsupplierAccount\tserviceType\tphoneNumber\tmatch_customer\tmatch_customer_name\taccount_count\nS0250\tTelstra\t586992900\tData\t0491 971 621\tC2441\tSmile IT\t12540\nS0261\tTelstra\t586992900\tData\t0499 301 756\tC2441\tSmile IT\t12540\nS0251\tTelstra\t586992900\tData\t0492 215 630\tC2441\tSmile IT\t12540\nS0663\tTelstra\t586992900\tMobile\t0472800727\tC2441\tSmile IT\t12540\nS0262\tTelstra\t586992900\tData\t0499 334 785\tC2441\tSmile IT\t12540\nS0257\tTelstra\t586992900\tMobile\t0498 188 366\tC2441\tSmile IT\t12540\nS0252\tTelstra\t586992900\tData\t0492 418 872\tC2441\tSmile IT\t12540\nBLITZ-0448277021\tTelstra\t586992900\tMobile\t0448277021\tC2441\tSmile IT\t12540\nS0664\tTelstra\t586992900\tMobile\t0484138666\tC2441\tSmile IT\t12540\nS0264\tTelstra\t586992900\tData\t0499 800 300\tC2441\tSmile IT\t12540\nS0263\tTelstra\t586992900\tData\t0499 598 409\tC2441\tSmile IT\t12540\nS0260\tTelstra\t586992900\tMobile\t0499 022 296\tC2441\tSmile IT\t12540\nS0259\tTelstra\t586992900\tData\t0498 780 941\tC2441\tSmile IT\t12540\nS0255\tTelstra\t586992900\tData\t0498 083 600\tC2441\tSmile IT\t12540\nS0254\tTelstra\t586992900\tData\t0498 012 701\tC2441\tSmile IT\t12540\nBLITZ-0492418872\tTelstra\t586992900\tMobile\t0492418872\tC0233\tSustainable Catering Company Pty Ltd\t12540\nS0161\tTelstra\t586992900\tData\t0429 627 604\tC0233\tSustainable Catering Company Pty Ltd\t12540\nBLITZ-0472817749\tTelstra\t586992900\tMobile\t0472817749\tC2441\tSmile IT\t12540\nBLITZ-0427406897\tTelstra\t586992900\tMobile\t0427406897\tC2441\tSmile IT\t12540\nS0265\tTelstra\t586992900\tData\t0499 833 743\tC2441\tSmile IT\t12540\n",
+  "stderr": "",
+  "execution_time_ms": 1632
+}

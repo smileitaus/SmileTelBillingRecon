@@ -1,0 +1,8 @@
+{
+  "query": "-- Find the customer\nSELECT externalId, name, billingPlatform, monthlyRevenue, monthlySpend\nFROM customers \nWHERE name LIKE '%Emergency%' OR name LIKE '%Medicine%';\n\n-- Find their services\nSELECT s.externalId, s.planName, s.serviceType, s.provider, s.monthlyCost, s.monthlyRevenue, s.status, s.customerExternalId\nFROM services s\nJOIN customers c ON s.customerExternalId = c.externalId\nWHERE c.name LIKE '%Emergency%' OR c.name LIKE '%Medicine%';\n\n-- Find their billing items\nSELECT bi.id, bi.description, bi.unitAmount, bi.quantity, bi.lineAmount, bi.contactName, bi.serviceExternalId\nFROM billing_items bi\nWHERE bi.contactName LIKE '%Emergency%' OR bi.contactName LIKE '%Medicine%';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute -- Find the customer\nSELECT externalId, name, billingPlatform, monthlyRevenue, monthlySpend\nFROM customers \nWHERE name LIKE '%Emergency%' OR name LIKE '%Medicine%';\n\n-- Find their services\nSELECT s.externalId, s.planName, s.serviceType, s.provider, s.monthlyCost, s.monthlyRevenue, s.status, s.customerExternalId\nFROM services s\nJOIN customers c ON s.customerExternalId = c.externalId\nWHERE c.name LIKE '%Emergency%' OR c.name LIKE '%Medicine%';\n\n-- Find their billing items\nSELECT bi.id, bi.description, bi.unitAmount, bi.quantity, bi.lineAmount, bi.contactName, bi.serviceExternalId\nFROM billing_items bi\nWHERE bi.contactName LIKE '%Emergency%' OR bi.contactName LIKE '%Medicine%';",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1054 (42S22) at line 2: Unknown column 'billingplatform' in 'field list'"
+  ]
+}

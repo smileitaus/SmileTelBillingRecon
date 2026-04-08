@@ -1,0 +1,190 @@
+{
+  "query": "\nSELECT \n  c.name as customer,\n  s.serviceId,\n  s.planName,\n  s.dataSource,\n  s.monthlyCost,\n  s.monthlyRevenue,\n  s.serviceType\nFROM services s\nJOIN customers c ON s.customerExternalId = c.externalId\nWHERE s.monthlyCost = 0 AND s.monthlyRevenue > 0\nORDER BY s.monthlyRevenue DESC\nLIMIT 20;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \nSELECT \n  c.name as customer,\n  s.serviceId,\n  s.planName,\n  s.dataSource,\n  s.monthlyCost,\n  s.monthlyRevenue,\n  s.serviceType\nFROM services s\nJOIN customers c ON s.customerExternalId = c.externalId\nWHERE s.monthlyCost = 0 AND s.monthlyRevenue > 0\nORDER BY s.monthlyRevenue DESC\nLIMIT 20;\n",
+  "rows": [
+    {
+      "customer": "Riverside Marine",
+      "serviceId": "",
+      "planName": "3CX 16SC Enterprise Edition Annual Renewal (Hosted)1533581 -",
+      "dataSource": "Xero Feb 2026 Invoice",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "5939.38",
+      "serviceType": "Other"
+    },
+    {
+      "customer": "Varsity Apartments SC Pty Ltd",
+      "serviceId": "",
+      "planName": "Smile Tel NBN Enterprise Ethernet Fibre 1000mb up/down - 36 MonthsEach",
+      "dataSource": "Xero Feb 2026 Invoice",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "4468.00",
+      "serviceType": "Internet"
+    },
+    {
+      "customer": "GBA Consulting Engineers",
+      "serviceId": "",
+      "planName": "Data - Internet",
+      "dataSource": "Xero Feb 2026 Invoice",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "3693.00",
+      "serviceType": "Internet"
+    },
+    {
+      "customer": "Sparrow Group Management Pty Ltd",
+      "serviceId": "",
+      "planName": "Voicemail",
+      "dataSource": "",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "2523.50",
+      "serviceType": "Voice"
+    },
+    {
+      "customer": "Sparrow Group Management Pty Ltd",
+      "serviceId": "",
+      "planName": "Premium-2",
+      "dataSource": "",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "2523.50",
+      "serviceType": "Voice"
+    },
+    {
+      "customer": "Sparrow Group Management Pty Ltd",
+      "serviceId": "",
+      "planName": "Softphone add-on with Cisco Webex",
+      "dataSource": "",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "2523.50",
+      "serviceType": "Voice"
+    },
+    {
+      "customer": "Sparrow Group Management Pty Ltd",
+      "serviceId": "",
+      "planName": "Voice - Services",
+      "dataSource": "Xero Feb 2026 Invoice",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "2523.50",
+      "serviceType": "Voice"
+    },
+    {
+      "customer": "ARM Group Pty Ltd ATF ARM Property Trust No. 2",
+      "serviceId": "",
+      "planName": "Data - Internet",
+      "dataSource": "Xero Feb 2026 Invoice",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "2131.00",
+      "serviceType": "Internet"
+    },
+    {
+      "customer": "Sparrow Group Management Pty Ltd",
+      "serviceId": "",
+      "planName": "- ALKIMOS - 3/3 BULWARK AVE, ALKIMOS WA 6038, AUSTRALIA - 100/20Mbps ABB Unlimited Data (Opticomm FTTP)",
+      "dataSource": "Xero Feb 2026 Invoice",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "1931.88",
+      "serviceType": "Internet"
+    },
+    {
+      "customer": "ASG Hail Pty Ltd",
+      "serviceId": "",
+      "planName": "Voice - Services",
+      "dataSource": "Xero Feb 2026 Invoice",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "1837.08",
+      "serviceType": "Voice"
+    },
+    {
+      "customer": "ASG Hail Pty Ltd",
+      "serviceId": "",
+      "planName": "ME - 3 Included Local National Mobile Call Pack",
+      "dataSource": "",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "1837.08",
+      "serviceType": "Voice"
+    },
+    {
+      "customer": "ASG Hail Pty Ltd",
+      "serviceId": "",
+      "planName": "Premium-1",
+      "dataSource": "",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "1837.08",
+      "serviceType": "Voice"
+    },
+    {
+      "customer": "ASG Hail Pty Ltd",
+      "serviceId": "",
+      "planName": "Voicemail",
+      "dataSource": "",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "1837.08",
+      "serviceType": "Voice"
+    },
+    {
+      "customer": "Gateway Containers",
+      "serviceId": "",
+      "planName": "Smile Tel NBN Enterprise Ethernet Fibre 100mb up/down - 36 MonthsEach",
+      "dataSource": "Xero Feb 2026 Invoice",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "1780.00",
+      "serviceType": "Internet"
+    },
+    {
+      "customer": "CDI Lawyers",
+      "serviceId": "",
+      "planName": "1000/1000 Vocus Fibre Internet Service with Unlimited Internet (36Month)- CPE/Router not Included",
+      "dataSource": "Xero Feb 2026 Invoice",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "1780.00",
+      "serviceType": "Internet"
+    },
+    {
+      "customer": "Salter Brothers Luxury Collection Operations Pty LTD",
+      "serviceId": "",
+      "planName": "100mb Business Grade Fibre Up and Down - 36 Month ContractEach",
+      "dataSource": "Xero Feb 2026 Invoice",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "1755.00",
+      "serviceType": "Internet"
+    },
+    {
+      "customer": "Sparrow Group Management Pty Ltd",
+      "serviceId": "",
+      "planName": "- 4G Failover Sim 7.5Gb p/site p/month",
+      "dataSource": "Xero Feb 2026 Invoice",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "1520.00",
+      "serviceType": "Mobile"
+    },
+    {
+      "customer": "Institute for Healthy Communities Australia",
+      "serviceId": "",
+      "planName": "Data - Internet",
+      "dataSource": "Xero Feb 2026 Invoice",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "1500.00",
+      "serviceType": "Internet"
+    },
+    {
+      "customer": "Mammoth Underground Mine Management Pty Ltd",
+      "serviceId": "",
+      "planName": "Local Priority 50GB Top-Up (Thursday, 1 January 2026 9:10 pm - Wednesday, 7 January 2026 12:00 am)MAMMOTH-FAILOVER-1TB KITP00070",
+      "dataSource": "Xero Feb 2026 Invoice",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "1430.56",
+      "serviceType": "Internet"
+    },
+    {
+      "customer": "CF Aust Pty Ltd",
+      "serviceId": "",
+      "planName": "1300826349",
+      "dataSource": "Xero Feb 2026 Invoice",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "1342.36",
+      "serviceType": "Voice"
+    }
+  ],
+  "messages": [],
+  "stdout": "customer\tserviceId\tplanName\tdataSource\tmonthlyCost\tmonthlyRevenue\tserviceType\nRiverside Marine\t\t3CX 16SC Enterprise Edition Annual Renewal (Hosted)1533581 -\tXero Feb 2026 Invoice\t0.00\t5939.38\tOther\nVarsity Apartments SC Pty Ltd\t\tSmile Tel NBN Enterprise Ethernet Fibre 1000mb up/down - 36 MonthsEach\tXero Feb 2026 Invoice\t0.00\t4468.00\tInternet\nGBA Consulting Engineers\t\tData - Internet\tXero Feb 2026 Invoice\t0.00\t3693.00\tInternet\nSparrow Group Management Pty Ltd\t\tVoicemail\t\t0.00\t2523.50\tVoice\nSparrow Group Management Pty Ltd\t\tPremium-2\t\t0.00\t2523.50\tVoice\nSparrow Group Management Pty Ltd\t\tSoftphone add-on with Cisco Webex\t\t0.00\t2523.50\tVoice\nSparrow Group Management Pty Ltd\t\tVoice - Services\tXero Feb 2026 Invoice\t0.00\t2523.50\tVoice\nARM Group Pty Ltd ATF ARM Property Trust No. 2\t\tData - Internet\tXero Feb 2026 Invoice\t0.00\t2131.00\tInternet\nSparrow Group Management Pty Ltd\t\t- ALKIMOS - 3/3 BULWARK AVE, ALKIMOS WA 6038, AUSTRALIA - 100/20Mbps ABB Unlimited Data (Opticomm FTTP)\tXero Feb 2026 Invoice\t0.00\t1931.88\tInternet\nASG Hail Pty Ltd\t\tVoice - Services\tXero Feb 2026 Invoice\t0.00\t1837.08\tVoice\nASG Hail Pty Ltd\t\tME - 3 Included Local National Mobile Call Pack\t\t0.00\t1837.08\tVoice\nASG Hail Pty Ltd\t\tPremium-1\t\t0.00\t1837.08\tVoice\nASG Hail Pty Ltd\t\tVoicemail\t\t0.00\t1837.08\tVoice\nGateway Containers\t\tSmile Tel NBN Enterprise Ethernet Fibre 100mb up/down - 36 MonthsEach\tXero Feb 2026 Invoice\t0.00\t1780.00\tInternet\nCDI Lawyers\t\t1000/1000 Vocus Fibre Internet Service with Unlimited Internet (36Month)- CPE/Router not Included\tXero Feb 2026 Invoice\t0.00\t1780.00\tInternet\nSalter Brothers Luxury Collection Operations Pty LTD\t\t100mb Business Grade Fibre Up and Down - 36 Month ContractEach\tXero Feb 2026 Invoice\t0.00\t1755.00\tInternet\nSparrow Group Management Pty Ltd\t\t- 4G Failover Sim 7.5Gb p/site p/month\tXero Feb 2026 Invoice\t0.00\t1520.00\tMobile\nInstitute for Healthy Communities Australia\t\tData - Internet\tXero Feb 2026 Invoice\t0.00\t1500.00\tInternet\nMammoth Underground Mine Management Pty Ltd\t\tLocal Priority 50GB Top-Up (Thursday, 1 January 2026 9:10 pm - Wednesday, 7 January 2026 12:00 am)MAMMOTH-FAILOVER-1TB KITP00070\tXero Feb 2026 Invoice\t0.00\t1430.56\tInternet\nCF Aust Pty Ltd\t\t1300826349\tXero Feb 2026 Invoice\t0.00\t1342.36\tVoice\n",
+  "stderr": "",
+  "execution_time_ms": 1704
+}

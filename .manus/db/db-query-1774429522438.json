@@ -1,0 +1,60 @@
+{
+  "query": "\nSELECT \n  customerName,\n  customerExternalId,\n  COUNT(*) as count\nFROM phone_numbers\nWHERE provider = 'CommsCode'\nGROUP BY customerName, customerExternalId\nORDER BY customerName;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \nSELECT \n  customerName,\n  customerExternalId,\n  COUNT(*) as count\nFROM phone_numbers\nWHERE provider = 'CommsCode'\nGROUP BY customerName, customerExternalId\nORDER BY customerName;\n",
+  "rows": [
+    {
+      "customerName": "Action Smart Group",
+      "customerExternalId": "",
+      "count": "10"
+    },
+    {
+      "customerName": "Air Restore",
+      "customerExternalId": "",
+      "count": "2"
+    },
+    {
+      "customerName": "Australian Computer Traders",
+      "customerExternalId": "C0026",
+      "count": "1"
+    },
+    {
+      "customerName": "CPM",
+      "customerExternalId": "C2424",
+      "count": "1"
+    },
+    {
+      "customerName": "Envest",
+      "customerExternalId": "",
+      "count": "1"
+    },
+    {
+      "customerName": "Gateway",
+      "customerExternalId": "",
+      "count": "1"
+    },
+    {
+      "customerName": "Salter Brothers Luxury Collection",
+      "customerExternalId": "",
+      "count": "1"
+    },
+    {
+      "customerName": "Smile IT",
+      "customerExternalId": "C2441",
+      "count": "3"
+    },
+    {
+      "customerName": "Spicers Retreats and Hotels",
+      "customerExternalId": "",
+      "count": "14"
+    },
+    {
+      "customerName": "Wineology",
+      "customerExternalId": "C0290",
+      "count": "1"
+    }
+  ],
+  "messages": [],
+  "stdout": "customerName\tcustomerExternalId\tcount\nAction Smart Group\t\t10\nAir Restore\t\t2\nAustralian Computer Traders\tC0026\t1\nCPM\tC2424\t1\nEnvest\t\t1\nGateway\t\t1\nSalter Brothers Luxury Collection\t\t1\nSmile IT\tC2441\t3\nSpicers Retreats and Hotels\t\t14\nWineology\tC0290\t1\n",
+  "stderr": "",
+  "execution_time_ms": 1734
+}

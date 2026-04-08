@@ -1,0 +1,18 @@
+{
+  "query": "\n-- Fix S1UMCO4 (AspleySCout): BI00631 3ch SIP Inbound $27 → BI00633 3ch SIP Outbound $159\nUPDATE service_billing_assignments SET billingItemExternalId = 'BI00633', assignmentMethod = 'manual' WHERE serviceExternalId = 'S1UMCO4' AND billingItemExternalId = 'BI00631';\n\n-- Also fix the inbound service SXQLTTS (AspleySCin) - check it's on the inbound item\nSELECT s.externalId, s.planName, s.monthlyCost, sba.billingItemExternalId, bi.description, bi.lineAmount\nFROM services s\nJOIN service_billing_assignments sba ON sba.serviceExternalId = s.externalId\nJOIN billing_items bi ON bi.externalId = sba.billingItemExternalId\nWHERE s.externalId = 'SXQLTTS';\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Fix S1UMCO4 (AspleySCout): BI00631 3ch SIP Inbound $27 → BI00633 3ch SIP Outbound $159\nUPDATE service_billing_assignments SET billingItemExternalId = 'BI00633', assignmentMethod = 'manual' WHERE serviceExternalId = 'S1UMCO4' AND billingItemExternalId = 'BI00631';\n\n-- Also fix the inbound service SXQLTTS (AspleySCin) - check it's on the inbound item\nSELECT s.externalId, s.planName, s.monthlyCost, sba.billingItemExternalId, bi.description, bi.lineAmount\nFROM services s\nJOIN service_billing_assignments sba ON sba.serviceExternalId = s.externalId\nJOIN billing_items bi ON bi.externalId = sba.billingItemExternalId\nWHERE s.externalId = 'SXQLTTS';\n",
+  "rows": [
+    {
+      "externalId": "SXQLTTS",
+      "planName": "AspleySCin",
+      "monthlyCost": "18.90",
+      "billingItemExternalId": "BI00631",
+      "description": "3 Channels Business SIP Inbound. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "lineAmount": "27.00"
+    }
+  ],
+  "messages": [],
+  "stdout": "externalId\tplanName\tmonthlyCost\tbillingItemExternalId\tdescription\tlineAmount\nSXQLTTS\tAspleySCin\t18.90\tBI00631\t3 Channels Business SIP Inbound. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t27.00\n",
+  "stderr": "",
+  "execution_time_ms": 1841
+}

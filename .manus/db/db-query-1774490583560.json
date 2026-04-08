@@ -1,0 +1,34 @@
+{
+  "query": "\n-- Check current assignments for remaining two services\nSELECT s.externalId, s.planName, s.monthlyCost, sba.billingItemExternalId, bi.description, bi.lineAmount\nFROM services s\nJOIN service_billing_assignments sba ON sba.serviceExternalId = s.externalId\nJOIN billing_items bi ON bi.externalId = sba.billingItemExternalId\nWHERE s.externalId IN ('SSE3JV7', 'SZR96SE', 'S1UMC04');\n\n-- Also check all billing items for these customers\nSELECT bi.externalId, bi.description, bi.lineAmount, bi.customerExternalId\nFROM billing_items bi\nWHERE bi.customerExternalId IN (\n  SELECT customerExternalId FROM services WHERE externalId IN ('SSE3JV7', 'SZR96SE', 'S1UMC04')\n)\nORDER BY bi.customerExternalId, bi.lineAmount DESC;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Check current assignments for remaining two services\nSELECT s.externalId, s.planName, s.monthlyCost, sba.billingItemExternalId, bi.description, bi.lineAmount\nFROM services s\nJOIN service_billing_assignments sba ON sba.serviceExternalId = s.externalId\nJOIN billing_items bi ON bi.externalId = sba.billingItemExternalId\nWHERE s.externalId IN ('SSE3JV7', 'SZR96SE', 'S1UMC04');\n\n-- Also check all billing items for these customers\nSELECT bi.externalId, bi.description, bi.lineAmount, bi.customerExternalId\nFROM billing_items bi\nWHERE bi.customerExternalId IN (\n  SELECT customerExternalId FROM services WHERE externalId IN ('SSE3JV7', 'SZR96SE', 'S1UMC04')\n)\nORDER BY bi.customerExternalId, bi.lineAmount DESC;\n",
+  "rows": [
+    {
+      "externalId": "SSE3JV7",
+      "planName": "WarwkMCOut",
+      "monthlyCost": "81.07",
+      "billingItemExternalId": "BI00627",
+      "description": "3 Channels Business SIP Inbound. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "lineAmount": "27.00"
+    },
+    {
+      "externalId": "SZR96SE",
+      "planName": "MtCottnMCOUT",
+      "monthlyCost": "75.50",
+      "billingItemExternalId": "BI00658",
+      "description": "3 Channels Business SIP Inbound. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "lineAmount": "27.00"
+    }
+  ],
+  "messages": [
+    "externalId\tdescription\tlineAmount\tcustomerExternalId",
+    "BI00660\t2 Channels Business SIP Outbound. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t106.00\tC0166",
+    "BI00658\t3 Channels Business SIP Inbound. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t27.00\tC0166",
+    "BI00659\t1# Rental. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t2.00\tC0166",
+    "BI00629\t2 Channels Business SIP Outbound. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t106.00\tC0284",
+    "BI00627\t3 Channels Business SIP Inbound. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t27.00\tC0284",
+    "BI00628\t1# Rental. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t2.00\tC0284"
+  ],
+  "stdout": "externalId\tplanName\tmonthlyCost\tbillingItemExternalId\tdescription\tlineAmount\nSSE3JV7\tWarwkMCOut\t81.07\tBI00627\t3 Channels Business SIP Inbound. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t27.00\nSZR96SE\tMtCottnMCOUT\t75.50\tBI00658\t3 Channels Business SIP Inbound. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t27.00\nexternalId\tdescription\tlineAmount\tcustomerExternalId\nBI00660\t2 Channels Business SIP Outbound. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t106.00\tC0166\nBI00658\t3 Channels Business SIP Inbound. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t27.00\tC0166\nBI00659\t1# Rental. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t2.00\tC0166\nBI00629\t2 Channels Business SIP Outbound. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t106.00\tC0284\nBI00627\t3 Channels Business SIP Inbound. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t27.00\tC0284\nBI00628\t1# Rental. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t2.00\tC0284\n",
+  "stderr": "",
+  "execution_time_ms": 1695
+}

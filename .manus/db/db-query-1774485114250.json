@@ -1,0 +1,90 @@
+{
+  "query": "\nSELECT description, COUNT(*) as cnt\nFROM billing_items\nWHERE description REGEXP '[0-9]+/[0-9]+'\nGROUP BY description\nORDER BY cnt DESC\nLIMIT 20;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \nSELECT description, COUNT(*) as cnt\nFROM billing_items\nWHERE description REGEXP '[0-9]+/[0-9]+'\nGROUP BY description\nORDER BY cnt DESC\nLIMIT 20;\n",
+  "rows": [
+    {
+      "description": "Site Bundle - Recurring: 25/10 Connectivity - Suitable for Enterprise Grade, Premium Dedicated Support, Business Grade Hardware, 24/7 Connectivity Monitoring, 4G Backup, Enhanced Remote Assistance, Unlimited Phone Calls",
+      "cnt": "20"
+    },
+    {
+      "description": "NBN 100/40 Unlimited. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "cnt": "6"
+    },
+    {
+      "description": "NBN 50/20 Unlimited. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "cnt": "6"
+    },
+    {
+      "description": "Site Bundle - Recurring: 100/40 Connectivity - Suitable for Enterprise Grade, Premium Dedicated Support, Business Grade Hardware, 24/7 Connectivity Monitoring, 4G Backup, Enhanced Remote Assistance, Unlimited Phone Calls",
+      "cnt": "5"
+    },
+    {
+      "description": "Site Bundle - Recurring: 50/20 Connectivity - Suitable for Enterprise Grade, Premium Dedicated Support, Business Grade Hardware, 24/7 Connectivity Monitoring, 4G Backup, Enhanced Remote Assistance, Unlimited Phone Calls",
+      "cnt": "5"
+    },
+    {
+      "description": "SmileTel supplied NBN 50/20mbps. 36 month plan. Includes:-,1xInternet service,1x4G Back-up, Static IP. Account management support.",
+      "cnt": "4"
+    },
+    {
+      "description": "NBN 50/20 Vocus Unlimited. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "cnt": "3"
+    },
+    {
+      "description": "SmileTel supplied NBN voice and internet bundle. 36-month plan with 25/10 Mbps internet and hardware (omada router, Voip gateway and cordless phone)",
+      "cnt": "3"
+    },
+    {
+      "description": "NBN 100/40 Vocus Unlimited. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "cnt": "2"
+    },
+    {
+      "description": "SmileTel supplied NBN Service 100/40 speed",
+      "cnt": "2"
+    },
+    {
+      "description": "Business Grade NBN 50/20 - 24 Months",
+      "cnt": "1"
+    },
+    {
+      "description": "BUTLER - LUKIN CENTRE\\, UNIT 1/2 CAPTIVA APPROACH\\, BUTLER WA 6036\\, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data",
+      "cnt": "1"
+    },
+    {
+      "description": "Teams Voice SIP Trunk - Unlimited Local/National/Mobile- Includes $5 International/1300 call's/month/trunk- 2/5/24 PT Reduced to 4 inline with upcoming agreement changes",
+      "cnt": "1"
+    },
+    {
+      "description": "Smile It V-NBN-100/40 - 12 month contract - Vocus backboneEach",
+      "cnt": "1"
+    },
+    {
+      "description": "'- NORTHAM - 8 DUKE ST E, NORTHAM WA 6401, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data'",
+      "cnt": "1"
+    },
+    {
+      "description": "Telstra Data SIM$30 per month for 100Gb + $1 per GB for additional usageTrimbles to pay all excess fees (Email 18/04/2024)",
+      "cnt": "1"
+    },
+    {
+      "description": "FIBRE400/36",
+      "cnt": "1"
+    },
+    {
+      "description": "NBN 100/40 Unlimited - 13034176. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "cnt": "1"
+    },
+    {
+      "description": "Business Grade NBN 50/20 - 24 Months AVC000146482523",
+      "cnt": "1"
+    },
+    {
+      "description": "SmileTel supplied Opticomm Service 50/20 speed",
+      "cnt": "1"
+    }
+  ],
+  "messages": [],
+  "stdout": "description\tcnt\nSite Bundle - Recurring: 25/10 Connectivity - Suitable for Enterprise Grade, Premium Dedicated Support, Business Grade Hardware, 24/7 Connectivity Monitoring, 4G Backup, Enhanced Remote Assistance, Unlimited Phone Calls\t20\nNBN 100/40 Unlimited. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t6\nNBN 50/20 Unlimited. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t6\nSite Bundle - Recurring: 100/40 Connectivity - Suitable for Enterprise Grade, Premium Dedicated Support, Business Grade Hardware, 24/7 Connectivity Monitoring, 4G Backup, Enhanced Remote Assistance, Unlimited Phone Calls\t5\nSite Bundle - Recurring: 50/20 Connectivity - Suitable for Enterprise Grade, Premium Dedicated Support, Business Grade Hardware, 24/7 Connectivity Monitoring, 4G Backup, Enhanced Remote Assistance, Unlimited Phone Calls\t5\nSmileTel supplied NBN 50/20mbps. 36 month plan. Includes:-,1xInternet service,1x4G Back-up, Static IP. Account management support.\t4\nNBN 50/20 Vocus Unlimited. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t3\nSmileTel supplied NBN voice and internet bundle. 36-month plan with 25/10 Mbps internet and hardware (omada router, Voip gateway and cordless phone)\t3\nNBN 100/40 Vocus Unlimited. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t2\nSmileTel supplied NBN Service 100/40 speed\t2\nBusiness Grade NBN 50/20 - 24 Months\t1\nBUTLER - LUKIN CENTRE\\, UNIT 1/2 CAPTIVA APPROACH\\, BUTLER WA 6036\\, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data\t1\nTeams Voice SIP Trunk - Unlimited Local/National/Mobile- Includes $5 International/1300 call's/month/trunk- 2/5/24 PT Reduced to 4 inline with upcoming agreement changes\t1\nSmile It V-NBN-100/40 - 12 month contract - Vocus backboneEach\t1\n'- NORTHAM - 8 DUKE ST E, NORTHAM WA 6401, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data'\t1\nTelstra Data SIM$30 per month for 100Gb + $1 per GB for additional usageTrimbles to pay all excess fees (Email 18/04/2024)\t1\nFIBRE400/36\t1\nNBN 100/40 Unlimited - 13034176. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t1\nBusiness Grade NBN 50/20 - 24 Months AVC000146482523\t1\nSmileTel supplied Opticomm Service 50/20 speed\t1\n",
+  "stderr": "",
+  "execution_time_ms": 1527
+}

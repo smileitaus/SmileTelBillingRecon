@@ -1,0 +1,98 @@
+{
+  "query": "\n-- Check UCXcel Webex Basic services revenue vs billing items\nSELECT \n  s.externalId, \n  s.planName, \n  s.monthlyCost,\n  s.monthlyRevenue,\n  s.customerName,\n  bi.lineAmount as billingItemAmount,\n  bi.quantity as billingItemQty,\n  bi.unitAmount as billingItemUnitAmount,\n  bi.description as billingItemDesc\nFROM services s\nLEFT JOIN billing_items bi ON bi.serviceExternalId = s.externalId\nWHERE s.planName = 'UCXcel Webex Basic'\n  AND s.status != 'terminated'\n  AND s.monthlyRevenue > 0\nORDER BY s.monthlyRevenue DESC\nLIMIT 8;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Check UCXcel Webex Basic services revenue vs billing items\nSELECT \n  s.externalId, \n  s.planName, \n  s.monthlyCost,\n  s.monthlyRevenue,\n  s.customerName,\n  bi.lineAmount as billingItemAmount,\n  bi.quantity as billingItemQty,\n  bi.unitAmount as billingItemUnitAmount,\n  bi.description as billingItemDesc\nFROM services s\nLEFT JOIN billing_items bi ON bi.serviceExternalId = s.externalId\nWHERE s.planName = 'UCXcel Webex Basic'\n  AND s.status != 'terminated'\n  AND s.monthlyRevenue > 0\nORDER BY s.monthlyRevenue DESC\nLIMIT 8;\n",
+  "rows": [
+    {
+      "externalId": "SSH1GROP",
+      "planName": "UCXcel Webex Basic",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "2523.50",
+      "customerName": "Sparrow Group Management Pty Ltd",
+      "billingItemAmount": "NULL",
+      "billingItemQty": "NULL",
+      "billingItemUnitAmount": "NULL",
+      "billingItemDesc": "NULL"
+    },
+    {
+      "externalId": "SSHLN94F",
+      "planName": "UCXcel Webex Basic",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "1837.08",
+      "customerName": "ASG Hail Pty Ltd",
+      "billingItemAmount": "NULL",
+      "billingItemQty": "NULL",
+      "billingItemUnitAmount": "NULL",
+      "billingItemDesc": "NULL"
+    },
+    {
+      "externalId": "SSA630NV",
+      "planName": "UCXcel Webex Basic",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "1182.33",
+      "customerName": "Sta Consulting Engineers",
+      "billingItemAmount": "NULL",
+      "billingItemQty": "NULL",
+      "billingItemUnitAmount": "NULL",
+      "billingItemDesc": "NULL"
+    },
+    {
+      "externalId": "SSMYYOLN",
+      "planName": "UCXcel Webex Basic",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "277.00",
+      "customerName": "Paedicare Pty Ltd",
+      "billingItemAmount": "NULL",
+      "billingItemQty": "NULL",
+      "billingItemUnitAmount": "NULL",
+      "billingItemDesc": "NULL"
+    },
+    {
+      "externalId": "SSPQGC3G",
+      "planName": "UCXcel Webex Basic",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "275.00",
+      "customerName": "River City Maintenance",
+      "billingItemAmount": "NULL",
+      "billingItemQty": "NULL",
+      "billingItemUnitAmount": "NULL",
+      "billingItemDesc": "NULL"
+    },
+    {
+      "externalId": "SSEE2SUI",
+      "planName": "UCXcel Webex Basic",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "150.00",
+      "customerName": "Groundswell Accounting & Advisory",
+      "billingItemAmount": "NULL",
+      "billingItemQty": "NULL",
+      "billingItemUnitAmount": "NULL",
+      "billingItemDesc": "NULL"
+    },
+    {
+      "externalId": "SSZ3NRQV",
+      "planName": "UCXcel Webex Basic",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "45.00",
+      "customerName": "THRL Pty Ltd trading as Scenic Rim Trail",
+      "billingItemAmount": "NULL",
+      "billingItemQty": "NULL",
+      "billingItemUnitAmount": "NULL",
+      "billingItemDesc": "NULL"
+    },
+    {
+      "externalId": "SSEOYP63",
+      "planName": "UCXcel Webex Basic",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "40.00",
+      "customerName": "NICKI'S PROFESSIONAL SECURITY SCREENS AND BLINDS",
+      "billingItemAmount": "NULL",
+      "billingItemQty": "NULL",
+      "billingItemUnitAmount": "NULL",
+      "billingItemDesc": "NULL"
+    }
+  ],
+  "messages": [],
+  "stdout": "externalId\tplanName\tmonthlyCost\tmonthlyRevenue\tcustomerName\tbillingItemAmount\tbillingItemQty\tbillingItemUnitAmount\tbillingItemDesc\nSSH1GROP\tUCXcel Webex Basic\t0.00\t2523.50\tSparrow Group Management Pty Ltd\tNULL\tNULL\tNULL\tNULL\nSSHLN94F\tUCXcel Webex Basic\t0.00\t1837.08\tASG Hail Pty Ltd\tNULL\tNULL\tNULL\tNULL\nSSA630NV\tUCXcel Webex Basic\t0.00\t1182.33\tSta Consulting Engineers\tNULL\tNULL\tNULL\tNULL\nSSMYYOLN\tUCXcel Webex Basic\t0.00\t277.00\tPaedicare Pty Ltd\tNULL\tNULL\tNULL\tNULL\nSSPQGC3G\tUCXcel Webex Basic\t0.00\t275.00\tRiver City Maintenance\tNULL\tNULL\tNULL\tNULL\nSSEE2SUI\tUCXcel Webex Basic\t0.00\t150.00\tGroundswell Accounting & Advisory\tNULL\tNULL\tNULL\tNULL\nSSZ3NRQV\tUCXcel Webex Basic\t0.00\t45.00\tTHRL Pty Ltd trading as Scenic Rim Trail\tNULL\tNULL\tNULL\tNULL\nSSEOYP63\tUCXcel Webex Basic\t0.00\t40.00\tNICKI'S PROFESSIONAL SECURITY SCREENS AND BLINDS\tNULL\tNULL\tNULL\tNULL\n",
+  "stderr": "",
+  "execution_time_ms": 1603
+}

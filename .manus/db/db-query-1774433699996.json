@@ -1,0 +1,19 @@
+{
+  "query": "\n-- Real addresses (not \"Unknown Location\")\nSELECT COUNT(*) AS real_address_count\nFROM services\nWHERE (customerExternalId IS NULL OR customerExternalId = '')\n  AND locationAddress IS NOT NULL AND locationAddress != ''\n  AND locationAddress NOT LIKE '%Unknown%';\n\n-- Phone number cross-match: unmatched service phone matches phone on a matched service\nSELECT COUNT(DISTINCT u.externalId) AS phone_crossmatch_count\nFROM services u\nJOIN services m ON REPLACE(REPLACE(m.phoneNumber,' ',''),'(','') = REPLACE(REPLACE(u.phoneNumber,' ',''),'(','')\n  AND (m.customerExternalId IS NOT NULL AND m.customerExternalId != '')\nWHERE (u.customerExternalId IS NULL OR u.customerExternalId = '')\n  AND u.phoneNumber IS NOT NULL AND u.phoneNumber != ''\n  AND u.phoneNumber NOT LIKE '%Unknown%';\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Real addresses (not \"Unknown Location\")\nSELECT COUNT(*) AS real_address_count\nFROM services\nWHERE (customerExternalId IS NULL OR customerExternalId = '')\n  AND locationAddress IS NOT NULL AND locationAddress != ''\n  AND locationAddress NOT LIKE '%Unknown%';\n\n-- Phone number cross-match: unmatched service phone matches phone on a matched service\nSELECT COUNT(DISTINCT u.externalId) AS phone_crossmatch_count\nFROM services u\nJOIN services m ON REPLACE(REPLACE(m.phoneNumber,' ',''),'(','') = REPLACE(REPLACE(u.phoneNumber,' ',''),'(','')\n  AND (m.customerExternalId IS NOT NULL AND m.customerExternalId != '')\nWHERE (u.customerExternalId IS NULL OR u.customerExternalId = '')\n  AND u.phoneNumber IS NOT NULL AND u.phoneNumber != ''\n  AND u.phoneNumber NOT LIKE '%Unknown%';\n",
+  "rows": [
+    {
+      "real_address_count": "6"
+    },
+    {
+      "real_address_count": "phone_crossmatch_count"
+    },
+    {
+      "real_address_count": "34"
+    }
+  ],
+  "messages": [],
+  "stdout": "real_address_count\n6\nphone_crossmatch_count\n34\n",
+  "stderr": "",
+  "execution_time_ms": 1854
+}

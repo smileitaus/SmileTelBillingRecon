@@ -1,0 +1,52 @@
+{
+  "query": "SELECT planName, COUNT(*) as cnt, SUM(monthlyCost) as total, MIN(monthlyCost) as minCost, MAX(monthlyCost) as maxCost\nFROM services\nWHERE planName LIKE '%Microsoft Teams%'\n   OR planName LIKE '%UCXcel Professional%'\n   OR planName LIKE '%UCXcel Voicemail%'\n   OR planName LIKE '%UCXcel Virtual%'\n   OR planName LIKE '%Residential%'\n   OR planName LIKE '%Premium User%'\n   OR planName LIKE '%SmileTel Premium%'\n   OR planName LIKE '%SmileTel Professional%'\nGROUP BY planName ORDER BY planName;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute SELECT planName, COUNT(*) as cnt, SUM(monthlyCost) as total, MIN(monthlyCost) as minCost, MAX(monthlyCost) as maxCost\nFROM services\nWHERE planName LIKE '%Microsoft Teams%'\n   OR planName LIKE '%UCXcel Professional%'\n   OR planName LIKE '%UCXcel Voicemail%'\n   OR planName LIKE '%UCXcel Virtual%'\n   OR planName LIKE '%Residential%'\n   OR planName LIKE '%Premium User%'\n   OR planName LIKE '%SmileTel Premium%'\n   OR planName LIKE '%SmileTel Professional%'\nGROUP BY planName ORDER BY planName;",
+  "rows": [
+    {
+      "planName": "MC - SmileTel Premium User License",
+      "cnt": "9",
+      "total": "174.06",
+      "minCost": "19.34",
+      "maxCost": "19.34"
+    },
+    {
+      "planName": "Microsoft Teams Channel-Recurring",
+      "cnt": "1",
+      "total": "0.00",
+      "minCost": "0.00",
+      "maxCost": "0.00"
+    },
+    {
+      "planName": "Residential NBN connection - 21 Cleary Drive\\, Pitt Town\\, NSW\\, 2756 (01/04/2023)",
+      "cnt": "1",
+      "total": "0.00",
+      "minCost": "0.00",
+      "maxCost": "0.00"
+    },
+    {
+      "planName": "UCXcel Professional",
+      "cnt": "2",
+      "total": "30.00",
+      "minCost": "15.00",
+      "maxCost": "15.00"
+    },
+    {
+      "planName": "UCXcel Virtual Park User",
+      "cnt": "1",
+      "total": "3.00",
+      "minCost": "3.00",
+      "maxCost": "3.00"
+    },
+    {
+      "planName": "UCXcel Voicemail User",
+      "cnt": "2",
+      "total": "6.00",
+      "minCost": "3.00",
+      "maxCost": "3.00"
+    }
+  ],
+  "messages": [],
+  "stdout": "planName\tcnt\ttotal\tminCost\tmaxCost\nMC - SmileTel Premium User License\t9\t174.06\t19.34\t19.34\nMicrosoft Teams Channel-Recurring\t1\t0.00\t0.00\t0.00\nResidential NBN connection - 21 Cleary Drive\\, Pitt Town\\, NSW\\, 2756 (01/04/2023)\t1\t0.00\t0.00\t0.00\nUCXcel Professional\t2\t30.00\t15.00\t15.00\nUCXcel Virtual Park User\t1\t3.00\t3.00\t3.00\nUCXcel Voicemail User\t2\t6.00\t3.00\t3.00\n",
+  "stderr": "",
+  "execution_time_ms": 1666
+}

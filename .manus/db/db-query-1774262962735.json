@@ -1,0 +1,52 @@
+{
+  "query": "SELECT connectionId, locationAddress, serviceType, planName, status FROM services \nWHERE connectionId IN ('VIE270242','VIE235082','VIE105431','VIE114994','VBU278922','VET278923','VBU280547','VBU290126','VBU289263','VBU291154','VBU282746','VBU293734','VBU301770','VBU312373','VBU312372','VBU123907155','VBU123970473','VIE124002281','VIE124121292')\nORDER BY connectionId;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute SELECT connectionId, locationAddress, serviceType, planName, status FROM services \nWHERE connectionId IN ('VIE270242','VIE235082','VIE105431','VIE114994','VBU278922','VET278923','VBU280547','VBU290126','VBU289263','VBU291154','VBU282746','VBU293734','VBU301770','VBU312373','VBU312372','VBU123907155','VBU123970473','VIE124002281','VIE124121292')\nORDER BY connectionId;",
+  "rows": [
+    {
+      "connectionId": "VBU280547",
+      "locationAddress": "129 Adelaide Street, Maryborough, Maryborough, QLD, 4650",
+      "serviceType": "Internet",
+      "planName": "Data - Internet",
+      "status": "active"
+    },
+    {
+      "connectionId": "VBU282746",
+      "locationAddress": "Shop M2 284 Anzac Av, Kippa-Ring, QLD, 4021",
+      "serviceType": "Internet",
+      "planName": "Data - Internet",
+      "status": "active"
+    },
+    {
+      "connectionId": "VBU289263",
+      "locationAddress": "Cleveland House Shop 2 120 Bloomfield St, CLEVELAND, QLD, 4163",
+      "serviceType": "Internet",
+      "planName": "NBN EE 100 Unlimited. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "status": "active"
+    },
+    {
+      "connectionId": "VBU293734",
+      "locationAddress": "Shop 6 133 Lennox St, MARYBOROUGH, QLD, 4650",
+      "serviceType": "Internet",
+      "planName": "NBN EE 100 Unlimited. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "status": "active"
+    },
+    {
+      "connectionId": "VBU312373",
+      "locationAddress": "Unit 1 23 Terrence Rd, BRENDALE, QLD, 4500",
+      "serviceType": "Internet",
+      "planName": "NBN EE 100 Std CoS / month - VBU312373. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "status": "active"
+    },
+    {
+      "connectionId": "VIE124002281",
+      "locationAddress": "STE 2, LEVEL 8, 100 Creek ST Brisbane QLD 4000 Brisbane",
+      "serviceType": "Internet",
+      "planName": "0Mbps/0Mbps",
+      "status": "active"
+    }
+  ],
+  "messages": [],
+  "stdout": "connectionId\tlocationAddress\tserviceType\tplanName\tstatus\nVBU280547\t129 Adelaide Street, Maryborough, Maryborough, QLD, 4650\tInternet\tData - Internet\tactive\nVBU282746\tShop M2 284 Anzac Av, Kippa-Ring, QLD, 4021\tInternet\tData - Internet\tactive\nVBU289263\tCleveland House Shop 2 120 Bloomfield St, CLEVELAND, QLD, 4163\tInternet\tNBN EE 100 Unlimited. Starting: 01-Feb-2026. Ending: 28-Feb-2026\tactive\nVBU293734\tShop 6 133 Lennox St, MARYBOROUGH, QLD, 4650\tInternet\tNBN EE 100 Unlimited. Starting: 01-Feb-2026. Ending: 28-Feb-2026\tactive\nVBU312373\tUnit 1 23 Terrence Rd, BRENDALE, QLD, 4500\tInternet\tNBN EE 100 Std CoS / month - VBU312373. Starting: 01-Feb-2026. Ending: 28-Feb-2026\tactive\nVIE124002281\tSTE 2, LEVEL 8, 100 Creek ST Brisbane QLD 4000 Brisbane\tInternet\t0Mbps/0Mbps\tactive\n",
+  "stderr": "",
+  "execution_time_ms": 2237
+}

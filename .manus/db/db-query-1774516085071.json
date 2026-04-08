@@ -1,0 +1,70 @@
+{
+  "query": "\n-- Check Little Cha parent assignments\nSELECT externalId, name, parentCustomerExternalId FROM customers WHERE name LIKE 'Little Cha%' ORDER BY name;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Check Little Cha parent assignments\nSELECT externalId, name, parentCustomerExternalId FROM customers WHERE name LIKE 'Little Cha%' ORDER BY name;\n",
+  "rows": [
+    {
+      "externalId": "C0140",
+      "name": "Little Cha Bateau Bay",
+      "parentCustomerExternalId": ""
+    },
+    {
+      "externalId": "C0141",
+      "name": "Little Cha Charlestown",
+      "parentCustomerExternalId": "C9024"
+    },
+    {
+      "externalId": "C7453",
+      "name": "Little Cha Eastgardens",
+      "parentCustomerExternalId": "C9024"
+    },
+    {
+      "externalId": "C0142",
+      "name": "Little Cha Erina Fair",
+      "parentCustomerExternalId": "C9024"
+    },
+    {
+      "externalId": "C0143",
+      "name": "Little Cha Forest Way",
+      "parentCustomerExternalId": "C9024"
+    },
+    {
+      "externalId": "C0144",
+      "name": "Little Cha Green Hills",
+      "parentCustomerExternalId": "C9024"
+    },
+    {
+      "externalId": "C0145",
+      "name": "Little Cha Lake Haven",
+      "parentCustomerExternalId": "C9024"
+    },
+    {
+      "externalId": "C1408",
+      "name": "Little Cha Mt Druitt",
+      "parentCustomerExternalId": "C9024"
+    },
+    {
+      "externalId": "C0146",
+      "name": "Little Cha Mt. Druitt",
+      "parentCustomerExternalId": "C9024"
+    },
+    {
+      "externalId": "C0147",
+      "name": "Little Cha St Ives",
+      "parentCustomerExternalId": "C9024"
+    },
+    {
+      "externalId": "C1413",
+      "name": "Little Cha St. Ives",
+      "parentCustomerExternalId": "C9024"
+    },
+    {
+      "externalId": "C0148",
+      "name": "Little Cha Tuggerah",
+      "parentCustomerExternalId": "C9024"
+    }
+  ],
+  "messages": [],
+  "stdout": "externalId\tname\tparentCustomerExternalId\nC0140\tLittle Cha Bateau Bay\t\nC0141\tLittle Cha Charlestown\tC9024\nC7453\tLittle Cha Eastgardens\tC9024\nC0142\tLittle Cha Erina Fair\tC9024\nC0143\tLittle Cha Forest Way\tC9024\nC0144\tLittle Cha Green Hills\tC9024\nC0145\tLittle Cha Lake Haven\tC9024\nC1408\tLittle Cha Mt Druitt\tC9024\nC0146\tLittle Cha Mt. Druitt\tC9024\nC0147\tLittle Cha St Ives\tC9024\nC1413\tLittle Cha St. Ives\tC9024\nC0148\tLittle Cha Tuggerah\tC9024\n",
+  "stderr": "",
+  "execution_time_ms": 1567
+}

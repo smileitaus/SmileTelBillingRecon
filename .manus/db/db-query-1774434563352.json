@@ -1,0 +1,62 @@
+{
+  "query": "\n-- Find customer IDs for the identifiable names\nSELECT externalId, name FROM customers WHERE \n  name LIKE '%Salter%' OR name LIKE '%SBH%'\n  OR name LIKE '%Action Smart%'\n  OR name LIKE '%Shenanigan%'\n  OR name LIKE '%Opticomm%'\n  OR name LIKE '%Aussie Fibre%'\n  OR name LIKE '%Smile IT%'\nORDER BY name;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Find customer IDs for the identifiable names\nSELECT externalId, name FROM customers WHERE \n  name LIKE '%Salter%' OR name LIKE '%SBH%'\n  OR name LIKE '%Action Smart%'\n  OR name LIKE '%Shenanigan%'\n  OR name LIKE '%Opticomm%'\n  OR name LIKE '%Aussie Fibre%'\n  OR name LIKE '%Smile IT%'\nORDER BY name;\n",
+  "rows": [
+    {
+      "externalId": "cust-action-smart-group",
+      "name": "Action Smart Group"
+    },
+    {
+      "externalId": "C2440",
+      "name": "Salter Brothers"
+    },
+    {
+      "externalId": "C0208",
+      "name": "Salter Brothers (Clovelly) Pty Ltd"
+    },
+    {
+      "externalId": "C0209",
+      "name": "Salter Brothers (Guesthouse) Pty Ltd"
+    },
+    {
+      "externalId": "C0210",
+      "name": "Salter Brothers (Peak Lodge) Pty Ltd"
+    },
+    {
+      "externalId": "C0211",
+      "name": "Salter Brothers (Sangoma) Pty Ltd"
+    },
+    {
+      "externalId": "C0212",
+      "name": "Salter Brothers (Tamarind) Pty Ltd"
+    },
+    {
+      "externalId": "C0213",
+      "name": "Salter Brothers (Vineyards) Pty Ltd"
+    },
+    {
+      "externalId": "C7554",
+      "name": "Salter Brothers Hospitality"
+    },
+    {
+      "externalId": "C0214",
+      "name": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "C0216",
+      "name": "Salter Brothers Management Company Pty Ltd t/a Spicers Potts Point"
+    },
+    {
+      "externalId": "C2441",
+      "name": "Smile IT"
+    },
+    {
+      "externalId": "C9003",
+      "name": "Smile IT"
+    }
+  ],
+  "messages": [],
+  "stdout": "externalId\tname\ncust-action-smart-group\tAction Smart Group\nC2440\tSalter Brothers\nC0208\tSalter Brothers (Clovelly) Pty Ltd\nC0209\tSalter Brothers (Guesthouse) Pty Ltd\nC0210\tSalter Brothers (Peak Lodge) Pty Ltd\nC0211\tSalter Brothers (Sangoma) Pty Ltd\nC0212\tSalter Brothers (Tamarind) Pty Ltd\nC0213\tSalter Brothers (Vineyards) Pty Ltd\nC7554\tSalter Brothers Hospitality\nC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nC0216\tSalter Brothers Management Company Pty Ltd t/a Spicers Potts Point\nC2441\tSmile IT\nC9003\tSmile IT\n",
+  "stderr": "",
+  "execution_time_ms": 1551
+}

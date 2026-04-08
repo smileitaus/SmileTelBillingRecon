@@ -1,0 +1,55 @@
+{
+  "query": "\nSELECT \n  bi.externalId, bi.description, bi.lineAmount, bi.quantity, bi.unitAmount,\n  bi.customerExternalId,\n  COUNT(sba.serviceExternalId) as assignedServices\nFROM billing_items bi\nLEFT JOIN service_billing_assignments sba ON sba.billingItemExternalId = bi.externalId\nWHERE bi.customerExternalId = (\n  SELECT customerExternalId FROM services WHERE externalId = 'S8JR3KM' LIMIT 1\n)\nGROUP BY bi.externalId, bi.description, bi.lineAmount, bi.quantity, bi.unitAmount, bi.customerExternalId\nORDER BY bi.lineAmount DESC;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \nSELECT \n  bi.externalId, bi.description, bi.lineAmount, bi.quantity, bi.unitAmount,\n  bi.customerExternalId,\n  COUNT(sba.serviceExternalId) as assignedServices\nFROM billing_items bi\nLEFT JOIN service_billing_assignments sba ON sba.billingItemExternalId = bi.externalId\nWHERE bi.customerExternalId = (\n  SELECT customerExternalId FROM services WHERE externalId = 'S8JR3KM' LIMIT 1\n)\nGROUP BY bi.externalId, bi.description, bi.lineAmount, bi.quantity, bi.unitAmount, bi.customerExternalId\nORDER BY bi.lineAmount DESC;\n",
+  "rows": [
+    {
+      "externalId": "BI00685",
+      "description": "5 Users Capped. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "lineAmount": "150.00",
+      "quantity": "1.00",
+      "unitAmount": "165.00",
+      "customerExternalId": "C0063",
+      "assignedServices": "1"
+    },
+    {
+      "externalId": "BI00683",
+      "description": "NBN 100/40 Unlimited. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "lineAmount": "114.00",
+      "quantity": "1.00",
+      "unitAmount": "125.40",
+      "customerExternalId": "C0063",
+      "assignedServices": "1"
+    },
+    {
+      "externalId": "BI00684",
+      "description": "7 Miscellaneous Calls :  For the period ending 31-Jan-2026",
+      "lineAmount": "2.45",
+      "quantity": "1.00",
+      "unitAmount": "2.70",
+      "customerExternalId": "C0063",
+      "assignedServices": "1"
+    },
+    {
+      "externalId": "BI00682",
+      "description": "Number Rental. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "lineAmount": "2.00",
+      "quantity": "1.00",
+      "unitAmount": "2.20",
+      "customerExternalId": "C0063",
+      "assignedServices": "2"
+    },
+    {
+      "externalId": "BI00822",
+      "description": "32 Miscellaneous Calls :  For the period ending 30-Jun-2025",
+      "lineAmount": "-1.05",
+      "quantity": "1.00",
+      "unitAmount": "-1.05",
+      "customerExternalId": "C0063",
+      "assignedServices": "0"
+    }
+  ],
+  "messages": [],
+  "stdout": "externalId\tdescription\tlineAmount\tquantity\tunitAmount\tcustomerExternalId\tassignedServices\nBI00685\t5 Users Capped. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t150.00\t1.00\t165.00\tC0063\t1\nBI00683\tNBN 100/40 Unlimited. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t114.00\t1.00\t125.40\tC0063\t1\nBI00684\t7 Miscellaneous Calls :  For the period ending 31-Jan-2026\t2.45\t1.00\t2.70\tC0063\t1\nBI00682\tNumber Rental. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t2.00\t1.00\t2.20\tC0063\t2\nBI00822\t32 Miscellaneous Calls :  For the period ending 30-Jun-2025\t-1.05\t1.00\t-1.05\tC0063\t0\n",
+  "stderr": "",
+  "execution_time_ms": 1545
+}

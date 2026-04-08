@@ -1,0 +1,9 @@
+{
+  "query": "\n-- Check unmatched billing items for these customers\nSELECT \n  bi.externalId,\n  bi.description,\n  bi.lineAmount,\n  bi.matchStatus,\n  bi.customerExternalId,\n  MAX(c.name) as customerName\nFROM billing_items bi\nJOIN customers c ON bi.customerExternalId = c.externalId\nWHERE bi.customerExternalId IN ('C0214','C0003','C0235','C0091','C0044','C0271','C2893')\nAND bi.matchStatus != 'service-matched'\nGROUP BY bi.externalId, bi.description, bi.lineAmount, bi.matchStatus, bi.customerExternalId\nORDER BY bi.customerExternalId, ABS(bi.lineAmount) DESC;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Check unmatched billing items for these customers\nSELECT \n  bi.externalId,\n  bi.description,\n  bi.lineAmount,\n  bi.matchStatus,\n  bi.customerExternalId,\n  MAX(c.name) as customerName\nFROM billing_items bi\nJOIN customers c ON bi.customerExternalId = c.externalId\nWHERE bi.customerExternalId IN ('C0214','C0003','C0235','C0091','C0044','C0271','C2893')\nAND bi.matchStatus != 'service-matched'\nGROUP BY bi.externalId, bi.description, bi.lineAmount, bi.matchStatus, bi.customerExternalId\nORDER BY bi.customerExternalId, ABS(bi.lineAmount) DESC;\n",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 1480
+}

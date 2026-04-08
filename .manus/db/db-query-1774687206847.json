@@ -1,0 +1,60 @@
+{
+  "query": "SELECT rb.id, rb.subscriberName, rb.customerExternalId, rb.hasHardware, rb.hasVoip, rb.hasSupport, rb.isByod,\n  GROUP_CONCAT(CONCAT(rci.slotType, ':', rci.monthlyCostExGst) ORDER BY rci.slotType SEPARATOR ', ') AS inputs\nFROM retail_bundles rb\nJOIN retail_bundle_cost_inputs rci ON rci.bundleId = rb.id\nWHERE rb.isActive = 1 AND rb.hasHardware = 1 AND rb.hasVoip = 1 AND rb.isByod = 0\nGROUP BY rb.id\nLIMIT 5",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute SELECT rb.id, rb.subscriberName, rb.customerExternalId, rb.hasHardware, rb.hasVoip, rb.hasSupport, rb.isByod,\n  GROUP_CONCAT(CONCAT(rci.slotType, ':', rci.monthlyCostExGst) ORDER BY rci.slotType SEPARATOR ', ') AS inputs\nFROM retail_bundles rb\nJOIN retail_bundle_cost_inputs rci ON rci.bundleId = rb.id\nWHERE rb.isActive = 1 AND rb.hasHardware = 1 AND rb.hasVoip = 1 AND rb.isByod = 0\nGROUP BY rb.id\nLIMIT 5",
+  "rows": [
+    {
+      "id": "2",
+      "subscriberName": "Denim Co",
+      "customerExternalId": "C0076",
+      "hasHardware": "1",
+      "hasVoip": "1",
+      "hasSupport": "1",
+      "isByod": "0",
+      "inputs": "hardware:7.5000, sip_channel:1.5000, support:21.0000"
+    },
+    {
+      "id": "13",
+      "subscriberName": "Zambrero Echuca",
+      "customerExternalId": "C0334",
+      "hasHardware": "1",
+      "hasVoip": "1",
+      "hasSupport": "1",
+      "isByod": "0",
+      "inputs": "hardware:7.5000, sip_channel:1.5000, support:21.0000"
+    },
+    {
+      "id": "14",
+      "subscriberName": "Zambrero Mater",
+      "customerExternalId": "C0359",
+      "hasHardware": "1",
+      "hasVoip": "1",
+      "hasSupport": "1",
+      "isByod": "0",
+      "inputs": "hardware:7.5000, sip_channel:1.5000, support:21.0000"
+    },
+    {
+      "id": "15",
+      "subscriberName": "Zambrero Ocean Grove",
+      "customerExternalId": "C0375",
+      "hasHardware": "1",
+      "hasVoip": "1",
+      "hasSupport": "1",
+      "isByod": "0",
+      "inputs": "hardware:7.5000, sip_channel:1.5000, support:21.0000"
+    },
+    {
+      "id": "17",
+      "subscriberName": "Haig St Cafe",
+      "customerExternalId": "C0115",
+      "hasHardware": "1",
+      "hasVoip": "1",
+      "hasSupport": "1",
+      "isByod": "0",
+      "inputs": "hardware:7.5000, sip_channel:1.5000, support:21.0000"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tsubscriberName\tcustomerExternalId\thasHardware\thasVoip\thasSupport\tisByod\tinputs\n2\tDenim Co\tC0076\t1\t1\t1\t0\thardware:7.5000, sip_channel:1.5000, support:21.0000\n13\tZambrero Echuca\tC0334\t1\t1\t1\t0\thardware:7.5000, sip_channel:1.5000, support:21.0000\n14\tZambrero Mater\tC0359\t1\t1\t1\t0\thardware:7.5000, sip_channel:1.5000, support:21.0000\n15\tZambrero Ocean Grove\tC0375\t1\t1\t1\t0\thardware:7.5000, sip_channel:1.5000, support:21.0000\n17\tHaig St Cafe\tC0115\t1\t1\t1\t0\thardware:7.5000, sip_channel:1.5000, support:21.0000\n",
+  "stderr": "",
+  "execution_time_ms": 1746
+}

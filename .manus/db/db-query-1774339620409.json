@@ -1,0 +1,38 @@
+{
+  "query": "SELECT tiabPlanId, planName, planType, baseCharge, dataAllowanceGb FROM tiab_plans WHERE planName LIKE '%Data Only 12%' OR planName LIKE '%Pool 60%' OR planName LIKE '%Retail%' OR planName LIKE '%ST Data%' LIMIT 10;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute SELECT tiabPlanId, planName, planType, baseCharge, dataAllowanceGb FROM tiab_plans WHERE planName LIKE '%Data Only 12%' OR planName LIKE '%Pool 60%' OR planName LIKE '%Retail%' OR planName LIKE '%ST Data%' LIMIT 10;",
+  "rows": [
+    {
+      "tiabPlanId": "TW-POOL-60GB",
+      "planName": "TW 5G Mobile Pool 60GB",
+      "planType": "pooling",
+      "baseCharge": "49.9100",
+      "dataAllowanceGb": "60.000"
+    },
+    {
+      "tiabPlanId": "TW-DPOOL-60GB",
+      "planName": "TW 5G Data Only Pool 60GB",
+      "planType": "pooling",
+      "baseCharge": "45.5100",
+      "dataAllowanceGb": "60.000"
+    },
+    {
+      "tiabPlanId": "TW-DATA-12GB",
+      "planName": "TW Data Only 12GB",
+      "planType": "broadband",
+      "baseCharge": "16.0100",
+      "dataAllowanceGb": "12.000"
+    },
+    {
+      "tiabPlanId": "TW-DATA-120GB",
+      "planName": "TW 5G Data Only 120GB",
+      "planType": "broadband",
+      "baseCharge": "43.1500",
+      "dataAllowanceGb": "120.000"
+    }
+  ],
+  "messages": [],
+  "stdout": "tiabPlanId\tplanName\tplanType\tbaseCharge\tdataAllowanceGb\nTW-POOL-60GB\tTW 5G Mobile Pool 60GB\tpooling\t49.9100\t60.000\nTW-DPOOL-60GB\tTW 5G Data Only Pool 60GB\tpooling\t45.5100\t60.000\nTW-DATA-12GB\tTW Data Only 12GB\tbroadband\t16.0100\t12.000\nTW-DATA-120GB\tTW 5G Data Only 120GB\tbroadband\t43.1500\t120.000\n",
+  "stderr": "",
+  "execution_time_ms": 1624
+}

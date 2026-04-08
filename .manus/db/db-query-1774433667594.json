@@ -1,0 +1,70 @@
+{
+  "query": "\nSELECT customerName, COUNT(*) AS cnt\nFROM services\nWHERE (customerExternalId IS NULL OR customerExternalId = '')\n  AND customerName IS NOT NULL AND customerName != ''\nGROUP BY customerName\nORDER BY cnt DESC\nLIMIT 30;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \nSELECT customerName, COUNT(*) AS cnt\nFROM services\nWHERE (customerExternalId IS NULL OR customerExternalId = '')\n  AND customerName IS NOT NULL AND customerName != ''\nGROUP BY customerName\nORDER BY cnt DESC\nLIMIT 30;\n",
+  "rows": [
+    {
+      "customerName": "Unassigned",
+      "cnt": "239"
+    },
+    {
+      "customerName": "Smile IT",
+      "cnt": "2"
+    },
+    {
+      "customerName": "Opticomm",
+      "cnt": "1"
+    },
+    {
+      "customerName": "(blank)",
+      "cnt": "1"
+    },
+    {
+      "customerName": "Action Smart End 2 End",
+      "cnt": "1"
+    },
+    {
+      "customerName": "Aussie Fibre",
+      "cnt": "1"
+    },
+    {
+      "customerName": "Kate Mobile",
+      "cnt": "1"
+    },
+    {
+      "customerName": "Enterprise SIM",
+      "cnt": "1"
+    },
+    {
+      "customerName": "SBH",
+      "cnt": "1"
+    },
+    {
+      "customerName": "Ian Mobile - iPhone 13 Pro MAX",
+      "cnt": "1"
+    },
+    {
+      "customerName": "NBN EE",
+      "cnt": "1"
+    },
+    {
+      "customerName": "Cindy Mobile",
+      "cnt": "1"
+    },
+    {
+      "customerName": "Shenanigans 3x Internet - 1x ADSL 2xLTE",
+      "cnt": "1"
+    },
+    {
+      "customerName": "Caitlin Mobile",
+      "cnt": "1"
+    },
+    {
+      "customerName": "Ian - T14",
+      "cnt": "1"
+    }
+  ],
+  "messages": [],
+  "stdout": "customerName\tcnt\nUnassigned\t239\nSmile IT\t2\nOpticomm\t1\n(blank)\t1\nAction Smart End 2 End\t1\nAussie Fibre\t1\nKate Mobile\t1\nEnterprise SIM\t1\nSBH\t1\nIan Mobile - iPhone 13 Pro MAX\t1\nNBN EE\t1\nCindy Mobile\t1\nShenanigans 3x Internet - 1x ADSL 2xLTE\t1\nCaitlin Mobile\t1\nIan - T14\t1\n",
+  "stderr": "",
+  "execution_time_ms": 1621
+}

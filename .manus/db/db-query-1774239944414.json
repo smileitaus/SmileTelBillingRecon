@@ -1,0 +1,200 @@
+{
+  "query": "DESCRIBE omada_sites; SELECT omadaSiteId, omadaSiteName, customerExternalId, matchType, wanIp, deviceCount, clientCount, updatedAt FROM omada_sites ORDER BY updatedAt DESC LIMIT 10;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute DESCRIBE omada_sites; SELECT omadaSiteId, omadaSiteName, customerExternalId, matchType, wanIp, deviceCount, clientCount, updatedAt FROM omada_sites ORDER BY updatedAt DESC LIMIT 10;",
+  "rows": [
+    {
+      "Field": "id",
+      "Type": "int",
+      "Null": "NO",
+      "Key": "PRI",
+      "Default": "NULL",
+      "Extra": "auto_increment"
+    },
+    {
+      "Field": "omadaSiteId",
+      "Type": "varchar(128)",
+      "Null": "NO",
+      "Key": "UNI",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "omadaSiteName",
+      "Type": "varchar(512)",
+      "Null": "NO",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "customerExternalId",
+      "Type": "varchar(64)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "matchType",
+      "Type": "varchar(32)",
+      "Null": "NO",
+      "Key": "",
+      "Default": "unmatched",
+      "Extra": ""
+    },
+    {
+      "Field": "matchConfidence",
+      "Type": "decimal(5,2)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "siteRegion",
+      "Type": "varchar(128)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "siteScenario",
+      "Type": "varchar(64)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "wanIp",
+      "Type": "varchar(64)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "wanStatus",
+      "Type": "varchar(32)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "wanUptimeSeconds",
+      "Type": "int",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "deviceCount",
+      "Type": "int",
+      "Null": "YES",
+      "Key": "",
+      "Default": "0",
+      "Extra": ""
+    },
+    {
+      "Field": "apCount",
+      "Type": "int",
+      "Null": "YES",
+      "Key": "",
+      "Default": "0",
+      "Extra": ""
+    },
+    {
+      "Field": "switchCount",
+      "Type": "int",
+      "Null": "YES",
+      "Key": "",
+      "Default": "0",
+      "Extra": ""
+    },
+    {
+      "Field": "gatewayCount",
+      "Type": "int",
+      "Null": "YES",
+      "Key": "",
+      "Default": "0",
+      "Extra": ""
+    },
+    {
+      "Field": "clientCount",
+      "Type": "int",
+      "Null": "YES",
+      "Key": "",
+      "Default": "0",
+      "Extra": ""
+    },
+    {
+      "Field": "healthScore",
+      "Type": "int",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "healthStatus",
+      "Type": "varchar(32)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "alertCount",
+      "Type": "int",
+      "Null": "YES",
+      "Key": "",
+      "Default": "0",
+      "Extra": ""
+    },
+    {
+      "Field": "rawJson",
+      "Type": "mediumtext",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "lastSyncedAt",
+      "Type": "timestamp",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "createdAt",
+      "Type": "timestamp",
+      "Null": "NO",
+      "Key": "",
+      "Default": "CURRENT_TIMESTAMP",
+      "Extra": ""
+    },
+    {
+      "Field": "updatedAt",
+      "Type": "timestamp",
+      "Null": "NO",
+      "Key": "",
+      "Default": "CURRENT_TIMESTAMP",
+      "Extra": "DEFAULT_GENERATED on update CURRENT_TIMESTAMP"
+    }
+  ],
+  "messages": [
+    "omadaSiteId\tomadaSiteName\tcustomerExternalId\tmatchType\twanIp\tdeviceCount\tclientCount\tupdatedAt",
+    "69111de137e3045484c7d62e\tNICKI'S PROFESSIONAL SECURITY SCREENS AND BLINDS\tC2893\tauto\t157.211.8.165\t1\t21\t2026-03-23 04:24:48",
+    "690d512237e3045484c79638\tJESS DJ STEEL & CONCRETE\tC0077\tmanual\t157.211.3.162\t1\t36\t2026-03-23 04:24:47",
+    "690c428efd910e521d32140f\tCaravan Fix Kunda Park\tC0054\tmanual\t180.181.213.195\t1\t20\t2026-03-23 04:24:46",
+    "68c7968b02f4f0550e351591\tSmile IT Head Office\tC9003\tmanual\t1.146.10.174\t3\t0\t2026-03-22 00:37:11"
+  ],
+  "stdout": "Field\tType\tNull\tKey\tDefault\tExtra\nid\tint\tNO\tPRI\tNULL\tauto_increment\nomadaSiteId\tvarchar(128)\tNO\tUNI\tNULL\t\nomadaSiteName\tvarchar(512)\tNO\t\tNULL\t\ncustomerExternalId\tvarchar(64)\tYES\t\tNULL\t\nmatchType\tvarchar(32)\tNO\t\tunmatched\t\nmatchConfidence\tdecimal(5,2)\tYES\t\tNULL\t\nsiteRegion\tvarchar(128)\tYES\t\tNULL\t\nsiteScenario\tvarchar(64)\tYES\t\tNULL\t\nwanIp\tvarchar(64)\tYES\t\tNULL\t\nwanStatus\tvarchar(32)\tYES\t\tNULL\t\nwanUptimeSeconds\tint\tYES\t\tNULL\t\ndeviceCount\tint\tYES\t\t0\t\napCount\tint\tYES\t\t0\t\nswitchCount\tint\tYES\t\t0\t\ngatewayCount\tint\tYES\t\t0\t\nclientCount\tint\tYES\t\t0\t\nhealthScore\tint\tYES\t\tNULL\t\nhealthStatus\tvarchar(32)\tYES\t\tNULL\t\nalertCount\tint\tYES\t\t0\t\nrawJson\tmediumtext\tYES\t\tNULL\t\nlastSyncedAt\ttimestamp\tYES\t\tNULL\t\ncreatedAt\ttimestamp\tNO\t\tCURRENT_TIMESTAMP\t\nupdatedAt\ttimestamp\tNO\t\tCURRENT_TIMESTAMP\tDEFAULT_GENERATED on update CURRENT_TIMESTAMP\nomadaSiteId\tomadaSiteName\tcustomerExternalId\tmatchType\twanIp\tdeviceCount\tclientCount\tupdatedAt\n69111de137e3045484c7d62e\tNICKI'S PROFESSIONAL SECURITY SCREENS AND BLINDS\tC2893\tauto\t157.211.8.165\t1\t21\t2026-03-23 04:24:48\n690d512237e3045484c79638\tJESS DJ STEEL & CONCRETE\tC0077\tmanual\t157.211.3.162\t1\t36\t2026-03-23 04:24:47\n690c428efd910e521d32140f\tCaravan Fix Kunda Park\tC0054\tmanual\t180.181.213.195\t1\t20\t2026-03-23 04:24:46\n68c7968b02f4f0550e351591\tSmile IT Head Office\tC9003\tmanual\t1.146.10.174\t3\t0\t2026-03-22 00:37:11\n",
+  "stderr": "",
+  "execution_time_ms": 1918
+}

@@ -1,0 +1,38 @@
+{
+  "query": "SELECT externalId, name, xeroContactName, xeroAccountNumber, status FROM customers WHERE name LIKE '%BT%' OR name LIKE '%Lawyers%' OR xeroContactName LIKE '%BT%' ORDER BY name LIMIT 20;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3M17pEiktKAmnzx.5240b4750712 --database 4LVfr96qhVoYSkLinpTZkt --execute SELECT externalId, name, xeroContactName, xeroAccountNumber, status FROM customers WHERE name LIKE '%BT%' OR name LIKE '%Lawyers%' OR xeroContactName LIKE '%BT%' ORDER BY name LIMIT 20;",
+  "rows": [
+    {
+      "externalId": "C0036",
+      "name": "BELL CRIMINAL LAWYERS PTY LTD",
+      "xeroContactName": "BELL CRIMINAL LAWYERS PTY LTD",
+      "xeroAccountNumber": "E-94700",
+      "status": "active"
+    },
+    {
+      "externalId": "C0057",
+      "name": "CDI Lawyers",
+      "xeroContactName": "CDI Lawyers Pty Ltd",
+      "xeroAccountNumber": "CDI001",
+      "status": "active"
+    },
+    {
+      "externalId": "C2648",
+      "name": "Hefford Hampton Lawyers",
+      "xeroContactName": "Hefford Hampton Lawyers",
+      "xeroAccountNumber": "SIT-00116",
+      "status": "inactive"
+    },
+    {
+      "externalId": "C0182",
+      "name": "Paxton-Hall Lawyers Pty Ltd",
+      "xeroContactName": "Paxton-Hall Lawyers Pty Ltd",
+      "xeroAccountNumber": "PAX002",
+      "status": "active"
+    }
+  ],
+  "messages": [],
+  "stdout": "externalId\tname\txeroContactName\txeroAccountNumber\tstatus\nC0036\tBELL CRIMINAL LAWYERS PTY LTD\tBELL CRIMINAL LAWYERS PTY LTD\tE-94700\tactive\nC0057\tCDI Lawyers\tCDI Lawyers Pty Ltd\tCDI001\tactive\nC2648\tHefford Hampton Lawyers\tHefford Hampton Lawyers\tSIT-00116\tinactive\nC0182\tPaxton-Hall Lawyers Pty Ltd\tPaxton-Hall Lawyers Pty Ltd\tPAX002\tactive\n",
+  "stderr": "",
+  "execution_time_ms": 1704
+}

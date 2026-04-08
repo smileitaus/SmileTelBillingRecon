@@ -1,0 +1,17 @@
+{
+  "query": "\nSELECT \n  COUNT(*) as total,\n  SUM(CASE WHEN billingPlatforms IS NULL OR billingPlatforms = '[]' OR billingPlatforms = '' THEN 1 ELSE 0 END) as no_platforms,\n  SUM(CASE WHEN billingPlatforms LIKE '%OneBill%' THEN 1 ELSE 0 END) as has_onebill,\n  SUM(CASE WHEN billingPlatforms LIKE '%SasBoss%' THEN 1 ELSE 0 END) as has_sasboss,\n  SUM(CASE WHEN billingPlatforms LIKE '%DataGate%' THEN 1 ELSE 0 END) as has_datagate\nFROM customers;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \nSELECT \n  COUNT(*) as total,\n  SUM(CASE WHEN billingPlatforms IS NULL OR billingPlatforms = '[]' OR billingPlatforms = '' THEN 1 ELSE 0 END) as no_platforms,\n  SUM(CASE WHEN billingPlatforms LIKE '%OneBill%' THEN 1 ELSE 0 END) as has_onebill,\n  SUM(CASE WHEN billingPlatforms LIKE '%SasBoss%' THEN 1 ELSE 0 END) as has_sasboss,\n  SUM(CASE WHEN billingPlatforms LIKE '%DataGate%' THEN 1 ELSE 0 END) as has_datagate\nFROM customers;\n",
+  "rows": [
+    {
+      "total": "1018",
+      "no_platforms": "565",
+      "has_onebill": "250",
+      "has_sasboss": "85",
+      "has_datagate": "117"
+    }
+  ],
+  "messages": [],
+  "stdout": "total\tno_platforms\thas_onebill\thas_sasboss\thas_datagate\n1018\t565\t250\t85\t117\n",
+  "stderr": "",
+  "execution_time_ms": 1621
+}

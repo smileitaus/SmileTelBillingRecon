@@ -1,0 +1,85 @@
+{
+  "query": "\n-- Final breakdown of what's still unmatched\nSELECT serviceType, supplierName, COUNT(*) AS cnt\nFROM services\nWHERE (customerExternalId IS NULL OR customerExternalId = '')\nGROUP BY serviceType, supplierName\nORDER BY cnt DESC;\n\n-- Total services and matched count for dashboard\nSELECT \n  COUNT(*) AS total_services,\n  SUM(CASE WHEN customerExternalId IS NOT NULL AND customerExternalId != '' THEN 1 ELSE 0 END) AS matched,\n  SUM(CASE WHEN customerExternalId IS NULL OR customerExternalId = '' THEN 1 ELSE 0 END) AS unmatched\nFROM services;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Final breakdown of what's still unmatched\nSELECT serviceType, supplierName, COUNT(*) AS cnt\nFROM services\nWHERE (customerExternalId IS NULL OR customerExternalId = '')\nGROUP BY serviceType, supplierName\nORDER BY cnt DESC;\n\n-- Total services and matched count for dashboard\nSELECT \n  COUNT(*) AS total_services,\n  SUM(CASE WHEN customerExternalId IS NOT NULL AND customerExternalId != '' THEN 1 ELSE 0 END) AS matched,\n  SUM(CASE WHEN customerExternalId IS NULL OR customerExternalId = '' THEN 1 ELSE 0 END) AS unmatched\nFROM services;\n",
+  "rows": [
+    {
+      "serviceType": "Mobile",
+      "supplierName": "Telstra",
+      "cnt": "356"
+    },
+    {
+      "serviceType": "Data",
+      "supplierName": "Telstra",
+      "cnt": "122"
+    },
+    {
+      "serviceType": "Voice",
+      "supplierName": "SasBoss",
+      "cnt": "9"
+    },
+    {
+      "serviceType": "Internet",
+      "supplierName": "Telstra",
+      "cnt": "8"
+    },
+    {
+      "serviceType": "Internet",
+      "supplierName": "ABB",
+      "cnt": "6"
+    },
+    {
+      "serviceType": "Voice",
+      "supplierName": "Telstra",
+      "cnt": "2"
+    },
+    {
+      "serviceType": "Internet",
+      "supplierName": "AAPT",
+      "cnt": "2"
+    },
+    {
+      "serviceType": "Mobile",
+      "supplierName": "Vocus",
+      "cnt": "1"
+    },
+    {
+      "serviceType": "Voice",
+      "supplierName": "ChannelHaus",
+      "cnt": "1"
+    },
+    {
+      "serviceType": "Internet",
+      "supplierName": "ChannelHaus",
+      "cnt": "1"
+    },
+    {
+      "serviceType": "VoIP",
+      "supplierName": "Telstra",
+      "cnt": "1"
+    },
+    {
+      "serviceType": "Other",
+      "supplierName": "AAPT",
+      "cnt": "1"
+    },
+    {
+      "serviceType": "Data",
+      "supplierName": "TIAB",
+      "cnt": "1"
+    },
+    {
+      "serviceType": "total_services",
+      "supplierName": "matched",
+      "cnt": "unmatched"
+    },
+    {
+      "serviceType": "2947",
+      "supplierName": "2436",
+      "cnt": "511"
+    }
+  ],
+  "messages": [],
+  "stdout": "serviceType\tsupplierName\tcnt\nMobile\tTelstra\t356\nData\tTelstra\t122\nVoice\tSasBoss\t9\nInternet\tTelstra\t8\nInternet\tABB\t6\nVoice\tTelstra\t2\nInternet\tAAPT\t2\nMobile\tVocus\t1\nVoice\tChannelHaus\t1\nInternet\tChannelHaus\t1\nVoIP\tTelstra\t1\nOther\tAAPT\t1\nData\tTIAB\t1\ntotal_services\tmatched\tunmatched\n2947\t2436\t511\n",
+  "stderr": "",
+  "execution_time_ms": 1856
+}

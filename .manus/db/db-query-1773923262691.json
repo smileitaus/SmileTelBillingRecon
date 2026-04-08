@@ -1,0 +1,220 @@
+{
+  "query": "SELECT planName, COUNT(*) as cnt, GROUP_CONCAT(externalId ORDER BY externalId SEPARATOR ',') as serviceIds\nFROM services\nWHERE provider = 'SasBoss'\n  AND monthlyCost = 0\n  AND (status IS NULL OR status != 'terminated')\n  AND customerExternalId IS NOT NULL AND customerExternalId != ''\n  AND (\n    planName LIKE '%NBN%' OR planName LIKE '%Cellular%' OR planName LIKE '%Acronis%' \n    OR planName LIKE '%Bonder%' OR planName LIKE '%4G SIM Backup%' OR planName LIKE '%TPG%'\n    OR planName LIKE '%PremSupport%' OR planName LIKE '%StandSupport%'\n    OR planName LIKE '%Cellular Internet%' OR planName LIKE '%Auto Dialler%'\n    OR planName LIKE '%Estimated Phone Usage%'\n  )\nGROUP BY planName\nORDER BY cnt DESC;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute SELECT planName, COUNT(*) as cnt, GROUP_CONCAT(externalId ORDER BY externalId SEPARATOR ',') as serviceIds\nFROM services\nWHERE provider = 'SasBoss'\n  AND monthlyCost = 0\n  AND (status IS NULL OR status != 'terminated')\n  AND customerExternalId IS NOT NULL AND customerExternalId != ''\n  AND (\n    planName LIKE '%NBN%' OR planName LIKE '%Cellular%' OR planName LIKE '%Acronis%' \n    OR planName LIKE '%Bonder%' OR planName LIKE '%4G SIM Backup%' OR planName LIKE '%TPG%'\n    OR planName LIKE '%PremSupport%' OR planName LIKE '%StandSupport%'\n    OR planName LIKE '%Cellular Internet%' OR planName LIKE '%Auto Dialler%'\n    OR planName LIKE '%Estimated Phone Usage%'\n  )\nGROUP BY planName\nORDER BY cnt DESC;",
+  "rows": [
+    {
+      "planName": "NBN 50/20 Unlimited. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "cnt": "6",
+      "serviceIds": "S0825,S1010,S1101,S1215,S1340,S1399"
+    },
+    {
+      "planName": "NBN 100/40 Unlimited. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "cnt": "6",
+      "serviceIds": "S0782,S0788,S0896,S0952,S1019,S1346"
+    },
+    {
+      "planName": "NBN 50/20 Vocus Unlimited. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "cnt": "3",
+      "serviceIds": "S0994,S1465,S1483"
+    },
+    {
+      "planName": "NBN 100/40 Vocus Unlimited. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "cnt": "2",
+      "serviceIds": "S0934,S1045"
+    },
+    {
+      "planName": "NBN EE 100 Unlimited. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "cnt": "2",
+      "serviceIds": "S0887,S1034"
+    },
+    {
+      "planName": "NBN-AB 250/100 36m36 Month Contract - Unlimited BusinessAussie Broadband backboneEach",
+      "cnt": "1",
+      "serviceIds": "S1236"
+    },
+    {
+      "planName": "- GREENWOOD - 65 WANNEROO RD, GREENWOOD WA 6024, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data",
+      "cnt": "1",
+      "serviceIds": "S1356"
+    },
+    {
+      "planName": "Smile Tel NBN Enterprise Ethernet Fibre 100mb up/down - 36 MonthsEach",
+      "cnt": "1",
+      "serviceIds": "S0814"
+    },
+    {
+      "planName": "Upgraded speed Smile Tel NBN Enterprise Ethernet Fibre 100mb up/down - 36 Months5 Kilcoy Drive, TomagoEach",
+      "cnt": "1",
+      "serviceIds": "S0776"
+    },
+    {
+      "planName": "NBN 100/40 Unlimited - 13146570. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "cnt": "1",
+      "serviceIds": "S0940"
+    },
+    {
+      "planName": "NBN 50/20 Unlimited . Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "cnt": "1",
+      "serviceIds": "S0974"
+    },
+    {
+      "planName": "Adam Blackwell House NBN Up to 100Mbps/40Mbps -36 Month Contract - Unlimited Business - Aussie Broadband BackboneEach",
+      "cnt": "1",
+      "serviceIds": "S0775"
+    },
+    {
+      "planName": "NBN 100/40 Unlimited - 13165768. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "cnt": "1",
+      "serviceIds": "S0998"
+    },
+    {
+      "planName": "NBN 100/40 Unlimited - 13078321. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "cnt": "1",
+      "serviceIds": "S1005"
+    },
+    {
+      "planName": "NBN 50/20 Unlimited - 12867121. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "cnt": "1",
+      "serviceIds": "S1097"
+    },
+    {
+      "planName": "- KELMSCOTT - 84 WESTFIELD RD, KELMSCOTT WA 6111, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data",
+      "cnt": "1",
+      "serviceIds": "S1102"
+    },
+    {
+      "planName": "NBN 100/40 Unlimited . Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "cnt": "1",
+      "serviceIds": "S1115"
+    },
+    {
+      "planName": "NBN 50/20 Unlimited - 12937523. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "cnt": "1",
+      "serviceIds": "S1143"
+    },
+    {
+      "planName": "Up to 500/200Mbps NBN Basic - TC4InternetUnlimited Data PackManaged CPESilver Support Pack",
+      "cnt": "1",
+      "serviceIds": "S1168"
+    },
+    {
+      "planName": "NBN 250/100 Unlimited - 13168568. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "cnt": "1",
+      "serviceIds": "S1176"
+    },
+    {
+      "planName": "NBN 100/40 Unlimited - 13197601. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "cnt": "1",
+      "serviceIds": "S0764"
+    },
+    {
+      "planName": "- BENTLEY - 81B MANNING RD, BENTLEY WA 6102, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data",
+      "cnt": "1",
+      "serviceIds": "S1353"
+    },
+    {
+      "planName": "- CANNING VALE - 2 FORUM AVE, CANNING VALE WA 6155, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data",
+      "cnt": "1",
+      "serviceIds": "S1354"
+    },
+    {
+      "planName": "- ELLENBROOK - 1 DELMAGE CIR, ELLENBROOK WA 6069, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data",
+      "cnt": "1",
+      "serviceIds": "S1355"
+    },
+    {
+      "planName": "Business Grade NBN 100/40 - 12 Months",
+      "cnt": "1",
+      "serviceIds": "S0882"
+    },
+    {
+      "planName": "- HIGH WYCOMBE - 1 BERLE WAY, HIGH WYCOMBE WA 6057, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data",
+      "cnt": "1",
+      "serviceIds": "S1357"
+    },
+    {
+      "planName": "- HILTON - 299 SOUTH ST, HILTON WA 6163, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data",
+      "cnt": "1",
+      "serviceIds": "S1358"
+    },
+    {
+      "planName": "- MORLEY - CHERRY COURT CHILD CARE CENTRE, 10 CHERRY CT, MORLEY WA 6062, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data",
+      "cnt": "1",
+      "serviceIds": "S1359"
+    },
+    {
+      "planName": "- NEDLANDS - 73 STIRLING HWY, NEDLANDS WA 6009, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data",
+      "cnt": "1",
+      "serviceIds": "S1360"
+    },
+    {
+      "planName": "- NORTHAM - 8 DUKE ST E, NORTHAM WA 6401, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data",
+      "cnt": "1",
+      "serviceIds": "S1361"
+    },
+    {
+      "planName": "- SEVILLE GROVE - 11 LISBON WAY, SEVILLE GROVE WA 6112, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data",
+      "cnt": "1",
+      "serviceIds": "S1362"
+    },
+    {
+      "planName": "- SWANBOURNE - 153 CLAREMONT CRES, SWANBOURNE WA 6010, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data",
+      "cnt": "1",
+      "serviceIds": "S1363"
+    },
+    {
+      "planName": "- THORNLIE - 190 YALE RD, THORNLIE WA 6108, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data",
+      "cnt": "1",
+      "serviceIds": "S1364"
+    },
+    {
+      "planName": "- WANNEROO - 32 MULWARRIE CIR, WANNEROO WA 6065, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data",
+      "cnt": "1",
+      "serviceIds": "S1365"
+    },
+    {
+      "planName": "- WANNEROO - 42 SCOTT RD, WANNEROO WA 6065, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data",
+      "cnt": "1",
+      "serviceIds": "S1366"
+    },
+    {
+      "planName": "- WARWICK - 121 ELLERSDALE AVE, WARWICK WA 6024, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data",
+      "cnt": "1",
+      "serviceIds": "S1367"
+    },
+    {
+      "planName": "- WEST LEEDERVILLE - 170 RAILWAY PARADE, WEST LEEDERVILLE WA 6007, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data",
+      "cnt": "1",
+      "serviceIds": "S1368"
+    },
+    {
+      "planName": "BUTLER - LUKIN CENTRE\\, UNIT 1/2 CAPTIVA APPROACH\\, BUTLER WA 6036\\, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data",
+      "cnt": "1",
+      "serviceIds": "S1370"
+    },
+    {
+      "planName": "NBN 100/40 Unlimited - 13034176. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "cnt": "1",
+      "serviceIds": "S1394"
+    },
+    {
+      "planName": "NBN Unlimited - 12866076 & 12867108. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "cnt": "1",
+      "serviceIds": "S1426"
+    },
+    {
+      "planName": "NBN Unlimited - 12888300. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "cnt": "1",
+      "serviceIds": "S1496"
+    },
+    {
+      "planName": "NBN EE 200 Unlimited. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "cnt": "1",
+      "serviceIds": "S1553"
+    }
+  ],
+  "messages": [],
+  "stdout": "planName\tcnt\tserviceIds\nNBN 50/20 Unlimited. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t6\tS0825,S1010,S1101,S1215,S1340,S1399\nNBN 100/40 Unlimited. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t6\tS0782,S0788,S0896,S0952,S1019,S1346\nNBN 50/20 Vocus Unlimited. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t3\tS0994,S1465,S1483\nNBN 100/40 Vocus Unlimited. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t2\tS0934,S1045\nNBN EE 100 Unlimited. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t2\tS0887,S1034\nNBN-AB 250/100 36m36 Month Contract - Unlimited BusinessAussie Broadband backboneEach\t1\tS1236\n- GREENWOOD - 65 WANNEROO RD, GREENWOOD WA 6024, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data\t1\tS1356\nSmile Tel NBN Enterprise Ethernet Fibre 100mb up/down - 36 MonthsEach\t1\tS0814\nUpgraded speed Smile Tel NBN Enterprise Ethernet Fibre 100mb up/down - 36 Months5 Kilcoy Drive, TomagoEach\t1\tS0776\nNBN 100/40 Unlimited - 13146570. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t1\tS0940\nNBN 50/20 Unlimited . Starting: 01-Feb-2026. Ending: 28-Feb-2026\t1\tS0974\nAdam Blackwell House NBN Up to 100Mbps/40Mbps -36 Month Contract - Unlimited Business - Aussie Broadband BackboneEach\t1\tS0775\nNBN 100/40 Unlimited - 13165768. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t1\tS0998\nNBN 100/40 Unlimited - 13078321. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t1\tS1005\nNBN 50/20 Unlimited - 12867121. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t1\tS1097\n- KELMSCOTT - 84 WESTFIELD RD, KELMSCOTT WA 6111, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data\t1\tS1102\nNBN 100/40 Unlimited . Starting: 01-Feb-2026. Ending: 28-Feb-2026\t1\tS1115\nNBN 50/20 Unlimited - 12937523. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t1\tS1143\nUp to 500/200Mbps NBN Basic - TC4InternetUnlimited Data PackManaged CPESilver Support Pack\t1\tS1168\nNBN 250/100 Unlimited - 13168568. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t1\tS1176\nNBN 100/40 Unlimited - 13197601. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t1\tS0764\n- BENTLEY - 81B MANNING RD, BENTLEY WA 6102, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data\t1\tS1353\n- CANNING VALE - 2 FORUM AVE, CANNING VALE WA 6155, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data\t1\tS1354\n- ELLENBROOK - 1 DELMAGE CIR, ELLENBROOK WA 6069, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data\t1\tS1355\nBusiness Grade NBN 100/40 - 12 Months\t1\tS0882\n- HIGH WYCOMBE - 1 BERLE WAY, HIGH WYCOMBE WA 6057, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data\t1\tS1357\n- HILTON - 299 SOUTH ST, HILTON WA 6163, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data\t1\tS1358\n- MORLEY - CHERRY COURT CHILD CARE CENTRE, 10 CHERRY CT, MORLEY WA 6062, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data\t1\tS1359\n- NEDLANDS - 73 STIRLING HWY, NEDLANDS WA 6009, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data\t1\tS1360\n- NORTHAM - 8 DUKE ST E, NORTHAM WA 6401, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data\t1\tS1361\n- SEVILLE GROVE - 11 LISBON WAY, SEVILLE GROVE WA 6112, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data\t1\tS1362\n- SWANBOURNE - 153 CLAREMONT CRES, SWANBOURNE WA 6010, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data\t1\tS1363\n- THORNLIE - 190 YALE RD, THORNLIE WA 6108, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data\t1\tS1364\n- WANNEROO - 32 MULWARRIE CIR, WANNEROO WA 6065, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data\t1\tS1365\n- WANNEROO - 42 SCOTT RD, WANNEROO WA 6065, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data\t1\tS1366\n- WARWICK - 121 ELLERSDALE AVE, WARWICK WA 6024, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data\t1\tS1367\n- WEST LEEDERVILLE - 170 RAILWAY PARADE, WEST LEEDERVILLE WA 6007, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data\t1\tS1368\nBUTLER - LUKIN CENTRE\\, UNIT 1/2 CAPTIVA APPROACH\\, BUTLER WA 6036\\, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data\t1\tS1370\nNBN 100/40 Unlimited - 13034176. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t1\tS1394\nNBN Unlimited - 12866076 & 12867108. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t1\tS1426\nNBN Unlimited - 12888300. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t1\tS1496\nNBN EE 200 Unlimited. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t1\tS1553\n",
+  "stderr": "",
+  "execution_time_ms": 1590
+}

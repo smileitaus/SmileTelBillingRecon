@@ -1,0 +1,106 @@
+{
+  "query": "SELECT externalId, planName, serviceType, provider, monthlyCost, monthlyRevenue,\n  CASE WHEN monthlyCost > 0 THEN ROUND((monthlyRevenue - monthlyCost) / monthlyRevenue * 100, 1) ELSE NULL END as marginPct\nFROM services \nWHERE customerExternalId = 'C0087'\nORDER BY serviceType, planName;\n\n-- Also verify billing items are correct now\nSELECT id, description, lineAmount, serviceExternalId FROM billing_items WHERE contactName LIKE '%Emergency%' ORDER BY id;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute SELECT externalId, planName, serviceType, provider, monthlyCost, monthlyRevenue,\n  CASE WHEN monthlyCost > 0 THEN ROUND((monthlyRevenue - monthlyCost) / monthlyRevenue * 100, 1) ELSE NULL END as marginPct\nFROM services \nWHERE customerExternalId = 'C0087'\nORDER BY serviceType, planName;\n\n-- Also verify billing items are correct now\nSELECT id, description, lineAmount, serviceExternalId FROM billing_items WHERE contactName LIKE '%Emergency%' ORDER BY id;",
+  "rows": [
+    {
+      "externalId": "S0332",
+      "planName": "NBN 100/40",
+      "serviceType": "Internet",
+      "provider": "ABB",
+      "monthlyCost": "81.05",
+      "monthlyRevenue": "120.00",
+      "marginPct": "32.5"
+    },
+    {
+      "externalId": "SSZ2TRXE",
+      "planName": "(blank)",
+      "serviceType": "Voice",
+      "provider": "SasBoss",
+      "monthlyCost": "50.43",
+      "monthlyRevenue": "0.00",
+      "marginPct": "NULL"
+    },
+    {
+      "externalId": "SSBZW5VU",
+      "planName": "Call Centre Queue with Time of Day Routing",
+      "serviceType": "Voice",
+      "provider": "SasBoss",
+      "monthlyCost": "9.00",
+      "monthlyRevenue": "0.00",
+      "marginPct": "NULL"
+    },
+    {
+      "externalId": "SSWS5JSC",
+      "planName": "DID Australia (1)",
+      "serviceType": "Voice",
+      "provider": "SasBoss",
+      "monthlyCost": "0.20",
+      "monthlyRevenue": "5.79",
+      "marginPct": "96.5"
+    },
+    {
+      "externalId": "S7381",
+      "planName": "IP Tel Single Number",
+      "serviceType": "Voice",
+      "provider": "Vocus",
+      "monthlyCost": "1.00",
+      "monthlyRevenue": "0.00",
+      "marginPct": "NULL"
+    },
+    {
+      "externalId": "SSJH6KS4",
+      "planName": "Premium-1",
+      "serviceType": "Voice",
+      "provider": "SasBoss",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00",
+      "marginPct": "NULL"
+    },
+    {
+      "externalId": "SSZFPCUO",
+      "planName": "UCXcel Basic Queue Agent",
+      "serviceType": "Voice",
+      "provider": "SasBoss",
+      "monthlyCost": "6.30",
+      "monthlyRevenue": "0.00",
+      "marginPct": "NULL"
+    },
+    {
+      "externalId": "SSJMFUF3",
+      "planName": "UCXcel Essential",
+      "serviceType": "Voice",
+      "provider": "SasBoss",
+      "monthlyCost": "9.00",
+      "monthlyRevenue": "25.00",
+      "marginPct": "64.0"
+    },
+    {
+      "externalId": "SS9GZ5US",
+      "planName": "UCXcel Webex Basic",
+      "serviceType": "Voice",
+      "provider": "SasBoss",
+      "monthlyCost": "13.80",
+      "monthlyRevenue": "0.00",
+      "marginPct": "NULL"
+    },
+    {
+      "externalId": "SSOAKWOE",
+      "planName": "Voicemail",
+      "serviceType": "Voice",
+      "provider": "SasBoss",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00",
+      "marginPct": "NULL"
+    }
+  ],
+  "messages": [
+    "id\tdescription\tlineAmount\tserviceExternalId",
+    "209\tVoice - Telephone Usage\t3.79\tSSWS5JSC",
+    "210\tVoice - Direct In Dial Numbers\t2.00\tSSWS5JSC",
+    "211\tVoice - Services\t25.00\tSSJMFUF3",
+    "499\tNBN-AB 100/40 36m\t120.00\tS0332"
+  ],
+  "stdout": "externalId\tplanName\tserviceType\tprovider\tmonthlyCost\tmonthlyRevenue\tmarginPct\nS0332\tNBN 100/40\tInternet\tABB\t81.05\t120.00\t32.5\nSSZ2TRXE\t(blank)\tVoice\tSasBoss\t50.43\t0.00\tNULL\nSSBZW5VU\tCall Centre Queue with Time of Day Routing\tVoice\tSasBoss\t9.00\t0.00\tNULL\nSSWS5JSC\tDID Australia (1)\tVoice\tSasBoss\t0.20\t5.79\t96.5\nS7381\tIP Tel Single Number\tVoice\tVocus\t1.00\t0.00\tNULL\nSSJH6KS4\tPremium-1\tVoice\tSasBoss\t0.00\t0.00\tNULL\nSSZFPCUO\tUCXcel Basic Queue Agent\tVoice\tSasBoss\t6.30\t0.00\tNULL\nSSJMFUF3\tUCXcel Essential\tVoice\tSasBoss\t9.00\t25.00\t64.0\nSS9GZ5US\tUCXcel Webex Basic\tVoice\tSasBoss\t13.80\t0.00\tNULL\nSSOAKWOE\tVoicemail\tVoice\tSasBoss\t0.00\t0.00\tNULL\nid\tdescription\tlineAmount\tserviceExternalId\n209\tVoice - Telephone Usage\t3.79\tSSWS5JSC\n210\tVoice - Direct In Dial Numbers\t2.00\tSSWS5JSC\n211\tVoice - Services\t25.00\tSSJMFUF3\n499\tNBN-AB 100/40 36m\t120.00\tS0332\n",
+  "stderr": "",
+  "execution_time_ms": 1746
+}

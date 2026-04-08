@@ -1,0 +1,130 @@
+{
+  "query": "\n-- Find the 66 Excel-serial items with no proper twin\nSELECT externalId, invoiceNumber, invoiceDate, contactName, lineAmount, description\nFROM billing_items AS excel_item\nWHERE excel_item.invoiceDate REGEXP '^[0-9]{5}$'\n  AND NOT EXISTS (\n    SELECT 1 FROM billing_items AS proper_item\n    WHERE proper_item.invoiceNumber = excel_item.invoiceNumber\n      AND proper_item.description = excel_item.description\n      AND proper_item.contactName = excel_item.contactName\n      AND proper_item.lineAmount = excel_item.lineAmount\n      AND proper_item.invoiceDate NOT REGEXP '^[0-9]{5}$'\n  )\nORDER BY invoiceNumber\nLIMIT 15;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Find the 66 Excel-serial items with no proper twin\nSELECT externalId, invoiceNumber, invoiceDate, contactName, lineAmount, description\nFROM billing_items AS excel_item\nWHERE excel_item.invoiceDate REGEXP '^[0-9]{5}$'\n  AND NOT EXISTS (\n    SELECT 1 FROM billing_items AS proper_item\n    WHERE proper_item.invoiceNumber = excel_item.invoiceNumber\n      AND proper_item.description = excel_item.description\n      AND proper_item.contactName = excel_item.contactName\n      AND proper_item.lineAmount = excel_item.lineAmount\n      AND proper_item.invoiceDate NOT REGEXP '^[0-9]{5}$'\n  )\nORDER BY invoiceNumber\nLIMIT 15;\n",
+  "rows": [
+    {
+      "externalId": "BI001596",
+      "invoiceNumber": "E-884458",
+      "invoiceDate": "46054",
+      "contactName": "BT LAWYERS PTY LTD",
+      "lineAmount": "426.56",
+      "description": "Other - Hardware Leased"
+    },
+    {
+      "externalId": "BI001597",
+      "invoiceNumber": "E-884458",
+      "invoiceDate": "46054",
+      "contactName": "BT LAWYERS PTY LTD",
+      "lineAmount": "185.00",
+      "description": "Voice - Porting"
+    },
+    {
+      "externalId": "BI002691",
+      "invoiceNumber": "INV-47377",
+      "invoiceDate": "46057",
+      "contactName": "Jack Green",
+      "lineAmount": "174.73",
+      "description": "PowerSheild 1200VA UPS - refurbished unit supplied to replace the failed APC 950VA unit.Two new Batteries installed and tested.No product warranty is available with this refurbished UPS unit.New Batteries provided with 12 Months Warranty."
+    },
+    {
+      "externalId": "BI002697",
+      "invoiceNumber": "INV-47470",
+      "invoiceDate": "46058",
+      "contactName": "Nu-Dev Pty Ltd",
+      "lineAmount": "399.00",
+      "description": "Smile It TPG Fibre 400 36 Months + InstallEach"
+    },
+    {
+      "externalId": "BI001957",
+      "invoiceNumber": "INV-47474",
+      "invoiceDate": "46058",
+      "contactName": "PIP Theatre",
+      "lineAmount": "349.00",
+      "description": "Smile It TPG Fibre 250 36 Months + InstallEach"
+    },
+    {
+      "externalId": "BI001951",
+      "invoiceNumber": "INV-47484",
+      "invoiceDate": "46058",
+      "contactName": "QCOS Orthopaedic Pty Ltd",
+      "lineAmount": "623.75",
+      "description": "Fibre Internet Service 1000Mbps- Carrier Service Level Assurance  Service Restoration Target < 8Hrs- 36mth agreement starting on installation date (TBA)"
+    },
+    {
+      "externalId": "BI001915",
+      "invoiceNumber": "INV-47536",
+      "invoiceDate": "46058",
+      "contactName": "THRL Pty Ltd trading as Scenic Rim Trail",
+      "lineAmount": "70.00",
+      "description": "SmileTel LargeMBB Sim Card - Canopy - 0429960189 (Serial # 8200 1438 1349 9N)Each"
+    },
+    {
+      "externalId": "BI001914",
+      "invoiceNumber": "INV-47536",
+      "invoiceDate": "46058",
+      "contactName": "THRL Pty Ltd trading as Scenic Rim Trail",
+      "lineAmount": "60.00",
+      "description": "SmileTel Large MBB Sim Card - Hidden Peaks - 0447141510  (Serial# 8200 1438 1348 1N)Each"
+    },
+    {
+      "externalId": "BI002678",
+      "invoiceNumber": "ST-6792",
+      "invoiceDate": "46080",
+      "contactName": "Solahart Brisbane",
+      "lineAmount": "100.00",
+      "description": "ST-NBN Setup (remote support)"
+    },
+    {
+      "externalId": "BI001535",
+      "invoiceNumber": "ST7805",
+      "invoiceDate": "46054",
+      "contactName": "Zambrero Woodvale",
+      "lineAmount": "165.43",
+      "description": "Site Bundle - Recurring: 50/20 Connectivity - Suitable for Enterprise Grade, Premium Dedicated Support, Business Grade Hardware, 24/7 Connectivity Monitoring, 4G Backup, Enhanced Remote Assistance, Unlimited Phone Calls"
+    },
+    {
+      "externalId": "BI001536",
+      "invoiceNumber": "ST7805",
+      "invoiceDate": "46054",
+      "contactName": "Zambrero Woodvale",
+      "lineAmount": "25.00",
+      "description": "Number porting-one time charge"
+    },
+    {
+      "externalId": "BI001518",
+      "invoiceNumber": "ST7822",
+      "invoiceDate": "46054",
+      "contactName": "Zambrero Balnarring",
+      "lineAmount": "139.30",
+      "description": "Site Bundle - Recurring: 25/10 Connectivity - Suitable for Enterprise Grade, Premium Dedicated Support, Business Grade Hardware, 24/7 Connectivity Monitoring, 4G Backup, Enhanced Remote Assistance, Unlimited Phone Calls"
+    },
+    {
+      "externalId": "BI001509",
+      "invoiceNumber": "ST7830",
+      "invoiceDate": "46054",
+      "contactName": "Zambrero Coolum",
+      "lineAmount": "139.30",
+      "description": "Site Bundle - Recurring: 25/10 Connectivity - Suitable for Enterprise Grade, Premium Dedicated Support, Business Grade Hardware, 24/7 Connectivity Monitoring, 4G Backup, Enhanced Remote Assistance, Unlimited Phone Calls"
+    },
+    {
+      "externalId": "BI001510",
+      "invoiceNumber": "ST7830",
+      "invoiceDate": "46054",
+      "contactName": "Zambrero Coolum",
+      "lineAmount": "740.00",
+      "description": "Smile IT: Onsite Support Visit-one time charge"
+    },
+    {
+      "externalId": "BI001506",
+      "invoiceNumber": "ST7832",
+      "invoiceDate": "46054",
+      "contactName": "Zambrero Fremantle",
+      "lineAmount": "139.30",
+      "description": "Site Bundle - Recurring: 25/10 Connectivity - Suitable for Enterprise Grade, Premium Dedicated Support, Business Grade Hardware, 24/7 Connectivity Monitoring, 4G Backup, Enhanced Remote Assistance, Unlimited Phone Calls"
+    }
+  ],
+  "messages": [],
+  "stdout": "externalId\tinvoiceNumber\tinvoiceDate\tcontactName\tlineAmount\tdescription\nBI001596\tE-884458\t46054\tBT LAWYERS PTY LTD\t426.56\tOther - Hardware Leased\nBI001597\tE-884458\t46054\tBT LAWYERS PTY LTD\t185.00\tVoice - Porting\nBI002691\tINV-47377\t46057\tJack Green\t174.73\tPowerSheild 1200VA UPS - refurbished unit supplied to replace the failed APC 950VA unit.Two new Batteries installed and tested.No product warranty is available with this refurbished UPS unit.New Batteries provided with 12 Months Warranty.\nBI002697\tINV-47470\t46058\tNu-Dev Pty Ltd\t399.00\tSmile It TPG Fibre 400 36 Months + InstallEach\nBI001957\tINV-47474\t46058\tPIP Theatre\t349.00\tSmile It TPG Fibre 250 36 Months + InstallEach\nBI001951\tINV-47484\t46058\tQCOS Orthopaedic Pty Ltd\t623.75\tFibre Internet Service 1000Mbps- Carrier Service Level Assurance  Service Restoration Target < 8Hrs- 36mth agreement starting on installation date (TBA)\nBI001915\tINV-47536\t46058\tTHRL Pty Ltd trading as Scenic Rim Trail\t70.00\tSmileTel LargeMBB Sim Card - Canopy - 0429960189 (Serial # 8200 1438 1349 9N)Each\nBI001914\tINV-47536\t46058\tTHRL Pty Ltd trading as Scenic Rim Trail\t60.00\tSmileTel Large MBB Sim Card - Hidden Peaks - 0447141510  (Serial# 8200 1438 1348 1N)Each\nBI002678\tST-6792\t46080\tSolahart Brisbane\t100.00\tST-NBN Setup (remote support)\nBI001535\tST7805\t46054\tZambrero Woodvale\t165.43\tSite Bundle - Recurring: 50/20 Connectivity - Suitable for Enterprise Grade, Premium Dedicated Support, Business Grade Hardware, 24/7 Connectivity Monitoring, 4G Backup, Enhanced Remote Assistance, Unlimited Phone Calls\nBI001536\tST7805\t46054\tZambrero Woodvale\t25.00\tNumber porting-one time charge\nBI001518\tST7822\t46054\tZambrero Balnarring\t139.30\tSite Bundle - Recurring: 25/10 Connectivity - Suitable for Enterprise Grade, Premium Dedicated Support, Business Grade Hardware, 24/7 Connectivity Monitoring, 4G Backup, Enhanced Remote Assistance, Unlimited Phone Calls\nBI001509\tST7830\t46054\tZambrero Coolum\t139.30\tSite Bundle - Recurring: 25/10 Connectivity - Suitable for Enterprise Grade, Premium Dedicated Support, Business Grade Hardware, 24/7 Connectivity Monitoring, 4G Backup, Enhanced Remote Assistance, Unlimited Phone Calls\nBI001510\tST7830\t46054\tZambrero Coolum\t740.00\tSmile IT: Onsite Support Visit-one time charge\nBI001506\tST7832\t46054\tZambrero Fremantle\t139.30\tSite Bundle - Recurring: 25/10 Connectivity - Suitable for Enterprise Grade, Premium Dedicated Support, Business Grade Hardware, 24/7 Connectivity Monitoring, 4G Backup, Enhanced Remote Assistance, Unlimited Phone Calls\n",
+  "stderr": "",
+  "execution_time_ms": 1563
+}

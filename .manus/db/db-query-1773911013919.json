@@ -1,0 +1,34 @@
+{
+  "query": "\n-- Find Back2Health customer\nSELECT externalId, name, xeroContactName, status, monthlyRevenue, monthlyCost, serviceCount, unmatchedBillingCount\nFROM customers\nWHERE name LIKE '%Back2Health%' OR xeroContactName LIKE '%Back2Health%' OR name LIKE '%Back 2 Health%';\n\n-- Find all services for Back2Health\nSELECT s.externalId, s.planName, s.serviceType, s.serviceTypeDetail, s.provider, s.status,\n       s.monthlyCost, s.monthlyRevenue, s.customerExternalId, s.customerName, s.phoneNumber, s.connectionId, s.locationAddress\nFROM services s\nWHERE s.customerName LIKE '%Back2Health%' OR s.customerName LIKE '%Back 2 Health%'\n   OR s.customerExternalId IN (\n     SELECT externalId FROM customers WHERE name LIKE '%Back2Health%' OR name LIKE '%Back 2 Health%'\n   );\n\n-- Find billing items for Back2Health\nSELECT bi.externalId, bi.description, bi.lineAmount, bi.quantity, bi.unitAmount, bi.matchStatus,\n       bi.contactName, bi.serviceExternalId, bi.category\nFROM billing_items bi\nWHERE bi.contactName LIKE '%Back2Health%' OR bi.contactName LIKE '%Back 2 Health%';\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Find Back2Health customer\nSELECT externalId, name, xeroContactName, status, monthlyRevenue, monthlyCost, serviceCount, unmatchedBillingCount\nFROM customers\nWHERE name LIKE '%Back2Health%' OR xeroContactName LIKE '%Back2Health%' OR name LIKE '%Back 2 Health%';\n\n-- Find all services for Back2Health\nSELECT s.externalId, s.planName, s.serviceType, s.serviceTypeDetail, s.provider, s.status,\n       s.monthlyCost, s.monthlyRevenue, s.customerExternalId, s.customerName, s.phoneNumber, s.connectionId, s.locationAddress\nFROM services s\nWHERE s.customerName LIKE '%Back2Health%' OR s.customerName LIKE '%Back 2 Health%'\n   OR s.customerExternalId IN (\n     SELECT externalId FROM customers WHERE name LIKE '%Back2Health%' OR name LIKE '%Back 2 Health%'\n   );\n\n-- Find billing items for Back2Health\nSELECT bi.externalId, bi.description, bi.lineAmount, bi.quantity, bi.unitAmount, bi.matchStatus,\n       bi.contactName, bi.serviceExternalId, bi.category\nFROM billing_items bi\nWHERE bi.contactName LIKE '%Back2Health%' OR bi.contactName LIKE '%Back 2 Health%';\n",
+  "rows": [
+    {
+      "externalId": "C0029",
+      "name": "Back2Health",
+      "xeroContactName": "Back2Health",
+      "status": "active",
+      "monthlyRevenue": "118.96",
+      "monthlyCost": "285.93",
+      "serviceCount": "1",
+      "unmatchedBillingCount": "0"
+    }
+  ],
+  "messages": [
+    "externalId\tplanName\tserviceType\tserviceTypeDetail\tprovider\tstatus\tmonthlyCost\tmonthlyRevenue\tcustomerExternalId\tcustomerName\tphoneNumber\tconnectionId\tlocationAddress",
+    "S0460\tOpticomm 100/40\tInternet\tNBN\tABB\tactive\t0.00\t118.96\tC0029\tHealthy Dynamics\t\t\tUnit 1, 304 MONTAGUE ROAD, WEST END QLD",
+    "SS3EBJ4J\tDID Australia (1)\tVoice\t\tSasBoss\tactive\t0.20\t0.00\tC0029\tBack2Health\t\t\t",
+    "SSFS3XRQ\tDID Australia (10)\tVoice\t\tSasBoss\tactive\t2.00\t0.00\tC0029\tBack2Health\t\t\t",
+    "SSWPBYU9\tMC - SmileTel Premium User License\tVoice\t\tSasBoss\tactive\t19.34\t15.00\tC0029\tBack2Health\t\t\t",
+    "SSBH8SLW\tPremium-1\tVoice\t\tSasBoss\tactive\t9.00\t0.00\tC0029\tBack2Health\t\t\t",
+    "SSOIUI3N\tVoicemail\tVoice\t\tSasBoss\tactive\t3.00\t0.00\tC0029\tBack2Health\t\t\t",
+    "externalId\tdescription\tlineAmount\tquantity\tunitAmount\tmatchStatus\tcontactName\tserviceExternalId\tcategory",
+    "BI00438\tVoice - Telephone Usage\t44.96\t1.00\t44.96\tservice-matched\tBack2Health\tS0460\tvoice",
+    "BI00439\tVoice - Services\t90.00\t1.00\t90.00\tservice-matched\tBack2Health\tS0460\tvoice",
+    "BI00440\tVoice - Direct In Dial Numbers\t24.00\t1.00\t24.00\tservice-matched\tBack2Health\tS0460\tnumber-rental",
+    "BI00441\tData - Internet\t150.00\t1.00\t150.00\tservice-matched\tBack2Health\tS0460\tinternet",
+    "BI00828\tCredit Jan/Feb charges as per email from Kim Walker\t-190.00\t1.00\t-190.00\tservice-matched\tBack2Health\tS0460\tinternet"
+  ],
+  "stdout": "externalId\tname\txeroContactName\tstatus\tmonthlyRevenue\tmonthlyCost\tserviceCount\tunmatchedBillingCount\nC0029\tBack2Health\tBack2Health\tactive\t118.96\t285.93\t1\t0\nexternalId\tplanName\tserviceType\tserviceTypeDetail\tprovider\tstatus\tmonthlyCost\tmonthlyRevenue\tcustomerExternalId\tcustomerName\tphoneNumber\tconnectionId\tlocationAddress\nS0460\tOpticomm 100/40\tInternet\tNBN\tABB\tactive\t0.00\t118.96\tC0029\tHealthy Dynamics\t\t\tUnit 1, 304 MONTAGUE ROAD, WEST END QLD\nSS3EBJ4J\tDID Australia (1)\tVoice\t\tSasBoss\tactive\t0.20\t0.00\tC0029\tBack2Health\t\t\t\nSSFS3XRQ\tDID Australia (10)\tVoice\t\tSasBoss\tactive\t2.00\t0.00\tC0029\tBack2Health\t\t\t\nSSWPBYU9\tMC - SmileTel Premium User License\tVoice\t\tSasBoss\tactive\t19.34\t15.00\tC0029\tBack2Health\t\t\t\nSSBH8SLW\tPremium-1\tVoice\t\tSasBoss\tactive\t9.00\t0.00\tC0029\tBack2Health\t\t\t\nSSOIUI3N\tVoicemail\tVoice\t\tSasBoss\tactive\t3.00\t0.00\tC0029\tBack2Health\t\t\t\nexternalId\tdescription\tlineAmount\tquantity\tunitAmount\tmatchStatus\tcontactName\tserviceExternalId\tcategory\nBI00438\tVoice - Telephone Usage\t44.96\t1.00\t44.96\tservice-matched\tBack2Health\tS0460\tvoice\nBI00439\tVoice - Services\t90.00\t1.00\t90.00\tservice-matched\tBack2Health\tS0460\tvoice\nBI00440\tVoice - Direct In Dial Numbers\t24.00\t1.00\t24.00\tservice-matched\tBack2Health\tS0460\tnumber-rental\nBI00441\tData - Internet\t150.00\t1.00\t150.00\tservice-matched\tBack2Health\tS0460\tinternet\nBI00828\tCredit Jan/Feb charges as per email from Kim Walker\t-190.00\t1.00\t-190.00\tservice-matched\tBack2Health\tS0460\tinternet\n",
+  "stderr": "",
+  "execution_time_ms": 2179
+}

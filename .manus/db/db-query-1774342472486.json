@@ -1,0 +1,98 @@
+{
+  "query": "SELECT octaneCustomerId, octaneCustomerName, octaneServiceName, matchType, matchConfidence, matchNotes \nFROM octane_customer_links \nWHERE matchType IN ('none', 'unmatched') OR matchType IS NULL \nORDER BY octaneCustomerName\nLIMIT 30;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute SELECT octaneCustomerId, octaneCustomerName, octaneServiceName, matchType, matchConfidence, matchNotes \nFROM octane_customer_links \nWHERE matchType IN ('none', 'unmatched') OR matchType IS NULL \nORDER BY octaneCustomerName\nLIMIT 30;",
+  "rows": [
+    {
+      "octaneCustomerId": "531913",
+      "octaneCustomerName": "Bel?s Resto Pty Ltd",
+      "octaneServiceName": "",
+      "matchType": "unmatched",
+      "matchConfidence": "0.00",
+      "matchNotes": "No suitable match found"
+    },
+    {
+      "octaneCustomerId": "532016",
+      "octaneCustomerName": "Infinitea Trading Pty Ltd",
+      "octaneServiceName": "",
+      "matchType": "unmatched",
+      "matchConfidence": "0.00",
+      "matchNotes": "No suitable match found"
+    },
+    {
+      "octaneCustomerId": "532013",
+      "octaneCustomerName": "Infinitea Trading Pty Ltd",
+      "octaneServiceName": "",
+      "matchType": "unmatched",
+      "matchConfidence": "0.00",
+      "matchNotes": "No suitable match found"
+    },
+    {
+      "octaneCustomerId": "532018",
+      "octaneCustomerName": "Infinitea Trading Pty Ltd",
+      "octaneServiceName": "",
+      "matchType": "unmatched",
+      "matchConfidence": "0.00",
+      "matchNotes": "No suitable match found"
+    },
+    {
+      "octaneCustomerId": "534485",
+      "octaneCustomerName": "Infinitea Trading Pty Ltd",
+      "octaneServiceName": "",
+      "matchType": "unmatched",
+      "matchConfidence": "0.00",
+      "matchNotes": "No suitable match found"
+    },
+    {
+      "octaneCustomerId": "532004",
+      "octaneCustomerName": "Infinitea Trading Pty Ltd",
+      "octaneServiceName": "",
+      "matchType": "unmatched",
+      "matchConfidence": "0.00",
+      "matchNotes": "No suitable match found"
+    },
+    {
+      "octaneCustomerId": "527014",
+      "octaneCustomerName": "JOSHELLEY PTY LTD",
+      "octaneServiceName": "",
+      "matchType": "unmatched",
+      "matchConfidence": "0.00",
+      "matchNotes": "No suitable match found"
+    },
+    {
+      "octaneCustomerId": "535123",
+      "octaneCustomerName": "Mother Duck Childcare and Kindergarten Bracken Ridge",
+      "octaneServiceName": "",
+      "matchType": "unmatched",
+      "matchConfidence": "0.00",
+      "matchNotes": "No suitable match found"
+    },
+    {
+      "octaneCustomerId": "525207",
+      "octaneCustomerName": "Orphan Services - SmileTel",
+      "octaneServiceName": "",
+      "matchType": "unmatched",
+      "matchConfidence": "0.00",
+      "matchNotes": "No suitable match found"
+    },
+    {
+      "octaneCustomerId": "526902",
+      "octaneCustomerName": "SmileTel",
+      "octaneServiceName": "",
+      "matchType": "unmatched",
+      "matchConfidence": "63.00",
+      "matchNotes": "Best candidate: Smile IT (score=63% — below threshold)"
+    },
+    {
+      "octaneCustomerId": "528133",
+      "octaneCustomerName": "Zambrero (AHJ Pty Ltd)",
+      "octaneServiceName": "Zam Fremantle 4G",
+      "matchType": "unmatched",
+      "matchConfidence": "0.00",
+      "matchNotes": "No suitable match found"
+    }
+  ],
+  "messages": [],
+  "stdout": "octaneCustomerId\toctaneCustomerName\toctaneServiceName\tmatchType\tmatchConfidence\tmatchNotes\n531913\tBel?s Resto Pty Ltd\t\tunmatched\t0.00\tNo suitable match found\n532016\tInfinitea Trading Pty Ltd\t\tunmatched\t0.00\tNo suitable match found\n532013\tInfinitea Trading Pty Ltd\t\tunmatched\t0.00\tNo suitable match found\n532018\tInfinitea Trading Pty Ltd\t\tunmatched\t0.00\tNo suitable match found\n534485\tInfinitea Trading Pty Ltd\t\tunmatched\t0.00\tNo suitable match found\n532004\tInfinitea Trading Pty Ltd\t\tunmatched\t0.00\tNo suitable match found\n527014\tJOSHELLEY PTY LTD\t\tunmatched\t0.00\tNo suitable match found\n535123\tMother Duck Childcare and Kindergarten Bracken Ridge\t\tunmatched\t0.00\tNo suitable match found\n525207\tOrphan Services - SmileTel\t\tunmatched\t0.00\tNo suitable match found\n526902\tSmileTel\t\tunmatched\t63.00\tBest candidate: Smile IT (score=63% — below threshold)\n528133\tZambrero (AHJ Pty Ltd)\tZam Fremantle 4G\tunmatched\t0.00\tNo suitable match found\n",
+  "stderr": "",
+  "execution_time_ms": 1564
+}

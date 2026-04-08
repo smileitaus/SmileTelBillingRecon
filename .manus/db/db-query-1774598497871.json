@@ -1,0 +1,164 @@
+{
+  "query": "\n-- Unmatched DataGate items - what customers and products\nSELECT bi.contactName, bi.description, bi.lineAmount, bi.matchStatus, bi.serviceExternalId, bi.customerExternalId\nFROM billing_items bi\nWHERE bi.billingPlatform = 'DataGate'\nAND bi.matchStatus IN ('unmatched', 'review')\nORDER BY bi.contactName, bi.lineAmount DESC\nLIMIT 20;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Unmatched DataGate items - what customers and products\nSELECT bi.contactName, bi.description, bi.lineAmount, bi.matchStatus, bi.serviceExternalId, bi.customerExternalId\nFROM billing_items bi\nWHERE bi.billingPlatform = 'DataGate'\nAND bi.matchStatus IN ('unmatched', 'review')\nORDER BY bi.contactName, bi.lineAmount DESC\nLIMIT 20;\n",
+  "rows": [
+    {
+      "contactName": "Buys Court Pty Ltd",
+      "description": "Business Grade NBN 100/40 - 36 Months AVC400035803900",
+      "lineAmount": "100.00",
+      "matchStatus": "review",
+      "serviceExternalId": "S0849",
+      "customerExternalId": "C0050"
+    },
+    {
+      "contactName": "Caravan and RV Works",
+      "description": "NBN 100/40 AVC000231661475",
+      "lineAmount": "135.69",
+      "matchStatus": "unmatched",
+      "serviceExternalId": "",
+      "customerExternalId": "C0054"
+    },
+    {
+      "contactName": "Caravan and RV Works",
+      "description": "T42SRENTAL 24 Monthly T42S Phone Rental",
+      "lineAmount": "78.00",
+      "matchStatus": "unmatched",
+      "serviceExternalId": "",
+      "customerExternalId": "C0054"
+    },
+    {
+      "contactName": "Caravan and RV Works",
+      "description": "Managed Voice Support 1 - 10 Users",
+      "lineAmount": "75.00",
+      "matchStatus": "unmatched",
+      "serviceExternalId": "",
+      "customerExternalId": "C0054"
+    },
+    {
+      "contactName": "Caravan and RV Works",
+      "description": "Standard",
+      "lineAmount": "56.00",
+      "matchStatus": "unmatched",
+      "serviceExternalId": "",
+      "customerExternalId": "C0054"
+    },
+    {
+      "contactName": "Caravan and RV Works",
+      "description": "Hunt Group Premium",
+      "lineAmount": "14.00",
+      "matchStatus": "unmatched",
+      "serviceExternalId": "",
+      "customerExternalId": "C0054"
+    },
+    {
+      "contactName": "Caravan and RV Works",
+      "description": "Single Number",
+      "lineAmount": "6.00",
+      "matchStatus": "unmatched",
+      "serviceExternalId": "",
+      "customerExternalId": "C0054"
+    },
+    {
+      "contactName": "Caravan and RV Works",
+      "description": "Voicemail",
+      "lineAmount": "4.00",
+      "matchStatus": "unmatched",
+      "serviceExternalId": "",
+      "customerExternalId": "C0054"
+    },
+    {
+      "contactName": "CC Innovation Pty Ltd",
+      "description": "Managed Voice Support 1 - 10 Users",
+      "lineAmount": "75.00",
+      "matchStatus": "review",
+      "serviceExternalId": "S0863",
+      "customerExternalId": "C0056"
+    },
+    {
+      "contactName": "CF Aust Pty Ltd",
+      "description": "Business Grade NBN 100/40 - 12 Months",
+      "lineAmount": "142.58",
+      "matchStatus": "unmatched",
+      "serviceExternalId": "",
+      "customerExternalId": "C0058"
+    },
+    {
+      "contactName": "CF Aust Pty Ltd",
+      "description": "Business Grade NBN 100/40 - 12 Months",
+      "lineAmount": "142.58",
+      "matchStatus": "unmatched",
+      "serviceExternalId": "",
+      "customerExternalId": "C0058"
+    },
+    {
+      "contactName": "CF Aust Pty Ltd",
+      "description": "Business Grade NBN 100/40 - 24 Months AVC000101436766",
+      "lineAmount": "135.69",
+      "matchStatus": "review",
+      "serviceExternalId": "S0883",
+      "customerExternalId": "C0058"
+    },
+    {
+      "contactName": "CF Aust Pty Ltd",
+      "description": "Business Grade NBN 100/40 - 36 Months AVC000106664528",
+      "lineAmount": "128.79",
+      "matchStatus": "review",
+      "serviceExternalId": "S0884",
+      "customerExternalId": "C0058"
+    },
+    {
+      "contactName": "Dolani Pty Ltd ",
+      "description": "Managed Voice Support 11- 25 Users",
+      "lineAmount": "100.00",
+      "matchStatus": "review",
+      "serviceExternalId": "S0947",
+      "customerExternalId": "C0081"
+    },
+    {
+      "contactName": "Gainsdale Pty Ltd ATF The G.F. Turner Family Trust",
+      "description": "Business Grade NBN 50/20 - 24 Months AVC000146482523",
+      "lineAmount": "120.00",
+      "matchStatus": "review",
+      "serviceExternalId": "S0983",
+      "customerExternalId": "C0099"
+    },
+    {
+      "contactName": "Hip Pocket Logan",
+      "description": "Business Grade NBN 100/40 - 12 Months AVC400027217967",
+      "lineAmount": "240.00",
+      "matchStatus": "review",
+      "serviceExternalId": "S1020",
+      "customerExternalId": "C0120"
+    },
+    {
+      "contactName": "Hip Pocket Logan",
+      "description": "Business Grade NBN 100/40 - 36 Months AVC000144535230",
+      "lineAmount": "120.00",
+      "matchStatus": "review",
+      "serviceExternalId": "S1021",
+      "customerExternalId": "C0120"
+    },
+    {
+      "contactName": "Jilrift Pty Ltd",
+      "description": "Fixed Wireless 50/20 - 24 months",
+      "lineAmount": "120.00",
+      "matchStatus": "review",
+      "serviceExternalId": "S1035",
+      "customerExternalId": "C0128"
+    },
+    {
+      "contactName": "Lead Childcare Pty Ltd",
+      "description": "Managed Voice Support 11- 25 Users",
+      "lineAmount": "100.00",
+      "matchStatus": "review",
+      "serviceExternalId": "S1059",
+      "customerExternalId": "C0134"
+    }
+  ],
+  "messages": [
+    "Jude Turner\tBusiness Grade NBN 50/20 - 36 Months \tAVC000233189615\t120.00\treview\tS1036\tC0129"
+  ],
+  "stdout": "contactName\tdescription\tlineAmount\tmatchStatus\tserviceExternalId\tcustomerExternalId\nBuys Court Pty Ltd\tBusiness Grade NBN 100/40 - 36 Months AVC400035803900\t100.00\treview\tS0849\tC0050\nCaravan and RV Works\tNBN 100/40 AVC000231661475\t135.69\tunmatched\t\tC0054\nCaravan and RV Works\tT42SRENTAL 24 Monthly T42S Phone Rental\t78.00\tunmatched\t\tC0054\nCaravan and RV Works\tManaged Voice Support 1 - 10 Users\t75.00\tunmatched\t\tC0054\nCaravan and RV Works\tStandard\t56.00\tunmatched\t\tC0054\nCaravan and RV Works\tHunt Group Premium\t14.00\tunmatched\t\tC0054\nCaravan and RV Works\tSingle Number\t6.00\tunmatched\t\tC0054\nCaravan and RV Works\tVoicemail\t4.00\tunmatched\t\tC0054\nCC Innovation Pty Ltd\tManaged Voice Support 1 - 10 Users\t75.00\treview\tS0863\tC0056\nCF Aust Pty Ltd\tBusiness Grade NBN 100/40 - 12 Months\t142.58\tunmatched\t\tC0058\nCF Aust Pty Ltd\tBusiness Grade NBN 100/40 - 12 Months\t142.58\tunmatched\t\tC0058\nCF Aust Pty Ltd\tBusiness Grade NBN 100/40 - 24 Months AVC000101436766\t135.69\treview\tS0883\tC0058\nCF Aust Pty Ltd\tBusiness Grade NBN 100/40 - 36 Months AVC000106664528\t128.79\treview\tS0884\tC0058\nDolani Pty Ltd \tManaged Voice Support 11- 25 Users\t100.00\treview\tS0947\tC0081\nGainsdale Pty Ltd ATF The G.F. Turner Family Trust\tBusiness Grade NBN 50/20 - 24 Months AVC000146482523\t120.00\treview\tS0983\tC0099\nHip Pocket Logan\tBusiness Grade NBN 100/40 - 12 Months AVC400027217967\t240.00\treview\tS1020\tC0120\nHip Pocket Logan\tBusiness Grade NBN 100/40 - 36 Months AVC000144535230\t120.00\treview\tS1021\tC0120\nJilrift Pty Ltd\tFixed Wireless 50/20 - 24 months\t120.00\treview\tS1035\tC0128\nJude Turner\tBusiness Grade NBN 50/20 - 36 Months \tAVC000233189615\t120.00\treview\tS1036\tC0129\nLead Childcare Pty Ltd\tManaged Voice Support 11- 25 Users\t100.00\treview\tS1059\tC0134\n",
+  "stderr": "",
+  "execution_time_ms": 1596
+}

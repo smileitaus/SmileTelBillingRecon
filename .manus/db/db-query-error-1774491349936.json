@@ -1,0 +1,10 @@
+{
+  "query": "\n-- Check BI00018 parsed fields\nSELECT externalId, description, parsedSpeedTier, parsedContractMonths, parsedHardwareStatus, parsedHas4gBackup, parsedDataAllowance, retailBundleComponent\nFROM billing_items WHERE externalId = 'BI00018';\n\n-- Check S0412 ABB service for speed info\nSELECT externalId, planName, serviceType, provider, monthlyCost, \n  parsedSpeedTier, parsedAvcId\nFROM services WHERE externalId = 'S0412';\n\n-- Check how many bundle items have empty parsedSpeedTier\nSELECT COUNT(*) as emptySpeed, \n  SUM(CASE WHEN parsedSpeedTier != '' THEN 1 ELSE 0 END) as hasSpeed\nFROM billing_items WHERE description LIKE '%SmileTel supplied%';\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Check BI00018 parsed fields\nSELECT externalId, description, parsedSpeedTier, parsedContractMonths, parsedHardwareStatus, parsedHas4gBackup, parsedDataAllowance, retailBundleComponent\nFROM billing_items WHERE externalId = 'BI00018';\n\n-- Check S0412 ABB service for speed info\nSELECT externalId, planName, serviceType, provider, monthlyCost, \n  parsedSpeedTier, parsedAvcId\nFROM services WHERE externalId = 'S0412';\n\n-- Check how many bundle items have empty parsedSpeedTier\nSELECT COUNT(*) as emptySpeed, \n  SUM(CASE WHEN parsedSpeedTier != '' THEN 1 ELSE 0 END) as hasSpeed\nFROM billing_items WHERE description LIKE '%SmileTel supplied%';\n",
+  "returncode": 1,
+  "logs": [
+    "externalId\tdescription\tparsedSpeedTier\tparsedContractMonths\tparsedHardwareStatus\tparsedHas4gBackup\tparsedDataAllowance\tretailBundleComponent",
+    "BI00018\tSmileTel supplied NBN voice and internet bundle. 24 month plan. Includes:- 1xVoice phone line,1xInternet service,1x4G Back-up, Static IP.  Unlimited calls to standard Australian numbers, Unlimited data allowance, Account management support.\t\t24\t\t1\tunlimited\tbundle",
+    "ERROR 1054 (42S22) at line 7: Unknown column 'parsedspeedtier' in 'field list'"
+  ]
+}

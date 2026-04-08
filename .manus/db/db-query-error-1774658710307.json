@@ -1,0 +1,8 @@
+{
+  "query": "\n-- Check workbook line items for bundle indicators\nSELECT \n  productName,\n  wbProductType,\n  COUNT(*) as count,\n  AVG(amountExGst) as avgAmount,\n  MIN(amountExGst) as minAmount,\n  MAX(amountExGst) as maxAmount\nFROM supplier_workbook_line_items swli\nJOIN supplier_workbook_uploads swu ON swli.uploadId = swu.id\nWHERE swu.supplier = 'SasBoss'\nAND (\n  productName LIKE '%bundle%' OR\n  productName LIKE '%Bundle%' OR\n  productName LIKE '%Legal%' OR\n  productName LIKE '%Compliance%' OR\n  productName LIKE '%Medical%' OR\n  wbProductType LIKE '%bundle%'\n)\nGROUP BY productName, wbProductType\nORDER BY count DESC\nLIMIT 30;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Check workbook line items for bundle indicators\nSELECT \n  productName,\n  wbProductType,\n  COUNT(*) as count,\n  AVG(amountExGst) as avgAmount,\n  MIN(amountExGst) as minAmount,\n  MAX(amountExGst) as maxAmount\nFROM supplier_workbook_line_items swli\nJOIN supplier_workbook_uploads swu ON swli.uploadId = swu.id\nWHERE swu.supplier = 'SasBoss'\nAND (\n  productName LIKE '%bundle%' OR\n  productName LIKE '%Bundle%' OR\n  productName LIKE '%Legal%' OR\n  productName LIKE '%Compliance%' OR\n  productName LIKE '%Medical%' OR\n  wbProductType LIKE '%bundle%'\n)\nGROUP BY productName, wbProductType\nORDER BY count DESC\nLIMIT 30;\n",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1054 (42S22) at line 3: Unknown column 'wbproducttype' in 'group statement'"
+  ]
+}

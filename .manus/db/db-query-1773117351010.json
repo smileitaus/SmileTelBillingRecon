@@ -1,0 +1,18 @@
+{
+  "query": "SELECT status, COUNT(*) as cnt FROM services GROUP BY status;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3M17pEiktKAmnzx.5240b4750712 --database 4LVfr96qhVoYSkLinpTZkt --execute SELECT status, COUNT(*) as cnt FROM services GROUP BY status;",
+  "rows": [
+    {
+      "status": "active",
+      "cnt": "91"
+    },
+    {
+      "status": "unmatched",
+      "cnt": "217"
+    }
+  ],
+  "messages": [],
+  "stdout": "status\tcnt\nactive\t91\nunmatched\t217\n",
+  "stderr": "",
+  "execution_time_ms": 1523
+}

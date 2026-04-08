@@ -1,0 +1,90 @@
+{
+  "query": "\n-- Aus Ships services\nSELECT externalId, serviceId, serviceType, planName, monthlyRevenue, monthlyCost, status, supplierName\nFROM services\nWHERE customerExternalId = 'C7513'\nORDER BY serviceType;\n\n-- Aus Ships billing items (all platforms)\nSELECT bi.externalId, bi.description, bi.lineAmount, bi.matchStatus, bi.billingPlatform, bi.invoiceNumber, bi.invoiceDate, bi.contactName\nFROM billing_items bi\nWHERE bi.customerExternalId = 'C7513'\nORDER BY bi.invoiceDate DESC\nLIMIT 20;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Aus Ships services\nSELECT externalId, serviceId, serviceType, planName, monthlyRevenue, monthlyCost, status, supplierName\nFROM services\nWHERE customerExternalId = 'C7513'\nORDER BY serviceType;\n\n-- Aus Ships billing items (all platforms)\nSELECT bi.externalId, bi.description, bi.lineAmount, bi.matchStatus, bi.billingPlatform, bi.invoiceNumber, bi.invoiceDate, bi.contactName\nFROM billing_items bi\nWHERE bi.customerExternalId = 'C7513'\nORDER BY bi.invoiceDate DESC\nLIMIT 20;\n",
+  "rows": [
+    {
+      "externalId": "SS7P5KR1",
+      "serviceId": "",
+      "serviceType": "Voice",
+      "planName": "DID Australia (1)",
+      "monthlyRevenue": "0.00",
+      "monthlyCost": "0.20",
+      "status": "active",
+      "supplierName": "SasBoss"
+    },
+    {
+      "externalId": "SSQHUKU1",
+      "serviceId": "",
+      "serviceType": "Voice",
+      "planName": "Premium-1",
+      "monthlyRevenue": "0.00",
+      "monthlyCost": "0.00",
+      "status": "active",
+      "supplierName": "SasBoss"
+    },
+    {
+      "externalId": "SSA0ORL6",
+      "serviceId": "",
+      "serviceType": "Voice",
+      "planName": "UCXcel Essential",
+      "monthlyRevenue": "0.00",
+      "monthlyCost": "9.00",
+      "status": "active",
+      "supplierName": "SasBoss"
+    },
+    {
+      "externalId": "SSG6UD9K",
+      "serviceId": "",
+      "serviceType": "Voice",
+      "planName": "(blank)",
+      "monthlyRevenue": "0.00",
+      "monthlyCost": "0.00",
+      "status": "active",
+      "supplierName": "SasBoss"
+    },
+    {
+      "externalId": "SSL0F109",
+      "serviceId": "",
+      "serviceType": "Voice",
+      "planName": "DID Australia (1)",
+      "monthlyRevenue": "0.00",
+      "monthlyCost": "0.20",
+      "status": "active",
+      "supplierName": "SasBoss"
+    },
+    {
+      "externalId": "SSQPWBKY",
+      "serviceId": "",
+      "serviceType": "Voice",
+      "planName": "Premium-1",
+      "monthlyRevenue": "0.00",
+      "monthlyCost": "0.00",
+      "status": "active",
+      "supplierName": "SasBoss"
+    },
+    {
+      "externalId": "SSYO23W9",
+      "serviceId": "",
+      "serviceType": "Voice",
+      "planName": "UCXcel Essential",
+      "monthlyRevenue": "0.00",
+      "monthlyCost": "9.00",
+      "status": "active",
+      "supplierName": "SasBoss"
+    },
+    {
+      "externalId": "SS53G7N0",
+      "serviceId": "",
+      "serviceType": "Voice",
+      "planName": "(blank)",
+      "monthlyRevenue": "0.00",
+      "monthlyCost": "0.00",
+      "status": "active",
+      "supplierName": "SasBoss"
+    }
+  ],
+  "messages": [],
+  "stdout": "externalId\tserviceId\tserviceType\tplanName\tmonthlyRevenue\tmonthlyCost\tstatus\tsupplierName\nSS7P5KR1\t\tVoice\tDID Australia (1)\t0.00\t0.20\tactive\tSasBoss\nSSQHUKU1\t\tVoice\tPremium-1\t0.00\t0.00\tactive\tSasBoss\nSSA0ORL6\t\tVoice\tUCXcel Essential\t0.00\t9.00\tactive\tSasBoss\nSSG6UD9K\t\tVoice\t(blank)\t0.00\t0.00\tactive\tSasBoss\nSSL0F109\t\tVoice\tDID Australia (1)\t0.00\t0.20\tactive\tSasBoss\nSSQPWBKY\t\tVoice\tPremium-1\t0.00\t0.00\tactive\tSasBoss\nSSYO23W9\t\tVoice\tUCXcel Essential\t0.00\t9.00\tactive\tSasBoss\nSS53G7N0\t\tVoice\t(blank)\t0.00\t0.00\tactive\tSasBoss\n",
+  "stderr": "",
+  "execution_time_ms": 1797
+}

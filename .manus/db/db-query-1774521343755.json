@@ -1,0 +1,170 @@
+{
+  "query": "\nSELECT externalId, planName, serviceType, monthlyCost, monthlyRevenue, supplierName, discoveryNotes, customerExternalId, customerName\nFROM services\nWHERE monthlyCost = 49.00 AND discoveryNotes LIKE '%COST REVIEW NEEDED%'\nORDER BY customerExternalId;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \nSELECT externalId, planName, serviceType, monthlyCost, monthlyRevenue, supplierName, discoveryNotes, customerExternalId, customerName\nFROM services\nWHERE monthlyCost = 49.00 AND discoveryNotes LIKE '%COST REVIEW NEEDED%'\nORDER BY customerExternalId;\n",
+  "rows": [
+    {
+      "externalId": "S0753",
+      "planName": "4G Data Backup Service",
+      "serviceType": "Other",
+      "monthlyCost": "49.00",
+      "monthlyRevenue": "20.00",
+      "supplierName": "SasBoss",
+      "discoveryNotes": "COST REVIEW NEEDED: $49 placeholder cost from Access4 pricebook — verify actual wholesale cost | COST REVIEW NEEDED | Invoice 890163: Customer billed $39 inc GST. Access4 wholesale cost unknown - estimated $18.18 ex GST.",
+      "customerExternalId": "C0003",
+      "customerName": "Active Living - Allen Developments Pty Ltd"
+    },
+    {
+      "externalId": "S0777",
+      "planName": "Other",
+      "serviceType": "Other",
+      "monthlyCost": "49.00",
+      "monthlyRevenue": "400.00",
+      "supplierName": "SasBoss",
+      "discoveryNotes": "[REVIEWED] Multiple services at this site reviewed and accepted.  | COST REVIEW NEEDED: $49 placeholder cost from Access4 pricebook — verify actual wholesale cost",
+      "customerExternalId": "C0015",
+      "customerName": "ASG Hail Pty Ltd"
+    },
+    {
+      "externalId": "S0815",
+      "planName": "Other",
+      "serviceType": "Other",
+      "monthlyCost": "49.00",
+      "monthlyRevenue": "75.00",
+      "supplierName": "SasBoss",
+      "discoveryNotes": "COST REVIEW NEEDED: $49 placeholder cost from Access4 pricebook — verify actual wholesale cost",
+      "customerExternalId": "C0031",
+      "customerName": "Balgra Shopping Centre Management Pty Ltd"
+    },
+    {
+      "externalId": "S0832",
+      "planName": "4G Failover SIM",
+      "serviceType": "Other",
+      "monthlyCost": "49.00",
+      "monthlyRevenue": "35.00",
+      "supplierName": "SasBoss",
+      "discoveryNotes": "COST REVIEW NEEDED: $49 placeholder cost from Access4 pricebook — verify actual wholesale cost | COST REVIEW NEEDED | Invoice 890190: Customer billed $35 ex GST (SIM 8200093721783). Access4 wholesale cost unknown - estimated.",
+      "customerExternalId": "C0044",
+      "customerName": "Bracken Ridge Family Practice"
+    },
+    {
+      "externalId": "S0898",
+      "planName": "Other",
+      "serviceType": "Other",
+      "monthlyCost": "49.00",
+      "monthlyRevenue": "50.00",
+      "supplierName": "SasBoss",
+      "discoveryNotes": "COST REVIEW NEEDED: $49 placeholder cost from Access4 pricebook — verify actual wholesale cost",
+      "customerExternalId": "C0064",
+      "customerName": "Community Lifestyle Agency Inc"
+    },
+    {
+      "externalId": "S0915",
+      "planName": "Other",
+      "serviceType": "Other",
+      "monthlyCost": "49.00",
+      "monthlyRevenue": "470.00",
+      "supplierName": "SasBoss",
+      "discoveryNotes": "COST REVIEW NEEDED: $49 placeholder cost from Access4 pricebook — verify actual wholesale cost",
+      "customerExternalId": "C0072",
+      "customerName": "Creek St Pharmacy"
+    },
+    {
+      "externalId": "S0966",
+      "planName": "4G Data Backup Service",
+      "serviceType": "Other",
+      "monthlyCost": "49.00",
+      "monthlyRevenue": "30.00",
+      "supplierName": "SasBoss",
+      "discoveryNotes": "COST REVIEW NEEDED: $49 placeholder cost from Access4 pricebook — verify actual wholesale cost | COST REVIEW NEEDED | Invoice 890124: Customer billed $30 inc GST ($27.27 ex GST). Access4 wholesale cost unknown.",
+      "customerExternalId": "C0091",
+      "customerName": "Fast Cut Qld Pty Ltd"
+    },
+    {
+      "externalId": "S1315",
+      "planName": "Other",
+      "serviceType": "Voice",
+      "monthlyCost": "49.00",
+      "monthlyRevenue": "0.80",
+      "supplierName": "SasBoss",
+      "discoveryNotes": "[REVIEWED] Multiple services at this site reviewed and accepted.  | COST REVIEW NEEDED: $49 placeholder cost from Access4 pricebook — verify actual wholesale cost",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "S1388",
+      "planName": "Other",
+      "serviceType": "Other",
+      "monthlyCost": "49.00",
+      "monthlyRevenue": "250.00",
+      "supplierName": "SasBoss",
+      "discoveryNotes": "[REVIEWED] Multiple services at this site reviewed and accepted.  | COST REVIEW NEEDED: $49 placeholder cost from Access4 pricebook — verify actual wholesale cost",
+      "customerExternalId": "C0226",
+      "customerName": "Sta Consulting Engineers"
+    },
+    {
+      "externalId": "S1416",
+      "planName": "Managed Voice Support",
+      "serviceType": "Other",
+      "monthlyCost": "49.00",
+      "monthlyRevenue": "25.00",
+      "supplierName": "SasBoss",
+      "discoveryNotes": "COST REVIEW NEEDED: $49 placeholder cost from Access4 pricebook — verify actual wholesale cost | COST REVIEW NEEDED | Invoice 890155: Customer billed $25 inc GST ($22.73 ex GST). Access4 wholesale cost unknown.",
+      "customerExternalId": "C0235",
+      "customerName": "Swara"
+    },
+    {
+      "externalId": "S1492",
+      "planName": "Other",
+      "serviceType": "Other",
+      "monthlyCost": "49.00",
+      "monthlyRevenue": "57.22",
+      "supplierName": "SasBoss",
+      "discoveryNotes": "COST REVIEW NEEDED: $49 placeholder cost from Access4 pricebook — verify actual wholesale cost",
+      "customerExternalId": "C0291",
+      "customerName": "Woodlands Enterprises Pty Ltd"
+    },
+    {
+      "externalId": "S1576",
+      "planName": "Other",
+      "serviceType": "Other",
+      "monthlyCost": "49.00",
+      "monthlyRevenue": "116.77",
+      "supplierName": "SasBoss",
+      "discoveryNotes": "COST REVIEW NEEDED: $49 placeholder cost from Access4 pricebook — verify actual wholesale cost",
+      "customerExternalId": "C2898",
+      "customerName": "Red Roo Australia"
+    },
+    {
+      "externalId": "S1589",
+      "planName": "Other",
+      "serviceType": "Other",
+      "monthlyCost": "49.00",
+      "monthlyRevenue": "2968.66",
+      "supplierName": "SasBoss",
+      "discoveryNotes": "COST REVIEW NEEDED: $49 placeholder cost from Access4 pricebook — verify actual wholesale cost",
+      "customerExternalId": "C2904",
+      "customerName": "Scout Talent Pty Ltd"
+    }
+  ],
+  "messages": [
+    "SSPVNO3A\tInternet 100/40\tInternet\t49.00\t114.00\tSasBoss\t",
+    "[AUTO-FIX] Duplicate of S0765+S0766 per invoice 890189 analysis | COST REVIEW NEEDED: $49 placeholder cost from Access4 pricebook — verify actual wholesale cost\tC0010\tAll Crops Haulage Pty Ltd",
+    "S0989\tOther\tOther\t49.00\t1084.00\tSasBoss\t[ABB Import] Provider: ABB | Speed: NBN 100/40 | Technology: FTTN | Buy Price: $144.6.127.34 | Activation: 05 Aug 2024 | Notes: Fibre Connect Eligible",
+    "[REVIEWED] Multiple services at this site reviewed and accepted.  | COST REVIEW NEEDED: $49 placeholder cost from Access4 pricebook — verify actual wholesale cost\tC0101\tGBA Consulting Engineers",
+    "S1120\tOther\tOther\t49.00\t75.00\tSasBoss\t[Auto-matched by alias by Angus Burnett-Smith on 11/03/2026: \"Mega Electrics NSW\" → \"Mega Electrics\"]",
+    "[ABB Import] Provider: ABB | Speed: NBN 100/40 | Technology: FTTN | Buy Price: $144.6.199.151 | Activation: 11 April 2024",
+    "[REVIEWED] Multiple services at this site reviewed and accepted.  | COST REVIEW NEEDED: $49 placeholder cost from Access4 pricebook — verify actual wholesale cost\tC0159\tMega Electrics",
+    "S1454\t4G SIM Backup Internet Service\tOther\t49.00\t35.00\tSasBoss\t[RVC Import] Source: NL",
+    "[SmileTel Import] Account: 586992900, Plan: Business Data Plan S",
+    "[SM Import] Ella's SM upload: unassigned from RVC pending verification.",
+    "[REVIEWED] Multiple services at this site reviewed and accepted.  | COST REVIEW NEEDED: $49 placeholder cost from Access4 pricebook — verify actual wholesale cost | COST REVIEW NEEDED | Invoice 890134: Customer billed $35 inc GST ($31.82 ex GST). Access4 wholesale cost unknown.\tC0271\tTrue Metal Solutions",
+    "S1547\tOther\tOther\t49.00\t3098.58\tSasBoss\t[COST REVIEW NEEDED] Cost price not found in spreadsheet — please verify manually. ",
+    "[REVIEWED] Multiple services at this site reviewed and accepted.  | COST REVIEW NEEDED: $49 placeholder cost from Access4 pricebook — verify actual wholesale cost\tC2888\tBT LAWYERS PTY LTD",
+    "S1560\t4G Data Backup Service\tOther\t49.00\t39.00\tSasBoss\t[Auto-matched by alias by Angus Burnett-Smith on 12/03/2026: \"Unassigned\" → \"NICKI'S PROFESSIONAL SECURITY SCREENS AND BLINDS\"]",
+    "[COST REVIEW NEEDED] Cost price not found in spreadsheet — please verify manually. ",
+    "[REVIEWED] Multiple services at this site reviewed and accepted.  | COST REVIEW NEEDED: $49 placeholder cost from Access4 pricebook — verify actual wholesale cost | COST REVIEW NEEDED | Invoice 890163: Customer billed $39 inc GST ($35.45 ex GST). Access4 wholesale cost unknown.\tC2893\tNICKI'S PROFESSIONAL SECURITY SCREENS AND BLINDS"
+  ],
+  "stdout": "externalId\tplanName\tserviceType\tmonthlyCost\tmonthlyRevenue\tsupplierName\tdiscoveryNotes\tcustomerExternalId\tcustomerName\nS0753\t4G Data Backup Service\tOther\t49.00\t20.00\tSasBoss\tCOST REVIEW NEEDED: $49 placeholder cost from Access4 pricebook — verify actual wholesale cost | COST REVIEW NEEDED | Invoice 890163: Customer billed $39 inc GST. Access4 wholesale cost unknown - estimated $18.18 ex GST.\tC0003\tActive Living - Allen Developments Pty Ltd\nSSPVNO3A\tInternet 100/40\tInternet\t49.00\t114.00\tSasBoss\t\n[AUTO-FIX] Duplicate of S0765+S0766 per invoice 890189 analysis | COST REVIEW NEEDED: $49 placeholder cost from Access4 pricebook — verify actual wholesale cost\tC0010\tAll Crops Haulage Pty Ltd\nS0777\tOther\tOther\t49.00\t400.00\tSasBoss\t[REVIEWED] Multiple services at this site reviewed and accepted.  | COST REVIEW NEEDED: $49 placeholder cost from Access4 pricebook — verify actual wholesale cost\tC0015\tASG Hail Pty Ltd\nS0815\tOther\tOther\t49.00\t75.00\tSasBoss\tCOST REVIEW NEEDED: $49 placeholder cost from Access4 pricebook — verify actual wholesale cost\tC0031\tBalgra Shopping Centre Management Pty Ltd\nS0832\t4G Failover SIM\tOther\t49.00\t35.00\tSasBoss\tCOST REVIEW NEEDED: $49 placeholder cost from Access4 pricebook — verify actual wholesale cost | COST REVIEW NEEDED | Invoice 890190: Customer billed $35 ex GST (SIM 8200093721783). Access4 wholesale cost unknown - estimated.\tC0044\tBracken Ridge Family Practice\nS0898\tOther\tOther\t49.00\t50.00\tSasBoss\tCOST REVIEW NEEDED: $49 placeholder cost from Access4 pricebook — verify actual wholesale cost\tC0064\tCommunity Lifestyle Agency Inc\nS0915\tOther\tOther\t49.00\t470.00\tSasBoss\tCOST REVIEW NEEDED: $49 placeholder cost from Access4 pricebook — verify actual wholesale cost\tC0072\tCreek St Pharmacy\nS0966\t4G Data Backup Service\tOther\t49.00\t30.00\tSasBoss\tCOST REVIEW NEEDED: $49 placeholder cost from Access4 pricebook — verify actual wholesale cost | COST REVIEW NEEDED | Invoice 890124: Customer billed $30 inc GST ($27.27 ex GST). Access4 wholesale cost unknown.\tC0091\tFast Cut Qld Pty Ltd\nS0989\tOther\tOther\t49.00\t1084.00\tSasBoss\t[ABB Import] Provider: ABB | Speed: NBN 100/40 | Technology: FTTN | Buy Price: $144.6.127.34 | Activation: 05 Aug 2024 | Notes: Fibre Connect Eligible\n[REVIEWED] Multiple services at this site reviewed and accepted.  | COST REVIEW NEEDED: $49 placeholder cost from Access4 pricebook — verify actual wholesale cost\tC0101\tGBA Consulting Engineers\nS1120\tOther\tOther\t49.00\t75.00\tSasBoss\t[Auto-matched by alias by Angus Burnett-Smith on 11/03/2026: \"Mega Electrics NSW\" → \"Mega Electrics\"]\n[ABB Import] Provider: ABB | Speed: NBN 100/40 | Technology: FTTN | Buy Price: $144.6.199.151 | Activation: 11 April 2024\n[REVIEWED] Multiple services at this site reviewed and accepted.  | COST REVIEW NEEDED: $49 placeholder cost from Access4 pricebook — verify actual wholesale cost\tC0159\tMega Electrics\nS1315\tOther\tVoice\t49.00\t0.80\tSasBoss\t[REVIEWED] Multiple services at this site reviewed and accepted.  | COST REVIEW NEEDED: $49 placeholder cost from Access4 pricebook — verify actual wholesale cost\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nS1388\tOther\tOther\t49.00\t250.00\tSasBoss\t[REVIEWED] Multiple services at this site reviewed and accepted.  | COST REVIEW NEEDED: $49 placeholder cost from Access4 pricebook — verify actual wholesale cost\tC0226\tSta Consulting Engineers\nS1416\tManaged Voice Support\tOther\t49.00\t25.00\tSasBoss\tCOST REVIEW NEEDED: $49 placeholder cost from Access4 pricebook — verify actual wholesale cost | COST REVIEW NEEDED | Invoice 890155: Customer billed $25 inc GST ($22.73 ex GST). Access4 wholesale cost unknown.\tC0235\tSwara\nS1454\t4G SIM Backup Internet Service\tOther\t49.00\t35.00\tSasBoss\t[RVC Import] Source: NL\n[SmileTel Import] Account: 586992900, Plan: Business Data Plan S\n[SM Import] Ella's SM upload: unassigned from RVC pending verification.\n[REVIEWED] Multiple services at this site reviewed and accepted.  | COST REVIEW NEEDED: $49 placeholder cost from Access4 pricebook — verify actual wholesale cost | COST REVIEW NEEDED | Invoice 890134: Customer billed $35 inc GST ($31.82 ex GST). Access4 wholesale cost unknown.\tC0271\tTrue Metal Solutions\nS1492\tOther\tOther\t49.00\t57.22\tSasBoss\tCOST REVIEW NEEDED: $49 placeholder cost from Access4 pricebook — verify actual wholesale cost\tC0291\tWoodlands Enterprises Pty Ltd\nS1547\tOther\tOther\t49.00\t3098.58\tSasBoss\t[COST REVIEW NEEDED] Cost price not found in spreadsheet — please verify manually. \n[REVIEWED] Multiple services at this site reviewed and accepted.  | COST REVIEW NEEDED: $49 placeholder cost from Access4 pricebook — verify actual wholesale cost\tC2888\tBT LAWYERS PTY LTD\nS1560\t4G Data Backup Service\tOther\t49.00\t39.00\tSasBoss\t[Auto-matched by alias by Angus Burnett-Smith on 12/03/2026: \"Unassigned\" → \"NICKI'S PROFESSIONAL SECURITY SCREENS AND BLINDS\"]\n[COST REVIEW NEEDED] Cost price not found in spreadsheet — please verify manually. \n[REVIEWED] Multiple services at this site reviewed and accepted.  | COST REVIEW NEEDED: $49 placeholder cost from Access4 pricebook — verify actual wholesale cost | COST REVIEW NEEDED | Invoice 890163: Customer billed $39 inc GST ($35.45 ex GST). Access4 wholesale cost unknown.\tC2893\tNICKI'S PROFESSIONAL SECURITY SCREENS AND BLINDS\nS1576\tOther\tOther\t49.00\t116.77\tSasBoss\tCOST REVIEW NEEDED: $49 placeholder cost from Access4 pricebook — verify actual wholesale cost\tC2898\tRed Roo Australia\nS1589\tOther\tOther\t49.00\t2968.66\tSasBoss\tCOST REVIEW NEEDED: $49 placeholder cost from Access4 pricebook — verify actual wholesale cost\tC2904\tScout Talent Pty Ltd\n",
+  "stderr": "",
+  "execution_time_ms": 1576
+}

@@ -1,0 +1,8 @@
+{
+  "query": "\n-- For ASG Hail, how many UCXcel Webex Basic services exist and what is the revenue on each?\nSELECT \n  s.id,\n  s.external_id,\n  s.plan_name,\n  s.monthly_revenue,\n  s.monthly_cost,\n  s.cost_source,\n  s.billing_item_id,\n  bi.description AS billing_item_desc,\n  bi.line_amount AS billing_item_amount,\n  bi.quantity AS billing_item_qty,\n  bi.unit_amount AS billing_item_unit_price\nFROM services s\nLEFT JOIN billing_items bi ON bi.id = s.billing_item_id\nWHERE s.customer_id = (SELECT id FROM customers WHERE name LIKE '%ASG Hail%' LIMIT 1)\n  AND s.plan_name LIKE '%UCXcel Webex Basic%'\nORDER BY s.id;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- For ASG Hail, how many UCXcel Webex Basic services exist and what is the revenue on each?\nSELECT \n  s.id,\n  s.external_id,\n  s.plan_name,\n  s.monthly_revenue,\n  s.monthly_cost,\n  s.cost_source,\n  s.billing_item_id,\n  bi.description AS billing_item_desc,\n  bi.line_amount AS billing_item_amount,\n  bi.quantity AS billing_item_qty,\n  bi.unit_amount AS billing_item_unit_price\nFROM services s\nLEFT JOIN billing_items bi ON bi.id = s.billing_item_id\nWHERE s.customer_id = (SELECT id FROM customers WHERE name LIKE '%ASG Hail%' LIMIT 1)\n  AND s.plan_name LIKE '%UCXcel Webex Basic%'\nORDER BY s.id;\n",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1054 (42S22) at line 3: Unknown column 's.billing_item_id' in 'on clause'"
+  ]
+}

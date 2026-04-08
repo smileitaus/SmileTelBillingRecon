@@ -1,0 +1,90 @@
+{
+  "query": "SELECT id, description, unitAmount, quantity, lineAmount, serviceExternalId, accountCode, invoiceNumber\nFROM billing_items \nWHERE contactName LIKE '%Emergency%'\nORDER BY id;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute SELECT id, description, unitAmount, quantity, lineAmount, serviceExternalId, accountCode, invoiceNumber\nFROM billing_items \nWHERE contactName LIKE '%Emergency%'\nORDER BY id;",
+  "rows": [
+    {
+      "id": "209",
+      "description": "Voice - Telephone Usage",
+      "unitAmount": "3.79",
+      "quantity": "1.00",
+      "lineAmount": "3.79",
+      "serviceExternalId": "SSWS5JSC",
+      "accountCode": "2376",
+      "invoiceNumber": "E-884461"
+    },
+    {
+      "id": "210",
+      "description": "Voice - Direct In Dial Numbers",
+      "unitAmount": "2.00",
+      "quantity": "1.00",
+      "lineAmount": "2.00",
+      "serviceExternalId": "S0332",
+      "accountCode": "2376",
+      "invoiceNumber": "E-884461"
+    },
+    {
+      "id": "211",
+      "description": "Voice - Services",
+      "unitAmount": "25.00",
+      "quantity": "1.00",
+      "lineAmount": "25.00",
+      "serviceExternalId": "S0332",
+      "accountCode": "2376",
+      "invoiceNumber": "E-884461"
+    },
+    {
+      "id": "499",
+      "description": "NBN-AB 100/40 36m",
+      "unitAmount": "120.00",
+      "quantity": "1.00",
+      "lineAmount": "120.00",
+      "serviceExternalId": "S0332",
+      "accountCode": "2378",
+      "invoiceNumber": "INV-47396"
+    },
+    {
+      "id": "32067",
+      "description": "Voice - Telephone Usage",
+      "unitAmount": "3.79",
+      "quantity": "1.00",
+      "lineAmount": "3.79",
+      "serviceExternalId": "S7381",
+      "accountCode": "NULL",
+      "invoiceNumber": "E-884461"
+    },
+    {
+      "id": "32068",
+      "description": "Voice - Direct In Dial Numbers",
+      "unitAmount": "2.00",
+      "quantity": "1.00",
+      "lineAmount": "2.00",
+      "serviceExternalId": "S7381",
+      "accountCode": "NULL",
+      "invoiceNumber": "E-884461"
+    },
+    {
+      "id": "32069",
+      "description": "Voice - Services",
+      "unitAmount": "25.00",
+      "quantity": "1.00",
+      "lineAmount": "25.00",
+      "serviceExternalId": "S7381",
+      "accountCode": "NULL",
+      "invoiceNumber": "E-884461"
+    },
+    {
+      "id": "32355",
+      "description": "NBN-AB 100/40 36m",
+      "unitAmount": "120.00",
+      "quantity": "1.00",
+      "lineAmount": "120.00",
+      "serviceExternalId": "S0332",
+      "accountCode": "NULL",
+      "invoiceNumber": "INV-47396"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tdescription\tunitAmount\tquantity\tlineAmount\tserviceExternalId\taccountCode\tinvoiceNumber\n209\tVoice - Telephone Usage\t3.79\t1.00\t3.79\tSSWS5JSC\t2376\tE-884461\n210\tVoice - Direct In Dial Numbers\t2.00\t1.00\t2.00\tS0332\t2376\tE-884461\n211\tVoice - Services\t25.00\t1.00\t25.00\tS0332\t2376\tE-884461\n499\tNBN-AB 100/40 36m\t120.00\t1.00\t120.00\tS0332\t2378\tINV-47396\n32067\tVoice - Telephone Usage\t3.79\t1.00\t3.79\tS7381\tNULL\tE-884461\n32068\tVoice - Direct In Dial Numbers\t2.00\t1.00\t2.00\tS7381\tNULL\tE-884461\n32069\tVoice - Services\t25.00\t1.00\t25.00\tS7381\tNULL\tE-884461\n32355\tNBN-AB 100/40 36m\t120.00\t1.00\t120.00\tS0332\tNULL\tINV-47396\n",
+  "stderr": "",
+  "execution_time_ms": 1695
+}

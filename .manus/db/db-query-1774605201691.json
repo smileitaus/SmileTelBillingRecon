@@ -1,0 +1,15 @@
+{
+  "query": "\n-- Check the distribution of discrepancy types\n-- Are these services with revenue > 0 but NO billing items at all (manually set revenue)?\nSELECT \n  SUM(CASE WHEN billingItemSum = 0 THEN 1 ELSE 0 END) as noMatchedBillingItems,\n  SUM(CASE WHEN billingItemSum > 0 THEN 1 ELSE 0 END) as hasBillingItemsButMismatch,\n  COUNT(*) as total\nFROM (\n  SELECT \n    s.externalId,\n    s.monthlyRevenue,\n    COALESCE(SUM(bi.lineAmount), 0) as billingItemSum\n  FROM services s\n  LEFT JOIN billing_items bi ON bi.serviceExternalId = s.externalId\n    AND bi.matchStatus IN ('matched', 'service-matched')\n  WHERE s.status = 'active'\n    AND s.monthlyRevenue > 0\n  GROUP BY s.externalId, s.monthlyRevenue\n  HAVING ABS(s.monthlyRevenue - COALESCE(SUM(bi.lineAmount), 0)) > 0.01\n) sub;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Check the distribution of discrepancy types\n-- Are these services with revenue > 0 but NO billing items at all (manually set revenue)?\nSELECT \n  SUM(CASE WHEN billingItemSum = 0 THEN 1 ELSE 0 END) as noMatchedBillingItems,\n  SUM(CASE WHEN billingItemSum > 0 THEN 1 ELSE 0 END) as hasBillingItemsButMismatch,\n  COUNT(*) as total\nFROM (\n  SELECT \n    s.externalId,\n    s.monthlyRevenue,\n    COALESCE(SUM(bi.lineAmount), 0) as billingItemSum\n  FROM services s\n  LEFT JOIN billing_items bi ON bi.serviceExternalId = s.externalId\n    AND bi.matchStatus IN ('matched', 'service-matched')\n  WHERE s.status = 'active'\n    AND s.monthlyRevenue > 0\n  GROUP BY s.externalId, s.monthlyRevenue\n  HAVING ABS(s.monthlyRevenue - COALESCE(SUM(bi.lineAmount), 0)) > 0.01\n) sub;\n",
+  "rows": [
+    {
+      "noMatchedBillingItems": "600",
+      "hasBillingItemsButMismatch": "0",
+      "total": "600"
+    }
+  ],
+  "messages": [],
+  "stdout": "noMatchedBillingItems\thasBillingItemsButMismatch\ttotal\n600\t0\t600\n",
+  "stderr": "",
+  "execution_time_ms": 1578
+}

@@ -1,0 +1,346 @@
+{
+  "query": "-- Check Middlemount Coal - S552C has no billing items but the customer has billing items\n-- The Exetel 500Mbps service is billed as \"500mb Business Grade Fibre\" in Xero\n-- Check if S552C has any billing items at all\nSELECT bi.id, bi.description, bi.lineAmount, bi.serviceExternalId, bi.contactName\nFROM billing_items bi\nWHERE bi.contactName = 'Middlemount Coal Pty Ltd'\nORDER BY bi.lineAmount DESC;\n\n-- Check Legrand AV Australia billing items\nSELECT bi.description, bi.lineAmount, bi.serviceExternalId\nFROM billing_items bi\nWHERE bi.contactName LIKE '%Legrand%'\nORDER BY bi.lineAmount DESC;\n\n-- Check Body Corporate Osprey - SNVXEGL (Legion $799) has no billing items\n-- but Osprey has billing items for S0236 and S0700 (500/500 Managed $1250 each)\n-- SNVXEGL is a different service (Legion Fibre Business $799)\nSELECT externalId, planName, provider, monthlyCost, monthlyRevenue\nFROM services WHERE customerExternalId = 'C0038';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute -- Check Middlemount Coal - S552C has no billing items but the customer has billing items\n-- The Exetel 500Mbps service is billed as \"500mb Business Grade Fibre\" in Xero\n-- Check if S552C has any billing items at all\nSELECT bi.id, bi.description, bi.lineAmount, bi.serviceExternalId, bi.contactName\nFROM billing_items bi\nWHERE bi.contactName = 'Middlemount Coal Pty Ltd'\nORDER BY bi.lineAmount DESC;\n\n-- Check Legrand AV Australia billing items\nSELECT bi.description, bi.lineAmount, bi.serviceExternalId\nFROM billing_items bi\nWHERE bi.contactName LIKE '%Legrand%'\nORDER BY bi.lineAmount DESC;\n\n-- Check Body Corporate Osprey - SNVXEGL (Legion $799) has no billing items\n-- but Osprey has billing items for S0236 and S0700 (500/500 Managed $1250 each)\n-- SNVXEGL is a different service (Legion Fibre Business $799)\nSELECT externalId, planName, provider, monthlyCost, monthlyRevenue\nFROM services WHERE customerExternalId = 'C0038';",
+  "rows": [
+    {
+      "id": "532",
+      "description": "500mb Business Grade Fibre Up and Down - Route 1 - 36 Month ContractEach",
+      "lineAmount": "4450.00",
+      "serviceExternalId": "S1132",
+      "contactName": "Middlemount Coal Pty Ltd"
+    },
+    {
+      "id": "32386",
+      "description": "500mb Business Grade Fibre Up and Down - Route 1 - 36 Month ContractEach",
+      "lineAmount": "4450.00",
+      "serviceExternalId": "S1131",
+      "contactName": "Middlemount Coal Pty Ltd"
+    },
+    {
+      "id": "531",
+      "description": "Starlink provides high-speed, low-latency broadband internet across the globe.Each",
+      "lineAmount": "863.00",
+      "serviceExternalId": "S1134",
+      "contactName": "Middlemount Coal Pty Ltd"
+    },
+    {
+      "id": "32385",
+      "description": "Starlink provides high-speed, low-latency broadband internet across the globe.Each",
+      "lineAmount": "863.00",
+      "serviceExternalId": "S1131",
+      "contactName": "Middlemount Coal Pty Ltd"
+    },
+    {
+      "id": "32387",
+      "description": "500mb up speed, 500mb down speed Business Grade SLA - 24 MonthEach",
+      "lineAmount": "599.00",
+      "serviceExternalId": "S7275",
+      "contactName": "Middlemount Coal Pty Ltd"
+    },
+    {
+      "id": "533",
+      "description": "500mb up speed, 500mb down speed Business Grade SLA - 24 MonthEach",
+      "lineAmount": "599.00",
+      "serviceExternalId": "S1133",
+      "contactName": "Middlemount Coal Pty Ltd"
+    },
+    {
+      "id": "1003",
+      "description": "Premium",
+      "lineAmount": "588.00",
+      "serviceExternalId": "S1126",
+      "contactName": "Middlemount Coal Pty Ltd"
+    },
+    {
+      "id": "32845",
+      "description": "Premium",
+      "lineAmount": "588.00",
+      "serviceExternalId": "S7275",
+      "contactName": "Middlemount Coal Pty Ltd"
+    },
+    {
+      "id": "32384",
+      "description": "4G Internet - 3 Sites - 125GB per Site Per MonthEach",
+      "lineAmount": "360.00",
+      "serviceExternalId": "S1131",
+      "contactName": "Middlemount Coal Pty Ltd"
+    },
+    {
+      "id": "530",
+      "description": "4G Internet - 3 Sites - 125GB per Site Per MonthEach",
+      "lineAmount": "360.00",
+      "serviceExternalId": "S1131",
+      "contactName": "Middlemount Coal Pty Ltd"
+    },
+    {
+      "id": "32829",
+      "description": "Managed Voice Support - 26 - 50",
+      "lineAmount": "250.00",
+      "serviceExternalId": "S7275",
+      "contactName": "Middlemount Coal Pty Ltd"
+    },
+    {
+      "id": "987",
+      "description": "Managed Voice Support - 26 - 50",
+      "lineAmount": "250.00",
+      "serviceExternalId": "S1135",
+      "contactName": "Middlemount Coal Pty Ltd"
+    },
+    {
+      "id": "32842",
+      "description": "100 Number block",
+      "lineAmount": "140.00",
+      "serviceExternalId": "S7275",
+      "contactName": "Middlemount Coal Pty Ltd"
+    },
+    {
+      "id": "1000",
+      "description": "100 Number block",
+      "lineAmount": "140.00",
+      "serviceExternalId": "S1121",
+      "contactName": "Middlemount Coal Pty Ltd"
+    },
+    {
+      "id": "32844",
+      "description": "Collaboration",
+      "lineAmount": "138.00",
+      "serviceExternalId": "S7275",
+      "contactName": "Middlemount Coal Pty Ltd"
+    },
+    {
+      "id": "1002",
+      "description": "Collaboration",
+      "lineAmount": "138.00",
+      "serviceExternalId": "S1123",
+      "contactName": "Middlemount Coal Pty Ltd"
+    },
+    {
+      "id": "1001",
+      "description": "Standard",
+      "lineAmount": "48.00",
+      "serviceExternalId": "S1129",
+      "contactName": "Middlemount Coal Pty Ltd"
+    },
+    {
+      "id": "32843",
+      "description": "Standard",
+      "lineAmount": "48.00",
+      "serviceExternalId": "S7275",
+      "contactName": "Middlemount Coal Pty Ltd"
+    },
+    {
+      "id": "991",
+      "description": "Mobile",
+      "lineAmount": "33.48",
+      "serviceExternalId": "S1125",
+      "contactName": "Middlemount Coal Pty Ltd"
+    },
+    {
+      "id": "32833",
+      "description": "Mobile",
+      "lineAmount": "33.48",
+      "serviceExternalId": "S1125",
+      "contactName": "Middlemount Coal Pty Ltd"
+    },
+    {
+      "id": "32830",
+      "description": "Mobile",
+      "lineAmount": "9.93",
+      "serviceExternalId": "S1125",
+      "contactName": "Middlemount Coal Pty Ltd"
+    },
+    {
+      "id": "988",
+      "description": "Mobile",
+      "lineAmount": "9.93",
+      "serviceExternalId": "S1125",
+      "contactName": "Middlemount Coal Pty Ltd"
+    },
+    {
+      "id": "1004",
+      "description": "Voicemail",
+      "lineAmount": "6.00",
+      "serviceExternalId": "S1130",
+      "contactName": "Middlemount Coal Pty Ltd"
+    },
+    {
+      "id": "32846",
+      "description": "Voicemail",
+      "lineAmount": "6.00",
+      "serviceExternalId": "S7275",
+      "contactName": "Middlemount Coal Pty Ltd"
+    },
+    {
+      "id": "995",
+      "description": "Mobile",
+      "lineAmount": "5.60",
+      "serviceExternalId": "S1125",
+      "contactName": "Middlemount Coal Pty Ltd"
+    },
+    {
+      "id": "32837",
+      "description": "Mobile",
+      "lineAmount": "5.60",
+      "serviceExternalId": "S1125",
+      "contactName": "Middlemount Coal Pty Ltd"
+    },
+    {
+      "id": "999",
+      "description": "Single Number",
+      "lineAmount": "2.00",
+      "serviceExternalId": "S1128",
+      "contactName": "Middlemount Coal Pty Ltd"
+    },
+    {
+      "id": "32841",
+      "description": "Single Number",
+      "lineAmount": "2.00",
+      "serviceExternalId": "S7275",
+      "contactName": "Middlemount Coal Pty Ltd"
+    },
+    {
+      "id": "992",
+      "description": "Mobile",
+      "lineAmount": "1.65",
+      "serviceExternalId": "S1125",
+      "contactName": "Middlemount Coal Pty Ltd"
+    },
+    {
+      "id": "32834",
+      "description": "Mobile",
+      "lineAmount": "1.65",
+      "serviceExternalId": "S1125",
+      "contactName": "Middlemount Coal Pty Ltd"
+    },
+    {
+      "id": "993",
+      "description": "Mobile",
+      "lineAmount": "1.02",
+      "serviceExternalId": "S1125",
+      "contactName": "Middlemount Coal Pty Ltd"
+    },
+    {
+      "id": "32835",
+      "description": "Mobile",
+      "lineAmount": "1.02",
+      "serviceExternalId": "S1125",
+      "contactName": "Middlemount Coal Pty Ltd"
+    },
+    {
+      "id": "32832",
+      "description": "13Number",
+      "lineAmount": "0.60",
+      "serviceExternalId": "S7275",
+      "contactName": "Middlemount Coal Pty Ltd"
+    },
+    {
+      "id": "990",
+      "description": "13Number",
+      "lineAmount": "0.60",
+      "serviceExternalId": "S1122",
+      "contactName": "Middlemount Coal Pty Ltd"
+    },
+    {
+      "id": "994",
+      "description": "13Number",
+      "lineAmount": "0.30",
+      "serviceExternalId": "S1122",
+      "contactName": "Middlemount Coal Pty Ltd"
+    },
+    {
+      "id": "32836",
+      "description": "13Number",
+      "lineAmount": "0.30",
+      "serviceExternalId": "S7275",
+      "contactName": "Middlemount Coal Pty Ltd"
+    },
+    {
+      "id": "32840",
+      "description": "Mobile",
+      "lineAmount": "0.13",
+      "serviceExternalId": "S1125",
+      "contactName": "Middlemount Coal Pty Ltd"
+    },
+    {
+      "id": "32831",
+      "description": "Mobile",
+      "lineAmount": "0.13",
+      "serviceExternalId": "S1125",
+      "contactName": "Middlemount Coal Pty Ltd"
+    },
+    {
+      "id": "998",
+      "description": "Mobile",
+      "lineAmount": "0.13",
+      "serviceExternalId": "S1125",
+      "contactName": "Middlemount Coal Pty Ltd"
+    },
+    {
+      "id": "989",
+      "description": "Mobile",
+      "lineAmount": "0.13",
+      "serviceExternalId": "S1125",
+      "contactName": "Middlemount Coal Pty Ltd"
+    },
+    {
+      "id": "32838",
+      "description": "Local",
+      "lineAmount": "0.08",
+      "serviceExternalId": "S7275",
+      "contactName": "Middlemount Coal Pty Ltd"
+    },
+    {
+      "id": "996",
+      "description": "Local",
+      "lineAmount": "0.08",
+      "serviceExternalId": "S1124",
+      "contactName": "Middlemount Coal Pty Ltd"
+    },
+    {
+      "id": "32839",
+      "description": "Regional",
+      "lineAmount": "0.06",
+      "serviceExternalId": "S7275",
+      "contactName": "Middlemount Coal Pty Ltd"
+    },
+    {
+      "id": "997",
+      "description": "Regional",
+      "lineAmount": "0.06",
+      "serviceExternalId": "S1127",
+      "contactName": "Middlemount Coal Pty Ltd"
+    },
+    {
+      "id": "externalId",
+      "description": "planName",
+      "lineAmount": "provider",
+      "serviceExternalId": "monthlyCost",
+      "contactName": "monthlyRevenue"
+    },
+    {
+      "id": "S0236",
+      "description": "Business Data Plan S",
+      "lineAmount": "Telstra",
+      "serviceExternalId": "10.00",
+      "contactName": "1500.00"
+    },
+    {
+      "id": "S0700",
+      "description": "NBN Enterprise Ethernet",
+      "lineAmount": "ABB",
+      "serviceExternalId": "768.90",
+      "contactName": "1500.00"
+    },
+    {
+      "id": "SNVXEGL",
+      "description": "Osprey Apartments - LEGION Fibre Business",
+      "lineAmount": "Legion",
+      "serviceExternalId": "799.00",
+      "contactName": "0.00"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tdescription\tlineAmount\tserviceExternalId\tcontactName\n532\t500mb Business Grade Fibre Up and Down - Route 1 - 36 Month ContractEach\t4450.00\tS1132\tMiddlemount Coal Pty Ltd\n32386\t500mb Business Grade Fibre Up and Down - Route 1 - 36 Month ContractEach\t4450.00\tS1131\tMiddlemount Coal Pty Ltd\n531\tStarlink provides high-speed, low-latency broadband internet across the globe.Each\t863.00\tS1134\tMiddlemount Coal Pty Ltd\n32385\tStarlink provides high-speed, low-latency broadband internet across the globe.Each\t863.00\tS1131\tMiddlemount Coal Pty Ltd\n32387\t500mb up speed, 500mb down speed Business Grade SLA - 24 MonthEach\t599.00\tS7275\tMiddlemount Coal Pty Ltd\n533\t500mb up speed, 500mb down speed Business Grade SLA - 24 MonthEach\t599.00\tS1133\tMiddlemount Coal Pty Ltd\n1003\tPremium\t588.00\tS1126\tMiddlemount Coal Pty Ltd\n32845\tPremium\t588.00\tS7275\tMiddlemount Coal Pty Ltd\n32384\t4G Internet - 3 Sites - 125GB per Site Per MonthEach\t360.00\tS1131\tMiddlemount Coal Pty Ltd\n530\t4G Internet - 3 Sites - 125GB per Site Per MonthEach\t360.00\tS1131\tMiddlemount Coal Pty Ltd\n32829\tManaged Voice Support - 26 - 50\t250.00\tS7275\tMiddlemount Coal Pty Ltd\n987\tManaged Voice Support - 26 - 50\t250.00\tS1135\tMiddlemount Coal Pty Ltd\n32842\t100 Number block\t140.00\tS7275\tMiddlemount Coal Pty Ltd\n1000\t100 Number block\t140.00\tS1121\tMiddlemount Coal Pty Ltd\n32844\tCollaboration\t138.00\tS7275\tMiddlemount Coal Pty Ltd\n1002\tCollaboration\t138.00\tS1123\tMiddlemount Coal Pty Ltd\n1001\tStandard\t48.00\tS1129\tMiddlemount Coal Pty Ltd\n32843\tStandard\t48.00\tS7275\tMiddlemount Coal Pty Ltd\n991\tMobile\t33.48\tS1125\tMiddlemount Coal Pty Ltd\n32833\tMobile\t33.48\tS1125\tMiddlemount Coal Pty Ltd\n32830\tMobile\t9.93\tS1125\tMiddlemount Coal Pty Ltd\n988\tMobile\t9.93\tS1125\tMiddlemount Coal Pty Ltd\n1004\tVoicemail\t6.00\tS1130\tMiddlemount Coal Pty Ltd\n32846\tVoicemail\t6.00\tS7275\tMiddlemount Coal Pty Ltd\n995\tMobile\t5.60\tS1125\tMiddlemount Coal Pty Ltd\n32837\tMobile\t5.60\tS1125\tMiddlemount Coal Pty Ltd\n999\tSingle Number\t2.00\tS1128\tMiddlemount Coal Pty Ltd\n32841\tSingle Number\t2.00\tS7275\tMiddlemount Coal Pty Ltd\n992\tMobile\t1.65\tS1125\tMiddlemount Coal Pty Ltd\n32834\tMobile\t1.65\tS1125\tMiddlemount Coal Pty Ltd\n993\tMobile\t1.02\tS1125\tMiddlemount Coal Pty Ltd\n32835\tMobile\t1.02\tS1125\tMiddlemount Coal Pty Ltd\n32832\t13Number\t0.60\tS7275\tMiddlemount Coal Pty Ltd\n990\t13Number\t0.60\tS1122\tMiddlemount Coal Pty Ltd\n994\t13Number\t0.30\tS1122\tMiddlemount Coal Pty Ltd\n32836\t13Number\t0.30\tS7275\tMiddlemount Coal Pty Ltd\n32840\tMobile\t0.13\tS1125\tMiddlemount Coal Pty Ltd\n32831\tMobile\t0.13\tS1125\tMiddlemount Coal Pty Ltd\n998\tMobile\t0.13\tS1125\tMiddlemount Coal Pty Ltd\n989\tMobile\t0.13\tS1125\tMiddlemount Coal Pty Ltd\n32838\tLocal\t0.08\tS7275\tMiddlemount Coal Pty Ltd\n996\tLocal\t0.08\tS1124\tMiddlemount Coal Pty Ltd\n32839\tRegional\t0.06\tS7275\tMiddlemount Coal Pty Ltd\n997\tRegional\t0.06\tS1127\tMiddlemount Coal Pty Ltd\nexternalId\tplanName\tprovider\tmonthlyCost\tmonthlyRevenue\nS0236\tBusiness Data Plan S\tTelstra\t10.00\t1500.00\nS0700\tNBN Enterprise Ethernet\tABB\t768.90\t1500.00\nSNVXEGL\tOsprey Apartments - LEGION Fibre Business\tLegion\t799.00\t0.00\n",
+  "stderr": "",
+  "execution_time_ms": 1943
+}

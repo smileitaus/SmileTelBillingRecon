@@ -1,0 +1,8 @@
+{
+  "query": "SELECT externalId, name, billingPlatforms, siteAddress, businessName FROM customers WHERE name REGEXP '^[A-M]' ORDER BY name LIMIT 200;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute SELECT externalId, name, billingPlatforms, siteAddress, businessName FROM customers WHERE name REGEXP '^[A-M]' ORDER BY name LIMIT 200;",
+  "returncode": 1,
+  "logs": [
+    "ERROR 9001 (HY000) at line 1: PD server timeout:"
+  ]
+}

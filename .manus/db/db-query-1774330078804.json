@@ -1,0 +1,211 @@
+{
+  "query": "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'vocus_nbn_services' ORDER BY ORDINAL_POSITION;\nSELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'vocus_mobile_services' ORDER BY ORDINAL_POSITION;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'vocus_nbn_services' ORDER BY ORDINAL_POSITION;\nSELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'vocus_mobile_services' ORDER BY ORDINAL_POSITION;",
+  "rows": [
+    {
+      "COLUMN_NAME": "id"
+    },
+    {
+      "COLUMN_NAME": "vocusServiceId"
+    },
+    {
+      "COLUMN_NAME": "serviceStatus"
+    },
+    {
+      "COLUMN_NAME": "planId"
+    },
+    {
+      "COLUMN_NAME": "realm"
+    },
+    {
+      "COLUMN_NAME": "username"
+    },
+    {
+      "COLUMN_NAME": "avcId"
+    },
+    {
+      "COLUMN_NAME": "locId"
+    },
+    {
+      "COLUMN_NAME": "technology"
+    },
+    {
+      "COLUMN_NAME": "speedTier"
+    },
+    {
+      "COLUMN_NAME": "address"
+    },
+    {
+      "COLUMN_NAME": "suburb"
+    },
+    {
+      "COLUMN_NAME": "state"
+    },
+    {
+      "COLUMN_NAME": "postcode"
+    },
+    {
+      "COLUMN_NAME": "customerName"
+    },
+    {
+      "COLUMN_NAME": "contactPhone"
+    },
+    {
+      "COLUMN_NAME": "contactEmail"
+    },
+    {
+      "COLUMN_NAME": "label"
+    },
+    {
+      "COLUMN_NAME": "anniversaryDay"
+    },
+    {
+      "COLUMN_NAME": "ipAddress"
+    },
+    {
+      "COLUMN_NAME": "poiName"
+    },
+    {
+      "COLUMN_NAME": "activationDate"
+    },
+    {
+      "COLUMN_NAME": "internalServiceExternalId"
+    },
+    {
+      "COLUMN_NAME": "internalCustomerExternalId"
+    },
+    {
+      "COLUMN_NAME": "matchType"
+    },
+    {
+      "COLUMN_NAME": "matchConfidence"
+    },
+    {
+      "COLUMN_NAME": "rawJson"
+    },
+    {
+      "COLUMN_NAME": "lastSyncedAt"
+    },
+    {
+      "COLUMN_NAME": "createdAt"
+    },
+    {
+      "COLUMN_NAME": "updatedAt"
+    },
+    {
+      "COLUMN_NAME": "COLUMN_NAME"
+    },
+    {
+      "COLUMN_NAME": "id"
+    },
+    {
+      "COLUMN_NAME": "vocusServiceId"
+    },
+    {
+      "COLUMN_NAME": "serviceScope"
+    },
+    {
+      "COLUMN_NAME": "serviceStatus"
+    },
+    {
+      "COLUMN_NAME": "planId"
+    },
+    {
+      "COLUMN_NAME": "realm"
+    },
+    {
+      "COLUMN_NAME": "sim"
+    },
+    {
+      "COLUMN_NAME": "simType"
+    },
+    {
+      "COLUMN_NAME": "msn"
+    },
+    {
+      "COLUMN_NAME": "puk"
+    },
+    {
+      "COLUMN_NAME": "customerName"
+    },
+    {
+      "COLUMN_NAME": "anniversaryDay"
+    },
+    {
+      "COLUMN_NAME": "bucketId"
+    },
+    {
+      "COLUMN_NAME": "label"
+    },
+    {
+      "COLUMN_NAME": "locationReference"
+    },
+    {
+      "COLUMN_NAME": "voiceBarring"
+    },
+    {
+      "COLUMN_NAME": "roaming"
+    },
+    {
+      "COLUMN_NAME": "gprs"
+    },
+    {
+      "COLUMN_NAME": "smsIn"
+    },
+    {
+      "COLUMN_NAME": "smsOut"
+    },
+    {
+      "COLUMN_NAME": "voiceDivertAlways"
+    },
+    {
+      "COLUMN_NAME": "voiceDivertBusy"
+    },
+    {
+      "COLUMN_NAME": "voiceDivertNoAnswer"
+    },
+    {
+      "COLUMN_NAME": "voiceDivertUnreachable"
+    },
+    {
+      "COLUMN_NAME": "orderType"
+    },
+    {
+      "COLUMN_NAME": "portOutReference"
+    },
+    {
+      "COLUMN_NAME": "billingProviderId"
+    },
+    {
+      "COLUMN_NAME": "activationDate"
+    },
+    {
+      "COLUMN_NAME": "internalServiceExternalId"
+    },
+    {
+      "COLUMN_NAME": "internalCustomerExternalId"
+    },
+    {
+      "COLUMN_NAME": "matchType"
+    },
+    {
+      "COLUMN_NAME": "matchConfidence"
+    },
+    {
+      "COLUMN_NAME": "rawJson"
+    },
+    {
+      "COLUMN_NAME": "lastSyncedAt"
+    },
+    {
+      "COLUMN_NAME": "createdAt"
+    },
+    {
+      "COLUMN_NAME": "updatedAt"
+    }
+  ],
+  "messages": [],
+  "stdout": "COLUMN_NAME\nid\nvocusServiceId\nserviceStatus\nplanId\nrealm\nusername\navcId\nlocId\ntechnology\nspeedTier\naddress\nsuburb\nstate\npostcode\ncustomerName\ncontactPhone\ncontactEmail\nlabel\nanniversaryDay\nipAddress\npoiName\nactivationDate\ninternalServiceExternalId\ninternalCustomerExternalId\nmatchType\nmatchConfidence\nrawJson\nlastSyncedAt\ncreatedAt\nupdatedAt\nCOLUMN_NAME\nid\nvocusServiceId\nserviceScope\nserviceStatus\nplanId\nrealm\nsim\nsimType\nmsn\npuk\ncustomerName\nanniversaryDay\nbucketId\nlabel\nlocationReference\nvoiceBarring\nroaming\ngprs\nsmsIn\nsmsOut\nvoiceDivertAlways\nvoiceDivertBusy\nvoiceDivertNoAnswer\nvoiceDivertUnreachable\norderType\nportOutReference\nbillingProviderId\nactivationDate\ninternalServiceExternalId\ninternalCustomerExternalId\nmatchType\nmatchConfidence\nrawJson\nlastSyncedAt\ncreatedAt\nupdatedAt\n",
+  "stderr": "",
+  "execution_time_ms": 1879
+}

@@ -1,0 +1,210 @@
+{
+  "query": "\nSELECT DISTINCT li.productName, li.productType, li.amountExGst\nFROM supplier_workbook_line_items li\nJOIN supplier_workbook_uploads wu ON wu.id = li.uploadId\nWHERE wu.supplier = 'SasBoss'\nORDER BY li.productName\nLIMIT 40;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \nSELECT DISTINCT li.productName, li.productType, li.amountExGst\nFROM supplier_workbook_line_items li\nJOIN supplier_workbook_uploads wu ON wu.id = li.uploadId\nWHERE wu.supplier = 'SasBoss'\nORDER BY li.productName\nLIMIT 40;\n",
+  "rows": [
+    {
+      "productName": "(blank)",
+      "productType": "(blank)",
+      "amountExGst": "74.38"
+    },
+    {
+      "productName": "(blank)",
+      "productType": "(blank)",
+      "amountExGst": "149.00"
+    },
+    {
+      "productName": "(blank)",
+      "productType": "(blank)",
+      "amountExGst": "5648.00"
+    },
+    {
+      "productName": "(blank)",
+      "productType": "(blank)",
+      "amountExGst": "470.74"
+    },
+    {
+      "productName": "(blank)",
+      "productType": "(blank)",
+      "amountExGst": "725.51"
+    },
+    {
+      "productName": "(blank)",
+      "productType": "(blank)",
+      "amountExGst": "114.00"
+    },
+    {
+      "productName": "(blank)",
+      "productType": "(blank)",
+      "amountExGst": "144.16"
+    },
+    {
+      "productName": "(blank)",
+      "productType": "(blank)",
+      "amountExGst": "82.73"
+    },
+    {
+      "productName": "(blank)",
+      "productType": "(blank)",
+      "amountExGst": "0.55"
+    },
+    {
+      "productName": "(blank)",
+      "productType": "(blank)",
+      "amountExGst": "611.29"
+    },
+    {
+      "productName": "(blank)",
+      "productType": "(blank)",
+      "amountExGst": "164.66"
+    },
+    {
+      "productName": "(blank)",
+      "productType": "(blank)",
+      "amountExGst": "692.15"
+    },
+    {
+      "productName": "(blank)",
+      "productType": "(blank)",
+      "amountExGst": "35.00"
+    },
+    {
+      "productName": "(blank)",
+      "productType": "(blank)",
+      "amountExGst": "399.00"
+    },
+    {
+      "productName": "(blank)",
+      "productType": "(blank)",
+      "amountExGst": "122.80"
+    },
+    {
+      "productName": "(blank)",
+      "productType": "(blank)",
+      "amountExGst": "167.94"
+    },
+    {
+      "productName": "(blank)",
+      "productType": "(blank)",
+      "amountExGst": "142.17"
+    },
+    {
+      "productName": "(blank)",
+      "productType": "(blank)",
+      "amountExGst": "148.00"
+    },
+    {
+      "productName": "(blank)",
+      "productType": "(blank)",
+      "amountExGst": "116.66"
+    },
+    {
+      "productName": "(blank)",
+      "productType": "(blank)",
+      "amountExGst": "63.78"
+    },
+    {
+      "productName": "(blank)",
+      "productType": "(blank)",
+      "amountExGst": "156.91"
+    },
+    {
+      "productName": "(blank)",
+      "productType": "(blank)",
+      "amountExGst": "1276.27"
+    },
+    {
+      "productName": "(blank)",
+      "productType": "(blank)",
+      "amountExGst": "155.43"
+    },
+    {
+      "productName": "(blank)",
+      "productType": "(blank)",
+      "amountExGst": "117.86"
+    },
+    {
+      "productName": "(blank)",
+      "productType": "(blank)",
+      "amountExGst": "297.15"
+    },
+    {
+      "productName": "(blank)",
+      "productType": "(blank)",
+      "amountExGst": "192.92"
+    },
+    {
+      "productName": "(blank)",
+      "productType": "(blank)",
+      "amountExGst": "255.30"
+    },
+    {
+      "productName": "(blank)",
+      "productType": "(blank)",
+      "amountExGst": "0.25"
+    },
+    {
+      "productName": "(blank)",
+      "productType": "(blank)",
+      "amountExGst": "0.00"
+    },
+    {
+      "productName": "(blank)",
+      "productType": "(blank)",
+      "amountExGst": "157.80"
+    },
+    {
+      "productName": "(blank)",
+      "productType": "(blank)",
+      "amountExGst": "62.70"
+    },
+    {
+      "productName": "(blank)",
+      "productType": "(blank)",
+      "amountExGst": "1630.77"
+    },
+    {
+      "productName": "(blank)",
+      "productType": "(blank)",
+      "amountExGst": "920.11"
+    },
+    {
+      "productName": "(blank)",
+      "productType": "(blank)",
+      "amountExGst": "115.45"
+    },
+    {
+      "productName": "(blank)",
+      "productType": "(blank)",
+      "amountExGst": "2050.64"
+    },
+    {
+      "productName": "(blank)",
+      "productType": "(blank)",
+      "amountExGst": "88.00"
+    },
+    {
+      "productName": "(blank)",
+      "productType": "(blank)",
+      "amountExGst": "1310.15"
+    },
+    {
+      "productName": "(blank)",
+      "productType": "(blank)",
+      "amountExGst": "155.00"
+    },
+    {
+      "productName": "(blank)",
+      "productType": "(blank)",
+      "amountExGst": "31.76"
+    },
+    {
+      "productName": "(blank)",
+      "productType": "(blank)",
+      "amountExGst": "153.16"
+    }
+  ],
+  "messages": [],
+  "stdout": "productName\tproductType\tamountExGst\n(blank)\t(blank)\t74.38\n(blank)\t(blank)\t149.00\n(blank)\t(blank)\t5648.00\n(blank)\t(blank)\t470.74\n(blank)\t(blank)\t725.51\n(blank)\t(blank)\t114.00\n(blank)\t(blank)\t144.16\n(blank)\t(blank)\t82.73\n(blank)\t(blank)\t0.55\n(blank)\t(blank)\t611.29\n(blank)\t(blank)\t164.66\n(blank)\t(blank)\t692.15\n(blank)\t(blank)\t35.00\n(blank)\t(blank)\t399.00\n(blank)\t(blank)\t122.80\n(blank)\t(blank)\t167.94\n(blank)\t(blank)\t142.17\n(blank)\t(blank)\t148.00\n(blank)\t(blank)\t116.66\n(blank)\t(blank)\t63.78\n(blank)\t(blank)\t156.91\n(blank)\t(blank)\t1276.27\n(blank)\t(blank)\t155.43\n(blank)\t(blank)\t117.86\n(blank)\t(blank)\t297.15\n(blank)\t(blank)\t192.92\n(blank)\t(blank)\t255.30\n(blank)\t(blank)\t0.25\n(blank)\t(blank)\t0.00\n(blank)\t(blank)\t157.80\n(blank)\t(blank)\t62.70\n(blank)\t(blank)\t1630.77\n(blank)\t(blank)\t920.11\n(blank)\t(blank)\t115.45\n(blank)\t(blank)\t2050.64\n(blank)\t(blank)\t88.00\n(blank)\t(blank)\t1310.15\n(blank)\t(blank)\t155.00\n(blank)\t(blank)\t31.76\n(blank)\t(blank)\t153.16\n",
+  "stderr": "",
+  "execution_time_ms": 1538
+}

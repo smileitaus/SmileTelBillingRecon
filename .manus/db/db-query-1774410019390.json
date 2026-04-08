@@ -1,0 +1,162 @@
+{
+  "query": "DESCRIBE phone_numbers;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute DESCRIBE phone_numbers;",
+  "rows": [
+    {
+      "Field": "id",
+      "Type": "int",
+      "Null": "NO",
+      "Key": "PRI",
+      "Default": "NULL",
+      "Extra": "auto_increment"
+    },
+    {
+      "Field": "number",
+      "Type": "varchar(32)",
+      "Null": "NO",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "numberDisplay",
+      "Type": "varchar(32)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "",
+      "Extra": ""
+    },
+    {
+      "Field": "numberType",
+      "Type": "varchar(32)",
+      "Null": "NO",
+      "Key": "",
+      "Default": "geographic",
+      "Extra": ""
+    },
+    {
+      "Field": "provider",
+      "Type": "varchar(128)",
+      "Null": "NO",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "status",
+      "Type": "varchar(32)",
+      "Null": "NO",
+      "Key": "",
+      "Default": "active",
+      "Extra": ""
+    },
+    {
+      "Field": "customerExternalId",
+      "Type": "varchar(32)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "",
+      "Extra": ""
+    },
+    {
+      "Field": "customerName",
+      "Type": "varchar(512)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "",
+      "Extra": ""
+    },
+    {
+      "Field": "serviceExternalId",
+      "Type": "varchar(32)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "",
+      "Extra": ""
+    },
+    {
+      "Field": "servicePlanName",
+      "Type": "varchar(512)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "",
+      "Extra": ""
+    },
+    {
+      "Field": "monthlyCost",
+      "Type": "decimal(10,2)",
+      "Null": "NO",
+      "Key": "",
+      "Default": "0.00",
+      "Extra": ""
+    },
+    {
+      "Field": "monthlyRevenue",
+      "Type": "decimal(10,2)",
+      "Null": "NO",
+      "Key": "",
+      "Default": "0.00",
+      "Extra": ""
+    },
+    {
+      "Field": "providerServiceCode",
+      "Type": "varchar(256)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "",
+      "Extra": ""
+    },
+    {
+      "Field": "notes",
+      "Type": "text",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "address",
+      "Type": "varchar(500)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "",
+      "Extra": ""
+    },
+    {
+      "Field": "dataSource",
+      "Type": "varchar(64)",
+      "Null": "NO",
+      "Key": "",
+      "Default": "manual",
+      "Extra": ""
+    },
+    {
+      "Field": "lastSyncedAt",
+      "Type": "timestamp",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "createdAt",
+      "Type": "timestamp",
+      "Null": "NO",
+      "Key": "",
+      "Default": "CURRENT_TIMESTAMP",
+      "Extra": ""
+    },
+    {
+      "Field": "updatedAt",
+      "Type": "timestamp",
+      "Null": "NO",
+      "Key": "",
+      "Default": "CURRENT_TIMESTAMP",
+      "Extra": "DEFAULT_GENERATED on update CURRENT_TIMESTAMP"
+    }
+  ],
+  "messages": [],
+  "stdout": "Field\tType\tNull\tKey\tDefault\tExtra\nid\tint\tNO\tPRI\tNULL\tauto_increment\nnumber\tvarchar(32)\tNO\t\tNULL\t\nnumberDisplay\tvarchar(32)\tYES\t\t\t\nnumberType\tvarchar(32)\tNO\t\tgeographic\t\nprovider\tvarchar(128)\tNO\t\tNULL\t\nstatus\tvarchar(32)\tNO\t\tactive\t\ncustomerExternalId\tvarchar(32)\tYES\t\t\t\ncustomerName\tvarchar(512)\tYES\t\t\t\nserviceExternalId\tvarchar(32)\tYES\t\t\t\nservicePlanName\tvarchar(512)\tYES\t\t\t\nmonthlyCost\tdecimal(10,2)\tNO\t\t0.00\t\nmonthlyRevenue\tdecimal(10,2)\tNO\t\t0.00\t\nproviderServiceCode\tvarchar(256)\tYES\t\t\t\nnotes\ttext\tYES\t\tNULL\t\naddress\tvarchar(500)\tYES\t\t\t\ndataSource\tvarchar(64)\tNO\t\tmanual\t\nlastSyncedAt\ttimestamp\tYES\t\tNULL\t\ncreatedAt\ttimestamp\tNO\t\tCURRENT_TIMESTAMP\t\nupdatedAt\ttimestamp\tNO\t\tCURRENT_TIMESTAMP\tDEFAULT_GENERATED on update CURRENT_TIMESTAMP\n",
+  "stderr": "",
+  "execution_time_ms": 1689
+}

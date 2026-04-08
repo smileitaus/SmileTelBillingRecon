@@ -1,0 +1,66 @@
+{
+  "query": "\nSELECT externalId, planName, monthlyCost, monthlyRevenue, customerExternalId\nFROM services\nWHERE externalId IN ('SG3D608','SSHKYHNC','SSCLR2F4','S1220','S1301','IPTEL-AB035443','S0467','S1315')\nORDER BY externalId;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \nSELECT externalId, planName, monthlyCost, monthlyRevenue, customerExternalId\nFROM services\nWHERE externalId IN ('SG3D608','SSHKYHNC','SSCLR2F4','S1220','S1301','IPTEL-AB035443','S0467','S1315')\nORDER BY externalId;\n",
+  "rows": [
+    {
+      "externalId": "IPTEL-AB035443",
+      "planName": "Managed Voice Support (1-10 users)",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "75.00",
+      "customerExternalId": "C0224"
+    },
+    {
+      "externalId": "S0467",
+      "planName": "Opticomm 100/40",
+      "monthlyCost": "109.00",
+      "monthlyRevenue": "35.00",
+      "customerExternalId": "C0076"
+    },
+    {
+      "externalId": "S1220",
+      "planName": "13Number",
+      "monthlyCost": "0.42",
+      "monthlyRevenue": "5.00",
+      "customerExternalId": "C0208"
+    },
+    {
+      "externalId": "S1301",
+      "planName": "13Number",
+      "monthlyCost": "1.89",
+      "monthlyRevenue": "5.00",
+      "customerExternalId": "C0214"
+    },
+    {
+      "externalId": "S1315",
+      "planName": "Other",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.80",
+      "customerExternalId": "C0214"
+    },
+    {
+      "externalId": "SG3D608",
+      "planName": "Logan Medical",
+      "monthlyCost": "80.00",
+      "monthlyRevenue": "35.00",
+      "customerExternalId": "C0151"
+    },
+    {
+      "externalId": "SSCLR2F4",
+      "planName": "Auto Attendant with Time of Day Routing",
+      "monthlyCost": "9.00",
+      "monthlyRevenue": "15.00",
+      "customerExternalId": "C0026"
+    },
+    {
+      "externalId": "SSHKYHNC",
+      "planName": "Inbound 1300 Number Hosting",
+      "monthlyCost": "5.00",
+      "monthlyRevenue": "10.50",
+      "customerExternalId": "C0107"
+    }
+  ],
+  "messages": [],
+  "stdout": "externalId\tplanName\tmonthlyCost\tmonthlyRevenue\tcustomerExternalId\nIPTEL-AB035443\tManaged Voice Support (1-10 users)\t0.00\t75.00\tC0224\nS0467\tOpticomm 100/40\t109.00\t35.00\tC0076\nS1220\t13Number\t0.42\t5.00\tC0208\nS1301\t13Number\t1.89\t5.00\tC0214\nS1315\tOther\t0.00\t0.80\tC0214\nSG3D608\tLogan Medical\t80.00\t35.00\tC0151\nSSCLR2F4\tAuto Attendant with Time of Day Routing\t9.00\t15.00\tC0026\nSSHKYHNC\tInbound 1300 Number Hosting\t5.00\t10.50\tC0107\n",
+  "stderr": "",
+  "execution_time_ms": 1633
+}

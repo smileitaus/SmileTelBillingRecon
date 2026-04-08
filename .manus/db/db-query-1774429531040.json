@@ -1,0 +1,78 @@
+{
+  "query": "\nSELECT DISTINCT customerName, customerExternalId\nFROM services\nWHERE (\n  customerName LIKE '%Action Smart%' OR\n  customerName LIKE '%Air Restore%' OR\n  customerName LIKE '%Envest%' OR\n  customerName LIKE '%Gateway%' OR\n  customerName LIKE '%Salter%' OR\n  customerName LIKE '%Spicers%'\n)\nAND customerExternalId IS NOT NULL AND customerExternalId != ''\nORDER BY customerName;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \nSELECT DISTINCT customerName, customerExternalId\nFROM services\nWHERE (\n  customerName LIKE '%Action Smart%' OR\n  customerName LIKE '%Air Restore%' OR\n  customerName LIKE '%Envest%' OR\n  customerName LIKE '%Gateway%' OR\n  customerName LIKE '%Salter%' OR\n  customerName LIKE '%Spicers%'\n)\nAND customerExternalId IS NOT NULL AND customerExternalId != ''\nORDER BY customerName;\n",
+  "rows": [
+    {
+      "customerName": "Air Restore NBN EE 100MB",
+      "customerExternalId": "C2EBB"
+    },
+    {
+      "customerName": "Gateway Containers",
+      "customerExternalId": "C0100"
+    },
+    {
+      "customerName": "Salter Bros Balfour Hotel",
+      "customerExternalId": "C2440"
+    },
+    {
+      "customerName": "Salter Brothers (Clovelly) Pty Ltd",
+      "customerExternalId": "C0208"
+    },
+    {
+      "customerName": "Salter Brothers (Guesthouse) Pty Ltd",
+      "customerExternalId": "C0209"
+    },
+    {
+      "customerName": "Salter Brothers (Peak Lodge) Pty Ltd",
+      "customerExternalId": "C0210"
+    },
+    {
+      "customerName": "Salter Brothers (Sangoma) Pty Ltd",
+      "customerExternalId": "C0211"
+    },
+    {
+      "customerName": "Salter Brothers (Tamarind) Pty Ltd",
+      "customerExternalId": "C0212"
+    },
+    {
+      "customerName": "Salter Brothers (Vineyards) Pty Ltd",
+      "customerExternalId": "C0213"
+    },
+    {
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD",
+      "customerExternalId": "C0214"
+    },
+    {
+      "customerName": "Salter Brothers Management Company Pty Ltd t/a Spicers Potts Point",
+      "customerExternalId": "C0216"
+    },
+    {
+      "customerName": "Spicers Clovelly",
+      "customerExternalId": "C0208"
+    },
+    {
+      "customerName": "Spicers Guest House",
+      "customerExternalId": "C0209"
+    },
+    {
+      "customerName": "Spicers Hiddenvale",
+      "customerExternalId": "C0224"
+    },
+    {
+      "customerName": "Spicers HO",
+      "customerExternalId": "C0214"
+    },
+    {
+      "customerName": "Spicers Peak Lodge",
+      "customerExternalId": "C0210"
+    },
+    {
+      "customerName": "Spicers Vineyards",
+      "customerExternalId": "C0213"
+    }
+  ],
+  "messages": [],
+  "stdout": "customerName\tcustomerExternalId\nAir Restore NBN EE 100MB\tC2EBB\nGateway Containers\tC0100\nSalter Bros Balfour Hotel\tC2440\nSalter Brothers (Clovelly) Pty Ltd\tC0208\nSalter Brothers (Guesthouse) Pty Ltd\tC0209\nSalter Brothers (Peak Lodge) Pty Ltd\tC0210\nSalter Brothers (Sangoma) Pty Ltd\tC0211\nSalter Brothers (Tamarind) Pty Ltd\tC0212\nSalter Brothers (Vineyards) Pty Ltd\tC0213\nSalter Brothers Luxury Collection Operations Pty LTD\tC0214\nSalter Brothers Management Company Pty Ltd t/a Spicers Potts Point\tC0216\nSpicers Clovelly\tC0208\nSpicers Guest House\tC0209\nSpicers Hiddenvale\tC0224\nSpicers HO\tC0214\nSpicers Peak Lodge\tC0210\nSpicers Vineyards\tC0213\n",
+  "stderr": "",
+  "execution_time_ms": 1623
+}

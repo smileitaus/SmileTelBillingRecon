@@ -1,0 +1,32 @@
+{
+  "query": "SELECT externalId, planName, serviceType, provider, monthlyCost, monthlyRevenue, phoneNumber, avcId, customerExternalId\nFROM services WHERE externalId IN ('S7381', 'SSZ2TRXE');\n\nSELECT id, description, lineAmount, contactName, invoiceNumber FROM billing_items WHERE serviceExternalId = 'S7381';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute SELECT externalId, planName, serviceType, provider, monthlyCost, monthlyRevenue, phoneNumber, avcId, customerExternalId\nFROM services WHERE externalId IN ('S7381', 'SSZ2TRXE');\n\nSELECT id, description, lineAmount, contactName, invoiceNumber FROM billing_items WHERE serviceExternalId = 'S7381';",
+  "rows": [
+    {
+      "externalId": "S7381",
+      "planName": "IP Tel Single Number",
+      "serviceType": "Voice",
+      "provider": "Vocus",
+      "monthlyCost": "1.00",
+      "monthlyRevenue": "0.00",
+      "phoneNumber": "",
+      "avcId": "",
+      "customerExternalId": "C0087"
+    },
+    {
+      "externalId": "SSZ2TRXE",
+      "planName": "(blank)",
+      "serviceType": "Voice",
+      "provider": "SasBoss",
+      "monthlyCost": "50.43",
+      "monthlyRevenue": "0.00",
+      "phoneNumber": "",
+      "avcId": "",
+      "customerExternalId": "C0087"
+    }
+  ],
+  "messages": [],
+  "stdout": "externalId\tplanName\tserviceType\tprovider\tmonthlyCost\tmonthlyRevenue\tphoneNumber\tavcId\tcustomerExternalId\nS7381\tIP Tel Single Number\tVoice\tVocus\t1.00\t0.00\t\t\tC0087\nSSZ2TRXE\t(blank)\tVoice\tSasBoss\t50.43\t0.00\t\t\tC0087\n",
+  "stderr": "",
+  "execution_time_ms": 1800
+}

@@ -1,0 +1,19 @@
+{
+  "query": "\nSELECT s.externalId, s.planName, s.serviceType, s.monthlyCost, s.supplierName, s.dataSource, c.name as customerName\nFROM services s\nLEFT JOIN customers c ON c.externalId = s.customerExternalId\nWHERE s.externalId = 'S7092';\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \nSELECT s.externalId, s.planName, s.serviceType, s.monthlyCost, s.supplierName, s.dataSource, c.name as customerName\nFROM services s\nLEFT JOIN customers c ON c.externalId = s.customerExternalId\nWHERE s.externalId = 'S7092';\n",
+  "rows": [
+    {
+      "externalId": "S7092",
+      "planName": "4G Data Back up",
+      "serviceType": "Data",
+      "monthlyCost": "0.00",
+      "supplierName": "TIAB",
+      "dataSource": "SM Import (Ella)",
+      "customerName": "Denim Co"
+    }
+  ],
+  "messages": [],
+  "stdout": "externalId\tplanName\tserviceType\tmonthlyCost\tsupplierName\tdataSource\tcustomerName\nS7092\t4G Data Back up\tData\t0.00\tTIAB\tSM Import (Ella)\tDenim Co\n",
+  "stderr": "",
+  "execution_time_ms": 1614
+}

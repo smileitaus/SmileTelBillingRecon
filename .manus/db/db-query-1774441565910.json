@@ -1,0 +1,9 @@
+{
+  "query": "\n-- Find UCXcel services in sasboss_services with enterprise info\nSELECT \n  ss.service_id, ss.enterprise_id, ss.enterprise_name, ss.service_ref_id,\n  ss.product_name, ss.monthly_recurring, ss.service_status, ss.service_number, ss.contact_name\nFROM sasboss_services ss\nWHERE ss.product_name LIKE '%UCXcel%'\nORDER BY ss.enterprise_name\nLIMIT 20;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Find UCXcel services in sasboss_services with enterprise info\nSELECT \n  ss.service_id, ss.enterprise_id, ss.enterprise_name, ss.service_ref_id,\n  ss.product_name, ss.monthly_recurring, ss.service_status, ss.service_number, ss.contact_name\nFROM sasboss_services ss\nWHERE ss.product_name LIKE '%UCXcel%'\nORDER BY ss.enterprise_name\nLIMIT 20;\n",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 1510
+}

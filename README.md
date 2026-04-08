@@ -1,113 +1,190 @@
-# SmileTel Billing Reconciliation Platform
+# SmileTel Billing Reconciliation Platform — Lucid Portal
 
-> **Comprehensive onboarding guide for new Manus accounts and development teams.**
-> This document covers the full system architecture, database schema, API surface, supplier-specific logic, and operational context required to continue development or deploy the platform in a new environment.
+> **Comprehensive onboarding guide for new development environments (Replit, Manus, or self-hosted).**
+> This document covers the full system architecture, database schema, API surface, supplier integrations, knowledge base, and operational context required to continue development or deploy the platform in a new environment.
 
 ---
 
 ## Table of Contents
 
 1. [Project Overview](#1-project-overview)
-2. [Technology Stack](#2-technology-stack)
-3. [Repository Structure](#3-repository-structure)
-4. [Architecture Overview](#4-architecture-overview)
-5. [Database Schema](#5-database-schema)
-6. [API Surface (tRPC Routers)](#6-api-surface-trpc-routers)
-7. [Application Pages & Navigation](#7-application-pages--navigation)
-8. [Supplier-Specific Logic](#8-supplier-specific-logic)
-9. [Key Business Concepts](#9-key-business-concepts)
-10. [Current Data State](#10-current-data-state)
-11. [Environment Variables & Secrets](#11-environment-variables--secrets)
-12. [Getting Started on a New Manus Account](#12-getting-started-on-a-new-manus-account)
-13. [Known Issues & Next Steps](#13-known-issues--next-steps)
+2. [Business Context and Purpose](#2-business-context-and-purpose)
+3. [Technology Stack](#3-technology-stack)
+4. [Repository Structure](#4-repository-structure)
+5. [Architecture Overview](#5-architecture-overview)
+6. [Database Schema](#6-database-schema)
+7. [API Surface — tRPC Routers](#7-api-surface--trpc-routers)
+8. [Application Pages and Navigation](#8-application-pages-and-navigation)
+9. [Supplier Integrations](#9-supplier-integrations)
+10. [Key Business Logic and Rules](#10-key-business-logic-and-rules)
+11. [Current Data State — April 2026](#11-current-data-state--april-2026)
+12. [Environment Variables and Secrets](#12-environment-variables-and-secrets)
+13. [Getting Started on Replit](#13-getting-started-on-replit)
+14. [Getting Started on a New Manus Account](#14-getting-started-on-a-new-manus-account)
+15. [Monthly Reconciliation Workflow](#15-monthly-reconciliation-workflow)
+16. [Known Issues and Pending Work](#16-known-issues-and-pending-work)
 
 ---
 
 ## 1. Project Overview
 
-The SmileTel Billing Reconciliation Platform is an internal operations tool built for SmileIT to manage multi-supplier telecommunications billing. Its core purpose is to ingest invoices from upstream wholesale providers, match those services to customers across multiple billing platforms, and surface discrepancies between what SmileIT pays wholesale and what it charges retail.
+The **SmileTel Billing Reconciliation Platform** (internal name: **Lucid**) is a full-stack internal operations tool built for SmileIT Pty Ltd (ABN 51 123 952 232) to manage multi-supplier telecommunications billing reconciliation. It is a React 19 + Express 4 + tRPC 11 + MySQL application deployed on the Manus platform.
 
-**The three core problems it solves:**
+The platform ingests invoices from upstream wholesale telecommunications providers, matches those services to end customers across multiple billing platforms, and surfaces discrepancies between what SmileIT pays wholesale and what it charges retail. It also manages service lifecycle events (provisioning, termination, payment plans) and provides live API integrations with supplier portals.
 
-1. **Cost visibility** — SmileIT receives invoices from Telstra, AAPT, SasBoss/Access4, Vocus, ABB, Exetel, Channel Haus, and others. Without this tool, there is no single view of total wholesale spend.
-2. **Revenue matching** — Xero billing line items (retail revenue) must be linked to supplier services (wholesale cost) to calculate per-service margin. This is done through a drag-and-drop matching workbench.
-3. **Termination identification** — Services with no usage in 6 months are flagged for termination, with full detail (SIM, IMEI, MRO contract, ETC amounts) exported for submission to Telstra.
+**Current scale (April 2026):**
 
-**Current scope (as of March 2026):**
-
-| Provider | Services | Monthly Wholesale Cost |
-|---|---|---|
-| ABB | 274 | $24,622 |
-| SasBoss / Access4 | 1,224 | $23,212 |
-| Telstra | 626 | $20,754 |
-| AAPT | 64 | $8,312 |
-| Channel Haus | 67 | $7,387 |
-| Exetel | 13 | $6,658 |
-| Legion | 1 | $799 |
-| Tech-e | 1 | $250 |
-| Vocus / TIAB | 119 | $0 (pending import) |
-| **Total** | **2,663** | **~$91,405/month** |
+| Metric | Value |
+|---|---|
+| Total services tracked | 2,663 |
+| Services matched to customers | ~2,155 (81%) |
+| Monthly wholesale spend tracked | ~$97,688 |
+| Active customers | 924 |
+| Suppliers integrated | 10 |
+| Database tables | 65+ |
 
 ---
 
-## 2. Technology Stack
+## 2. Business Context and Purpose
 
-| Layer | Technology | Notes |
-|---|---|---|
-| Frontend | React 19, TypeScript, Vite 7 | SPA served via Vite dev server |
-| Routing | Wouter 3 | Lightweight client-side routing |
-| UI Components | shadcn/ui, Radix UI, Tailwind CSS 4 | Dark theme, OKLCH colour tokens |
-| State / Data | tRPC 11, TanStack Query 5 | End-to-end type-safe API |
-| Backend | Express 4, tsx (Node.js 22) | Single Express server, no separate API gateway |
-| Database ORM | Drizzle ORM 0.44 | Schema-first, migrations via `pnpm db:push` |
-| Database | MySQL / TiDB (Manus-managed) | camelCase column names throughout |
-| File Storage | AWS S3 (Manus-managed) | Invoice PDFs and workbooks stored as S3 objects |
-| Auth | Manus OAuth (JWT cookies) | `protectedProcedure` gates all mutations |
-| PDF Parsing | pdf-parse 2.4 | Custom parser in `server/pdfInvoiceParser.ts` |
-| Excel Parsing | xlsx 0.18 | Used for SasBoss Dispatch/Pivot workbooks and Access4 pricebook |
-| Drag-and-drop | @dnd-kit/core 6 | Used on the Billing Match workbench |
-| Charts | Recharts 2.15 | Dashboard provider cost bars |
-| Testing | Vitest 2.1 | 15+ test files covering all critical paths |
+SmileIT is a managed service provider (MSP) and telecommunications reseller operating across Queensland and New South Wales. It purchases wholesale telecommunications services from multiple upstream carriers and resells them to small-to-medium businesses, hospitality groups, mining operations, and franchise networks.
+
+**The three core problems Lucid solves:**
+
+**Cost Visibility.** SmileIT receives invoices from Telstra, AAPT, SasBoss/Access4, Vocus, ABB (Carbon API), Exetel, ChannelHaus, NetSIP, TIAB, and Starlink. Without this tool, there is no single consolidated view of total wholesale spend, making it impossible to identify cost anomalies, price increases, or services being charged that have already been terminated.
+
+**Revenue Matching.** Xero billing line items (retail revenue) must be linked to supplier services (wholesale cost) to calculate per-service gross margin. This is done through a drag-and-drop matching workbench. The platform maintains a repeatable mapping engine so that once a service is matched, future invoice cycles auto-match without manual intervention.
+
+**Termination Identification.** Services with no usage in 6 months are flagged for termination with full detail (phone number, SIM, IMEI, MRO contract, Early Termination Charge amounts) exported in a format ready for submission to Telstra. This directly reduces ongoing wholesale costs for services that are no longer generating revenue.
+
+Secondary capabilities include: payment plan management for customers with outstanding balances, Omada network device monitoring, Starlink satellite broadband account management, TIAB (Telstra Indirect Access Billing) reconciliation, and Vocus mobile/NBN service tracking.
 
 ---
 
-## 3. Repository Structure
+## 3. Technology Stack
+
+| Layer | Technology | Version | Notes |
+|---|---|---|---|
+| Frontend | React | 19 | SPA served via Vite dev server |
+| Language | TypeScript | 5.x | Strict mode throughout |
+| Routing (client) | Wouter | 3 | Lightweight client-side routing |
+| UI Components | shadcn/ui + Radix UI | Latest | Dark theme, OKLCH colour tokens |
+| Styling | Tailwind CSS | 4 | CSS variables for theming |
+| State / Data | tRPC + TanStack Query | 11 / 5 | End-to-end type-safe API |
+| Backend | Express | 4 | Single server, no API gateway |
+| Runtime | Node.js (tsx) | 22 | TypeScript executed directly |
+| Database ORM | Drizzle ORM | 0.44 | Schema-first, camelCase columns |
+| Database | MySQL / TiDB | 8.x | Manus-managed in production |
+| File Storage | AWS S3 | — | Invoice PDFs, workbooks |
+| Auth | Manus OAuth (JWT) | — | `protectedProcedure` gates mutations |
+| PDF Parsing | pdf-parse | 2.4 | Custom parsers per supplier format |
+| Excel Parsing | xlsx | 0.18 | SasBoss workbooks, Access4 pricebook |
+| Drag-and-drop | @dnd-kit/core | 6 | Billing match workbench |
+| Charts | Recharts | 2.15 | Dashboard cost/revenue bars |
+| Email | SendGrid | — | Automated review and alert emails |
+| Testing | Vitest | 2.1 | 20+ test files, all critical paths |
+
+---
+
+## 4. Repository Structure
 
 ```
-billing-tool/
+SmileTelBillingRecon/
 ├── client/
-│   ├── src/
-│   │   ├── pages/          ← All 20 page components (one per route)
-│   │   ├── components/     ← Shared UI components (DashboardLayout, shadcn/ui)
-│   │   ├── _core/hooks/    ← useAuth hook
-│   │   ├── lib/trpc.ts     ← tRPC client binding
-│   │   ├── App.tsx         ← Route definitions
-│   │   └── index.css       ← Global Tailwind theme (dark mode, OKLCH tokens)
-│   └── index.html
+│   ├── index.html                      ← Vite entry, Google Fonts loaded here
+│   └── src/
+│       ├── pages/                      ← 20+ page components (one per route)
+│       │   ├── Home.tsx                ← Dashboard / landing
+│       │   ├── Customers.tsx           ← Customer list with search/filter
+│       │   ├── CustomerDetail.tsx      ← Per-customer service + billing detail
+│       │   ├── Services.tsx            ← All services with provider filter
+│       │   ├── ServiceDetail.tsx       ← Per-service detail + history
+│       │   ├── BillingMatch.tsx        ← Drag-and-drop reconciliation workbench
+│       │   ├── Suppliers.tsx           ← Supplier accounts overview
+│       │   ├── Integrations.tsx        ← API sync status + manual triggers
+│       │   ├── Termination.tsx         ← Blitz termination review
+│       │   ├── Review.tsx              ← Manual QA review queue
+│       │   ├── Numbers.tsx             ← DID / phone number inventory
+│       │   ├── Pricebook.tsx           ← Supplier rate card browser
+│       │   ├── RetailBundles.tsx       ← Retail bundle cost builder
+│       │   ├── PaymentPlans.tsx        ← Customer payment plan tracker
+│       │   ├── Starlink.tsx            ← Starlink account + invoice management
+│       │   ├── TIAB.tsx                ← TIAB/Octane reconciliation
+│       │   └── Vocus.tsx               ← Vocus mobile + NBN services
+│       ├── components/                 ← Reusable UI components
+│       │   ├── DashboardLayout.tsx     ← Sidebar nav + auth wrapper
+│       │   ├── ReconciliationBoard.tsx ← Core matching workbench
+│       │   ├── ServiceEditPanel.tsx    ← Inline service editor
+│       │   ├── ProviderBadge.tsx       ← Colour-coded provider pill
+│       │   ├── OmadaSitePanel.tsx      ← Omada network widget
+│       │   ├── CarbonDiagnosticsPanel.tsx ← ABB diagnostic widget
+│       │   └── WhyMatchedPopover.tsx   ← Match confidence explanation
+│       ├── hooks/
+│       │   └── useData.ts              ← Shared data-fetching hooks
+│       ├── lib/
+│       │   └── trpc.ts                 ← tRPC client binding
+│       └── App.tsx                     ← Route definitions
 ├── server/
-│   ├── routers.ts          ← All tRPC procedures (~23 router namespaces)
-│   ├── db.ts               ← All database query helpers (~8,000 lines)
-│   ├── pdfInvoiceParser.ts ← AAPT and Access4 PDF parsing logic
-│   ├── storage.ts          ← S3 upload/download helpers
-│   ├── index.ts            ← Express server entry point
-│   ├── _core/              ← Framework plumbing (OAuth, context, LLM, env)
-│   └── *.test.ts           ← Vitest test files
+│   ├── index.ts                        ← Express entry point
+│   ├── routers.ts                      ← Main tRPC router (imports sub-routers)
+│   ├── db.ts                           ← Drizzle query helpers
+│   ├── pdfInvoiceParser.ts             ← AAPT + Access4 PDF parsers
+│   ├── billingItemParser.ts            ← Xero CSV line item parser
+│   ├── vocusScraper.ts                 ← Vocus portal scraper
+│   ├── vocusQuotaAlerts.ts             ← Vocus data pool alert logic
+│   ├── routers/                        ← Feature sub-routers
+│   │   ├── billingCycle.ts             ← Monthly billing period management
+│   │   ├── internetPricebook.ts        ← NBN/internet pricebook CRUD
+│   │   ├── numbers.ts                  ← DID number inventory
+│   │   ├── paymentPlans.ts             ← Payment plan CRUD + tracking
+│   │   ├── retailBundles.ts            ← Retail bundle builder
+│   │   ├── starlink.ts                 ← Starlink accounts + invoices
+│   │   ├── termination.ts              ← Termination batch management
+│   │   ├── tiab.ts                     ← TIAB/Octane data sync
+│   │   └── vocus.ts                    ← Vocus mobile + NBN sync
+│   ├── suppliers/                      ← Supplier API clients
+│   │   ├── sasboss-api.ts              ← SasBoss/Access4 REST API
+│   │   ├── carbon-diagnostics.ts       ← ABB Carbon diagnostic API
+│   │   ├── carbon-outage-usage.ts      ← ABB outage + usage data
+│   │   ├── carbon-usage-alerts.ts      ← ABB quota threshold alerts
+│   │   ├── commscode.ts                ← CommsCode number manager
+│   │   ├── netsip.ts                   ← NetSIP (Aussie Broadband) SIP
+│   │   ├── omada.ts                    ← TP-Link Omada SDN controller
+│   │   ├── tiab.ts                     ← TIAB API client
+│   │   └── vocus-api.ts                ← Vocus wholesale portal API
+│   ├── starlink/
+│   │   ├── apiClient.ts                ← Starlink portal API client
+│   │   ├── parseInvoice.ts             ← Starlink AU invoice PDF parser
+│   │   └── fuzzyMatch.ts               ← Starlink service-to-customer matcher
+│   └── _core/                          ← Framework plumbing (do not edit)
+│       ├── context.ts                  ← tRPC context builder
+│       ├── trpc.ts                     ← publicProcedure / protectedProcedure
+│       ├── oauth.ts                    ← Manus OAuth handler
+│       ├── env.ts                      ← Environment variable registry
+│       ├── llm.ts                      ← LLM helper (invokeLLM)
+│       ├── email.ts                    ← SendGrid email helper
+│       └── notification.ts             ← Owner notification helper
 ├── drizzle/
-│   ├── schema.ts           ← Single source of truth for all 23 DB tables
-│   ├── migrations/         ← Auto-generated migration SQL files
-│   └── relations.ts        ← Drizzle relation definitions
+│   ├── schema.ts                       ← Single source of truth — all 65+ tables
+│   ├── relations.ts                    ← Drizzle relation definitions
+│   └── migrations/                     ← Auto-generated migration SQL
 ├── shared/
-│   ├── const.ts            ← Shared constants (error messages, etc.)
-│   └── types.ts            ← Shared TypeScript types
-├── drizzle.config.ts       ← Drizzle Kit configuration
-├── vite.config.ts          ← Vite build configuration
+│   ├── const.ts                        ← Shared constants
+│   ├── suppliers.ts                    ← Supplier registry constants
+│   └── types.ts                        ← Shared TypeScript types
+├── scripts/                            ← One-off data migration scripts
+├── drizzle.config.ts
+├── vite.config.ts
 ├── package.json
-└── todo.md                 ← Live feature/bug tracking list
+├── todo.md                             ← Live feature/bug tracking
+├── ideas.md                            ← Design brainstorm archive
+├── investigation_notes.txt             ← Debugging notes archive
+└── recon-checklist-april-2026.md      ← Monthly reconciliation checklist
 ```
 
 ---
 
-## 4. Architecture Overview
+## 5. Architecture Overview
 
 ### Request Flow
 
@@ -116,405 +193,499 @@ Browser (React SPA)
     │
     │  HTTP POST /api/trpc/<procedure>
     ▼
-Express Server (server/index.ts)
+Express Server  (server/index.ts)
     │
-    │  tRPC middleware
+    │  tRPC middleware  →  context.ts (injects ctx.user from JWT cookie)
     ▼
-Router (server/routers.ts)
+Main Router  (server/routers.ts)
+    │
+    ├── Sub-routers (billing, starlink, tiab, vocus, termination, etc.)
     │
     │  Calls DB helpers
     ▼
-Database Helpers (server/db.ts)
+Database Helpers  (server/db.ts)
     │
     │  Drizzle ORM queries
     ▼
-MySQL / TiDB (Manus-managed)
+MySQL / TiDB  (Manus-managed)
 ```
 
-All API calls go through tRPC. There are no REST endpoints except `/api/oauth/callback` (Manus OAuth) and `/api/trpc` (tRPC batch endpoint). The frontend never calls the database directly.
+All API calls go through tRPC. There are no REST endpoints except `/api/oauth/callback` (Manus OAuth) and `/api/trpc` (tRPC batch endpoint). The frontend never queries the database directly. File uploads (invoice PDFs, XLSX workbooks) are handled via a dedicated `/api/upload` Express route that stores files in S3 and returns a URL for the tRPC layer to process.
 
 ### Authentication
 
-Authentication is handled by Manus OAuth. The `protectedProcedure` helper in `server/_core/trpc.ts` validates the JWT session cookie on every mutation. The `ctx.user` object is available in all protected procedures and contains `openId`, `name`, `email`, and `role` (`user` | `admin`).
-
-### PDF Invoice Parsing
-
-`server/pdfInvoiceParser.ts` contains two parsers:
-
-- **AAPT parser** — extracts service rows from AAPT itemised invoices. Each row contains a Service ID, Access ID, product type, address, and monthly charge. The parser uses regex patterns tuned to AAPT's PDF layout.
-- **Access4 parser** — extracts enterprise-level MRC (Monthly Recurring Charge), variable charges, and once-off charges from Access4 consolidated invoices. Each enterprise block is identified by its header line and terminated by the next enterprise or page break.
+Authentication is handled by Manus OAuth. The `protectedProcedure` helper in `server/_core/trpc.ts` validates the JWT session cookie on every request. The `ctx.user` object contains `openId`, `name`, `email`, and `role` (`user` | `admin`). All mutations are protected; read-only queries may be public or protected depending on sensitivity.
 
 ### Repeatable Mapping Engine
 
-The most important architectural concept is the **repeatable mapping engine**. Every time a supplier service is matched to a customer (manually or automatically), the match key is stored in `supplier_service_map`. On the next invoice upload, the system checks this table first before running fuzzy matching. This means the first import of any invoice requires manual review, but all subsequent months are largely automatic.
+The most important architectural concept is the **repeatable mapping engine**. Every time a supplier service is matched to a customer (manually or via auto-match), the match key is stored in `supplierServiceMap`. On the next invoice upload, the system checks this table first before running fuzzy matching. This means the first import of any invoice requires manual review, but all subsequent months are largely automatic.
 
-Match keys are stored in priority order:
-1. `service_id` — AAPT service number (most reliable)
-2. `access_id` — AAPT access circuit ID / NBN AVC ID
-3. `address` — normalised street address (reliable for FAST Fibre)
-4. `your_id` — customer-assigned label (useful hint only)
+Match keys are stored in priority order: (1) `serviceId` — supplier-assigned service number; (2) `accessId` — NBN AVC ID or circuit ID; (3) `address` — normalised street address; (4) `yourId` — customer-assigned label.
+
+### PDF Invoice Parsing
+
+`server/pdfInvoiceParser.ts` contains custom parsers for each supplier's invoice format. The AAPT parser extracts service rows using regex patterns tuned to AAPT's PDF layout. The Access4 parser identifies enterprise blocks by header lines and extracts MRC, variable, and once-off charges. The Starlink parser (`server/starlink/parseInvoice.ts`) handles the Starlink AU invoice format with service line grouping.
+
+### Auto-Match Pipeline
+
+After every invoice import, the system runs a three-pass auto-match: (1) exact match against `supplierServiceMap`; (2) fuzzy address match with normalisation (strips "Shop", "Unit", "Level" prefixes); (3) account-based grouping for mobile SIM fleets. Matches above a 90% confidence threshold are applied automatically; matches between 70–90% are surfaced as suggestions in the Review queue.
 
 ---
 
-## 5. Database Schema
+## 6. Database Schema
 
-The database contains **23 tables**. All column names use camelCase (matching the Drizzle schema definition). Below is a description of each table, its purpose, and current record count.
+The database contains **65+ tables** across several logical groups. All column names use camelCase. The Drizzle schema in `drizzle/schema.ts` is the single source of truth.
 
 ### Core Entities
 
-| Table | Records | Purpose |
-|---|---|---|
-| `users` | 5 | Manus OAuth users with `role` (user/admin) |
-| `customers` | 924 | Primary entity — one per business/location consuming services |
-| `locations` | 77 | Physical addresses; each belongs to one customer |
-| `services` | 2,663 | Individual telecom services (internet, mobile, voice, UCaaS) |
-| `billing_items` | 1,323 | Xero invoice line items representing retail revenue |
-| `supplier_accounts` | 8 | Telstra account numbers and their aggregate costs |
+| Table | Purpose |
+|---|---|
+| `users` | Manus OAuth users with `role` (user/admin) |
+| `customers` | Primary entity — one per business/location consuming services |
+| `locations` | Physical addresses; each belongs to one customer |
+| `services` | Individual telecom services (internet, mobile, voice, UCaaS, satellite) |
+| `billingItems` | Xero invoice line items representing retail revenue |
+| `supplierAccounts` | Telstra account numbers and aggregate costs |
 
 ### Supplier Import Tables
 
-| Table | Records | Purpose |
-|---|---|---|
-| `supplier_invoice_uploads` | 2 | Tracks PDF invoice uploads (AAPT, Access4) with match summary |
-| `supplier_workbook_uploads` | 2 | Tracks XLSX workbook uploads (SasBoss Dispatch/Pivot) |
-| `supplier_workbook_line_items` | 911 | Individual line items from SasBoss workbooks |
+| Table | Purpose |
+|---|---|
+| `supplierInvoiceUploads` | Tracks PDF invoice uploads with match summary |
+| `supplierWorkbookUploads` | Tracks XLSX workbook uploads |
+| `supplierWorkbookLineItems` | Individual line items from SasBoss workbooks |
+| `carbonApiCache` | Cached ABB Carbon API responses |
+| `supplierSyncLog` | Timestamped log of all API sync events |
 
-### Mapping & Matching Tables
+### Mapping and Matching Tables
 
-| Table | Records | Purpose |
-|---|---|---|
-| `supplier_service_map` | 118 | **Core repeatable mapping layer** — supplier service ID → customer |
-| `supplier_enterprise_map` | 104 | SasBoss enterprise name → customer (for workbook imports) |
-| `supplier_product_map` | 52 | Supplier product name → internal service type classification |
-| `supplier_product_cost_map` | 204 | Access4 Diamond tier wholesale costs per product (108 products seeded) |
-| `supplier_registry` | 3 | Master list of active suppliers with metadata and upload config |
+| Table | Purpose |
+|---|---|
+| `supplierServiceMap` | **Core repeatable mapping layer** — supplier service ID to customer |
+| `supplierEnterpriseMap` | SasBoss enterprise name to customer |
+| `supplierProductMap` | Supplier product name to internal service type |
+| `supplierProductCostMap` | Access4 Diamond tier wholesale costs per product |
+| `supplierRegistry` | Master list of active suppliers with metadata |
+| `supplierRateCards` | Versioned rate card headers per supplier |
+| `supplierRateCardItems` | Individual rate card line items |
+| `serviceMatchEvents` | Audit log of every match/unmatch action |
 
 ### Billing Resolution Tables
 
-| Table | Records | Purpose |
-|---|---|---|
-| `service_billing_assignments` | 62 | Many-to-one junction: services → Xero billing items (for margin calc) |
-| `service_billing_match_log` | 62 | Persistent log of service-to-billing-item resolutions |
-| `unbillable_services` | 0 | Services explicitly marked as not requiring a billing item |
-| `escalated_services` | 1 | Services that could not be matched and need manual review |
-
-### Audit & Review Tables
-
-| Table | Records | Purpose |
-|---|---|---|
-| `review_items` | 99 | User-submitted review items and dismissed system issues |
-| `billing_platform_checks` | 48 | Action items for manual verification on billing platforms |
-| `service_edit_history` | 227 | Full audit trail of all manual edits to service records |
-| `service_cost_history` | 134 | Snapshots of cost changes (before any override) |
-| `customer_proposals` | 35 | New customer creation requests pending approval |
-
-### Key Field Definitions
-
-The following fields appear across multiple tables and carry specific business meaning:
-
-| Field | Type | Meaning |
-|---|---|---|
-| `monthlyCost` | decimal(10,2) | **Wholesale cost to SmileIT** — what SmileIT pays the supplier |
-| `monthlyRevenue` | decimal(10,2) | **Retail price charged to customers** — from Xero billing items |
-| `marginPercent` | decimal(10,2) | `(monthlyRevenue - monthlyCost) / monthlyRevenue * 100` |
-| `costSource` | varchar(32) | Where the cost figure came from (see values below) |
-| `provider` | varchar(64) | Upstream supplier name (Telstra, AAPT, SasBoss, ABB, etc.) |
-| `status` | varchar(32) | Service lifecycle: `active`, `unmatched`, `flagged`, `terminated` |
-| `externalId` | varchar(32) | Stable unique identifier used across all cross-table references |
-
-**`costSource` values:**
-
-| Value | Meaning |
+| Table | Purpose |
 |---|---|
-| `access4_diamond_pricebook_excel` | Cost set from Access4 Diamond Advantage Pricebook v3.4 |
-| `access4_invoice_corrected` | Cost corrected after Access4 PDF invoice import |
-| `supplier_invoice` | Cost extracted directly from supplier invoice |
-| `retail_only_no_wholesale` | Retail revenue known but no wholesale cost determined |
-| `carbon_api` | Cost from ABB Carbon API sync |
-| `manual` | Cost set manually by a user |
-| `unknown` | No cost source determined |
+| `serviceBillingAssignments` | Many-to-one junction: services to Xero billing items |
+| `serviceBillingMatchLog` | Persistent log of service-to-billing-item resolutions |
+| `unbillableServices` | Services explicitly marked as not requiring a billing item |
+| `escalatedServices` | Services that could not be matched and need manual review |
 
----
+### Supplier-Specific Tables
 
-## 6. API Surface (tRPC Routers)
-
-All procedures are defined in `server/routers.ts` and grouped into the following namespaces. All procedures except `auth.me` and `auth.logout` require authentication.
-
-| Namespace | Key Procedures | Purpose |
-|---|---|---|
-| `auth` | `me`, `logout` | Session management |
-| `billing` | `summary` | Dashboard totals (total cost, matched %, unmatched count) |
-| `customers` | `list`, `byId`, `create`, `update`, `services`, `locations` | Customer CRUD and service lookups |
-| `customers.proposals` | `submit`, `list`, `approve`, `reject`, `assignToExisting` | New customer creation workflow with approval gate |
-| `customers.billingAssignments` | `billingItemsWithAssignments`, `assignServiceToBillingItem`, `removeAssignment` | Drag-and-drop billing match workbench |
-| `services` | `list`, `byId`, `updateFields`, `flagForTermination`, `bulkFlag` | Service CRUD, termination flagging |
-| `unmatched` | `list`, `assignToCustomer`, `createAndAssign` | Unmatched service triage and assignment |
-| `billingItems` | `list`, `byCustomer`, `import` | Xero billing item management |
-| `margin` | `getServicesWithMargin`, `getSummary` | Revenue & Margin page data |
-| `review` | `list`, `submit`, `resolve`, `ignore` | Review queue management |
-| `platformChecks` | `list`, `action`, `dismiss` | Billing platform action item tracking |
-| `autoMatch` | `run`, `preview` | Fuzzy auto-match engine for services → customers |
-| `addressMatch` | `run` | Address-based matching for AAPT/NBN services |
-| `workbookMatching` | `getCustomerWorkbook`, `confirmMatch`, `skipMatch` | SasBoss workbook per-customer matching |
-| `xeroContacts` | `import`, `list` | Xero contact name import for customer matching |
-| `serviceBillingMatch` | `getUnmatched`, `link`, `markUnbillable`, `escalate` | Service-to-billing-item resolution workflow |
-| `aapt` | `import`, `getStats`, `getUnmatched`, `assignToCustomer`, `getMappingRules` | AAPT invoice import and assignment |
-| `supplierRegistry` | `list`, `upsert` | Supplier master list management |
-| `productCosts` | `list`, `upsert`, `importPricebook` | Access4 Diamond pricebook management |
-| `blitz` | `import`, `getTerminationList`, `exportCsv` | Telstra Blitz report import and termination export |
-| `merge` | `preview`, `execute` | Customer merge (deduplication) workflow |
-
----
-
-## 7. Application Pages & Navigation
-
-The application uses a persistent sidebar layout (`DashboardLayout`) with the following pages:
-
-| Route | Page Component | Purpose |
-|---|---|---|
-| `/` | `Dashboard` | Overview: total spend, matched %, provider breakdown chart, service type breakdown |
-| `/customers` | `CustomerList` | Searchable/filterable customer list with unmatched billing indicators |
-| `/customers/:id` | `CustomerDetail` | Customer profile with services, locations, billing items, and edit panel |
-| `/customers/:id/billing-match` | `CustomerBillingMatch` | Drag-and-drop workbench to link services to Xero billing items |
-| `/services/:id` | `ServiceDetail` | Full service record with edit panel and audit history |
-| `/unmatched` | `UnmatchedServices` | Triage view for services not yet assigned to a customer |
-| `/revenue` | `RevenueMargin` | Revenue & Margin analysis — cost vs revenue per service/provider |
-| `/billing` | `BillingUnmatched` | Xero billing items with no linked service (revenue leakage detection) |
-| `/billing-queue` | `UnmatchedBillingQueue` | Global queue of unmatched and escalated billing items |
-| `/review` | `Review` | User-submitted review items and system-detected issues |
-| `/platform-checks` | `BillingPlatformChecks` | Action items for manual verification on billing platforms |
-| `/auto-match` | `AutoMatch` | Bulk fuzzy auto-match engine with preview and confirmation |
-| `/service-billing-match` | `ServiceBillingMatch` | Global service-to-billing-item resolution workbench |
-| `/supplier-invoices` | `SupplierInvoices` | Upload history for all supplier invoices |
-| `/suppliers` | `Suppliers` | Supplier management: AAPT invoice uploader, Access4 pricebook, mapping rules |
-| `/blitz-termination` | `BlitzTerminationReview` | Telstra Blitz termination candidates with CSV export |
-| `/merge` | `CustomerMerge` | Customer deduplication tool |
-
----
-
-## 8. Supplier-Specific Logic
-
-### Telstra (Blitz Reports)
-
-Telstra services are imported from the monthly **Blitz Summary XLSX report** via the `/blitz-termination` page. The import function (`importBlitzReport` in `server/db.ts`) processes the report and:
-
-- Creates or updates service records with 20+ Blitz-specific fields (IMEI, device name, MRO contract, ETC amount, usage averages).
-- Flags services with `blitzNoUse6m = 1` (no usage in 6 months) as termination candidates with a generated `terminationNote`.
-- The termination note includes: customer name, phone number, SIM serial, IMEI, last used date, MRO contract flag, MRO end date, and ETC amount — sufficient for submission to Telstra.
-- A CSV export is available at `/blitz-termination` for direct submission.
-
-**Current state:** 221 services imported from March 2026 Blitz report; 147 flagged for termination.
-
-### AAPT (PDF Itemised Invoices)
-
-AAPT invoices are uploaded as PDFs via the Suppliers page. The parser (`parseAaptInvoice` in `server/pdfInvoiceParser.ts`) extracts:
-
-- Service ID, Access ID, product type, "Your ID" label, address, and monthly charge per service row.
-- Invoice header data: invoice number, account number, billing period, total amount.
-
-After parsing, the import function (`importAaptInvoice` in `server/db.ts`):
-1. Checks `supplier_service_map` for existing mapping rules (by service_id, access_id, or address).
-2. Auto-applies matched rules without user intervention.
-3. For unmatched services, creates records with `status = 'unmatched'` for manual assignment.
-4. Every manual assignment saves a new mapping rule for future imports.
-
-**Current state:** 64 services, 37 mapping rules, 14 matched to customers, 50 unmatched (IP-Line backbone services with no address identifier).
-
-### SasBoss / Access4 (XLSX Workbooks + PDF Invoices)
-
-SasBoss billing involves **two separate data sources** that must be combined:
-
-**1. SasBoss Dispatch/Pivot XLSX workbooks** (uploaded via Suppliers page):
-- Contain **retail revenue** — what SmileIT charges customers for UCaaS services.
-- Stored in `monthlyRevenue` field on service records.
-- Enterprise names are matched to customers via `supplier_enterprise_map` (persistent mapping).
-- The Pivot sheet contains per-enterprise product totals; the Dispatch sheet contains individual service line items.
-
-**2. Access4 PDF invoices** (uploaded via Suppliers page):
-- Contain **wholesale costs** — what SmileIT pays Access4 for UCaaS services.
-- Stored in `monthlyCost` field on service records.
-- Parsed by `parseAccess4Invoice` in `server/pdfInvoiceParser.ts`.
-- Enterprise-level MRC (ex-GST) is the wholesale cost figure used.
-
-**3. Access4 Diamond Advantage Pricebook v3.4** (seeded once):
-- 108 products with Diamond tier wholesale costs stored in `supplier_product_cost_map`.
-- Used as a fallback when the Access4 invoice doesn't have a per-service cost breakdown.
-- Products include UCaaS licensing (SmileTel Essential $9/mo, Executive User $15/mo), SIP trunks, call queues, etc.
-
-**Important:** SasBoss Pivot/Dispatch data is **retail revenue** (not wholesale cost). This was a critical data model correction made in March 2026 — earlier imports incorrectly stored retail totals in `monthlyCost`. The `costSource` field tracks this: services with `retail_only_no_wholesale` have revenue but no confirmed wholesale cost.
-
-**Current state:** 1,224 services, $23,212/month wholesale cost (Diamond tier), $110,687/month retail revenue.
-
-### ABB (Carbon API)
-
-ABB services are sourced from the **Carbon API** (SmileIT's ABB reseller portal). The Carbon API fields on the `services` table (`carbonServiceId`, `carbonServiceType`, `carbonStatus`, `avcId`, `technology`, `speedTier`, etc.) are populated from this API. Cost source is `carbon_api`. 274 services, $24,622/month.
-
-### Other Providers
-
-Channel Haus (67 services, $7,387/month), Exetel (13 services, $6,658/month), and Vocus/TIAB (119 services, $0 pending import) are present in the database but their invoice import workflows are not yet fully built. Services exist with cost data but may require manual cost assignment.
-
----
-
-## 9. Key Business Concepts
-
-### Cost vs Revenue Model
-
-The platform distinguishes strictly between:
-
-- **`monthlyCost`** — what SmileIT pays the upstream supplier (wholesale). This is the authoritative cost figure and must come from supplier invoices or the Access4 pricebook.
-- **`monthlyRevenue`** — what SmileIT charges the customer (retail). This comes from Xero billing items linked via `service_billing_assignments`.
-- **Margin** — calculated as `(monthlyRevenue - monthlyCost) / monthlyRevenue * 100`. Only meaningful when both fields are populated.
-
-### Service-to-Billing-Item Assignment
-
-The core matching workflow links supplier services (costs) to Xero billing items (revenue). This is a **many-to-one** relationship: multiple services can be bundled under a single Xero line item (e.g., a "Hosted Voice Bundle" billing item might cover 10 individual SIP extensions).
-
-The assignment is stored in `service_billing_assignments`. Once assigned, the service's `monthlyRevenue` is set to the billing item's `lineAmount` divided by the number of assigned services (or the full amount if it's a 1:1 match).
-
-Unresolved services appear in the Billing Queue (`/billing-queue`) and can be:
-1. **Linked** to an existing Xero billing item (drag-and-drop on `/customers/:id/billing-match`)
-2. **Marked as intentionally unbilled** (e.g., internal use, bundled into another item)
-3. **Escalated** for manual review (stored in `escalated_services`)
-
-### Repeatable Mapping
-
-Every confirmed match — whether service-to-customer or service-to-billing-item — is stored as a mapping rule. Future invoice uploads consult these rules first, enabling largely automatic processing after the first manual import. This is the primary mechanism for reducing ongoing operational overhead.
-
-### Termination Workflow
-
-Telstra services flagged for termination (`status = 'flagged'`) appear on the Blitz Termination Review page. The page provides:
-- Full service detail (phone, SIM, IMEI, device, MRO contract, ETC)
-- Customer assignment (or "Unassigned" if not yet matched)
-- Last used date and usage averages
-- CSV export formatted for Telstra submission
-
----
-
-## 10. Current Data State
-
-As of the March 2026 import cycle, the database contains the following data:
-
-| Metric | Value |
+| Table | Purpose |
 |---|---|
-| Total services | 2,663 |
-| Matched to customers | 2,155 (81%) |
-| Unmatched (no customer) | 327 |
-| Flagged for termination | 176 |
-| Total monthly wholesale spend | ~$91,405 |
-| Xero billing items loaded | 1,323 |
-| Services linked to billing items | 62 |
-| Mapping rules saved | 118 |
-| Customers | 924 |
+| `vocusMobileServices` | Vocus wholesale mobile SIM inventory |
+| `vocusNbnServices` | Vocus wholesale NBN service inventory |
+| `vocusBuckets` | Vocus shared data pool definitions |
+| `vocusSyncLog` | Vocus API sync history |
+| `tiabCustomers` | TIAB/Octane customer records |
+| `tiabServices` | TIAB service lines |
+| `tiabPlans` | TIAB rate plan definitions |
+| `tiabTransactions` | TIAB transaction/charge records |
+| `tiabDataPools` | TIAB shared data pool records |
+| `tiabSyncLog` | TIAB sync history |
+| `tiabReconIssues` | TIAB reconciliation discrepancies |
+| `tiabSupplierInvoices` | TIAB supplier invoice headers |
+| `tiabSupplierInvoiceLineItems` | TIAB invoice line items |
+| `octaneCustomerLinks` | Octane portal customer ID mappings |
+| `starlinkAccounts` | Starlink portal accounts (6 accounts) |
+| `starlinkServiceLines` | Starlink service lines (15 active) |
+| `starlinkTerminals` | Starlink hardware terminals |
+| `starlinkUsage` | Starlink usage snapshots |
+| `starlinkInvoices` | Starlink invoice headers (13 imported) |
+| `starlinkInvoiceLines` | Starlink invoice line items (35 lines) |
+| `omadaSites` | TP-Link Omada SDN site records |
+| `omadaDeviceCache` | Cached Omada device inventory |
+| `phoneNumbers` | DID / phone number inventory |
 
-**Data quality notes:**
+### Operational Tables
 
-- **AAPT:** 50 services are unmatched because they are IP-Line backbone/link services with no address or customer-identifiable field. These require manual assignment via Suppliers → AAPT → Unmatched tab.
-- **SasBoss:** 32 services have `costSource = 'retail_only_no_wholesale'` — retail revenue is known but no matching wholesale cost was found in the Access4 invoice. These need manual cost assignment from the pricebook.
-- **Telstra:** 147 services are flagged for termination (no usage in 6 months). 140 of these are unassigned to a customer.
-- **Revenue & Margin:** Only 62 services have been linked to Xero billing items. The remaining ~2,600 services have `monthlyRevenue = 0` and will show as "Revenue Unknown" on the Revenue & Margin page until linked.
+| Table | Purpose |
+|---|---|
+| `serviceOutages` | Carbon API outage records |
+| `serviceUsageSnapshots` | Monthly usage snapshots for trend analysis |
+| `carbonDiagnosticRuns` | ABB Carbon diagnostic run history |
+| `usageThresholdAlerts` | Data quota alert records |
+| `internetPricebookVersions` | Versioned NBN/internet pricebook headers |
+| `internetPricebookItems` | Individual pricebook line items |
+| `retailBundles` | Retail bundle definitions |
+| `retailBundleCostInputs` | Cost inputs for retail bundle calculator |
+| `terminationBatches` | Termination batch submissions |
+| `paymentPlans` | Customer payment plan agreements |
+| `paymentPlanInvoices` | Individual instalment records |
+| `billingPeriods` | Monthly billing period definitions |
+| `supplierMonthlySnapshots` | Monthly cost snapshots per supplier |
+| `reconChecklistItems` | Monthly reconciliation checklist state |
+| `discrepancyAlerts` | Cost discrepancy alerts (>10% month-on-month) |
 
 ---
 
-## 11. Environment Variables & Secrets
+## 7. API Surface — tRPC Routers
 
-The following environment variables are required. On Manus, these are injected automatically from the platform secrets store.
+All procedures are defined in `server/routers.ts` and the sub-routers in `server/routers/`. The following is a summary of the available procedure namespaces.
 
-| Variable | Required | Purpose |
+| Namespace | Key Procedures |
+|---|---|
+| `auth` | `me`, `logout` |
+| `system` | `notifyOwner`, `getOutboundIp` |
+| `customers` | `getAll`, `getById`, `merge`, `search` |
+| `services` | `getAll`, `getById`, `getByCustomer`, `updateFields`, `updateStatus`, `reassign`, `getEditHistory` |
+| `billing` | `getItems`, `getByService`, `getByCustomer`, `getSummary`, `assignToCustomer`, `updateMatch`, `associateItem`, `review.*` |
+| `suppliers` | `getAccounts`, `getSummary`, `uploadInvoice`, `uploadWorkbook`, `syncSasBoss`, `syncCarbon`, `syncOmada` |
+| `matching` | `getUnmatched`, `getSuggested`, `assign`, `dismiss`, `previewAliasAutoMatch`, `commitAliasAutoMatch` |
+| `pricebook` | `getVersions`, `getItems`, `createVersion`, `upsertItems`, `syncSasBoss` |
+| `termination` | `getAll`, `createBatch`, `exportCsv`, `management.*` |
+| `numbers` | `getAll`, `getByCustomer`, `import`, `assignToService` |
+| `vocus` | `getMobileServices`, `getNbnServices`, `sync`, `getBuckets` |
+| `tiab` | `getCustomers`, `getServices`, `getTransactions`, `sync`, `getReconIssues` |
+| `starlink` | `getAccounts`, `getServiceLines`, `getInvoices`, `getInvoiceLines`, `parseInvoice`, `upsertInvoice` |
+| `retailBundles` | `getAll`, `create`, `update`, `delete`, `getCostInputs` |
+| `paymentPlans` | `getAll`, `create`, `update`, `recordPayment`, `getInvoices` |
+| `billingCycle` | `getPeriods`, `createPeriod`, `closePeriod`, `getSnapshots` |
+| `omada` | `getSites`, `getSiteDetail`, `getDevices`, `getClients`, `autoMatch`, `blockClient`, `unblockClient` |
+
+---
+
+## 8. Application Pages and Navigation
+
+The application uses a persistent left sidebar (`DashboardLayout.tsx`) with the following navigation structure:
+
+| Page | Route | Purpose |
 |---|---|---|
-| `DATABASE_URL` | Yes | MySQL/TiDB connection string |
-| `JWT_SECRET` | Yes | Session cookie signing secret |
-| `VITE_APP_ID` | Yes | Manus OAuth application ID |
-| `OAUTH_SERVER_URL` | Yes | Manus OAuth backend base URL |
-| `VITE_OAUTH_PORTAL_URL` | Yes | Manus login portal URL (frontend) |
-| `OWNER_OPEN_ID` | Yes | Owner's Manus OpenID |
-| `OWNER_NAME` | Yes | Owner's display name |
-| `BUILT_IN_FORGE_API_URL` | Yes | Manus built-in API base URL |
-| `BUILT_IN_FORGE_API_KEY` | Yes | Bearer token for server-side Manus APIs |
-| `VITE_FRONTEND_FORGE_API_KEY` | Yes | Bearer token for frontend Manus APIs |
-| `VITE_FRONTEND_FORGE_API_URL` | Yes | Frontend Manus API base URL |
-| `CARBON_USERNAME` | Optional | ABB Carbon API username (for ABB service sync) |
-| `CARBON_PASSWORD` | Optional | ABB Carbon API password |
-| `Carbon_SmiletelAPI` | Optional | ABB Carbon API endpoint |
-| `VITE_APP_TITLE` | Optional | App title shown in browser tab |
-| `VITE_APP_LOGO` | Optional | App logo URL |
+| Dashboard | `/` | Summary stats, provider cost chart, recent activity |
+| Customers | `/customers` | Searchable customer list with match status |
+| Customer Detail | `/customers/:id` | Services, billing items, margin, Omada widget |
+| Services | `/services` | All services with provider/status filter |
+| Service Detail | `/services/:id` | Full service record, edit history, billing links |
+| Billing Match | `/billing` | Drag-and-drop reconciliation workbench |
+| Suppliers | `/suppliers` | Supplier account overview with cost totals |
+| Integrations | `/integrations` | API sync status, manual triggers, last-synced timestamps |
+| Termination | `/termination` | Blitz review — flagged services for termination |
+| Review | `/review` | Manual QA queue — unresolved matching issues |
+| Numbers | `/numbers` | DID/phone number inventory |
+| Pricebook | `/pricebook` | Supplier rate card browser (all 6 SasBoss pricing tiers) |
+| Retail Bundles | `/retail-bundles` | Bundle cost builder for franchise/retail customers |
+| Payment Plans | `/payment-plans` | Outstanding balance tracker with instalment records |
+| Starlink | `/starlink` | Starlink account management + invoice upload |
+| TIAB | `/tiab` | TIAB/Octane reconciliation dashboard |
+| Vocus | `/vocus` | Vocus mobile SIM + NBN service management |
 
 ---
 
-## 12. Getting Started on a New Manus Account
+## 9. Supplier Integrations
 
-### Step 1: Import from GitHub
+### ABB / Carbon API
 
-In the new Manus account, create a new project and import from:
-```
-https://github.com/smileitaus/SmileTelBillingRecon
-```
+The ABB (Aussie Broadband) integration uses the Carbon API to retrieve NBN service inventory, usage data, outage history, and diagnostic information. Services are identified by `carbonServiceId` and matched to the `services` table via AVC ID or address. Usage quota alerts are generated when a service exceeds a configurable threshold (default 80% of plan allowance). Source files: `server/suppliers/carbon-diagnostics.ts`, `carbon-outage-usage.ts`, `carbon-usage-alerts.ts`.
 
-### Step 2: Initialise the Database
+**Required secrets:** `CARBON_USERNAME`, `CARBON_PASSWORD`, `CARBON_API`, `CARBON_PASSWORD_PREFIX`, `CARBON_PASSWORD_SUFFIX`
 
-After the project is created, run the database migration to create all 23 tables:
+### SasBoss / Access4
+
+SasBoss is the UCaaS platform (hosted PBX, SIP trunks, Microsoft 365 licensing) used for the majority of SmileIT's voice customers. The integration uses the SasBoss REST API (reseller ID 2815) to sync enterprise records, service accounts, and the full product pricebook across six pricing tiers: PAYG, Bundled, and Unlimited (charge and RRP for each). Source file: `server/suppliers/sasboss-api.ts`.
+
+**Required secrets:** `SasBoss_API_Host`, `SasBoss_Reseller_ID`, `SasBoss_User`, `SasBoss_Password`, `SasBoss_Webaddress`
+
+### Vocus
+
+Vocus provides wholesale mobile SIM services and NBN services. The integration authenticates against the Vocus SP portal API and syncs mobile service inventory, shared data bucket definitions, and NBN service records. Vocus is treated as the primary source of truth for mobile SIM data. Source files: `server/suppliers/vocus-api.ts`, `server/routers/vocus.ts`.
+
+**Required secrets:** `Vocus_SP_Username`, `Vocus_SP_Password`, `Vocus_Mobile_Real_Name`
+
+### TIAB / Octane
+
+TIAB (Telstra Indirect Access Billing) is the mechanism by which SmileIT is billed for Telstra services via the Octane portal. The integration syncs customer records, service lines, rate plans, data pool usage, and transaction history. Reconciliation issues are surfaced in the TIAB Recon Issues table. Source files: `server/suppliers/tiab.ts`, `server/routers/tiab.ts`.
+
+**Required secrets:** `TIAB_API_BASE_URL`, `TIAB_API_USERNAME`, `TIAB_API_PASSWORD`, `TIAB_Octane_WebAddress`, `Octane_TIAB_Angus_Username`, `Octane_TIAB_Angus_Password`
+
+### Starlink
+
+SmileIT manages six Starlink portal accounts covering 15 active satellite broadband service lines, primarily for remote mining and agricultural customers. The integration parses Starlink AU invoice PDFs and stores invoice headers and line items. Service lines are fuzzy-matched to customers using GPS coordinates and site nicknames. Source files: `server/starlink/`.
+
+**Required secrets:** Six sets of `STARLINK_TOKEN_*_CLIENT_ID` and `STARLINK_TOKEN_*_SECRET` (one per portal account — see Section 12 for full list).
+
+### Omada
+
+TP-Link Omada SDN is used for network device management at customer sites. The integration connects to the Omada controller API to list sites, retrieve WAN status, enumerate devices and connected clients, and block/unblock clients. Omada sites are manually assigned to customers via the Integrations page UI. Source file: `server/suppliers/omada.ts`.
+
+**Required secrets:** `OMADA_BASE_URL`, `OMADA_CLIENT_ID`, `OMADA_CLIENT_SECRET`, `OMADA_CONTROLLER_ID`
+
+### NetSIP / Aussie Broadband SIP
+
+NetSIP provides SIP trunking services resold under the Aussie Broadband brand. Seven SIP accounts are tracked with a combined monthly cost of approximately $1,557. DID numbers are stored in the `phoneNumbers` table and linked to services. Source file: `server/suppliers/netsip.ts`.
+
+**Required secrets:** `NetSIP_SmileTelAPI_Login`, `NetSIP_SmileTelAPI_Password`
+
+### CommsCode
+
+CommsCode is the number management platform for DID inventory. The integration retrieves the full DID inventory and links numbers to services and customers. Source file: `server/suppliers/commscode.ts`.
+
+**Required secrets:** `CommsCode_NumberManager_AccountCode`, `CommsCode_NumberManager_Login`, `CommsCode_NumberManager_Password`, `CommsCode_NumberManager_WebAddress`
+
+### ChannelHaus / ECN
+
+ChannelHaus provides SIP channel services (reselling ECN infrastructure). 67 services are tracked at approximately $7,387/month. Services are imported via PDF invoice parsing and matched using the repeatable mapping engine.
+
+### DataGate
+
+DataGate is a Telstra wholesale portal providing service inventory and billing data. The integration uses the DataGate API token for authentication.
+
+**Required secrets:** `DataGate_API_Token`, `DataGate_Username`, `DataGate_Password`, `DataGate_Webaddress`
+
+---
+
+## 10. Key Business Logic and Rules
+
+**Service Categories.** Every service is assigned a `serviceCategory` from a fixed enumeration: `voice-licensing`, `voice-usage`, `voice-numbers`, `voice-features`, `data-mobile`, `data-nbn`, `data-enterprise`, `data-usage`, `hardware`, `professional-services`, `internal`, `other`. This category drives filtering, grouping, and the billing match workbench tab layout.
+
+**Margin Calculation.** Gross margin per service is calculated as `(billingItem.amount - service.monthlyCost) / billingItem.amount`. A service with no billing item assigned has undefined margin and appears in the "Unmatched Revenue" section of the dashboard. Negative margin (cost exceeds revenue) triggers a red indicator on the customer detail page.
+
+**Retail Bundle Customers.** Customers billed via the Retail Bundle offering (NBN + 4G SIM + hardware + SIP + support as a single line item) are tagged with `billingPlatform = 'retail-bundle'`. Their costs are aggregated into a single bundle cost figure rather than broken out per service.
+
+**Terminated Services.** A service is marked `status = 'terminated'` when it is actioned through the Termination page. Terminated services are excluded from margin calculations and the active service count, but remain in the database for historical reporting.
+
+**Proportional Revenue Splitting.** When a single Xero line item (e.g., "Data — Internet $450") covers multiple services for the same customer, the revenue is split proportionally across all matched services based on their individual monthly wholesale costs.
+
+**Stale Data Warnings.** The Integrations page displays a "last synced" timestamp for each API source. If any source has not been synced within 48 hours, a stale data banner is shown on the relevant pages (Vocus, Carbon, TIAB, Omada).
+
+**Automated Discrepancy Alerts.** After each monthly import cycle, the system compares each supplier's invoiced total against the expected cost from service records. Any line item where the cost has moved by more than 10% month-on-month generates a `discrepancyAlert` record and triggers a summary email to `angusbs@smiletel.com.au`.
+
+**Unmatched Service Triage.** Unmatched services are triaged using a three-pass algorithm: (1) exact service ID match against `supplierServiceMap`; (2) fuzzy address match with normalisation; (3) account-based grouping for mobile SIM fleets. Services on Telstra account 586992900 are flagged as "bulk mobile fleet — may belong to single customer" because no matched services exist on that account for reference.
+
+**Data Source Indicators.** Each data field on the service detail page displays an information icon indicating whether the value was populated from an API sync, invoice upload, manual entry, or pricebook lookup. This helps operators understand the reliability of each data point.
+
+---
+
+## 11. Current Data State — April 2026
+
+| Provider | Services | Monthly Wholesale Cost |
+|---|---|---|
+| ABB (Carbon API) | 274 | $24,622 |
+| SasBoss / Access4 | 1,224 | $23,212 |
+| Telstra (TIAB) | 626 | $20,754 |
+| AAPT | 64 | $8,312 |
+| ChannelHaus / ECN | 67 | $7,387 |
+| Exetel | 13 | $6,658 |
+| Starlink | 15 | $4,137 |
+| NetSIP | 7 | $1,557 |
+| Legion | 1 | $799 |
+| Tech-e | 1 | $250 |
+| Vocus / TIAB | 119 | Pending import |
+| **Total** | **2,663** | **~$97,688/month** |
+
+Match status: 2,155 services (81%) are matched to customers. 508 services remain unmatched, primarily mobile SIM fleets on Telstra account 586992900 that require bulk assignment.
+
+Billing items: 1,323 Xero line items imported. Approximately 62 service-to-billing-item assignments confirmed.
+
+---
+
+## 12. Environment Variables and Secrets
+
+The following environment variables are required. In Manus, these are managed via the Secrets panel. In Replit, add them to the Replit Secrets tab.
+
+### Core Platform
+
+| Variable | Purpose |
+|---|---|
+| `DATABASE_URL` | MySQL/TiDB connection string |
+| `JWT_SECRET` | Session cookie signing secret |
+| `VITE_APP_ID` | Manus OAuth application ID |
+| `OAUTH_SERVER_URL` | Manus OAuth backend base URL |
+| `VITE_OAUTH_PORTAL_URL` | Manus login portal URL |
+| `OWNER_OPEN_ID` | Owner's Manus OpenID |
+| `OWNER_NAME` | Owner's display name |
+
+### Supplier APIs
+
+| Variable | Supplier |
+|---|---|
+| `CARBON_API` | ABB Carbon API base URL |
+| `CARBON_USERNAME` | ABB Carbon API login |
+| `CARBON_PASSWORD` | ABB Carbon API password |
+| `CARBON_PASSWORD_PREFIX` | ABB password prefix |
+| `CARBON_PASSWORD_SUFFIX` | ABB password suffix |
+| `SasBoss_API_Host` | SasBoss API host URL |
+| `SasBoss_Reseller_ID` | SasBoss reseller ID (2815) |
+| `SasBoss_User` | SasBoss API username |
+| `SasBoss_Password` | SasBoss API password |
+| `SasBoss_Webaddress` | SasBoss portal URL |
+| `Vocus_SP_Username` | Vocus SP portal username |
+| `Vocus_SP_Password` | Vocus SP portal password |
+| `Vocus_Mobile_Real_Name` | Vocus account real name |
+| `TIAB_API_BASE_URL` | TIAB API base URL |
+| `TIAB_API_USERNAME` | TIAB API username |
+| `TIAB_API_PASSWORD` | TIAB API password |
+| `TIAB_Octane_WebAddress` | Octane portal URL |
+| `Octane_TIAB_Angus_Username` | Octane login username |
+| `Octane_TIAB_Angus_Password` | Octane login password |
+| `OMADA_BASE_URL` | Omada controller base URL |
+| `OMADA_CLIENT_ID` | Omada OAuth client ID |
+| `OMADA_CLIENT_SECRET` | Omada OAuth client secret |
+| `OMADA_CONTROLLER_ID` | Omada controller ID |
+| `NetSIP_SmileTelAPI_Login` | NetSIP API login |
+| `NetSIP_SmileTelAPI_Password` | NetSIP API password |
+| `CommsCode_NumberManager_AccountCode` | CommsCode account code |
+| `CommsCode_NumberManager_Login` | CommsCode login |
+| `CommsCode_NumberManager_Password` | CommsCode password |
+| `CommsCode_NumberManager_WebAddress` | CommsCode portal URL |
+| `DataGate_API_Token` | DataGate API token |
+| `DataGate_Username` | DataGate username |
+| `DataGate_Password` | DataGate password |
+| `DataGate_Webaddress` | DataGate portal URL |
+| `STARLINK_TOKEN_SMILEITSTARLINK_CLIENT_ID` | Starlink account 1 client ID |
+| `STARLINK_TOKEN_SMILEITSTARLINK_SECRET` | Starlink account 1 secret |
+| `STARLINK_TOKEN_SUPPORT_SMILEIT_CLIENT_ID` | Starlink account 2 client ID |
+| `STARLINK_TOKEN_SUPPORT_SMILEIT_SECRET` | Starlink account 2 secret |
+| `STARLINK_TOKEN_ORDERS_SMILEIT_CLIENT_ID` | Starlink account 3 client ID |
+| `STARLINK_TOKEN_ORDERS_SMILEIT_SECRET` | Starlink account 3 secret |
+| `STARLINK_TOKEN_ACCOUNTS_SMILEIT_CLIENT_ID` | Starlink account 4 client ID |
+| `STARLINK_TOKEN_ACCOUNTS_SMILEIT_SECRET` | Starlink account 4 secret |
+| `STARLINK_TOKEN_PJDRUMMOND_CLIENT_ID` | Starlink account 5 client ID |
+| `STARLINK_TOKEN_PJDRUMMOND_SECRET` | Starlink account 5 secret |
+| `STARLINK_TOKEN_PRODUCTADMIN_SMILEIT_CLIENT_ID` | Starlink account 6 client ID |
+| `STARLINK_TOKEN_PRODUCTADMIN_SMILEIT_SECRET` | Starlink account 6 secret |
+
+### Billing and Communication
+
+| Variable | Purpose |
+|---|---|
+| `SendGrid_API` | SendGrid API key for automated emails |
+| `SendGrid_Login` | SendGrid account login |
+| `OneBill_Address` | OneBill billing platform URL |
+| `OneBill_Login` | OneBill login |
+| `OneBill_Password` | OneBill password |
+| `MyTelstra_Login` | MyTelstra portal login |
+| `MyTelstra_Password` | MyTelstra portal password |
+| `MyTelstra_Webaddress` | MyTelstra portal URL |
+| `TEAM_ACCESS_PASSWORD` | Internal team access password |
+| `SmileTelCLIENTID` | SmileTel OAuth client ID |
+| `CLIENTSECRET` | OAuth client secret |
+| `InterfaceAccessAddress` | Interface access URL |
+| `ChannelHaus_Username` | ChannelHaus portal username |
+| `ChannelHaus_Password` | ChannelHaus portal password |
+| `ChannelHaus_Address` | ChannelHaus portal URL |
+
+---
+
+## 13. Getting Started on Replit
+
+### Prerequisites
+
+Replit requires a Node.js 22 repl with a MySQL-compatible database. The recommended approach is to use an external TiDB Cloud Serverless instance (free tier available at tidbcloud.com) or a PlanetScale MySQL database.
+
+### Step 1 — Import the Repository
+
+Import `smileitaus/SmileTelBillingRecon` directly into Replit via **Create Repl > Import from GitHub**.
+
+### Step 2 — Install Dependencies
 
 ```bash
-pnpm db:push
+npm install -g pnpm && pnpm install
 ```
 
-This runs `drizzle-kit generate && drizzle-kit migrate` and creates the full schema from `drizzle/schema.ts`.
+### Step 3 — Configure Secrets
 
-### Step 3: Seed the Access4 Pricebook
+Add all environment variables from Section 12 to the Replit Secrets tab. The minimum required set to run the application is:
 
-The Access4 Diamond Advantage Pricebook (108 products) needs to be re-seeded. Upload the pricebook XLSX via:
+```
+DATABASE_URL=mysql://user:password@host:3306/dbname
+JWT_SECRET=<any-random-32-char-string>
+VITE_APP_ID=dev
+OAUTH_SERVER_URL=https://api.manus.im
+VITE_OAUTH_PORTAL_URL=https://manus.im
+OWNER_OPEN_ID=dev-user
+OWNER_NAME=Developer
+```
 
-**Suppliers page → Access4 Diamond Pricebook panel → Upload Pricebook**
+### Step 4 — Run Database Migrations
 
-The file is: `Access4AdvantagePricebookAUDv3.4.xlsx`
+```bash
+pnpm drizzle-kit push
+```
 
-### Step 4: Re-import Supplier Invoices
+This applies the full schema from `drizzle/schema.ts` to your database. For production migrations, generate SQL first with `pnpm drizzle-kit generate`, then review and apply the generated file.
 
-Re-import the supplier invoices in this order (each builds on the previous):
+### Step 5 — Seed Initial Data
 
-1. **SasBoss Dispatch/Pivot XLSX** — via Suppliers page → SasBoss panel
-2. **Access4 PDF invoice** — via Suppliers page → Access4 panel (sets wholesale costs)
-3. **AAPT PDF invoice** — via Suppliers page → AAPT panel
-4. **Telstra Blitz XLSX** — via Blitz Termination Review page → Import Blitz Report
+```bash
+node seed-db.mjs
+```
 
-### Step 5: Re-import Xero Billing Items
+This seeds the supplier registry, product cost maps, and initial pricebook data.
 
-Upload the Xero invoice export CSV via the Billing Items import. This populates `billing_items` with retail revenue data.
+### Step 6 — Start the Development Server
 
-### Step 6: Run Auto-Match
+```bash
+pnpm dev
+```
 
-Navigate to `/auto-match` and run the fuzzy auto-match engine. This will attempt to match unmatched services to customers based on name similarity, address, and phone number.
+The application runs on port 3000. The Vite dev server proxies `/api` requests to the Express backend.
 
-### Step 7: Manual Assignment
+### Important Notes for Replit
 
-For remaining unmatched services, use:
-- **Unmatched Services** (`/unmatched`) — assign services to customers
-- **Suppliers → AAPT → Unmatched tab** — assign AAPT backbone services
+The application was built on the Manus platform which provides managed MySQL (TiDB), S3 storage, and OAuth. On Replit, you will need to substitute the following:
 
----
+**Database.** Use Replit's built-in PostgreSQL or an external MySQL/TiDB instance. If using PostgreSQL, the Drizzle schema uses MySQL-specific types (`varchar`, `decimal`, `mysqlTable`) that will need to be adapted to `pgTable` equivalents. TiDB Cloud Serverless is the recommended drop-in replacement as it is fully MySQL-compatible.
 
-## 13. Known Issues & Next Steps
+**File Storage.** Replace `server/storage.ts` S3 helpers with Replit's object storage or an external S3-compatible service (Cloudflare R2 is a cost-effective option).
 
-### Active Issues
+**Authentication.** The Manus OAuth flow requires a valid Manus OAuth client. For Replit development, the simplest approach is to temporarily bypass authentication by hardcoding a development user in `server/_core/context.ts`, or to implement a simple username/password auth using the existing `users` table and `JWT_SECRET`.
 
-| Issue | Status | Location |
-|---|---|---|
-| 50 AAPT services unmatched (IP-Line backbone) | Open | Suppliers → AAPT → Unmatched |
-| 32 SasBoss services with no wholesale cost | Open | Revenue & Margin → filter by `retail_only_no_wholesale` |
-| 147 Telstra services flagged for termination | Pending submission | Blitz Termination Review → Export CSV |
-| ~2,600 services with no Xero billing item linked | Ongoing | Billing Match workbench |
+**Email.** SendGrid integration is ready — just add the `SendGrid_API` secret.
 
-### Planned Enhancements
-
-1. **Xero API integration** — direct OAuth connection to Xero to auto-import billing items monthly, eliminating the manual CSV export/import step.
-2. **Vocus invoice import** — build PDF parser for Vocus invoices (119 services currently have $0 wholesale cost).
-3. **Monthly reconciliation workflow** — a guided wizard that walks through each supplier's invoice upload, auto-applies mapping rules, and surfaces only the exceptions requiring manual review.
-4. **Margin alerts** — automated notifications when a service's margin drops below a threshold (e.g., below 10% or negative).
-5. **Carbon API sync** — scheduled sync of ABB service costs from the Carbon API to keep wholesale costs current.
-
-### Data Transfer Note
-
-When transferring to a new Manus account, the **database is not included in the GitHub repository**. All data must be re-imported from the original supplier invoice files. The mapping rules stored in `supplier_service_map` and `supplier_enterprise_map` are the most valuable operational data — once re-imported, subsequent monthly invoice uploads will be largely automatic.
+**LLM.** The `invokeLLM` helper in `server/_core/llm.ts` uses Manus built-in API keys. On Replit, replace with a direct OpenAI or Anthropic API call using your own key.
 
 ---
 
-*Document prepared March 2026. For questions about the platform, contact the SmileIT operations team.*
+## 14. Getting Started on a New Manus Account
+
+1. Create a new Manus project and select the "Web App (tRPC + Auth + Database)" template.
+2. Clone this repository into the project directory.
+3. Add all secrets from Section 12 via the Manus Secrets panel.
+4. Run `pnpm drizzle-kit push` to apply the schema.
+5. Run `node seed-db.mjs` to seed initial data.
+6. The application will be available at the Manus-assigned domain immediately.
+
+The Manus platform automatically provides `DATABASE_URL`, `JWT_SECRET`, `VITE_APP_ID`, `OAUTH_SERVER_URL`, `VITE_OAUTH_PORTAL_URL`, `OWNER_OPEN_ID`, and `OWNER_NAME` — these do not need to be manually set.
+
+---
+
+## 15. Monthly Reconciliation Workflow
+
+The following workflow is performed on the 1st–7th of each month. The full checklist is maintained in `recon-checklist-april-2026.md`.
+
+**Days 1–3: Supplier Invoice Collection.** Collect and upload invoices from all suppliers. For API-connected suppliers (Carbon/ABB, SasBoss, TIAB, Omada), trigger a manual sync from the Integrations page. For portal-only suppliers (Telstra via MyTelstra, Vocus via SP Portal, TIAB via Octane), run the relevant scraper scripts. For invoice-only suppliers (AAPT, ChannelHaus, Starlink), upload the PDF invoices via the Suppliers page.
+
+**Days 3–5: Revenue Import.** Export the monthly Xero invoice CSV and upload via the Billing Match page. The auto-match pipeline runs immediately after upload. Review the match summary and resolve any new unmatched items in the Review queue.
+
+**Days 5–7: Reconciliation Review.** Open the Billing Match workbench and resolve any remaining unmatched services. Check the Discrepancy Alerts for any cost movements greater than 10%. Review the Termination page for any services flagged for termination and action them.
+
+**Ongoing: Payment Plans.** Check the Payment Plans page for any instalments due in the current month. Mark as paid once confirmed in Xero.
+
+---
+
+## 16. Known Issues and Pending Work
+
+The following items represent the current development backlog, tracked in full in `todo.md`.
+
+**Pending supplier confirmations (SasBoss).** The per-enterprise pricing override endpoint has been noted (chargeOverriden flag) but confirmation from SasBoss TAC is pending. Historical transacted charges endpoint for closed billing periods is also pending. Webhook/event callback support for enterprise provisioning events has been raised with the SasBoss development team.
+
+**Pending data imports.** Vocus mobile and NBN services (119 services, costs pending import), March 2026 Xero invoice CSV, and OneBill March 2026 export are all outstanding.
+
+**Pending manual matches.** Six Starlink service lines are without confirmed customer assignments (Black Pearl x2, UQ Wildlife x2, Waratah Village x2). Approximately 508 unmatched services on Telstra account 586992900 (mobile SIM fleet) require bulk assignment to one or more customers.
+
+**Pending SasBoss API live tests.** Pricebook sync validation (all 6 pricing tiers), pending charges export cross-reference, and enterprise list sync cross-reference are all scheduled for the next development sprint.
+
+---
+
+*Document maintained by the SmileIT development team. Last updated: April 2026.*
+*For questions, contact angusbs@smiletel.com.au*

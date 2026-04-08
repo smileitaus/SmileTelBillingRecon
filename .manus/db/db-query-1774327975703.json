@@ -1,0 +1,9 @@
+{
+  "query": "ALTER TABLE vocus_nbn_services ADD COLUMN internalCustomerExternalId VARCHAR(32) NULL DEFAULT NULL AFTER internalServiceExternalId;\nALTER TABLE vocus_mobile_services ADD COLUMN internalCustomerExternalId VARCHAR(32) NULL DEFAULT NULL AFTER internalServiceExternalId;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute ALTER TABLE vocus_nbn_services ADD COLUMN internalCustomerExternalId VARCHAR(32) NULL DEFAULT NULL AFTER internalServiceExternalId;\nALTER TABLE vocus_mobile_services ADD COLUMN internalCustomerExternalId VARCHAR(32) NULL DEFAULT NULL AFTER internalServiceExternalId;",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 2781
+}

@@ -1,0 +1,61 @@
+{
+  "query": "-- What billing items exist for the zero-revenue ABB/AAPT/ChannelHaus services?\n-- These are the ones that would need PDF parsing to get revenue\nSELECT \n  bi.category,\n  bi.billingPlatform,\n  bi.matchStatus,\n  COUNT(*) as itemCount,\n  SUM(bi.lineAmount) as totalAmount\nFROM billing_items bi\nWHERE bi.category IN ('internet', 'nbn-bundle', 'abb-passthrough', 'telstra-passthrough')\nGROUP BY bi.category, bi.billingPlatform, bi.matchStatus\nORDER BY totalAmount DESC;\n\n-- How many zero-revenue services already have a billing item assigned via service_billing_assignments?\nSELECT COUNT(*) as alreadyAssigned\nFROM services s\nJOIN service_billing_assignments sba ON sba.serviceExternalId = s.externalId\nWHERE s.monthlyRevenue = 0 AND s.monthlyCost > 0\n  AND s.status NOT IN ('inactive', 'terminated')\n  AND s.customerExternalId IS NOT NULL;\n\n-- What is the breakdown of HOW revenue gets set on services that DO have revenue?\nSELECT costSource, COUNT(*) as cnt, SUM(monthlyRevenue) as totalRevenue\nFROM services \nWHERE monthlyRevenue > 0 AND status NOT IN ('inactive', 'terminated')\nGROUP BY costSource ORDER BY totalRevenue DESC;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute -- What billing items exist for the zero-revenue ABB/AAPT/ChannelHaus services?\n-- These are the ones that would need PDF parsing to get revenue\nSELECT \n  bi.category,\n  bi.billingPlatform,\n  bi.matchStatus,\n  COUNT(*) as itemCount,\n  SUM(bi.lineAmount) as totalAmount\nFROM billing_items bi\nWHERE bi.category IN ('internet', 'nbn-bundle', 'abb-passthrough', 'telstra-passthrough')\nGROUP BY bi.category, bi.billingPlatform, bi.matchStatus\nORDER BY totalAmount DESC;\n\n-- How many zero-revenue services already have a billing item assigned via service_billing_assignments?\nSELECT COUNT(*) as alreadyAssigned\nFROM services s\nJOIN service_billing_assignments sba ON sba.serviceExternalId = s.externalId\nWHERE s.monthlyRevenue = 0 AND s.monthlyCost > 0\n  AND s.status NOT IN ('inactive', 'terminated')\n  AND s.customerExternalId IS NOT NULL;\n\n-- What is the breakdown of HOW revenue gets set on services that DO have revenue?\nSELECT costSource, COUNT(*) as cnt, SUM(monthlyRevenue) as totalRevenue\nFROM services \nWHERE monthlyRevenue > 0 AND status NOT IN ('inactive', 'terminated')\nGROUP BY costSource ORDER BY totalRevenue DESC;",
+  "rows": [
+    {
+      "category": "internet",
+      "billingPlatform": "",
+      "matchStatus": "service-matched",
+      "itemCount": "219",
+      "totalAmount": "59192.49"
+    },
+    {
+      "category": "nbn-bundle",
+      "billingPlatform": "",
+      "matchStatus": "service-matched",
+      "itemCount": "132",
+      "totalAmount": "18906.45"
+    },
+    {
+      "category": "abb-passthrough",
+      "billingPlatform": "",
+      "matchStatus": "service-matched",
+      "itemCount": "4",
+      "totalAmount": "710.00"
+    },
+    {
+      "category": "nbn-bundle",
+      "billingPlatform": "",
+      "matchStatus": "unmatched",
+      "itemCount": "2",
+      "totalAmount": "272.72"
+    },
+    {
+      "category": "telstra-passthrough",
+      "billingPlatform": "",
+      "matchStatus": "service-matched",
+      "itemCount": "2",
+      "totalAmount": "100.00"
+    }
+  ],
+  "messages": [
+    "alreadyAssigned",
+    "42",
+    "costSource\tcnt\ttotalRevenue",
+    "unknown\t533\t134028.34",
+    "carbon_api\t172\t79907.57",
+    "access4_diamond_pricebook_excel\t165\t25279.15",
+    "supplier_invoice\t68\t19952.96",
+    "carbon_nbn_estimate\t51\t19763.87",
+    "pricebook-derived\t76\t10724.81",
+    "product_map\t23\t3198.99",
+    "invoice_derived\t13\t1371.61",
+    "abb_opticomm_kent_pricing\t5\t1015.42",
+    "access4_diamond_pricebook\t1\t576.00",
+    "blitz_report\t2\t275.66",
+    "retail_only_no_wholesale\t2\t236.36"
+  ],
+  "stdout": "category\tbillingPlatform\tmatchStatus\titemCount\ttotalAmount\ninternet\t\tservice-matched\t219\t59192.49\nnbn-bundle\t\tservice-matched\t132\t18906.45\nabb-passthrough\t\tservice-matched\t4\t710.00\nnbn-bundle\t\tunmatched\t2\t272.72\ntelstra-passthrough\t\tservice-matched\t2\t100.00\nalreadyAssigned\n42\ncostSource\tcnt\ttotalRevenue\nunknown\t533\t134028.34\ncarbon_api\t172\t79907.57\naccess4_diamond_pricebook_excel\t165\t25279.15\nsupplier_invoice\t68\t19952.96\ncarbon_nbn_estimate\t51\t19763.87\npricebook-derived\t76\t10724.81\nproduct_map\t23\t3198.99\ninvoice_derived\t13\t1371.61\nabb_opticomm_kent_pricing\t5\t1015.42\naccess4_diamond_pricebook\t1\t576.00\nblitz_report\t2\t275.66\nretail_only_no_wholesale\t2\t236.36\n",
+  "stderr": "",
+  "execution_time_ms": 2045
+}

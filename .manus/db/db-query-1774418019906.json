@@ -1,0 +1,45 @@
+{
+  "query": "SELECT pn.number, pn.serviceExternalId, s.connectionId, s.supplierName, s.customerName FROM phone_numbers pn LEFT JOIN services s ON s.externalId = pn.serviceExternalId WHERE pn.serviceExternalId != '' LIMIT 5;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute SELECT pn.number, pn.serviceExternalId, s.connectionId, s.supplierName, s.customerName FROM phone_numbers pn LEFT JOIN services s ON s.externalId = pn.serviceExternalId WHERE pn.serviceExternalId != '' LIMIT 5;",
+  "rows": [
+    {
+      "number": "0738813335",
+      "serviceExternalId": "S81LV9S",
+      "connectionId": "",
+      "supplierName": "ChannelHaus",
+      "customerName": "Albany Family Doctors"
+    },
+    {
+      "number": "0738632226",
+      "serviceExternalId": "SXQLTTS",
+      "connectionId": "",
+      "supplierName": "ChannelHaus",
+      "customerName": "Aspley Firstcare Doctors"
+    },
+    {
+      "number": "0733985225",
+      "serviceExternalId": "SJFKCR0",
+      "connectionId": "",
+      "supplierName": "ChannelHaus",
+      "customerName": "Ausdocs Carindale Pty Ltd"
+    },
+    {
+      "number": "0754062081",
+      "serviceExternalId": "SV0A37V",
+      "connectionId": "",
+      "supplierName": "ChannelHaus",
+      "customerName": "Doctors At Kawana Shopping World"
+    },
+    {
+      "number": "0732892366",
+      "serviceExternalId": "SEX5HFK",
+      "connectionId": "",
+      "supplierName": "ChannelHaus",
+      "customerName": "Doctors at Samford Valley"
+    }
+  ],
+  "messages": [],
+  "stdout": "number\tserviceExternalId\tconnectionId\tsupplierName\tcustomerName\n0738813335\tS81LV9S\t\tChannelHaus\tAlbany Family Doctors\n0738632226\tSXQLTTS\t\tChannelHaus\tAspley Firstcare Doctors\n0733985225\tSJFKCR0\t\tChannelHaus\tAusdocs Carindale Pty Ltd\n0754062081\tSV0A37V\t\tChannelHaus\tDoctors At Kawana Shopping World\n0732892366\tSEX5HFK\t\tChannelHaus\tDoctors at Samford Valley\n",
+  "stderr": "",
+  "execution_time_ms": 1594
+}

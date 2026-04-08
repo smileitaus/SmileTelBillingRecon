@@ -1,0 +1,22 @@
+{
+  "query": "\n-- Check Torquay service reassignment\nSELECT externalId, planName, customerExternalId, customerName, locationAddress, status \nFROM services WHERE externalId = 'S0340';\n\n-- Check Tewantin termination\nSELECT externalId, planName, customerName, locationAddress, status \nFROM services WHERE locationAddress LIKE '%Tewantin%' OR locationAddress LIKE '%TEWANTIN%';\n\n-- Check Nicki's and Poppy G's business names\nSELECT externalId, name, businessName FROM customers WHERE externalId IN ('C2893', 'C0186');\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Check Torquay service reassignment\nSELECT externalId, planName, customerExternalId, customerName, locationAddress, status \nFROM services WHERE externalId = 'S0340';\n\n-- Check Tewantin termination\nSELECT externalId, planName, customerName, locationAddress, status \nFROM services WHERE locationAddress LIKE '%Tewantin%' OR locationAddress LIKE '%TEWANTIN%';\n\n-- Check Nicki's and Poppy G's business names\nSELECT externalId, name, businessName FROM customers WHERE externalId IN ('C2893', 'C0186');\n",
+  "rows": [
+    {
+      "externalId": "S0340",
+      "planName": "NBN 50/20",
+      "customerExternalId": "C0011",
+      "customerName": "Allegra Property Management Pty Ltd",
+      "locationAddress": "7 BARNSTAPLE ST, TORQUAY QLD",
+      "status": "active"
+    }
+  ],
+  "messages": [
+    "externalId\tname\tbusinessName",
+    "C2893\tNICKI'S PROFESSIONAL SECURITY SCREENS AND BLINDS\tJoshelley Pty Ltd",
+    "C0186\tPoppy G's Midland\tBel's Resto Pty Ltd"
+  ],
+  "stdout": "externalId\tplanName\tcustomerExternalId\tcustomerName\tlocationAddress\tstatus\nS0340\tNBN 50/20\tC0011\tAllegra Property Management Pty Ltd\t7 BARNSTAPLE ST, TORQUAY QLD\tactive\nexternalId\tname\tbusinessName\nC2893\tNICKI'S PROFESSIONAL SECURITY SCREENS AND BLINDS\tJoshelley Pty Ltd\nC0186\tPoppy G's Midland\tBel's Resto Pty Ltd\n",
+  "stderr": "",
+  "execution_time_ms": 2053
+}

@@ -1,0 +1,110 @@
+{
+  "query": "\n-- Find Zambrero billing item descriptions to identify the Retail Bundle pattern\nSELECT DISTINCT bi.description, bi.customerExternalId, c.name\nFROM billing_items bi\nJOIN customers c ON c.externalId = bi.customerExternalId\nWHERE c.name LIKE '%Zambrero%'\nORDER BY bi.description\nLIMIT 20;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Find Zambrero billing item descriptions to identify the Retail Bundle pattern\nSELECT DISTINCT bi.description, bi.customerExternalId, c.name\nFROM billing_items bi\nJOIN customers c ON c.externalId = bi.customerExternalId\nWHERE c.name LIKE '%Zambrero%'\nORDER BY bi.description\nLIMIT 20;\n",
+  "rows": [
+    {
+      "description": "Credit August Usage",
+      "customerExternalId": "C2728",
+      "name": "Zambrero - Brisbane Mater Hospital"
+    },
+    {
+      "description": "Credit to remove Call Charges from SB - Billing is done through OB",
+      "customerExternalId": "C2728",
+      "name": "Zambrero - Brisbane Mater Hospital"
+    },
+    {
+      "description": "Goodwill adjustment",
+      "customerExternalId": "C2779",
+      "name": "Zambrero - Hamilton"
+    },
+    {
+      "description": "Number porting-one time charge",
+      "customerExternalId": "C0340",
+      "name": "Zambrero Fremantle"
+    },
+    {
+      "description": "Number porting-one time charge",
+      "customerExternalId": "C0402",
+      "name": "Zambrero Woodvale"
+    },
+    {
+      "description": "Site Bundle - Recurring: 100/40 Connectivity - Suitable for Enterprise Grade, Premium Dedicated Support, Business Grade Hardware, 24/7 Connectivity Monitoring, 4G Backup, Enhanced Remote Assistance, Unlimited Phone Calls",
+      "customerExternalId": "C2719",
+      "name": "Zambrero - Belmont"
+    },
+    {
+      "description": "Site Bundle - Recurring: 25/10 Connectivity - Suitable for Enterprise Grade, Premium Dedicated Support, Business Grade Hardware, 24/7 Connectivity Monitoring, 4G Backup, Enhanced Remote Assistance, Unlimited Phone Calls",
+      "customerExternalId": "C0315",
+      "name": "Zambrero Byford"
+    },
+    {
+      "description": "Site Bundle - Recurring: 25/10 Connectivity - Suitable for Enterprise Grade, Premium Dedicated Support, Business Grade Hardware, 24/7 Connectivity Monitoring, 4G Backup, Enhanced Remote Assistance, Unlimited Phone Calls",
+      "customerExternalId": "C0324",
+      "name": "Zambrero Coolum"
+    },
+    {
+      "description": "Site Bundle - Recurring: 25/10 Connectivity - Suitable for Enterprise Grade, Premium Dedicated Support, Business Grade Hardware, 24/7 Connectivity Monitoring, 4G Backup, Enhanced Remote Assistance, Unlimited Phone Calls",
+      "customerExternalId": "C0329",
+      "name": "Zambrero Currumbin"
+    },
+    {
+      "description": "Site Bundle - Recurring: 25/10 Connectivity - Suitable for Enterprise Grade, Premium Dedicated Support, Business Grade Hardware, 24/7 Connectivity Monitoring, 4G Backup, Enhanced Remote Assistance, Unlimited Phone Calls",
+      "customerExternalId": "C0386",
+      "name": "Zambrero South Yarra"
+    },
+    {
+      "description": "Site Bundle - Recurring: 25/10 Connectivity - Suitable for Enterprise Grade, Premium Dedicated Support, Business Grade Hardware, 24/7 Connectivity Monitoring, 4G Backup, Enhanced Remote Assistance, Unlimited Phone Calls",
+      "customerExternalId": "C0374",
+      "name": "Zambrero Nundah"
+    },
+    {
+      "description": "Site Bundle - Recurring: 25/10 Connectivity - Suitable for Enterprise Grade, Premium Dedicated Support, Business Grade Hardware, 24/7 Connectivity Monitoring, 4G Backup, Enhanced Remote Assistance, Unlimited Phone Calls",
+      "customerExternalId": "C2731",
+      "name": "Zambrero - Bullsbrook"
+    },
+    {
+      "description": "Site Bundle - Recurring: 25/10 Connectivity - Suitable for Enterprise Grade, Premium Dedicated Support, Business Grade Hardware, 24/7 Connectivity Monitoring, 4G Backup, Enhanced Remote Assistance, Unlimited Phone Calls",
+      "customerExternalId": "C0396",
+      "name": "Zambrero Warragul"
+    },
+    {
+      "description": "Site Bundle - Recurring: 25/10 Connectivity - Suitable for Enterprise Grade, Premium Dedicated Support, Business Grade Hardware, 24/7 Connectivity Monitoring, 4G Backup, Enhanced Remote Assistance, Unlimited Phone Calls",
+      "customerExternalId": "C0301",
+      "name": "Zambrero Balnarring"
+    },
+    {
+      "description": "Site Bundle - Recurring: 25/10 Connectivity - Suitable for Enterprise Grade, Premium Dedicated Support, Business Grade Hardware, 24/7 Connectivity Monitoring, 4G Backup, Enhanced Remote Assistance, Unlimited Phone Calls",
+      "customerExternalId": "C0340",
+      "name": "Zambrero Fremantle"
+    },
+    {
+      "description": "Site Bundle - Recurring: 25/10 Connectivity - Suitable for Enterprise Grade, Premium Dedicated Support, Business Grade Hardware, 24/7 Connectivity Monitoring, 4G Backup, Enhanced Remote Assistance, Unlimited Phone Calls",
+      "customerExternalId": "C0326",
+      "name": "Zambrero Coopers Plains"
+    },
+    {
+      "description": "Site Bundle - Recurring: 25/10 Connectivity - Suitable for Enterprise Grade, Premium Dedicated Support, Business Grade Hardware, 24/7 Connectivity Monitoring, 4G Backup, Enhanced Remote Assistance, Unlimited Phone Calls",
+      "customerExternalId": "C2734",
+      "name": "Zambrero - Bundoora"
+    },
+    {
+      "description": "Site Bundle - Recurring: 25/10 Connectivity - Suitable for Enterprise Grade, Premium Dedicated Support, Business Grade Hardware, 24/7 Connectivity Monitoring, 4G Backup, Enhanced Remote Assistance, Unlimited Phone Calls",
+      "customerExternalId": "C2779",
+      "name": "Zambrero - Hamilton"
+    },
+    {
+      "description": "Site Bundle - Recurring: 25/10 Connectivity - Suitable for Enterprise Grade, Premium Dedicated Support, Business Grade Hardware, 24/7 Connectivity Monitoring, 4G Backup, Enhanced Remote Assistance, Unlimited Phone Calls",
+      "customerExternalId": "C0341",
+      "name": "Zambrero Geelong West"
+    },
+    {
+      "description": "Site Bundle - Recurring: 25/10 Connectivity - Suitable for Enterprise Grade, Premium Dedicated Support, Business Grade Hardware, 24/7 Connectivity Monitoring, 4G Backup, Enhanced Remote Assistance, Unlimited Phone Calls",
+      "customerExternalId": "C0353",
+      "name": "Zambrero Kings Cross"
+    }
+  ],
+  "messages": [],
+  "stdout": "description\tcustomerExternalId\tname\nCredit August Usage\tC2728\tZambrero - Brisbane Mater Hospital\nCredit to remove Call Charges from SB - Billing is done through OB\tC2728\tZambrero - Brisbane Mater Hospital\nGoodwill adjustment\tC2779\tZambrero - Hamilton\nNumber porting-one time charge\tC0340\tZambrero Fremantle\nNumber porting-one time charge\tC0402\tZambrero Woodvale\nSite Bundle - Recurring: 100/40 Connectivity - Suitable for Enterprise Grade, Premium Dedicated Support, Business Grade Hardware, 24/7 Connectivity Monitoring, 4G Backup, Enhanced Remote Assistance, Unlimited Phone Calls\tC2719\tZambrero - Belmont\nSite Bundle - Recurring: 25/10 Connectivity - Suitable for Enterprise Grade, Premium Dedicated Support, Business Grade Hardware, 24/7 Connectivity Monitoring, 4G Backup, Enhanced Remote Assistance, Unlimited Phone Calls\tC0315\tZambrero Byford\nSite Bundle - Recurring: 25/10 Connectivity - Suitable for Enterprise Grade, Premium Dedicated Support, Business Grade Hardware, 24/7 Connectivity Monitoring, 4G Backup, Enhanced Remote Assistance, Unlimited Phone Calls\tC0324\tZambrero Coolum\nSite Bundle - Recurring: 25/10 Connectivity - Suitable for Enterprise Grade, Premium Dedicated Support, Business Grade Hardware, 24/7 Connectivity Monitoring, 4G Backup, Enhanced Remote Assistance, Unlimited Phone Calls\tC0329\tZambrero Currumbin\nSite Bundle - Recurring: 25/10 Connectivity - Suitable for Enterprise Grade, Premium Dedicated Support, Business Grade Hardware, 24/7 Connectivity Monitoring, 4G Backup, Enhanced Remote Assistance, Unlimited Phone Calls\tC0386\tZambrero South Yarra\nSite Bundle - Recurring: 25/10 Connectivity - Suitable for Enterprise Grade, Premium Dedicated Support, Business Grade Hardware, 24/7 Connectivity Monitoring, 4G Backup, Enhanced Remote Assistance, Unlimited Phone Calls\tC0374\tZambrero Nundah\nSite Bundle - Recurring: 25/10 Connectivity - Suitable for Enterprise Grade, Premium Dedicated Support, Business Grade Hardware, 24/7 Connectivity Monitoring, 4G Backup, Enhanced Remote Assistance, Unlimited Phone Calls\tC2731\tZambrero - Bullsbrook\nSite Bundle - Recurring: 25/10 Connectivity - Suitable for Enterprise Grade, Premium Dedicated Support, Business Grade Hardware, 24/7 Connectivity Monitoring, 4G Backup, Enhanced Remote Assistance, Unlimited Phone Calls\tC0396\tZambrero Warragul\nSite Bundle - Recurring: 25/10 Connectivity - Suitable for Enterprise Grade, Premium Dedicated Support, Business Grade Hardware, 24/7 Connectivity Monitoring, 4G Backup, Enhanced Remote Assistance, Unlimited Phone Calls\tC0301\tZambrero Balnarring\nSite Bundle - Recurring: 25/10 Connectivity - Suitable for Enterprise Grade, Premium Dedicated Support, Business Grade Hardware, 24/7 Connectivity Monitoring, 4G Backup, Enhanced Remote Assistance, Unlimited Phone Calls\tC0340\tZambrero Fremantle\nSite Bundle - Recurring: 25/10 Connectivity - Suitable for Enterprise Grade, Premium Dedicated Support, Business Grade Hardware, 24/7 Connectivity Monitoring, 4G Backup, Enhanced Remote Assistance, Unlimited Phone Calls\tC0326\tZambrero Coopers Plains\nSite Bundle - Recurring: 25/10 Connectivity - Suitable for Enterprise Grade, Premium Dedicated Support, Business Grade Hardware, 24/7 Connectivity Monitoring, 4G Backup, Enhanced Remote Assistance, Unlimited Phone Calls\tC2734\tZambrero - Bundoora\nSite Bundle - Recurring: 25/10 Connectivity - Suitable for Enterprise Grade, Premium Dedicated Support, Business Grade Hardware, 24/7 Connectivity Monitoring, 4G Backup, Enhanced Remote Assistance, Unlimited Phone Calls\tC2779\tZambrero - Hamilton\nSite Bundle - Recurring: 25/10 Connectivity - Suitable for Enterprise Grade, Premium Dedicated Support, Business Grade Hardware, 24/7 Connectivity Monitoring, 4G Backup, Enhanced Remote Assistance, Unlimited Phone Calls\tC0341\tZambrero Geelong West\nSite Bundle - Recurring: 25/10 Connectivity - Suitable for Enterprise Grade, Premium Dedicated Support, Business Grade Hardware, 24/7 Connectivity Monitoring, 4G Backup, Enhanced Remote Assistance, Unlimited Phone Calls\tC0353\tZambrero Kings Cross\n",
+  "stderr": "",
+  "execution_time_ms": 1569
+}

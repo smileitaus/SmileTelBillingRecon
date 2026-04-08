@@ -1,0 +1,258 @@
+{
+  "query": "SELECT tiabCustomerId, companyName, firstName, lastName, internalCustomerExternalId, matchConfidence\nFROM tiab_customers \nWHERE companyName NOT LIKE '%Zambrero%'\nORDER BY companyName;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute SELECT tiabCustomerId, companyName, firstName, lastName, internalCustomerExternalId, matchConfidence\nFROM tiab_customers \nWHERE companyName NOT LIKE '%Zambrero%'\nORDER BY companyName;",
+  "rows": [
+    {
+      "tiabCustomerId": "530235",
+      "companyName": "Accountant Ready Services",
+      "firstName": "Accountant Ready Ser",
+      "lastName": "4G",
+      "internalCustomerExternalId": "NULL",
+      "matchConfidence": "NULL"
+    },
+    {
+      "tiabCustomerId": "528133",
+      "companyName": "AHJ Pty Ltd",
+      "firstName": "Zambrero",
+      "lastName": "Main Account",
+      "internalCustomerExternalId": "NULL",
+      "matchConfidence": "NULL"
+    },
+    {
+      "tiabCustomerId": "527604",
+      "companyName": "Bar Alto Pty Ltd",
+      "firstName": "Bar Alto",
+      "lastName": "Pty Ltd",
+      "internalCustomerExternalId": "NULL",
+      "matchConfidence": "NULL"
+    },
+    {
+      "tiabCustomerId": "531913",
+      "companyName": "Bel?s Resto Pty Ltd",
+      "firstName": "Poppy G's Midland",
+      "lastName": "4G",
+      "internalCustomerExternalId": "NULL",
+      "matchConfidence": "NULL"
+    },
+    {
+      "tiabCustomerId": "531868",
+      "companyName": "Booroodabin Community & Recreation Club Inc",
+      "firstName": "Booroodabin",
+      "lastName": "4G",
+      "internalCustomerExternalId": "NULL",
+      "matchConfidence": "NULL"
+    },
+    {
+      "tiabCustomerId": "529664",
+      "companyName": "Bracken Ridge Family Practice",
+      "firstName": "Bracken Ridge",
+      "lastName": "Family Practice",
+      "internalCustomerExternalId": "NULL",
+      "matchConfidence": "NULL"
+    },
+    {
+      "tiabCustomerId": "526985",
+      "companyName": "CF Aust Pty Ltd",
+      "firstName": "Caravan Fix",
+      "lastName": "Kunda Park 4G",
+      "internalCustomerExternalId": "NULL",
+      "matchConfidence": "NULL"
+    },
+    {
+      "tiabCustomerId": "531872",
+      "companyName": "Fritzenberger (South Brisbane) Pty Ltd",
+      "firstName": "Fritzenberger Southb",
+      "lastName": "4G",
+      "internalCustomerExternalId": "NULL",
+      "matchConfidence": "NULL"
+    },
+    {
+      "tiabCustomerId": "531993",
+      "companyName": "GORMAN & CO CONTRACTORS PTY LTD",
+      "firstName": "Gorman & Co",
+      "lastName": "4G",
+      "internalCustomerExternalId": "NULL",
+      "matchConfidence": "NULL"
+    },
+    {
+      "tiabCustomerId": "531804",
+      "companyName": "Holy Shot Cafe Pty Ltd",
+      "firstName": "Holy Shot",
+      "lastName": "4G",
+      "internalCustomerExternalId": "NULL",
+      "matchConfidence": "NULL"
+    },
+    {
+      "tiabCustomerId": "532004",
+      "companyName": "Infinitea Trading Pty Ltd",
+      "firstName": "Little Cha Bateau Ba",
+      "lastName": "4G",
+      "internalCustomerExternalId": "NULL",
+      "matchConfidence": "NULL"
+    },
+    {
+      "tiabCustomerId": "532013",
+      "companyName": "Infinitea Trading Pty Ltd",
+      "firstName": "Little Cha Lake Have",
+      "lastName": "4G",
+      "internalCustomerExternalId": "NULL",
+      "matchConfidence": "NULL"
+    },
+    {
+      "tiabCustomerId": "534485",
+      "companyName": "Infinitea Trading Pty Ltd",
+      "firstName": "Little Cha Eastgarde",
+      "lastName": "4G",
+      "internalCustomerExternalId": "NULL",
+      "matchConfidence": "NULL"
+    },
+    {
+      "tiabCustomerId": "532018",
+      "companyName": "Infinitea Trading Pty Ltd",
+      "firstName": "Little Cha St Ives",
+      "lastName": "4G",
+      "internalCustomerExternalId": "NULL",
+      "matchConfidence": "NULL"
+    },
+    {
+      "tiabCustomerId": "532016",
+      "companyName": "Infinitea Trading Pty Ltd",
+      "firstName": "Little Cha Mt Druitt",
+      "lastName": "4G",
+      "internalCustomerExternalId": "NULL",
+      "matchConfidence": "NULL"
+    },
+    {
+      "tiabCustomerId": "527014",
+      "companyName": "JOSHELLEY PTY LTD",
+      "firstName": "Nicki's Professional",
+      "lastName": "Security Screens and Blinds",
+      "internalCustomerExternalId": "NULL",
+      "matchConfidence": "NULL"
+    },
+    {
+      "tiabCustomerId": "531876",
+      "companyName": "KHM Group Investments Pty Ltd",
+      "firstName": "KHM Group Investment",
+      "lastName": "Kebab HQ 4G",
+      "internalCustomerExternalId": "NULL",
+      "matchConfidence": "NULL"
+    },
+    {
+      "tiabCustomerId": "527025",
+      "companyName": "Lyndarr Constructions Pty Ltd",
+      "firstName": "DJ Steel",
+      "lastName": "Monto",
+      "internalCustomerExternalId": "NULL",
+      "matchConfidence": "NULL"
+    },
+    {
+      "tiabCustomerId": "535123",
+      "companyName": "Mother Duck Childcare and Kindergarten Bracken Ridge",
+      "firstName": "Mother Duck",
+      "lastName": "Bracken Ridge",
+      "internalCustomerExternalId": "NULL",
+      "matchConfidence": "NULL"
+    },
+    {
+      "tiabCustomerId": "531874",
+      "companyName": "Nodo Pty Ltd",
+      "firstName": "Nodo West Village",
+      "lastName": "4G",
+      "internalCustomerExternalId": "NULL",
+      "matchConfidence": "NULL"
+    },
+    {
+      "tiabCustomerId": "531875",
+      "companyName": "Nodo Pty Ltd",
+      "firstName": "Nodo Camp Hill",
+      "lastName": "4G",
+      "internalCustomerExternalId": "NULL",
+      "matchConfidence": "NULL"
+    },
+    {
+      "tiabCustomerId": "528323",
+      "companyName": "Nodo Pty Ltd",
+      "firstName": "Nodo",
+      "lastName": "Carindale",
+      "internalCustomerExternalId": "NULL",
+      "matchConfidence": "NULL"
+    },
+    {
+      "tiabCustomerId": "531871",
+      "companyName": "Nodo Pty Ltd",
+      "firstName": "Nodo CBD",
+      "lastName": "4G",
+      "internalCustomerExternalId": "NULL",
+      "matchConfidence": "NULL"
+    },
+    {
+      "tiabCustomerId": "525207",
+      "companyName": "Orphan Services - SmileTel",
+      "firstName": "Peter",
+      "lastName": "Drummond",
+      "internalCustomerExternalId": "NULL",
+      "matchConfidence": "NULL"
+    },
+    {
+      "tiabCustomerId": "526902",
+      "companyName": "SmileTel",
+      "firstName": "SmileTel",
+      "lastName": "Test",
+      "internalCustomerExternalId": "NULL",
+      "matchConfidence": "NULL"
+    },
+    {
+      "tiabCustomerId": "532648",
+      "companyName": "Sparrow Group Pty Ltd",
+      "firstName": "Sparrow Group",
+      "lastName": "4G",
+      "internalCustomerExternalId": "NULL",
+      "matchConfidence": "NULL"
+    },
+    {
+      "tiabCustomerId": "531997",
+      "companyName": "The Trustee for the Collingwood Trust",
+      "firstName": "Haig St Cafe",
+      "lastName": "4G",
+      "internalCustomerExternalId": "NULL",
+      "matchConfidence": "NULL"
+    },
+    {
+      "tiabCustomerId": "527021",
+      "companyName": "The Trustee for the Fashion Cafe Trust",
+      "firstName": "Denim",
+      "lastName": "Co",
+      "internalCustomerExternalId": "NULL",
+      "matchConfidence": "NULL"
+    },
+    {
+      "tiabCustomerId": "534220",
+      "companyName": "THE YIROS SHOP PTY LTD",
+      "firstName": "TYS Factory Unit",
+      "lastName": "4G",
+      "internalCustomerExternalId": "NULL",
+      "matchConfidence": "NULL"
+    },
+    {
+      "tiabCustomerId": "528800",
+      "companyName": "Yiros Pty Ltd",
+      "firstName": "The Yiros Shop",
+      "lastName": "Berrinba",
+      "internalCustomerExternalId": "NULL",
+      "matchConfidence": "NULL"
+    },
+    {
+      "tiabCustomerId": "531118",
+      "companyName": "Yiros Pty Ltd",
+      "firstName": "TYS Valley Metro",
+      "lastName": "4G",
+      "internalCustomerExternalId": "NULL",
+      "matchConfidence": "NULL"
+    }
+  ],
+  "messages": [],
+  "stdout": "tiabCustomerId\tcompanyName\tfirstName\tlastName\tinternalCustomerExternalId\tmatchConfidence\n530235\tAccountant Ready Services\tAccountant Ready Ser\t4G\tNULL\tNULL\n528133\tAHJ Pty Ltd\tZambrero\tMain Account\tNULL\tNULL\n527604\tBar Alto Pty Ltd\tBar Alto\tPty Ltd\tNULL\tNULL\n531913\tBel?s Resto Pty Ltd\tPoppy G's Midland\t4G\tNULL\tNULL\n531868\tBooroodabin Community & Recreation Club Inc\tBooroodabin\t4G\tNULL\tNULL\n529664\tBracken Ridge Family Practice\tBracken Ridge\tFamily Practice\tNULL\tNULL\n526985\tCF Aust Pty Ltd\tCaravan Fix\tKunda Park 4G\tNULL\tNULL\n531872\tFritzenberger (South Brisbane) Pty Ltd\tFritzenberger Southb\t4G\tNULL\tNULL\n531993\tGORMAN & CO CONTRACTORS PTY LTD\tGorman & Co\t4G\tNULL\tNULL\n531804\tHoly Shot Cafe Pty Ltd\tHoly Shot\t4G\tNULL\tNULL\n532004\tInfinitea Trading Pty Ltd\tLittle Cha Bateau Ba\t4G\tNULL\tNULL\n532013\tInfinitea Trading Pty Ltd\tLittle Cha Lake Have\t4G\tNULL\tNULL\n534485\tInfinitea Trading Pty Ltd\tLittle Cha Eastgarde\t4G\tNULL\tNULL\n532018\tInfinitea Trading Pty Ltd\tLittle Cha St Ives\t4G\tNULL\tNULL\n532016\tInfinitea Trading Pty Ltd\tLittle Cha Mt Druitt\t4G\tNULL\tNULL\n527014\tJOSHELLEY PTY LTD\tNicki's Professional\tSecurity Screens and Blinds\tNULL\tNULL\n531876\tKHM Group Investments Pty Ltd\tKHM Group Investment\tKebab HQ 4G\tNULL\tNULL\n527025\tLyndarr Constructions Pty Ltd\tDJ Steel\tMonto\tNULL\tNULL\n535123\tMother Duck Childcare and Kindergarten Bracken Ridge\tMother Duck\tBracken Ridge\tNULL\tNULL\n531874\tNodo Pty Ltd\tNodo West Village\t4G\tNULL\tNULL\n531875\tNodo Pty Ltd\tNodo Camp Hill\t4G\tNULL\tNULL\n528323\tNodo Pty Ltd\tNodo\tCarindale\tNULL\tNULL\n531871\tNodo Pty Ltd\tNodo CBD\t4G\tNULL\tNULL\n525207\tOrphan Services - SmileTel\tPeter\tDrummond\tNULL\tNULL\n526902\tSmileTel\tSmileTel\tTest\tNULL\tNULL\n532648\tSparrow Group Pty Ltd\tSparrow Group\t4G\tNULL\tNULL\n531997\tThe Trustee for the Collingwood Trust\tHaig St Cafe\t4G\tNULL\tNULL\n527021\tThe Trustee for the Fashion Cafe Trust\tDenim\tCo\tNULL\tNULL\n534220\tTHE YIROS SHOP PTY LTD\tTYS Factory Unit\t4G\tNULL\tNULL\n528800\tYiros Pty Ltd\tThe Yiros Shop\tBerrinba\tNULL\tNULL\n531118\tYiros Pty Ltd\tTYS Valley Metro\t4G\tNULL\tNULL\n",
+  "stderr": "",
+  "execution_time_ms": 1573
+}

@@ -1,0 +1,15 @@
+{
+  "query": "-- Find RVC ICT Consulting customer\nSELECT externalId, name, businessName, contactEmail, siteAddress, status\nFROM customers \nWHERE name LIKE '%RVC%' OR name LIKE '%Ian Donald%' OR businessName LIKE '%RVC%' OR name LIKE '%North Lakes%'\nORDER BY name LIMIT 10;\n\n-- Find the two NBN services by service ID / AVC\nSELECT id, externalId, serviceType, provider, planName, avcId, address, simSerial, status, customerExternalId, monthlyCost\nFROM services \nWHERE externalId IN ('13207099', '13300275') \n   OR avcId IN ('AVC400045874456', 'AVC400045874456')\n   OR (address LIKE '%Keperra%' AND serviceType LIKE '%NBN%')\n   OR (address LIKE '%North Lakes%' AND serviceType LIKE '%NBN%')\nLIMIT 10;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute -- Find RVC ICT Consulting customer\nSELECT externalId, name, businessName, contactEmail, siteAddress, status\nFROM customers \nWHERE name LIKE '%RVC%' OR name LIKE '%Ian Donald%' OR businessName LIKE '%RVC%' OR name LIKE '%North Lakes%'\nORDER BY name LIMIT 10;\n\n-- Find the two NBN services by service ID / AVC\nSELECT id, externalId, serviceType, provider, planName, avcId, address, simSerial, status, customerExternalId, monthlyCost\nFROM services \nWHERE externalId IN ('13207099', '13300275') \n   OR avcId IN ('AVC400045874456', 'AVC400045874456')\n   OR (address LIKE '%Keperra%' AND serviceType LIKE '%NBN%')\n   OR (address LIKE '%North Lakes%' AND serviceType LIKE '%NBN%')\nLIMIT 10;",
+  "returncode": 1,
+  "logs": [
+    "externalId\tname\tbusinessName\tcontactEmail\tsiteAddress\tstatus",
+    "C0207\tRVC ICT Consulting\t\tian.donald@rvcict.com.au\t14 Page St, NORTH LAKES, QLD, 4509\tactive",
+    "C2528\tSHOP 2, 2 MASON ST, NORTH LAKES QLD\t\t\t\tinactive",
+    "C0262\tThe Yiros Shop North Lakes\t\tnorthlakesyiros.ccd4@app.hubdoc.com\tShop 2, 2 Mason St, North Lakes, QLD, 4509\tactive",
+    "C0276\tUMC North Lakes\t\tumcnorthlakes@unitedmedical.net.au\t1/26 Torres Crescent, NORTH LAKES, North Lakes, QLD, 4509\tactive",
+    "C2462\tUN 4, 14 BURKE CR, NORTH LAKES QLD\t\t\t\tinactive",
+    "C2829\tZambrero - North Lakes\tARORA INTERNATIONAL PTY LTD\tnorthlakes@zambrero.com\tShop 10b, 27 Discovery Drive, NORTH LAKES, QLD, 4509\tinactive",
+    "ERROR 1054 (42S22) at line 8: Unknown column 'address' in 'where clause'"
+  ]
+}

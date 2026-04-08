@@ -1,0 +1,175 @@
+{
+  "query": "\n-- Sample Telstra services with no revenue assignment — what do they look like?\nSELECT \n  s.externalId,\n  s.serviceType,\n  s.planName,\n  s.provider,\n  s.billingPlatform,\n  s.monthlyCost,\n  s.monthlyRevenue,\n  s.customerExternalId,\n  c.name as customerName\nFROM services s\nLEFT JOIN customers c ON s.customerExternalId = c.externalId\nWHERE s.provider = 'Telstra' \n  AND s.customerExternalId IS NOT NULL\n  AND (s.monthlyRevenue IS NULL OR s.monthlyRevenue = 0)\n  AND s.status = 'active'\n  AND s.monthlyCost > 0\nLIMIT 15;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Sample Telstra services with no revenue assignment — what do they look like?\nSELECT \n  s.externalId,\n  s.serviceType,\n  s.planName,\n  s.provider,\n  s.billingPlatform,\n  s.monthlyCost,\n  s.monthlyRevenue,\n  s.customerExternalId,\n  c.name as customerName\nFROM services s\nLEFT JOIN customers c ON s.customerExternalId = c.externalId\nWHERE s.provider = 'Telstra' \n  AND s.customerExternalId IS NOT NULL\n  AND (s.monthlyRevenue IS NULL OR s.monthlyRevenue = 0)\n  AND s.status = 'active'\n  AND s.monthlyCost > 0\nLIMIT 15;\n",
+  "rows": [
+    {
+      "externalId": "S0003",
+      "serviceType": "Internet",
+      "planName": "Core Internet ,Static IP",
+      "provider": "Telstra",
+      "billingPlatform": "NULL",
+      "monthlyCost": "93.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C2785",
+      "customerName": "Zambrero - Hindley"
+    },
+    {
+      "externalId": "S0010",
+      "serviceType": "Internet",
+      "planName": "Core Internet, Static IP",
+      "provider": "Telstra",
+      "billingPlatform": "NULL",
+      "monthlyCost": "93.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C1404",
+      "customerName": "Zambrero Mornington (Yullies RD)"
+    },
+    {
+      "externalId": "S0017",
+      "serviceType": "Internet",
+      "planName": "Unlimited Internet",
+      "provider": "Telstra",
+      "billingPlatform": "NULL",
+      "monthlyCost": "93.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C1406",
+      "customerName": "Nodo Camp Hill"
+    },
+    {
+      "externalId": "S0064",
+      "serviceType": "Voice",
+      "planName": "Main Business Number",
+      "provider": "Telstra",
+      "billingPlatform": "NULL",
+      "monthlyCost": "45.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C0357",
+      "customerName": "Zambrero Majura Park"
+    },
+    {
+      "externalId": "S0066",
+      "serviceType": "Voice",
+      "planName": "Main Business Number",
+      "provider": "Telstra",
+      "billingPlatform": "NULL",
+      "monthlyCost": "45.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C0344",
+      "customerName": "Zambrero Griffith"
+    },
+    {
+      "externalId": "S0067",
+      "serviceType": "Voice",
+      "planName": "Main Business Number",
+      "provider": "Telstra",
+      "billingPlatform": "NULL",
+      "monthlyCost": "45.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C0370",
+      "customerName": "Zambrero Newtown"
+    },
+    {
+      "externalId": "S0070",
+      "serviceType": "Voice",
+      "planName": "Main Business Number",
+      "provider": "Telstra",
+      "billingPlatform": "NULL",
+      "monthlyCost": "45.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C0323",
+      "customerName": "Zambrero Coolangatta"
+    },
+    {
+      "externalId": "S0072",
+      "serviceType": "Voice",
+      "planName": "Main Business Number",
+      "provider": "Telstra",
+      "billingPlatform": "NULL",
+      "monthlyCost": "45.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C0369",
+      "customerName": "Zambrero Nerang"
+    },
+    {
+      "externalId": "S0074",
+      "serviceType": "Internet",
+      "planName": "Unlimited Business Internet",
+      "provider": "Telstra",
+      "billingPlatform": "NULL",
+      "monthlyCost": "93.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C0385",
+      "customerName": "Zambrero South Hedland"
+    },
+    {
+      "externalId": "S0075",
+      "serviceType": "Voice",
+      "planName": "Main Business Number",
+      "provider": "Telstra",
+      "billingPlatform": "NULL",
+      "monthlyCost": "45.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C0385",
+      "customerName": "Zambrero South Hedland"
+    },
+    {
+      "externalId": "S0076",
+      "serviceType": "Voice",
+      "planName": "Main Business Number",
+      "provider": "Telstra",
+      "billingPlatform": "NULL",
+      "monthlyCost": "45.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C1407",
+      "customerName": "Zambrero Tuart Hill"
+    },
+    {
+      "externalId": "S0077",
+      "serviceType": "Voice",
+      "planName": "Main Business Number",
+      "provider": "Telstra",
+      "billingPlatform": "NULL",
+      "monthlyCost": "45.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C0298",
+      "customerName": "Zambrero Ascot"
+    },
+    {
+      "externalId": "S0079",
+      "serviceType": "Voice",
+      "planName": "Main Business Number",
+      "provider": "Telstra",
+      "billingPlatform": "NULL",
+      "monthlyCost": "45.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C0349",
+      "customerName": "Zambrero Joondalup"
+    },
+    {
+      "externalId": "S0082",
+      "serviceType": "Internet",
+      "planName": "Unlimited Business Internet",
+      "provider": "Telstra",
+      "billingPlatform": "NULL",
+      "monthlyCost": "93.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C1407",
+      "customerName": "Zambrero Tuart Hill"
+    },
+    {
+      "externalId": "S0083",
+      "serviceType": "Voice",
+      "planName": "Main Business Number",
+      "provider": "Telstra",
+      "billingPlatform": "NULL",
+      "monthlyCost": "45.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C0340",
+      "customerName": "Zambrero Fremantle"
+    }
+  ],
+  "messages": [],
+  "stdout": "externalId\tserviceType\tplanName\tprovider\tbillingPlatform\tmonthlyCost\tmonthlyRevenue\tcustomerExternalId\tcustomerName\nS0003\tInternet\tCore Internet ,Static IP\tTelstra\tNULL\t93.00\t0.00\tC2785\tZambrero - Hindley\nS0010\tInternet\tCore Internet, Static IP\tTelstra\tNULL\t93.00\t0.00\tC1404\tZambrero Mornington (Yullies RD)\nS0017\tInternet\tUnlimited Internet\tTelstra\tNULL\t93.00\t0.00\tC1406\tNodo Camp Hill\nS0064\tVoice\tMain Business Number\tTelstra\tNULL\t45.00\t0.00\tC0357\tZambrero Majura Park\nS0066\tVoice\tMain Business Number\tTelstra\tNULL\t45.00\t0.00\tC0344\tZambrero Griffith\nS0067\tVoice\tMain Business Number\tTelstra\tNULL\t45.00\t0.00\tC0370\tZambrero Newtown\nS0070\tVoice\tMain Business Number\tTelstra\tNULL\t45.00\t0.00\tC0323\tZambrero Coolangatta\nS0072\tVoice\tMain Business Number\tTelstra\tNULL\t45.00\t0.00\tC0369\tZambrero Nerang\nS0074\tInternet\tUnlimited Business Internet\tTelstra\tNULL\t93.00\t0.00\tC0385\tZambrero South Hedland\nS0075\tVoice\tMain Business Number\tTelstra\tNULL\t45.00\t0.00\tC0385\tZambrero South Hedland\nS0076\tVoice\tMain Business Number\tTelstra\tNULL\t45.00\t0.00\tC1407\tZambrero Tuart Hill\nS0077\tVoice\tMain Business Number\tTelstra\tNULL\t45.00\t0.00\tC0298\tZambrero Ascot\nS0079\tVoice\tMain Business Number\tTelstra\tNULL\t45.00\t0.00\tC0349\tZambrero Joondalup\nS0082\tInternet\tUnlimited Business Internet\tTelstra\tNULL\t93.00\t0.00\tC1407\tZambrero Tuart Hill\nS0083\tVoice\tMain Business Number\tTelstra\tNULL\t45.00\t0.00\tC0340\tZambrero Fremantle\n",
+  "stderr": "",
+  "execution_time_ms": 1608
+}

@@ -1,0 +1,120 @@
+{
+  "query": "\nSELECT \n  s1.externalId AS sasboss_id,\n  s1.customerExternalId,\n  s1.monthlyCost AS sasboss_cost,\n  s1.monthlyRevenue AS sasboss_revenue,\n  s2.externalId AS real_id,\n  s2.supplierName AS real_supplier,\n  s2.monthlyCost AS real_cost,\n  s2.monthlyRevenue AS real_revenue,\n  COUNT(bi.id) AS billing_items_on_sasboss\nFROM services s1\nJOIN services s2 ON s2.customerExternalId = s1.customerExternalId \n  AND s2.supplierName != 'SasBoss' AND s2.serviceType = 'Internet'\nLEFT JOIN billing_items bi ON bi.serviceExternalId = s1.externalId\nWHERE s1.supplierName = 'SasBoss' AND s1.serviceType = 'Internet'\nGROUP BY s1.externalId, s1.customerExternalId, s1.monthlyCost, s1.monthlyRevenue, s2.externalId, s2.supplierName, s2.monthlyCost, s2.monthlyRevenue\nHAVING billing_items_on_sasboss > 0\nLIMIT 10;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \nSELECT \n  s1.externalId AS sasboss_id,\n  s1.customerExternalId,\n  s1.monthlyCost AS sasboss_cost,\n  s1.monthlyRevenue AS sasboss_revenue,\n  s2.externalId AS real_id,\n  s2.supplierName AS real_supplier,\n  s2.monthlyCost AS real_cost,\n  s2.monthlyRevenue AS real_revenue,\n  COUNT(bi.id) AS billing_items_on_sasboss\nFROM services s1\nJOIN services s2 ON s2.customerExternalId = s1.customerExternalId \n  AND s2.supplierName != 'SasBoss' AND s2.serviceType = 'Internet'\nLEFT JOIN billing_items bi ON bi.serviceExternalId = s1.externalId\nWHERE s1.supplierName = 'SasBoss' AND s1.serviceType = 'Internet'\nGROUP BY s1.externalId, s1.customerExternalId, s1.monthlyCost, s1.monthlyRevenue, s2.externalId, s2.supplierName, s2.monthlyCost, s2.monthlyRevenue\nHAVING billing_items_on_sasboss > 0\nLIMIT 10;\n",
+  "rows": [
+    {
+      "sasboss_id": "S1119",
+      "customerExternalId": "C0159",
+      "sasboss_cost": "0.00",
+      "sasboss_revenue": "500.00",
+      "real_id": "SVC0047",
+      "real_supplier": "AAPT",
+      "real_cost": "62.23",
+      "real_revenue": "0.00",
+      "billing_items_on_sasboss": "1"
+    },
+    {
+      "sasboss_id": "S0988",
+      "customerExternalId": "C0101",
+      "sasboss_cost": "0.00",
+      "sasboss_revenue": "3693.00",
+      "real_id": "S0337",
+      "real_supplier": "ABB",
+      "real_cost": "73.68",
+      "real_revenue": "3693.00",
+      "billing_items_on_sasboss": "1"
+    },
+    {
+      "sasboss_id": "S1486",
+      "customerExternalId": "C0286",
+      "sasboss_cost": "0.00",
+      "sasboss_revenue": "151.66",
+      "real_id": "S0392",
+      "real_supplier": "ABB",
+      "real_cost": "77.00",
+      "real_revenue": "151.66",
+      "billing_items_on_sasboss": "1"
+    },
+    {
+      "sasboss_id": "S0882",
+      "customerExternalId": "C0015",
+      "sasboss_cost": "0.00",
+      "sasboss_revenue": "285.16",
+      "real_id": "SVC0016",
+      "real_supplier": "AAPT",
+      "real_cost": "48.40",
+      "real_revenue": "0.00",
+      "billing_items_on_sasboss": "2"
+    },
+    {
+      "sasboss_id": "S0775",
+      "customerExternalId": "C0015",
+      "sasboss_cost": "0.00",
+      "sasboss_revenue": "990.00",
+      "real_id": "SVC0016",
+      "real_supplier": "AAPT",
+      "real_cost": "48.40",
+      "real_revenue": "0.00",
+      "billing_items_on_sasboss": "1"
+    },
+    {
+      "sasboss_id": "S1198",
+      "customerExternalId": "C0197",
+      "sasboss_cost": "0.00",
+      "sasboss_revenue": "240.00",
+      "real_id": "SVC0017",
+      "real_supplier": "AAPT",
+      "real_cost": "62.23",
+      "real_revenue": "240.00",
+      "billing_items_on_sasboss": "1"
+    },
+    {
+      "sasboss_id": "S1119",
+      "customerExternalId": "C0159",
+      "sasboss_cost": "0.00",
+      "sasboss_revenue": "500.00",
+      "real_id": "S0347",
+      "real_supplier": "ABB",
+      "real_cost": "77.00",
+      "real_revenue": "500.00",
+      "billing_items_on_sasboss": "1"
+    },
+    {
+      "sasboss_id": "S1586",
+      "customerExternalId": "C2902",
+      "sasboss_cost": "0.00",
+      "sasboss_revenue": "123.50",
+      "real_id": "S0357",
+      "real_supplier": "ABB",
+      "real_cost": "78.00",
+      "real_revenue": "123.50",
+      "billing_items_on_sasboss": "1"
+    },
+    {
+      "sasboss_id": "S0988",
+      "customerExternalId": "C0101",
+      "sasboss_cost": "0.00",
+      "sasboss_revenue": "3693.00",
+      "real_id": "S0470",
+      "real_supplier": "ABB",
+      "real_cost": "639.10",
+      "real_revenue": "3693.00",
+      "billing_items_on_sasboss": "1"
+    },
+    {
+      "sasboss_id": "S0826",
+      "customerExternalId": "C0036",
+      "sasboss_cost": "0.00",
+      "sasboss_revenue": "449.00",
+      "real_id": "S0471",
+      "real_supplier": "ABB",
+      "real_cost": "369.10",
+      "real_revenue": "449.00",
+      "billing_items_on_sasboss": "1"
+    }
+  ],
+  "messages": [],
+  "stdout": "sasboss_id\tcustomerExternalId\tsasboss_cost\tsasboss_revenue\treal_id\treal_supplier\treal_cost\treal_revenue\tbilling_items_on_sasboss\nS1119\tC0159\t0.00\t500.00\tSVC0047\tAAPT\t62.23\t0.00\t1\nS0988\tC0101\t0.00\t3693.00\tS0337\tABB\t73.68\t3693.00\t1\nS1486\tC0286\t0.00\t151.66\tS0392\tABB\t77.00\t151.66\t1\nS0882\tC0015\t0.00\t285.16\tSVC0016\tAAPT\t48.40\t0.00\t2\nS0775\tC0015\t0.00\t990.00\tSVC0016\tAAPT\t48.40\t0.00\t1\nS1198\tC0197\t0.00\t240.00\tSVC0017\tAAPT\t62.23\t240.00\t1\nS1119\tC0159\t0.00\t500.00\tS0347\tABB\t77.00\t500.00\t1\nS1586\tC2902\t0.00\t123.50\tS0357\tABB\t78.00\t123.50\t1\nS0988\tC0101\t0.00\t3693.00\tS0470\tABB\t639.10\t3693.00\t1\nS0826\tC0036\t0.00\t449.00\tS0471\tABB\t369.10\t449.00\t1\n",
+  "stderr": "",
+  "execution_time_ms": 1639
+}

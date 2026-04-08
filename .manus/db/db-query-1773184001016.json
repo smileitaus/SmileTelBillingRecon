@@ -1,0 +1,19 @@
+{
+  "query": "SELECT COUNT(*) as datageCount FROM customers WHERE billingPlatforms LIKE '%DATAGATE%'; SELECT COUNT(*) as totalCustomers FROM customers;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3M17pEiktKAmnzx.5240b4750712 --database 4LVfr96qhVoYSkLinpTZkt --execute SELECT COUNT(*) as datageCount FROM customers WHERE billingPlatforms LIKE '%DATAGATE%'; SELECT COUNT(*) as totalCustomers FROM customers;",
+  "rows": [
+    {
+      "datageCount": "113"
+    },
+    {
+      "datageCount": "totalCustomers"
+    },
+    {
+      "datageCount": "672"
+    }
+  ],
+  "messages": [],
+  "stdout": "datageCount\n113\ntotalCustomers\n672\n",
+  "stderr": "",
+  "execution_time_ms": 1721
+}

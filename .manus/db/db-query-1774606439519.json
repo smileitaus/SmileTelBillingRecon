@@ -1,0 +1,175 @@
+{
+  "query": "\nSHOW TABLES;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \nSHOW TABLES;\n",
+  "rows": [
+    {
+      "Tables_in_SkibUwiSvPndpvTSJv52KC": "__drizzle_migrations"
+    },
+    {
+      "Tables_in_SkibUwiSvPndpvTSJv52KC": "billing_items"
+    },
+    {
+      "Tables_in_SkibUwiSvPndpvTSJv52KC": "billing_platform_checks"
+    },
+    {
+      "Tables_in_SkibUwiSvPndpvTSJv52KC": "carbon_api_cache"
+    },
+    {
+      "Tables_in_SkibUwiSvPndpvTSJv52KC": "carbon_diagnostic_runs"
+    },
+    {
+      "Tables_in_SkibUwiSvPndpvTSJv52KC": "customer_proposals"
+    },
+    {
+      "Tables_in_SkibUwiSvPndpvTSJv52KC": "customer_usage_summaries"
+    },
+    {
+      "Tables_in_SkibUwiSvPndpvTSJv52KC": "customers"
+    },
+    {
+      "Tables_in_SkibUwiSvPndpvTSJv52KC": "escalated_services"
+    },
+    {
+      "Tables_in_SkibUwiSvPndpvTSJv52KC": "locations"
+    },
+    {
+      "Tables_in_SkibUwiSvPndpvTSJv52KC": "octane_customer_links"
+    },
+    {
+      "Tables_in_SkibUwiSvPndpvTSJv52KC": "omada_device_cache"
+    },
+    {
+      "Tables_in_SkibUwiSvPndpvTSJv52KC": "omada_sites"
+    },
+    {
+      "Tables_in_SkibUwiSvPndpvTSJv52KC": "phone_numbers"
+    },
+    {
+      "Tables_in_SkibUwiSvPndpvTSJv52KC": "review_items"
+    },
+    {
+      "Tables_in_SkibUwiSvPndpvTSJv52KC": "sasboss_did_inventory"
+    },
+    {
+      "Tables_in_SkibUwiSvPndpvTSJv52KC": "sasboss_enterprises"
+    },
+    {
+      "Tables_in_SkibUwiSvPndpvTSJv52KC": "sasboss_invoices"
+    },
+    {
+      "Tables_in_SkibUwiSvPndpvTSJv52KC": "sasboss_pricebook"
+    },
+    {
+      "Tables_in_SkibUwiSvPndpvTSJv52KC": "sasboss_services"
+    },
+    {
+      "Tables_in_SkibUwiSvPndpvTSJv52KC": "service_billing_assignments"
+    },
+    {
+      "Tables_in_SkibUwiSvPndpvTSJv52KC": "service_billing_match_log"
+    },
+    {
+      "Tables_in_SkibUwiSvPndpvTSJv52KC": "service_cost_history"
+    },
+    {
+      "Tables_in_SkibUwiSvPndpvTSJv52KC": "service_edit_history"
+    },
+    {
+      "Tables_in_SkibUwiSvPndpvTSJv52KC": "service_outages"
+    },
+    {
+      "Tables_in_SkibUwiSvPndpvTSJv52KC": "service_usage_snapshots"
+    },
+    {
+      "Tables_in_SkibUwiSvPndpvTSJv52KC": "services"
+    },
+    {
+      "Tables_in_SkibUwiSvPndpvTSJv52KC": "supplierRateCardItems"
+    },
+    {
+      "Tables_in_SkibUwiSvPndpvTSJv52KC": "supplierRateCards"
+    },
+    {
+      "Tables_in_SkibUwiSvPndpvTSJv52KC": "supplier_accounts"
+    },
+    {
+      "Tables_in_SkibUwiSvPndpvTSJv52KC": "supplier_enterprise_map"
+    },
+    {
+      "Tables_in_SkibUwiSvPndpvTSJv52KC": "supplier_invoice_uploads"
+    },
+    {
+      "Tables_in_SkibUwiSvPndpvTSJv52KC": "supplier_product_cost_map"
+    },
+    {
+      "Tables_in_SkibUwiSvPndpvTSJv52KC": "supplier_product_map"
+    },
+    {
+      "Tables_in_SkibUwiSvPndpvTSJv52KC": "supplier_registry"
+    },
+    {
+      "Tables_in_SkibUwiSvPndpvTSJv52KC": "supplier_service_map"
+    },
+    {
+      "Tables_in_SkibUwiSvPndpvTSJv52KC": "supplier_sync_log"
+    },
+    {
+      "Tables_in_SkibUwiSvPndpvTSJv52KC": "supplier_workbook_line_items"
+    },
+    {
+      "Tables_in_SkibUwiSvPndpvTSJv52KC": "supplier_workbook_uploads"
+    },
+    {
+      "Tables_in_SkibUwiSvPndpvTSJv52KC": "tiab_customers"
+    },
+    {
+      "Tables_in_SkibUwiSvPndpvTSJv52KC": "tiab_data_pools"
+    },
+    {
+      "Tables_in_SkibUwiSvPndpvTSJv52KC": "tiab_plans"
+    },
+    {
+      "Tables_in_SkibUwiSvPndpvTSJv52KC": "tiab_recon_issues"
+    },
+    {
+      "Tables_in_SkibUwiSvPndpvTSJv52KC": "tiab_services"
+    },
+    {
+      "Tables_in_SkibUwiSvPndpvTSJv52KC": "tiab_supplier_invoice_line_items"
+    },
+    {
+      "Tables_in_SkibUwiSvPndpvTSJv52KC": "tiab_supplier_invoices"
+    },
+    {
+      "Tables_in_SkibUwiSvPndpvTSJv52KC": "tiab_sync_log"
+    },
+    {
+      "Tables_in_SkibUwiSvPndpvTSJv52KC": "tiab_transactions"
+    },
+    {
+      "Tables_in_SkibUwiSvPndpvTSJv52KC": "unbillable_services"
+    },
+    {
+      "Tables_in_SkibUwiSvPndpvTSJv52KC": "usage_threshold_alerts"
+    },
+    {
+      "Tables_in_SkibUwiSvPndpvTSJv52KC": "users"
+    },
+    {
+      "Tables_in_SkibUwiSvPndpvTSJv52KC": "vocus_buckets"
+    },
+    {
+      "Tables_in_SkibUwiSvPndpvTSJv52KC": "vocus_mobile_services"
+    },
+    {
+      "Tables_in_SkibUwiSvPndpvTSJv52KC": "vocus_nbn_services"
+    },
+    {
+      "Tables_in_SkibUwiSvPndpvTSJv52KC": "vocus_sync_log"
+    }
+  ],
+  "messages": [],
+  "stdout": "Tables_in_SkibUwiSvPndpvTSJv52KC\n__drizzle_migrations\nbilling_items\nbilling_platform_checks\ncarbon_api_cache\ncarbon_diagnostic_runs\ncustomer_proposals\ncustomer_usage_summaries\ncustomers\nescalated_services\nlocations\noctane_customer_links\nomada_device_cache\nomada_sites\nphone_numbers\nreview_items\nsasboss_did_inventory\nsasboss_enterprises\nsasboss_invoices\nsasboss_pricebook\nsasboss_services\nservice_billing_assignments\nservice_billing_match_log\nservice_cost_history\nservice_edit_history\nservice_outages\nservice_usage_snapshots\nservices\nsupplierRateCardItems\nsupplierRateCards\nsupplier_accounts\nsupplier_enterprise_map\nsupplier_invoice_uploads\nsupplier_product_cost_map\nsupplier_product_map\nsupplier_registry\nsupplier_service_map\nsupplier_sync_log\nsupplier_workbook_line_items\nsupplier_workbook_uploads\ntiab_customers\ntiab_data_pools\ntiab_plans\ntiab_recon_issues\ntiab_services\ntiab_supplier_invoice_line_items\ntiab_supplier_invoices\ntiab_sync_log\ntiab_transactions\nunbillable_services\nusage_threshold_alerts\nusers\nvocus_buckets\nvocus_mobile_services\nvocus_nbn_services\nvocus_sync_log\n",
+  "stderr": "",
+  "execution_time_ms": 1501
+}

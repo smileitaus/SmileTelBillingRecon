@@ -1,0 +1,170 @@
+{
+  "query": "\nSELECT DISTINCT li.productName, li.productType\nFROM supplier_workbook_line_items li\nJOIN supplier_workbook_uploads wu ON wu.id = li.uploadId\nWHERE wu.supplier = 'SasBoss'\n  AND li.productName != '(blank)'\n  AND li.productName != ''\nORDER BY li.productName\nLIMIT 40;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \nSELECT DISTINCT li.productName, li.productType\nFROM supplier_workbook_line_items li\nJOIN supplier_workbook_uploads wu ON wu.id = li.uploadId\nWHERE wu.supplier = 'SasBoss'\n  AND li.productName != '(blank)'\n  AND li.productName != ''\nORDER BY li.productName\nLIMIT 40;\n",
+  "rows": [
+    {
+      "productName": "Auto Attendant with Time of Day Routing",
+      "productType": "service-pack"
+    },
+    {
+      "productName": "Basic Call Queue",
+      "productType": "service-pack"
+    },
+    {
+      "productName": "Business Trunk (PAYG)",
+      "productType": "service-pack"
+    },
+    {
+      "productName": "Call Centre Queue with Time of Day Routing",
+      "productType": "service-pack"
+    },
+    {
+      "productName": "Call Recording - Unlimited",
+      "productType": "service-pack"
+    },
+    {
+      "productName": "Collaborate Basic User with Cisco Webex",
+      "productType": "service-pack"
+    },
+    {
+      "productName": "CS - 3 Included Local National Mobile Call Pack",
+      "productType": "call-pack"
+    },
+    {
+      "productName": "DID Australia (1)",
+      "productType": "did-number"
+    },
+    {
+      "productName": "DID Australia (10)",
+      "productType": "did-number"
+    },
+    {
+      "productName": "DID Australia (100)",
+      "productType": "did-number"
+    },
+    {
+      "productName": "Direct In Dial AU Mobile Number (1)",
+      "productType": "did-number"
+    },
+    {
+      "productName": "Essentials",
+      "productType": "service-pack"
+    },
+    {
+      "productName": "External Channels",
+      "productType": "service-pack"
+    },
+    {
+      "productName": "iCall Suite - Ultimate User Licence",
+      "productType": "service-pack"
+    },
+    {
+      "productName": "Inbound 1300 Number Hosting",
+      "productType": "did-number"
+    },
+    {
+      "productName": "Inbound 1800 Number Hosting",
+      "productType": "did-number"
+    },
+    {
+      "productName": "Lite",
+      "productType": "service-pack"
+    },
+    {
+      "productName": "MC - SmileTel Basic User License",
+      "productType": "service-pack"
+    },
+    {
+      "productName": "MC - SmileTel Executive User License",
+      "productType": "service-pack"
+    },
+    {
+      "productName": "MC - SmileTel Lite User License",
+      "productType": "service-pack"
+    },
+    {
+      "productName": "MC - SmileTel Premium User License",
+      "productType": "service-pack"
+    },
+    {
+      "productName": "MC (Special - Inc) - Executive User License",
+      "productType": "service-pack"
+    },
+    {
+      "productName": "MC (Special) - Executive User License",
+      "productType": "service-pack"
+    },
+    {
+      "productName": "ME - 3 Included Local National Mobile Call Pack",
+      "productType": "call-pack"
+    },
+    {
+      "productName": "Operator Connect SIP Trunk",
+      "productType": "service-pack"
+    },
+    {
+      "productName": "Premium Call Queue",
+      "productType": "service-pack"
+    },
+    {
+      "productName": "Premium-1",
+      "productType": "call-pack"
+    },
+    {
+      "productName": "Premium-2",
+      "productType": "call-pack"
+    },
+    {
+      "productName": "Premium-3",
+      "productType": "call-pack"
+    },
+    {
+      "productName": "SmileTel Basic User License",
+      "productType": "service-pack"
+    },
+    {
+      "productName": "SmileTel Essential user",
+      "productType": "service-pack"
+    },
+    {
+      "productName": "SmileTel Essential User Special",
+      "productType": "service-pack"
+    },
+    {
+      "productName": "SmileTel Executive User License",
+      "productType": "service-pack"
+    },
+    {
+      "productName": "SmileTel Lite user",
+      "productType": "service-pack"
+    },
+    {
+      "productName": "SMS Gateway Instance",
+      "productType": "service-pack"
+    },
+    {
+      "productName": "Softphone add-on with Cisco Webex",
+      "productType": "service-pack"
+    },
+    {
+      "productName": "UCXcel Auto-Attendant",
+      "productType": "service-pack"
+    },
+    {
+      "productName": "UCXcel Basic Queue Agent",
+      "productType": "service-pack"
+    },
+    {
+      "productName": "UCXcel Call Centre Queue",
+      "productType": "service-pack"
+    },
+    {
+      "productName": "UCXcel Essential",
+      "productType": "service-pack"
+    }
+  ],
+  "messages": [],
+  "stdout": "productName\tproductType\nAuto Attendant with Time of Day Routing\tservice-pack\nBasic Call Queue\tservice-pack\nBusiness Trunk (PAYG)\tservice-pack\nCall Centre Queue with Time of Day Routing\tservice-pack\nCall Recording - Unlimited\tservice-pack\nCollaborate Basic User with Cisco Webex\tservice-pack\nCS - 3 Included Local National Mobile Call Pack\tcall-pack\nDID Australia (1)\tdid-number\nDID Australia (10)\tdid-number\nDID Australia (100)\tdid-number\nDirect In Dial AU Mobile Number (1)\tdid-number\nEssentials\tservice-pack\nExternal Channels\tservice-pack\niCall Suite - Ultimate User Licence\tservice-pack\nInbound 1300 Number Hosting\tdid-number\nInbound 1800 Number Hosting\tdid-number\nLite\tservice-pack\nMC - SmileTel Basic User License\tservice-pack\nMC - SmileTel Executive User License\tservice-pack\nMC - SmileTel Lite User License\tservice-pack\nMC - SmileTel Premium User License\tservice-pack\nMC (Special - Inc) - Executive User License\tservice-pack\nMC (Special) - Executive User License\tservice-pack\nME - 3 Included Local National Mobile Call Pack\tcall-pack\nOperator Connect SIP Trunk\tservice-pack\nPremium Call Queue\tservice-pack\nPremium-1\tcall-pack\nPremium-2\tcall-pack\nPremium-3\tcall-pack\nSmileTel Basic User License\tservice-pack\nSmileTel Essential user\tservice-pack\nSmileTel Essential User Special\tservice-pack\nSmileTel Executive User License\tservice-pack\nSmileTel Lite user\tservice-pack\nSMS Gateway Instance\tservice-pack\nSoftphone add-on with Cisco Webex\tservice-pack\nUCXcel Auto-Attendant\tservice-pack\nUCXcel Basic Queue Agent\tservice-pack\nUCXcel Call Centre Queue\tservice-pack\nUCXcel Essential\tservice-pack\n",
+  "stderr": "",
+  "execution_time_ms": 1616
+}

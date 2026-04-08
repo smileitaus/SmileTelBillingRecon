@@ -1,0 +1,555 @@
+{
+  "query": "\nSELECT COLUMN_NAME, DATA_TYPE, COLUMN_COMMENT \nFROM INFORMATION_SCHEMA.COLUMNS \nWHERE TABLE_NAME = 'services' \nORDER BY ORDINAL_POSITION;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \nSELECT COLUMN_NAME, DATA_TYPE, COLUMN_COMMENT \nFROM INFORMATION_SCHEMA.COLUMNS \nWHERE TABLE_NAME = 'services' \nORDER BY ORDINAL_POSITION;\n",
+  "rows": [
+    {
+      "COLUMN_NAME": "id",
+      "DATA_TYPE": "int",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "externalId",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "serviceId",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "serviceType",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "serviceTypeDetail",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "planName",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "status",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "locationExternalId",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "locationAddress",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "supplierAccount",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "supplierName",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "phoneNumber",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "email",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "connectionId",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "locId",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "ipAddress",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "customerName",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "customerExternalId",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "monthlyCost",
+      "DATA_TYPE": "decimal",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "billingHistory",
+      "DATA_TYPE": "text",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "createdAt",
+      "DATA_TYPE": "timestamp",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "updatedAt",
+      "DATA_TYPE": "timestamp",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "dismissedSuggestions",
+      "DATA_TYPE": "text",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "costSource",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "simSerialNumber",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "hardwareType",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "macAddress",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "modemSerialNumber",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "wifiPassword",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "lastWanIp",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "simOwner",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "dataPlanGb",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "purchaseDate",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "dataSource",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "imei",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "deviceName",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "deviceType",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "deviceCategory",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "imsi",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "userName",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "serviceActivationDate",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "serviceEndDate",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "flexiplanCode",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "flexiplanName",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "contractEndDate",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "proposedPlan",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "proposedCost",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "proposedDataGb",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "noDataUse",
+      "DATA_TYPE": "int",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "blitzCategory",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "provider",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "carbonServiceId",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "carbonServiceType",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "carbonStatus",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "avcId",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "technology",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "speedTier",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "nbnSla",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "supportPack",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "poiName",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "zone",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "openDate",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "carbonMonthlyCost",
+      "DATA_TYPE": "decimal",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "carbonPlanName",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "carbonAlias",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "monthlyRevenue",
+      "DATA_TYPE": "decimal",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "marginPercent",
+      "DATA_TYPE": "decimal",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "billingItemId",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "billingPlatform",
+      "DATA_TYPE": "text",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "blitzImportDate",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "blitzReportName",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "blitzAccountNumber",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "blitzNoUse3m",
+      "DATA_TYPE": "int",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "blitzNoUse6m",
+      "DATA_TYPE": "int",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "blitzNoNetActivity6m",
+      "DATA_TYPE": "int",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "blitzLastUsedDate",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "blitzPostcode",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "blitzDeviceAgeMths",
+      "DATA_TYPE": "int",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "blitzMroContract",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "blitzMroEndDate",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "blitzMroEtc",
+      "DATA_TYPE": "decimal",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "blitzMroDeviceName",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "blitzAvg3mDataMb",
+      "DATA_TYPE": "decimal",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "blitzAvg6mDataMb",
+      "DATA_TYPE": "decimal",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "blitzAvg3mVoiceMins",
+      "DATA_TYPE": "decimal",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "blitzAvg6mVoiceMins",
+      "DATA_TYPE": "decimal",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "blitzAvg3mBill",
+      "DATA_TYPE": "decimal",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "blitzBillMar26",
+      "DATA_TYPE": "decimal",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "blitzBillFeb26",
+      "DATA_TYPE": "decimal",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "blitzBillJan26",
+      "DATA_TYPE": "decimal",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "blitzUsageHistory",
+      "DATA_TYPE": "text",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "terminationNote",
+      "DATA_TYPE": "text",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "aaptServiceId",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "aaptProductType",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "aaptProductCategory",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "aaptYourId",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "aaptAccessId",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "aaptSpeedMbps",
+      "DATA_TYPE": "int",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "aaptContractMonths",
+      "DATA_TYPE": "int",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "aaptAccountNumber",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "aaptInvoiceNumber",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "aaptBillingPeriod",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "aaptImportDate",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "serviceCategory",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "discoveryNotes",
+      "DATA_TYPE": "text",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "notesAuthor",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "notesUpdatedAt",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "billingPeriod",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    },
+    {
+      "COLUMN_NAME": "invoiceMonth",
+      "DATA_TYPE": "varchar",
+      "COLUMN_COMMENT": ""
+    }
+  ],
+  "messages": [],
+  "stdout": "COLUMN_NAME\tDATA_TYPE\tCOLUMN_COMMENT\nid\tint\t\nexternalId\tvarchar\t\nserviceId\tvarchar\t\nserviceType\tvarchar\t\nserviceTypeDetail\tvarchar\t\nplanName\tvarchar\t\nstatus\tvarchar\t\nlocationExternalId\tvarchar\t\nlocationAddress\tvarchar\t\nsupplierAccount\tvarchar\t\nsupplierName\tvarchar\t\nphoneNumber\tvarchar\t\nemail\tvarchar\t\nconnectionId\tvarchar\t\nlocId\tvarchar\t\nipAddress\tvarchar\t\ncustomerName\tvarchar\t\ncustomerExternalId\tvarchar\t\nmonthlyCost\tdecimal\t\nbillingHistory\ttext\t\ncreatedAt\ttimestamp\t\nupdatedAt\ttimestamp\t\ndismissedSuggestions\ttext\t\ncostSource\tvarchar\t\nsimSerialNumber\tvarchar\t\nhardwareType\tvarchar\t\nmacAddress\tvarchar\t\nmodemSerialNumber\tvarchar\t\nwifiPassword\tvarchar\t\nlastWanIp\tvarchar\t\nsimOwner\tvarchar\t\ndataPlanGb\tvarchar\t\npurchaseDate\tvarchar\t\ndataSource\tvarchar\t\nimei\tvarchar\t\ndeviceName\tvarchar\t\ndeviceType\tvarchar\t\ndeviceCategory\tvarchar\t\nimsi\tvarchar\t\nuserName\tvarchar\t\nserviceActivationDate\tvarchar\t\nserviceEndDate\tvarchar\t\nflexiplanCode\tvarchar\t\nflexiplanName\tvarchar\t\ncontractEndDate\tvarchar\t\nproposedPlan\tvarchar\t\nproposedCost\tvarchar\t\nproposedDataGb\tvarchar\t\nnoDataUse\tint\t\nblitzCategory\tvarchar\t\nprovider\tvarchar\t\ncarbonServiceId\tvarchar\t\ncarbonServiceType\tvarchar\t\ncarbonStatus\tvarchar\t\navcId\tvarchar\t\ntechnology\tvarchar\t\nspeedTier\tvarchar\t\nnbnSla\tvarchar\t\nsupportPack\tvarchar\t\npoiName\tvarchar\t\nzone\tvarchar\t\nopenDate\tvarchar\t\ncarbonMonthlyCost\tdecimal\t\ncarbonPlanName\tvarchar\t\ncarbonAlias\tvarchar\t\nmonthlyRevenue\tdecimal\t\nmarginPercent\tdecimal\t\nbillingItemId\tvarchar\t\nbillingPlatform\ttext\t\nblitzImportDate\tvarchar\t\nblitzReportName\tvarchar\t\nblitzAccountNumber\tvarchar\t\nblitzNoUse3m\tint\t\nblitzNoUse6m\tint\t\nblitzNoNetActivity6m\tint\t\nblitzLastUsedDate\tvarchar\t\nblitzPostcode\tvarchar\t\nblitzDeviceAgeMths\tint\t\nblitzMroContract\tvarchar\t\nblitzMroEndDate\tvarchar\t\nblitzMroEtc\tdecimal\t\nblitzMroDeviceName\tvarchar\t\nblitzAvg3mDataMb\tdecimal\t\nblitzAvg6mDataMb\tdecimal\t\nblitzAvg3mVoiceMins\tdecimal\t\nblitzAvg6mVoiceMins\tdecimal\t\nblitzAvg3mBill\tdecimal\t\nblitzBillMar26\tdecimal\t\nblitzBillFeb26\tdecimal\t\nblitzBillJan26\tdecimal\t\nblitzUsageHistory\ttext\t\nterminationNote\ttext\t\naaptServiceId\tvarchar\t\naaptProductType\tvarchar\t\naaptProductCategory\tvarchar\t\naaptYourId\tvarchar\t\naaptAccessId\tvarchar\t\naaptSpeedMbps\tint\t\naaptContractMonths\tint\t\naaptAccountNumber\tvarchar\t\naaptInvoiceNumber\tvarchar\t\naaptBillingPeriod\tvarchar\t\naaptImportDate\tvarchar\t\nserviceCategory\tvarchar\t\ndiscoveryNotes\ttext\t\nnotesAuthor\tvarchar\t\nnotesUpdatedAt\tvarchar\t\nbillingPeriod\tvarchar\t\ninvoiceMonth\tvarchar\t\n",
+  "stderr": "",
+  "execution_time_ms": 1623
+}

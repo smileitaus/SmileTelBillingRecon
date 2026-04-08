@@ -1,0 +1,213 @@
+{
+  "query": "\n-- Get ALL services with $49 cost (the known placeholder amount) with full context\nSELECT \n  c.name as customer,\n  s.serviceId,\n  s.planName,\n  s.dataSource,\n  s.monthlyCost,\n  s.monthlyRevenue,\n  s.serviceType,\n  LEFT(s.discoveryNotes, 80) as notes\nFROM services s\nJOIN customers c ON s.customerExternalId = c.externalId\nWHERE s.monthlyCost = 49.00\nORDER BY s.monthlyRevenue - s.monthlyCost ASC;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Get ALL services with $49 cost (the known placeholder amount) with full context\nSELECT \n  c.name as customer,\n  s.serviceId,\n  s.planName,\n  s.dataSource,\n  s.monthlyCost,\n  s.monthlyRevenue,\n  s.serviceType,\n  LEFT(s.discoveryNotes, 80) as notes\nFROM services s\nJOIN customers c ON s.customerExternalId = c.externalId\nWHERE s.monthlyCost = 49.00\nORDER BY s.monthlyRevenue - s.monthlyCost ASC;\n",
+  "rows": [
+    {
+      "customer": "Salter Brothers Luxury Collection Operations Pty LTD",
+      "serviceId": "",
+      "planName": "Other",
+      "dataSource": "Xero Feb 2026 Invoice",
+      "monthlyCost": "49.00",
+      "monthlyRevenue": "0.80",
+      "serviceType": "Voice",
+      "notes": "[REVIEWED] Multiple services at this site reviewed and accepted.  | COST REVIEW "
+    },
+    {
+      "customer": "Active Living - Allen Developments Pty Ltd",
+      "serviceId": "",
+      "planName": "4G Data Backup Service",
+      "dataSource": "Xero Feb 2026 Invoice",
+      "monthlyCost": "49.00",
+      "monthlyRevenue": "20.00",
+      "serviceType": "Other",
+      "notes": "COST REVIEW NEEDED: $49 placeholder cost from Access4 pricebook — verify actual "
+    },
+    {
+      "customer": "Swara",
+      "serviceId": "",
+      "planName": "Managed Voice Support",
+      "dataSource": "Xero Feb 2026 Invoice",
+      "monthlyCost": "49.00",
+      "monthlyRevenue": "25.00",
+      "serviceType": "Other",
+      "notes": "COST REVIEW NEEDED: $49 placeholder cost from Access4 pricebook — verify actual "
+    },
+    {
+      "customer": "Fast Cut Qld Pty Ltd",
+      "serviceId": "",
+      "planName": "4G Data Backup Service",
+      "dataSource": "Xero Feb 2026 Invoice",
+      "monthlyCost": "49.00",
+      "monthlyRevenue": "30.00",
+      "serviceType": "Other",
+      "notes": "COST REVIEW NEEDED: $49 placeholder cost from Access4 pricebook — verify actual "
+    },
+    {
+      "customer": "True Metal Solutions",
+      "serviceId": "",
+      "planName": "4G SIM Backup Internet Service",
+      "dataSource": "Xero Feb 2026 Invoice",
+      "monthlyCost": "49.00",
+      "monthlyRevenue": "35.00",
+      "serviceType": "Other",
+      "notes": "[RVC Import] Source: NL"
+    },
+    {
+      "customer": "Bracken Ridge Family Practice",
+      "serviceId": "",
+      "planName": "4G Failover SIM",
+      "dataSource": "Xero Feb 2026 Invoice",
+      "monthlyCost": "49.00",
+      "monthlyRevenue": "35.00",
+      "serviceType": "Other",
+      "notes": "COST REVIEW NEEDED: $49 placeholder cost from Access4 pricebook — verify actual "
+    },
+    {
+      "customer": "NICKI'S PROFESSIONAL SECURITY SCREENS AND BLINDS",
+      "serviceId": "",
+      "planName": "4G Data Backup Service",
+      "dataSource": "Xero Feb 2026 Invoice",
+      "monthlyCost": "49.00",
+      "monthlyRevenue": "39.00",
+      "serviceType": "Other",
+      "notes": "[Auto-matched by alias by Angus Burnett-Smith on 12/03/2026: \"Unassigned\" → \"NIC"
+    },
+    {
+      "customer": "Community Lifestyle Agency Inc",
+      "serviceId": "",
+      "planName": "Other",
+      "dataSource": "Xero Feb 2026 Invoice",
+      "monthlyCost": "49.00",
+      "monthlyRevenue": "50.00",
+      "serviceType": "Other",
+      "notes": "COST REVIEW NEEDED: $49 placeholder cost from Access4 pricebook — verify actual "
+    },
+    {
+      "customer": "Woodlands Enterprises Pty Ltd",
+      "serviceId": "",
+      "planName": "Other",
+      "dataSource": "Xero Feb 2026 Invoice",
+      "monthlyCost": "49.00",
+      "monthlyRevenue": "57.22",
+      "serviceType": "Other",
+      "notes": "COST REVIEW NEEDED: $49 placeholder cost from Access4 pricebook — verify actual "
+    },
+    {
+      "customer": "Mega Electrics",
+      "serviceId": "",
+      "planName": "Other",
+      "dataSource": "Xero Feb 2026 Invoice",
+      "monthlyCost": "49.00",
+      "monthlyRevenue": "75.00",
+      "serviceType": "Other",
+      "notes": "[Auto-matched by alias by Angus Burnett-Smith on 11/03/2026: \"Mega Electrics NSW"
+    },
+    {
+      "customer": "Balgra Shopping Centre Management Pty Ltd",
+      "serviceId": "",
+      "planName": "Other",
+      "dataSource": "Xero Feb 2026 Invoice",
+      "monthlyCost": "49.00",
+      "monthlyRevenue": "75.00",
+      "serviceType": "Other",
+      "notes": "COST REVIEW NEEDED: $49 placeholder cost from Access4 pricebook — verify actual "
+    },
+    {
+      "customer": "All Crops Haulage Pty Ltd",
+      "serviceId": "SSPVNO3A",
+      "planName": "Internet 100/40",
+      "dataSource": "",
+      "monthlyCost": "49.00",
+      "monthlyRevenue": "114.00",
+      "serviceType": "Internet",
+      "notes": ""
+    },
+    {
+      "customer": "Red Roo Australia",
+      "serviceId": "",
+      "planName": "Other",
+      "dataSource": "Xero Feb 2026 Invoice",
+      "monthlyCost": "49.00",
+      "monthlyRevenue": "116.77",
+      "serviceType": "Other",
+      "notes": "COST REVIEW NEEDED: $49 placeholder cost from Access4 pricebook — verify actual "
+    },
+    {
+      "customer": "All Crops Haulage Pty Ltd",
+      "serviceId": "",
+      "planName": "NBN 100/40",
+      "dataSource": "Xero Feb 2026 Invoice",
+      "monthlyCost": "49.00",
+      "monthlyRevenue": "228.00",
+      "serviceType": "Internet",
+      "notes": "NULL"
+    },
+    {
+      "customer": "Sta Consulting Engineers",
+      "serviceId": "",
+      "planName": "Other",
+      "dataSource": "Xero Feb 2026 Invoice",
+      "monthlyCost": "49.00",
+      "monthlyRevenue": "250.00",
+      "serviceType": "Other",
+      "notes": "[REVIEWED] Multiple services at this site reviewed and accepted.  | COST REVIEW "
+    },
+    {
+      "customer": "ASG Hail Pty Ltd",
+      "serviceId": "",
+      "planName": "Other",
+      "dataSource": "Xero Feb 2026 Invoice",
+      "monthlyCost": "49.00",
+      "monthlyRevenue": "400.00",
+      "serviceType": "Other",
+      "notes": "[REVIEWED] Multiple services at this site reviewed and accepted.  | COST REVIEW "
+    },
+    {
+      "customer": "Creek St Pharmacy",
+      "serviceId": "",
+      "planName": "Other",
+      "dataSource": "Xero Feb 2026 Invoice",
+      "monthlyCost": "49.00",
+      "monthlyRevenue": "470.00",
+      "serviceType": "Other",
+      "notes": "COST REVIEW NEEDED: $49 placeholder cost from Access4 pricebook — verify actual "
+    },
+    {
+      "customer": "GBA Consulting Engineers",
+      "serviceId": "",
+      "planName": "Other",
+      "dataSource": "Xero Feb 2026 Invoice",
+      "monthlyCost": "49.00",
+      "monthlyRevenue": "1084.00",
+      "serviceType": "Other",
+      "notes": "[ABB Import] Provider: ABB | Speed: NBN 100/40 | Technology: FTTN | Buy Price: $"
+    },
+    {
+      "customer": "Scout Talent Pty Ltd",
+      "serviceId": "",
+      "planName": "Other",
+      "dataSource": "Xero Feb 2026 Invoice",
+      "monthlyCost": "49.00",
+      "monthlyRevenue": "2968.66",
+      "serviceType": "Other",
+      "notes": "COST REVIEW NEEDED: $49 placeholder cost from Access4 pricebook — verify actual "
+    },
+    {
+      "customer": "BT LAWYERS PTY LTD",
+      "serviceId": "",
+      "planName": "Other",
+      "dataSource": "Xero Feb 2026 Invoice",
+      "monthlyCost": "49.00",
+      "monthlyRevenue": "3098.58",
+      "serviceType": "Other",
+      "notes": "[COST REVIEW NEEDED] Cost price not found in spreadsheet — please verify manuall"
+    }
+  ],
+  "messages": [
+    "[SmileTel Import] Account: 586992900, Plan: Business Dat",
+    "[AUTO-FIX] Duplicate of S0765+S0766 per invoice 890189 analysis | COST REVIEW N"
+  ],
+  "stdout": "customer\tserviceId\tplanName\tdataSource\tmonthlyCost\tmonthlyRevenue\tserviceType\tnotes\nSalter Brothers Luxury Collection Operations Pty LTD\t\tOther\tXero Feb 2026 Invoice\t49.00\t0.80\tVoice\t[REVIEWED] Multiple services at this site reviewed and accepted.  | COST REVIEW \nActive Living - Allen Developments Pty Ltd\t\t4G Data Backup Service\tXero Feb 2026 Invoice\t49.00\t20.00\tOther\tCOST REVIEW NEEDED: $49 placeholder cost from Access4 pricebook — verify actual \nSwara\t\tManaged Voice Support\tXero Feb 2026 Invoice\t49.00\t25.00\tOther\tCOST REVIEW NEEDED: $49 placeholder cost from Access4 pricebook — verify actual \nFast Cut Qld Pty Ltd\t\t4G Data Backup Service\tXero Feb 2026 Invoice\t49.00\t30.00\tOther\tCOST REVIEW NEEDED: $49 placeholder cost from Access4 pricebook — verify actual \nTrue Metal Solutions\t\t4G SIM Backup Internet Service\tXero Feb 2026 Invoice\t49.00\t35.00\tOther\t[RVC Import] Source: NL\n[SmileTel Import] Account: 586992900, Plan: Business Dat\nBracken Ridge Family Practice\t\t4G Failover SIM\tXero Feb 2026 Invoice\t49.00\t35.00\tOther\tCOST REVIEW NEEDED: $49 placeholder cost from Access4 pricebook — verify actual \nNICKI'S PROFESSIONAL SECURITY SCREENS AND BLINDS\t\t4G Data Backup Service\tXero Feb 2026 Invoice\t49.00\t39.00\tOther\t[Auto-matched by alias by Angus Burnett-Smith on 12/03/2026: \"Unassigned\" → \"NIC\nCommunity Lifestyle Agency Inc\t\tOther\tXero Feb 2026 Invoice\t49.00\t50.00\tOther\tCOST REVIEW NEEDED: $49 placeholder cost from Access4 pricebook — verify actual \nWoodlands Enterprises Pty Ltd\t\tOther\tXero Feb 2026 Invoice\t49.00\t57.22\tOther\tCOST REVIEW NEEDED: $49 placeholder cost from Access4 pricebook — verify actual \nMega Electrics\t\tOther\tXero Feb 2026 Invoice\t49.00\t75.00\tOther\t[Auto-matched by alias by Angus Burnett-Smith on 11/03/2026: \"Mega Electrics NSW\nBalgra Shopping Centre Management Pty Ltd\t\tOther\tXero Feb 2026 Invoice\t49.00\t75.00\tOther\tCOST REVIEW NEEDED: $49 placeholder cost from Access4 pricebook — verify actual \nAll Crops Haulage Pty Ltd\tSSPVNO3A\tInternet 100/40\t\t49.00\t114.00\tInternet\t\n[AUTO-FIX] Duplicate of S0765+S0766 per invoice 890189 analysis | COST REVIEW N\nRed Roo Australia\t\tOther\tXero Feb 2026 Invoice\t49.00\t116.77\tOther\tCOST REVIEW NEEDED: $49 placeholder cost from Access4 pricebook — verify actual \nAll Crops Haulage Pty Ltd\t\tNBN 100/40\tXero Feb 2026 Invoice\t49.00\t228.00\tInternet\tNULL\nSta Consulting Engineers\t\tOther\tXero Feb 2026 Invoice\t49.00\t250.00\tOther\t[REVIEWED] Multiple services at this site reviewed and accepted.  | COST REVIEW \nASG Hail Pty Ltd\t\tOther\tXero Feb 2026 Invoice\t49.00\t400.00\tOther\t[REVIEWED] Multiple services at this site reviewed and accepted.  | COST REVIEW \nCreek St Pharmacy\t\tOther\tXero Feb 2026 Invoice\t49.00\t470.00\tOther\tCOST REVIEW NEEDED: $49 placeholder cost from Access4 pricebook — verify actual \nGBA Consulting Engineers\t\tOther\tXero Feb 2026 Invoice\t49.00\t1084.00\tOther\t[ABB Import] Provider: ABB | Speed: NBN 100/40 | Technology: FTTN | Buy Price: $\nScout Talent Pty Ltd\t\tOther\tXero Feb 2026 Invoice\t49.00\t2968.66\tOther\tCOST REVIEW NEEDED: $49 placeholder cost from Access4 pricebook — verify actual \nBT LAWYERS PTY LTD\t\tOther\tXero Feb 2026 Invoice\t49.00\t3098.58\tOther\t[COST REVIEW NEEDED] Cost price not found in spreadsheet — please verify manuall\n",
+  "stderr": "",
+  "execution_time_ms": 1684
+}

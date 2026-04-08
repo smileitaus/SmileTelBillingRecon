@@ -1,0 +1,9 @@
+{
+  "query": "\n-- Tag services with their data bundle group\nUPDATE services svc\nINNER JOIN revenue_groups rg\n  ON rg.type = 'data_bundle'\n  AND rg.customerExternalId = svc.customerExternalId\n  AND rg.totalRevenue = svc.monthlyRevenue\nSET svc.revenueGroupId = rg.groupId, svc.revenueGroupLabel = 'Data - Internet'\nWHERE\n  (svc.revenueGroupId IS NULL OR svc.revenueGroupId = '')\n  AND (\n    svc.serviceType = 'Internet'\n    OR svc.planName LIKE '%NBN%'\n    OR svc.planName LIKE '%Broadband%'\n    OR svc.planName LIKE '%Fibre%'\n    OR svc.planName LIKE '%Internet%'\n    OR svc.planName LIKE '%Data%'\n  );\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Tag services with their data bundle group\nUPDATE services svc\nINNER JOIN revenue_groups rg\n  ON rg.type = 'data_bundle'\n  AND rg.customerExternalId = svc.customerExternalId\n  AND rg.totalRevenue = svc.monthlyRevenue\nSET svc.revenueGroupId = rg.groupId, svc.revenueGroupLabel = 'Data - Internet'\nWHERE\n  (svc.revenueGroupId IS NULL OR svc.revenueGroupId = '')\n  AND (\n    svc.serviceType = 'Internet'\n    OR svc.planName LIKE '%NBN%'\n    OR svc.planName LIKE '%Broadband%'\n    OR svc.planName LIKE '%Fibre%'\n    OR svc.planName LIKE '%Internet%'\n    OR svc.planName LIKE '%Data%'\n  );\n",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 1683
+}

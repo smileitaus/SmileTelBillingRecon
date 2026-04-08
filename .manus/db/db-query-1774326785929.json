@@ -1,0 +1,16 @@
+{
+  "query": "SELECT \n  (SELECT COUNT(*) FROM vocus_mobile_services) as mobile_count,\n  (SELECT COUNT(*) FROM vocus_nbn_services) as nbn_count,\n  (SELECT COUNT(*) FROM vocus_buckets) as bucket_count,\n  (SELECT COUNT(*) FROM vocus_sync_log) as sync_log_count;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute SELECT \n  (SELECT COUNT(*) FROM vocus_mobile_services) as mobile_count,\n  (SELECT COUNT(*) FROM vocus_nbn_services) as nbn_count,\n  (SELECT COUNT(*) FROM vocus_buckets) as bucket_count,\n  (SELECT COUNT(*) FROM vocus_sync_log) as sync_log_count;",
+  "rows": [
+    {
+      "mobile_count": "96",
+      "nbn_count": "147",
+      "bucket_count": "2",
+      "sync_log_count": "1"
+    }
+  ],
+  "messages": [],
+  "stdout": "mobile_count\tnbn_count\tbucket_count\tsync_log_count\n96\t147\t2\t1\n",
+  "stderr": "",
+  "execution_time_ms": 1730
+}

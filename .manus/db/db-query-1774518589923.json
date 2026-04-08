@@ -1,0 +1,18 @@
+{
+  "query": "\n-- Check costSource values and how the UI \"Cost Review Needed\" badge is triggered\nSELECT costSource, COUNT(*) as count \nFROM services \nWHERE supplierName = 'SasBoss' AND monthlyCost = 49.00\nGROUP BY costSource;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Check costSource values and how the UI \"Cost Review Needed\" badge is triggered\nSELECT costSource, COUNT(*) as count \nFROM services \nWHERE supplierName = 'SasBoss' AND monthlyCost = 49.00\nGROUP BY costSource;\n",
+  "rows": [
+    {
+      "costSource": "access4_invoice_corrected",
+      "count": "1"
+    },
+    {
+      "costSource": "access4_diamond_pricebook_excel",
+      "count": "18"
+    }
+  ],
+  "messages": [],
+  "stdout": "costSource\tcount\naccess4_invoice_corrected\t1\naccess4_diamond_pricebook_excel\t18\n",
+  "stderr": "",
+  "execution_time_ms": 1576
+}

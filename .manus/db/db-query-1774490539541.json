@@ -1,0 +1,142 @@
+{
+  "query": "\nSELECT \n  s.externalId as serviceId,\n  s.planName,\n  s.monthlyCost as supplierCost,\n  s.customerExternalId,\n  sba.billingItemExternalId as currentMatchedBiId,\n  bi_current.description as currentBiDesc,\n  bi_current.lineAmount as currentRevenue,\n  bi_correct.externalId as correctBiId,\n  bi_correct.description as correctBiDesc,\n  bi_correct.lineAmount as correctRevenue\nFROM services s\nJOIN service_billing_assignments sba ON sba.serviceExternalId = s.externalId\nJOIN billing_items bi_current ON bi_current.externalId = sba.billingItemExternalId\nJOIN (\n  SELECT bi2.customerExternalId, bi2.externalId, bi2.description, bi2.lineAmount\n  FROM billing_items bi2\n  WHERE bi2.description LIKE '%SIP%' OR bi2.description LIKE '%Users%' OR bi2.description LIKE '%PBX%'\n) bi_correct ON bi_correct.customerExternalId = s.customerExternalId \n  AND bi_correct.lineAmount > bi_current.lineAmount\n  AND (bi_correct.description LIKE '%SIP%' OR bi_correct.description LIKE '%Users%')\nWHERE s.externalId IN ('S8JR3KM','SHB64AC','S72C54J','SHU42OX','SGVQT30','S1UMC04','SEEV150','SKY3MLC','SSE3JV7','SZR96SE','SGBHVJV','S66U54A')\nORDER BY s.externalId, bi_correct.lineAmount DESC;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \nSELECT \n  s.externalId as serviceId,\n  s.planName,\n  s.monthlyCost as supplierCost,\n  s.customerExternalId,\n  sba.billingItemExternalId as currentMatchedBiId,\n  bi_current.description as currentBiDesc,\n  bi_current.lineAmount as currentRevenue,\n  bi_correct.externalId as correctBiId,\n  bi_correct.description as correctBiDesc,\n  bi_correct.lineAmount as correctRevenue\nFROM services s\nJOIN service_billing_assignments sba ON sba.serviceExternalId = s.externalId\nJOIN billing_items bi_current ON bi_current.externalId = sba.billingItemExternalId\nJOIN (\n  SELECT bi2.customerExternalId, bi2.externalId, bi2.description, bi2.lineAmount\n  FROM billing_items bi2\n  WHERE bi2.description LIKE '%SIP%' OR bi2.description LIKE '%Users%' OR bi2.description LIKE '%PBX%'\n) bi_correct ON bi_correct.customerExternalId = s.customerExternalId \n  AND bi_correct.lineAmount > bi_current.lineAmount\n  AND (bi_correct.description LIKE '%SIP%' OR bi_correct.description LIKE '%Users%')\nWHERE s.externalId IN ('S8JR3KM','SHB64AC','S72C54J','SHU42OX','SGVQT30','S1UMC04','SEEV150','SKY3MLC','SSE3JV7','SZR96SE','SGBHVJV','S66U54A')\nORDER BY s.externalId, bi_correct.lineAmount DESC;\n",
+  "rows": [
+    {
+      "serviceId": "S66U54A",
+      "planName": "MedPodsDoOut",
+      "supplierCost": "71.20",
+      "customerExternalId": "C0118",
+      "currentMatchedBiId": "BI00644",
+      "currentBiDesc": "3 Channels Business SIP Inbound. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "currentRevenue": "27.00",
+      "correctBiId": "BI00648",
+      "correctBiDesc": "2 Channels Business SIP Outbound. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "correctRevenue": "106.00"
+    },
+    {
+      "serviceId": "S72C54J",
+      "planName": "GumdaleMed",
+      "supplierCost": "214.30",
+      "customerExternalId": "C0114",
+      "currentMatchedBiId": "BI00745",
+      "currentBiDesc": "eFax Service Flat Rate. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "currentRevenue": "35.00",
+      "correctBiId": "BI00746",
+      "correctBiDesc": "6 Channels Business SIP. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "correctRevenue": "288.00"
+    },
+    {
+      "serviceId": "S8JR3KM",
+      "planName": "pbx Coastal Dental Specialists",
+      "supplierCost": "90.65",
+      "customerExternalId": "C0063",
+      "currentMatchedBiId": "BI00682",
+      "currentBiDesc": "Number Rental. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "currentRevenue": "2.00",
+      "correctBiId": "BI00685",
+      "correctBiDesc": "5 Users Capped. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "correctRevenue": "150.00"
+    },
+    {
+      "serviceId": "SEEV150",
+      "planName": "AusdCarindOut",
+      "supplierCost": "143.98",
+      "customerExternalId": "C0022",
+      "currentMatchedBiId": "BI00618",
+      "currentBiDesc": "4 Channels Business SIP. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "currentRevenue": "36.00",
+      "correctBiId": "BI00621",
+      "correctBiDesc": "4 Channels Business SIP. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "correctRevenue": "192.00"
+    },
+    {
+      "serviceId": "SGBHVJV",
+      "planName": "MtCottnMCIN",
+      "supplierCost": "72.65",
+      "customerExternalId": "C0166",
+      "currentMatchedBiId": "BI00658",
+      "currentBiDesc": "3 Channels Business SIP Inbound. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "currentRevenue": "27.00",
+      "correctBiId": "BI00660",
+      "correctBiDesc": "2 Channels Business SIP Outbound. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "correctRevenue": "106.00"
+    },
+    {
+      "serviceId": "SGVQT30",
+      "planName": "AlbyFDocsOut",
+      "supplierCost": "146.51",
+      "customerExternalId": "C0009",
+      "currentMatchedBiId": "BI00598",
+      "currentBiDesc": "4 Channels Business SIP. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "currentRevenue": "36.00",
+      "correctBiId": "BI00601",
+      "correctBiDesc": "4 Channels Business SIP. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "correctRevenue": "212.00"
+    },
+    {
+      "serviceId": "SHB64AC",
+      "planName": "docsamfdvout",
+      "supplierCost": "112.27",
+      "customerExternalId": "C0080",
+      "currentMatchedBiId": "BI00605",
+      "currentBiDesc": "2 Channels Business SIP. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "currentRevenue": "18.00",
+      "correctBiId": "BI00608",
+      "correctBiDesc": "3 Channels Business SIP. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "correctRevenue": "159.00"
+    },
+    {
+      "serviceId": "SHU42OX",
+      "planName": "Staff Heights Medical Practice",
+      "supplierCost": "148.79",
+      "customerExternalId": "C0229",
+      "currentMatchedBiId": "BI00735",
+      "currentBiDesc": "eFax Service Flat Rate. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "currentRevenue": "35.00",
+      "correctBiId": "BI00736",
+      "correctBiDesc": "4 Channels Business SIP. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "correctRevenue": "192.00"
+    },
+    {
+      "serviceId": "SKY3MLC",
+      "planName": "KawanaFClout",
+      "supplierCost": "142.72",
+      "customerExternalId": "C0132",
+      "currentMatchedBiId": "BI00651",
+      "currentBiDesc": "4 Channels Business SIP. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "currentRevenue": "36.00",
+      "correctBiId": "BI00653",
+      "correctBiDesc": "4 Channels Business SIP. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "correctRevenue": "212.00"
+    },
+    {
+      "serviceId": "SSE3JV7",
+      "planName": "WarwkMCOut",
+      "supplierCost": "81.07",
+      "customerExternalId": "C0284",
+      "currentMatchedBiId": "BI00627",
+      "currentBiDesc": "3 Channels Business SIP Inbound. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "currentRevenue": "27.00",
+      "correctBiId": "BI00629",
+      "correctBiDesc": "2 Channels Business SIP Outbound. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "correctRevenue": "106.00"
+    },
+    {
+      "serviceId": "SZR96SE",
+      "planName": "MtCottnMCOUT",
+      "supplierCost": "75.50",
+      "customerExternalId": "C0166",
+      "currentMatchedBiId": "BI00658",
+      "currentBiDesc": "3 Channels Business SIP Inbound. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "currentRevenue": "27.00",
+      "correctBiId": "BI00660",
+      "correctBiDesc": "2 Channels Business SIP Outbound. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "correctRevenue": "106.00"
+    }
+  ],
+  "messages": [],
+  "stdout": "serviceId\tplanName\tsupplierCost\tcustomerExternalId\tcurrentMatchedBiId\tcurrentBiDesc\tcurrentRevenue\tcorrectBiId\tcorrectBiDesc\tcorrectRevenue\nS66U54A\tMedPodsDoOut\t71.20\tC0118\tBI00644\t3 Channels Business SIP Inbound. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t27.00\tBI00648\t2 Channels Business SIP Outbound. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t106.00\nS72C54J\tGumdaleMed\t214.30\tC0114\tBI00745\teFax Service Flat Rate. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t35.00\tBI00746\t6 Channels Business SIP. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t288.00\nS8JR3KM\tpbx Coastal Dental Specialists\t90.65\tC0063\tBI00682\tNumber Rental. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t2.00\tBI00685\t5 Users Capped. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t150.00\nSEEV150\tAusdCarindOut\t143.98\tC0022\tBI00618\t4 Channels Business SIP. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t36.00\tBI00621\t4 Channels Business SIP. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t192.00\nSGBHVJV\tMtCottnMCIN\t72.65\tC0166\tBI00658\t3 Channels Business SIP Inbound. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t27.00\tBI00660\t2 Channels Business SIP Outbound. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t106.00\nSGVQT30\tAlbyFDocsOut\t146.51\tC0009\tBI00598\t4 Channels Business SIP. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t36.00\tBI00601\t4 Channels Business SIP. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t212.00\nSHB64AC\tdocsamfdvout\t112.27\tC0080\tBI00605\t2 Channels Business SIP. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t18.00\tBI00608\t3 Channels Business SIP. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t159.00\nSHU42OX\tStaff Heights Medical Practice\t148.79\tC0229\tBI00735\teFax Service Flat Rate. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t35.00\tBI00736\t4 Channels Business SIP. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t192.00\nSKY3MLC\tKawanaFClout\t142.72\tC0132\tBI00651\t4 Channels Business SIP. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t36.00\tBI00653\t4 Channels Business SIP. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t212.00\nSSE3JV7\tWarwkMCOut\t81.07\tC0284\tBI00627\t3 Channels Business SIP Inbound. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t27.00\tBI00629\t2 Channels Business SIP Outbound. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t106.00\nSZR96SE\tMtCottnMCOUT\t75.50\tC0166\tBI00658\t3 Channels Business SIP Inbound. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t27.00\tBI00660\t2 Channels Business SIP Outbound. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t106.00\n",
+  "stderr": "",
+  "execution_time_ms": 1522
+}

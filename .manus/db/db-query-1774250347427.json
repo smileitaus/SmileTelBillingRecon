@@ -1,0 +1,3510 @@
+{
+  "query": "SELECT externalId, name, billingPlatforms, siteAddress, businessName FROM customers ORDER BY name LIMIT 500;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute SELECT externalId, name, billingPlatforms, siteAddress, businessName FROM customers ORDER BY name LIMIT 500;",
+  "rows": [
+    {
+      "externalId": "C2509",
+      "name": "1 WILKINSON RD, MARYVALE QLD",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2574",
+      "name": "11 BROADWAY , NEDLANDS WA",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2480",
+      "name": "11E PETERSEN ST, BUNDABERG EAST QLD",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2510",
+      "name": "13 BROADWATER CL, BARGARA QLD",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2461",
+      "name": "13 WINFIELD RD, ORMEAU QLD",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2490",
+      "name": "133 WOONGARRA SCENIC DR, BARGARA QLD",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2561",
+      "name": "134A STATION ST, FAIRFIELD VIC",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2518",
+      "name": "149 GEORGE ST, BEENLEIGH QLD",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2593",
+      "name": "154 HIGH ST, WODONGA VIC",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2622",
+      "name": "16 A LLOYD ST, MIDLAND WA",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2579",
+      "name": "166 SWAN ST, CREMORNE VIC",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2568",
+      "name": "16A LLOYD ST, MIDLAND WA",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2578",
+      "name": "200 ELLEN ST, PORT PIRIE SA",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2567",
+      "name": "206 GLENFERRIE RD, MALVERN VIC",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2508",
+      "name": "22 CREEDY ST, ROSEWOOD QLD",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2613",
+      "name": "235 BRUNSWICK ST, FORTITUDE VALLEY QLD",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2468",
+      "name": "25 PRODUCTION ST, SVENSSON HEIGHTS QLD",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2541",
+      "name": "254 CARLISLE ST, BALACLAVA VIC",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2597",
+      "name": "27A ANDERSON ST, YARRAVILLE VIC",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2537",
+      "name": "2814 OLD GYMPIE RD, BEERWAH QLD",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2489",
+      "name": "290 DAREBIN RD, FAIRFIELD VIC",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2548",
+      "name": "3 CONNOR ST, BURLEIGH HEADS QLD",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2473",
+      "name": "30 KEDRON AV, MITCHELTON QLD",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2498",
+      "name": "31 BLACKBEAUTY CT, KENSINGTON QLD",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2612",
+      "name": "36 MARSHALL ST, GOONDIWINDI QLD",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2506",
+      "name": "37 ACCESS AV, YATALA QLD",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2557",
+      "name": "378 DECEPTION BAY RD, DECEPTION BAY QLD",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2610",
+      "name": "400 NUDGEE RD, HENDRA QLD",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2476",
+      "name": "43 BERNOULLI ST, DARRA QLD",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2595",
+      "name": "459 PACIFIC HWY, WYOMING NSW",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2540",
+      "name": "461B Dean St, Albury NSW",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2545",
+      "name": "476 CENTRE RD, BENTLEIGH VIC",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2472",
+      "name": "49 DAWSON HWY, BILOELA QLD",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2607",
+      "name": "5 CHURCH LANE, EMERALD QLD",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2515",
+      "name": "500 TORQUAY RD, ARMSTRONG CREEK VIC",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2512",
+      "name": "62 BEAL ST, MEADOWBROOK QLD",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2539",
+      "name": "62 BYNG ST, ORANGE NSW",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2482",
+      "name": "7 BARNSTAPLE ST, TORQUAY QLD",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2478",
+      "name": "73 ELM ST, BARCALDINE QLD",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2606",
+      "name": "74 78 VICTORIA PDE, ROCKHAMPTON CITY QLD",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2588",
+      "name": "778 OLD PRINCES HWY, SUTHERLAND NSW",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2464",
+      "name": "8 AUSTIN ST, NEWSTEAD QLD",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2554",
+      "name": "93 CRONULLA ST, CRONULLA NSW",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0001",
+      "name": "A & K Financial Planning Pty Ltd",
+      "billingPlatforms": "[\"Sasboss\", \"OneBill\"]",
+      "siteAddress": "Suite 16 72 Wises Rd, BUDERIM, Queensland, Australia, 4556",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0002",
+      "name": "A M Emerick & T J Morrice",
+      "billingPlatforms": "[\"Sasboss\"]",
+      "siteAddress": "136 Tarrants Rd, CALAVOS, QLD, 4670",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2887",
+      "name": "Accountant Ready Services",
+      "billingPlatforms": "NULL",
+      "siteAddress": "19B Juliet St, Mackay, Queensland, Australia, 4740",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0003",
+      "name": "Active Living - Allen Developments Pty Ltd",
+      "billingPlatforms": "[\"Sasboss\", \"OneBill\"]",
+      "siteAddress": "Unit 3, Eloura Towers, 81 Sixth AV, Maroochydore, QLD, 4558",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0004",
+      "name": "Acumen Building Projects",
+      "billingPlatforms": "[\"OneBill\"]",
+      "siteAddress": "38 Piper Street, Caboolture, QLD, 4510",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0005",
+      "name": "Adams Financial Group",
+      "billingPlatforms": "[\"OneBill\"]",
+      "siteAddress": "Level 2, Building A/6, Innovation Pkwy, Birtinya, QLD, 4575",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2889",
+      "name": "Affinage Professional",
+      "billingPlatforms": "NULL",
+      "siteAddress": "14 India St, Capalaba, QLD, 4157",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2638",
+      "name": "Affinity Partners Pty Ltd",
+      "billingPlatforms": "[\"DATAGATE\"]",
+      "siteAddress": "-, -, -, -, -",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0006",
+      "name": "Agnes Water Beauty Hub",
+      "billingPlatforms": "[\"Sasboss\"]",
+      "siteAddress": "Tenancy T14, 2875 Round Hill Road, Seventeen Seventy, QLD, 4677",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0007",
+      "name": "Agnes Water Doctors",
+      "billingPlatforms": "[\"Sasboss\"]",
+      "siteAddress": "2853 Round Hill Road, Agnes Water, Seventeen Seventy, QLD, 4677",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2EBB",
+      "name": "Air Restore",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0008",
+      "name": "Alan Powell",
+      "billingPlatforms": "[\"OneBill\"]",
+      "siteAddress": "Unit 126, 50 Marshall Street, Burnett Heads, QLD, 4670",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0009",
+      "name": "Albany Family Doctors",
+      "billingPlatforms": "[\"ECN\"]",
+      "siteAddress": "Shop 3 715 Albany Creek Rd, Albany Creek, QLD, 4035",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0010",
+      "name": "All Crops Haulage Pty Ltd",
+      "billingPlatforms": "[\"Sasboss\"]",
+      "siteAddress": "28672 Bruce Hwy, Childers, QLD, 4660",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0011",
+      "name": "Allegra Property Management Pty Ltd",
+      "billingPlatforms": "[\"ECN\"]",
+      "siteAddress": "468 The Esplanade, TORQUAY, QLD, 4655",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0012",
+      "name": "ARM Group Pty Ltd ATF ARM Property Trust No. 2",
+      "billingPlatforms": "[\"Sasboss\", \"OneBill\"]",
+      "siteAddress": "PO BOX 7666, EAST BRISBANE, QLD, 4169",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0013",
+      "name": "Armani Tobacconist",
+      "billingPlatforms": "[]",
+      "siteAddress": "Tenancy T92853 Round Hill Road, Agnes Waters, Queensland, Australia, 4677",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0014",
+      "name": "Aromas Noosa",
+      "billingPlatforms": "[\"Sasboss\", \"OneBill\"]",
+      "siteAddress": "Shop 7 32 Hastings St, NOOSA HEADS, Noosa Heads, QLD, 4567",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2633",
+      "name": "Aromas Noosa Heads",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7557",
+      "name": "ASDL Ltd",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": "ASDL Ltd"
+    },
+    {
+      "externalId": "C2415",
+      "name": "ASG",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0015",
+      "name": "ASG Hail Pty Ltd",
+      "billingPlatforms": "[\"DATAGATE\"]",
+      "siteAddress": "6 Telford Circuit, Yatala, Queensland, 4207",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0016",
+      "name": "Aspley Firstcare Doctors",
+      "billingPlatforms": "[\"ECN\"]",
+      "siteAddress": "Shop N19 605 Robertson Road, Aspley, QLD, 4034",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0017",
+      "name": "Atkinson's Specialist Shuttles",
+      "billingPlatforms": "[]",
+      "siteAddress": "-, -, -, -, -",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0018",
+      "name": "Atlantis Pool Shop",
+      "billingPlatforms": "[\"Sasboss\", \"OneBill\"]",
+      "siteAddress": "Unit 4 14 Burke Crescent, North Lakes, North Lakes, QLD, 4509",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0019",
+      "name": "Audem Electrical",
+      "billingPlatforms": "[]",
+      "siteAddress": "3/44 Leonard Street, Woolloongabba, QLD, 4102",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2416",
+      "name": "Auriga Group",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0020",
+      "name": "Auriga Group Pty Ltd",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7513",
+      "name": "Aus Ships",
+      "billingPlatforms": "[\"SasBoss\"]",
+      "siteAddress": "",
+      "businessName": "Aus Ships"
+    },
+    {
+      "externalId": "C0021",
+      "name": "Ausavo Corporation Pty Ltd",
+      "billingPlatforms": "[\"Sasboss\"]",
+      "siteAddress": "9 Kevin Livingston Drive, ISIS CENTRAL, Isis Central, QLD, 4660",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0022",
+      "name": "Ausdocs Carindale Pty Ltd",
+      "billingPlatforms": "[\"ECN\", \"OneBill\"]",
+      "siteAddress": "Shop 2066, Wesfield Carindale, 1151 Creek Road, Carindale, QLD, 4152",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0023",
+      "name": "Ausdocs Team Care Pty Ltd T/As Bribie MediPlus",
+      "billingPlatforms": "[\"ECN\"]",
+      "siteAddress": "2d/241 Goodwin Drive, Bongaree, QLD, 4507",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2639",
+      "name": "Aussie Hail Pty Ltd",
+      "billingPlatforms": "[\"DATAGATE\"]",
+      "siteAddress": "-, -, -, -, -",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2615",
+      "name": "Aussie Traveller",
+      "billingPlatforms": "[]",
+      "siteAddress": "-, -, -, -, -",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0025",
+      "name": "Australian Air Science Pty Ltd",
+      "billingPlatforms": "[\"DATAGATE\"]",
+      "siteAddress": "32 Dividend Street, Mansfield, QLD, 4122",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0026",
+      "name": "Australian Computer Traders",
+      "billingPlatforms": "[\"DATAGATE\"]",
+      "siteAddress": "911 Stanley Street, East Brisbane, Queensland, 4169",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0027",
+      "name": "Australian Resort Management Pty Ltd",
+      "billingPlatforms": "[\"Sasboss\"]",
+      "siteAddress": "LOT 3 UNIT 4 371 CHARLTON ESPLANADE, SCARNESS, QLD, 4655",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0028",
+      "name": "Autonomy & Asset Management Group",
+      "billingPlatforms": "[]",
+      "siteAddress": "12/441 Nudgee Rd, Hendra, Queensland, 4011",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2640",
+      "name": "Back Track Adventures",
+      "billingPlatforms": "[\"DATAGATE\"]",
+      "siteAddress": "222A Barry Pde, Fortitude Valley, QLD, 4006",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0029",
+      "name": "Back2Health",
+      "billingPlatforms": "[\"DATAGATE\",\"Sasboss\"]",
+      "siteAddress": "1/304 Montague Road, West End, QLD, 4101",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0030",
+      "name": "Balanced Business Accounting",
+      "billingPlatforms": "[\"DATAGATE\",\"Sasboss\"]",
+      "siteAddress": "Shop 1  Ground Floor  76 Old Cleveland Rd, 76 Old Cleveland Road, CAPALABA, Queensland, 4157",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0031",
+      "name": "Balgra Shopping Centre Management Pty Ltd",
+      "billingPlatforms": "[\"DATAGATE\"]",
+      "siteAddress": "Oracle Building South, Level 2, 17 Elizabeth Avenue, Broadbeach, QLD, 4218",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2543",
+      "name": "BANKSIA GROVE VILLAGE TNCY 11, 1001 JOONDALUP DR, BANKSIA GROVE WA",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0032",
+      "name": "Bantan Fiesta Pty Ltd (for Zambrero Swan View)",
+      "billingPlatforms": "[\"OneBill\"]",
+      "siteAddress": "Darling Ridge Shopping Centre Un 9, 309 Morrison Rd, Swan View, WA, 6056",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0033",
+      "name": "Banyo Village Medical Centre",
+      "billingPlatforms": "[\"ECN\"]",
+      "siteAddress": "Shop 1, 299 St Vincents Road, Banyo, QLD, 4500",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0034",
+      "name": "Bar Alto",
+      "billingPlatforms": "[\"DATAGATE\"]",
+      "siteAddress": "119 Lamington Street, New Farm, QLD, 4005",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2417",
+      "name": "BBA",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2641",
+      "name": "Beechmont Estate",
+      "billingPlatforms": "[\"DATAGATE\"]",
+      "siteAddress": "442 Binna Burra Rd, Beechmont, QLD, 4211",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0035",
+      "name": "Beenleigh Road Medical Practice",
+      "billingPlatforms": "[\"ECN\"]",
+      "siteAddress": "Shop 10, 565 Beenleigh Road, SUNNYBANK, QLD, 4109",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0036",
+      "name": "BELL CRIMINAL LAWYERS PTY LTD",
+      "billingPlatforms": "[\"Sasboss\"]",
+      "siteAddress": "Level 10/193 N Quay, Brisbane City, Queensland, 4000",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2544",
+      "name": "BELRIDGE SHOPPING CENTRE UN 4, 36 GWENDOLINE DR, BELDON WA",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2643",
+      "name": "Better Business Finance",
+      "billingPlatforms": "[\"DATAGATE\"]",
+      "siteAddress": "107 Maud Street, Maroochydore, QLD",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0037",
+      "name": "BGC Engineering",
+      "billingPlatforms": "[]",
+      "siteAddress": "Level 3, 31 Merivale Street, South Brisbane, QLD, 4101",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0038",
+      "name": "Body Corporate for Osprey Mooloolaba CTS4773",
+      "billingPlatforms": "[\"ECN\"]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2418",
+      "name": "Body Corporate Systems",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0039",
+      "name": "Body Corporate Systems Pty Ltd",
+      "billingPlatforms": "[]",
+      "siteAddress": "Suite 106, 621 Wynnum Road, Morningside, QLD, 4170",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0042",
+      "name": "Booroodabin",
+      "billingPlatforms": "[\"OneBill\"]",
+      "siteAddress": "PO Box 3068, NEWSTEAD, QLD, 4006",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0043",
+      "name": "Boyd Legal",
+      "billingPlatforms": "[\"OneBill\"]",
+      "siteAddress": "Level 12, 200 Mary Street, Brisbane, QLD, 4000",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2608",
+      "name": "BP HOUSE OFFC 10C, 193 NORTH QY, BRISBANE CITY QLD",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0044",
+      "name": "Bracken Ridge Family Practice",
+      "billingPlatforms": "[\"Sasboss\"]",
+      "siteAddress": "Shop 1, 81 Gawain Road,, BRACKEN RIDGE, Bracken Ridge, QLD, 4017",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0045",
+      "name": "Branyan Early Learning Centre",
+      "billingPlatforms": "[\"DATAGATE\",\"Sasboss\"]",
+      "siteAddress": "7 Penny Ln, Branyan QLD 4670, Bundaberg, QLD, 4670",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0046",
+      "name": "BrewDog Australia",
+      "billingPlatforms": "[]",
+      "siteAddress": "77 Metroplex Ave, Murarrie, QLD, 4172",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0047",
+      "name": "Brimar Pty Ltd",
+      "billingPlatforms": "[\"DATAGATE\"]",
+      "siteAddress": "2/333 Queensport Road North, Murarrie, QLD, 4172",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2611",
+      "name": "BROOKHOLLOW UNIT 5, 40 BROOKHOLLOW AV, NORWEST NSW",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2888",
+      "name": "BT LAWYERS PTY LTD",
+      "billingPlatforms": "NULL",
+      "siteAddress": "Level 30/239 George St, Brisbane City, Queensland, Australia, 4000",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2466",
+      "name": "BUDERIM GARDENS RETIREMENT VILLAGE UN 206, 405 MOOLOOLABA RD, BUDERIM QLD",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0048",
+      "name": "Bundy Homes",
+      "billingPlatforms": "[\"Sasboss\"]",
+      "siteAddress": "1/53 Perry St, Bundaberg North, QLD, 4670",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2592",
+      "name": "BURRENDAH TAVERN , 47 BURRENDAH BVD, WILLETTON WA",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2894",
+      "name": "BUSH TO BEACH LEGAL PTY LTD",
+      "billingPlatforms": "NULL",
+      "siteAddress": "50 Owen Creek Rd, Forest Glen, Queensland, 4556",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0049",
+      "name": "Butchulla Enterprises Limited",
+      "billingPlatforms": "[\"OneBill\"]",
+      "siteAddress": "Unit 2, 52 Ariadne St, River Heads, Queensland, Australia, 4655",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2419",
+      "name": "Buys Court",
+      "billingPlatforms": "[\"DATAGATE\"]",
+      "siteAddress": "22 Gillan Street, Norman Park, QLD, 4170",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0050",
+      "name": "Buys Court Pty Ltd",
+      "billingPlatforms": "[\"DATAGATE\"]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0051",
+      "name": "Cala Luna Rental",
+      "billingPlatforms": "[\"Sasboss\"]",
+      "siteAddress": "6 Cala Luna Pde, YAROOMBA, Taroomba, QLD, 4573",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2644",
+      "name": "Campos Coffee Qld",
+      "billingPlatforms": "[\"DATAGATE\"]",
+      "siteAddress": "19/300 Cullen Ave East, Eagle Farm, QLD, 4006",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0052",
+      "name": "Caneland Engineering",
+      "billingPlatforms": "[\"Sasboss\"]",
+      "siteAddress": "25 Production Street, Bundaberg, Queensland, Australia, 4670",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0053",
+      "name": "Canossa Medical Centre Pharmacy",
+      "billingPlatforms": "[\"Sasboss\"]",
+      "siteAddress": "SE 5 Canossa Hospital 169 Seventeen Mile Rocks Road, Oxley, QLD, 4075",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0054",
+      "name": "Caravan and RV Works",
+      "billingPlatforms": "[\"DATAGATE\"]",
+      "siteAddress": "12-14 Enterprise Street, Kunda Park, QLD, 4556",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2645",
+      "name": "Carroll Consulting",
+      "billingPlatforms": "[\"DATAGATE\"]",
+      "siteAddress": "Level 1, 225 Wickham Terrace, Brisbane, QLD, 4000",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2897",
+      "name": "Cassels Strata Management",
+      "billingPlatforms": "NULL",
+      "siteAddress": "Level 1, 11 Lang Parade, Milton, QLD, 4064",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0055",
+      "name": "Catolin Pty Ltd T-A Helloworld Strathpine",
+      "billingPlatforms": "[\"Sasboss\", \"OneBill\"]",
+      "siteAddress": "58/295 Gympie Rd, STRATHPINE, Strathpine, QLD, 4500",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0056",
+      "name": "CC Innovation Pty Ltd",
+      "billingPlatforms": "[\"DATAGATE\"]",
+      "siteAddress": "1467 Anzac Avenue, Kallangur, QLD, 4503",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0057",
+      "name": "CDI Lawyers",
+      "billingPlatforms": "[]",
+      "siteAddress": "4/49 Park Rd, Milton, QLD, 4064",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0058",
+      "name": "CF Aust Pty Ltd",
+      "billingPlatforms": "[\"DATAGATE\"]",
+      "siteAddress": "6 Telford Circuit, Yatala, Queensland, Australia, 4207",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2523",
+      "name": "CHERMSIDE SHOPPING CENTRE SHOP R2A, 395 HAMILTON RD, CHERMSIDE QLD",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0059",
+      "name": "Cirque Apartments - The Shores Motel Group",
+      "billingPlatforms": "[\"OneBill\"]",
+      "siteAddress": "ROOM COMMS FCTY, 776 BRUNSWICK ST,, NEW FARM, QLD, 4005",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2627",
+      "name": "City Care Doctors Wintergarden",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0060",
+      "name": "Clear Insurance",
+      "billingPlatforms": "[\"Sasboss\"]",
+      "siteAddress": "Suite 3, Level 1,, 116 Racecourse Rd, Ascot, Queensland, 4007",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0061",
+      "name": "Cleveland Medical",
+      "billingPlatforms": "[\"ECN\"]",
+      "siteAddress": "Cleveland House Shop 2 120 Bloomfield St, CLEVELAND, QLD, 4163",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2422",
+      "name": "CMC",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0062",
+      "name": "CMC Property Management",
+      "billingPlatforms": "[\"DATAGATE\",\"Sasboss\"]",
+      "siteAddress": "PO Box 66, Strathpine Centre, Queensland, 4500",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0063",
+      "name": "Coastal Dental Specialists",
+      "billingPlatforms": "[\"ECN\", \"OneBill\"]",
+      "siteAddress": "Unit 202 67 Regatta Bvd, Birtinya, BIRTINYA, QLD, 4575",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0064",
+      "name": "Community Lifestyle Agency Inc",
+      "billingPlatforms": "[\"Sasboss\"]",
+      "siteAddress": "129 Adelaide Street, Maryborough, Maryborough, QLD, 4650",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0065",
+      "name": "Compass Assurance Services Pty Ltd",
+      "billingPlatforms": "[\"DATAGATE\"]",
+      "siteAddress": "60 Enterprise Place, Tingalpa, QLD, 4173",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0066",
+      "name": "Complete Care Doctors",
+      "billingPlatforms": "[]",
+      "siteAddress": "Suite 111 55 Creek Rd, MOUNT GRAVATT EAST, QLD, 4122",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0067",
+      "name": "Control Equipment Pty Ltd",
+      "billingPlatforms": "[\"ECN\"]",
+      "siteAddress": "Unit 6 30 Enterprise Cres, MALAGA, WA, 6090",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0068",
+      "name": "Core Glass & Aluminium",
+      "billingPlatforms": "[\"ECN\"]",
+      "siteAddress": "Unit 1 56 Eagleview Pl, EAGLE FARM, Eagle Farm, QLD, 4009",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2423",
+      "name": "Cornwalls",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0069",
+      "name": "Cornwalls (QLD)",
+      "billingPlatforms": "[\"OneBill\"]",
+      "siteAddress": "Level 21, 300 Queen Street, Brisbane, 4000",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7471",
+      "name": "Cory Johnston",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2424",
+      "name": "CPM",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0070",
+      "name": "CPM Advisory and Project Management",
+      "billingPlatforms": "[\"DATAGATE\",\"Sasboss\"]",
+      "siteAddress": "88 Limestone Street, Ipswich, QLD, 4305",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0071",
+      "name": "Creative Early Learning Group PTY LTD",
+      "billingPlatforms": "[\"DATAGATE\"]",
+      "siteAddress": "146 Elliott Heads Road, Avenell Heights, QLD, 4670",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0072",
+      "name": "Creek St Pharmacy",
+      "billingPlatforms": "[\"Sasboss\"]",
+      "siteAddress": "Shop 1 Ground Floor, 40 Creek Street, Brisbane, QLD, 4000",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0073",
+      "name": "CU@N8S",
+      "billingPlatforms": "[]",
+      "siteAddress": "88 Limestone St, Ipswich, QLD, 4305",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0074",
+      "name": "Cubico Sustainable Investments",
+      "billingPlatforms": "[]",
+      "siteAddress": "Level 28, 161 Castlereagh St, Sydney, NSW, 2000",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2555",
+      "name": "CURRAMBINE CENTRAL SHOP SP110, 1244 MARMION AV, CURRAMBINE WA",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0075",
+      "name": "DanKel Electrical Pty Ltd",
+      "billingPlatforms": "[\"Sasboss\", \"OneBill\"]",
+      "siteAddress": "PO Box 322, Bundaberg, Bundaberg East, QLD, 4670",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2589",
+      "name": "DARLING RIDGE SHOPPING CENTRE UN 9, 309 MORRISON RD, SWAN VIEW WA",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0076",
+      "name": "Denim Co",
+      "billingPlatforms": "[\"OneBill\"]",
+      "siteAddress": "Shop 9/A Little Stanley St, South Brisbane, Queensland, 4101",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0077",
+      "name": "DJ Steel - Lyndarr Constructions Pty Ltd",
+      "billingPlatforms": "[\"ECN\"]",
+      "siteAddress": "16 Mill Rd,, Monto, QLD, 4630",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0078",
+      "name": "DJ Steel Biloela - AJ and KL Fletcher",
+      "billingPlatforms": "[\"Sasboss\", \"OneBill\"]",
+      "siteAddress": "49-51 DAWSON HIGHWAY, Biloela, Queensland, Australia, 4715",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0079",
+      "name": "Doctors At Kawana Shopping World",
+      "billingPlatforms": "[\"ECN\"]",
+      "siteAddress": "Kawana Shopping World Shop 387a 119 Point Cartwright Dr, BUDDINA, QLD, 4575",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0080",
+      "name": "Doctors at Samford Valley",
+      "billingPlatforms": "[\"ECN\"]",
+      "siteAddress": "Shop 4-5, 39 Main Street, Samford Valley, QLD, 4520",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0081",
+      "name": "Dolani Pty Ltd",
+      "billingPlatforms": "[\"DATAGATE\"]",
+      "siteAddress": "1467 Anzac Avenue, Kallangur, QLD, 4503",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0082",
+      "name": "Doyles Trade Centre",
+      "billingPlatforms": "[\"DATAGATE\",\"Sasboss\"]",
+      "siteAddress": "27 Blackwood Street, Mitchelton, QLD, 4053",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2425",
+      "name": "Drummond House",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7456",
+      "name": "Duplicate Test 1773461062738",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7467",
+      "name": "Duplicate Test 1773461870429",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7481",
+      "name": "Duplicate Test 1773465030613",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7487",
+      "name": "Duplicate Test 1773472909584",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7493",
+      "name": "Duplicate Test 1773472942990",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7498",
+      "name": "Duplicate Test 1773480859098",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7504",
+      "name": "Duplicate Test 1773480895022",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7509",
+      "name": "Duplicate Test 1773480953761",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7515",
+      "name": "Duplicate Test 1773896995802",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7520",
+      "name": "Duplicate Test 1773897085340",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7525",
+      "name": "Duplicate Test 1773897218441",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7530",
+      "name": "Duplicate Test 1773897253309",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7535",
+      "name": "Duplicate Test 1773898989380",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7540",
+      "name": "Duplicate Test 1773901661885",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7545",
+      "name": "Duplicate Test 1773901901168",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7550",
+      "name": "Duplicate Test 1773901981868",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7580",
+      "name": "Duplicate Test 1773983858316",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C9005",
+      "name": "Duplicate Test 1774147641440",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0083",
+      "name": "Eatons Quality Medical & Skin Cancer",
+      "billingPlatforms": "[\"ECN\"]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0084",
+      "name": "EcoLife Solutions",
+      "billingPlatforms": "[\"ECN\"]",
+      "siteAddress": "Unit 1 23 Terrence Rd, BRENDALE, QLD, 4500",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0085",
+      "name": "Edens Landing Doctors",
+      "billingPlatforms": "[\"ECN\",\"Sasboss\"]",
+      "siteAddress": "Shops 10 & 11, 125-127 Castile Crescent, Edens Landing, QLD, 4207",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0086",
+      "name": "Education and Care Hub Pty Ltd",
+      "billingPlatforms": "[\"DATAGATE\"]",
+      "siteAddress": "1467 Anzac Avenue, Kallangur, QLD, 4503",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2535",
+      "name": "ELOUERA TOWERS UN 1, 81 SIXTH AV, MAROOCHYDORE QLD",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0087",
+      "name": "Emergency Medicine Foundation",
+      "billingPlatforms": "[\"DATAGATE\",\"Sasboss\"]",
+      "siteAddress": "Suite 1A, 34 Sherwood Road, Toowong, Queensland, 4066",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0088",
+      "name": "Employment Office",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2426",
+      "name": "Empowering Hive",
+      "billingPlatforms": "[\"DATAGATE\"]",
+      "siteAddress": "Shop 111, Alexandra Hills Shopping Centre, 71 Cambridge Drive, Alexandra Hills, QLD, 4161",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0089",
+      "name": "Energy Pro Electrical",
+      "billingPlatforms": "[\"DATAGATE\",\"Sasboss\"]",
+      "siteAddress": "-, -, -, -, -",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0090",
+      "name": "Exceed Laser",
+      "billingPlatforms": "[]",
+      "siteAddress": "43 Bernoulli Street, Darra, Queensland, 4076",
+      "businessName": ""
+    },
+    {
+      "externalId": "C8C0B",
+      "name": "Exetel NBN Service (0701561050)",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0091",
+      "name": "Fast Cut Qld Pty Ltd",
+      "billingPlatforms": "[\"Sasboss\"]",
+      "siteAddress": "46 Matheson St, Virginia, Queensland, Australia, 4014",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0092",
+      "name": "First National Childers",
+      "billingPlatforms": "[\"Sasboss\", \"OneBill\"]",
+      "siteAddress": "PO Box 130, Childers, Childers, QLD, 4660",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0093",
+      "name": "Firstcare Doctors Pty Ltd",
+      "billingPlatforms": "[\"ECN\"]",
+      "siteAddress": "Unit A, 181 Elizabeth Street, Brisbane, QLD, 4000",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0094",
+      "name": "Flight Options",
+      "billingPlatforms": "[]",
+      "siteAddress": "19 Friendship Ave, Mudjimba, 4564",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0095",
+      "name": "Flutterbys Child Care",
+      "billingPlatforms": "[\"Sasboss\", \"OneBill\"]",
+      "siteAddress": "234 Albany Creek Rd, BRIDGEMAN DOWNS, Albany Creek, QLD, 4035",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2562",
+      "name": "FORRESTFIELD FORUM SHOP 23M, 20 STRELITZIA AV, FORRESTFIELD WA",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2646",
+      "name": "Fortress Collision Repair Services Pty Ltd",
+      "billingPlatforms": "[\"DATAGATE\"]",
+      "siteAddress": "6 Telford Circuit, Yatala, QLD, 4207",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0096",
+      "name": "Fox and Thomas",
+      "billingPlatforms": "[]",
+      "siteAddress": "36 Marshall St, GOONDIWINDI, QLD, 4390",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0097",
+      "name": "Fritzenberger Southbank",
+      "billingPlatforms": "[\"OneBill\"]",
+      "siteAddress": "Shop 11 & 12, Little Stanley St, South Brisbane, QLD, 4101",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0098",
+      "name": "Froyay Hawthorne",
+      "billingPlatforms": "[\"OneBill\"]",
+      "siteAddress": "265 Hawthorne Rd, Hawthorne, QLD, 4171",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0099",
+      "name": "Gainsdale Pty Ltd ATF The G.F. Turner Family Trust",
+      "billingPlatforms": "[\"DATAGATE\"]",
+      "siteAddress": "PO Box 108, Fortitude Valley, QLD, 4006",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0100",
+      "name": "Gateway Containers",
+      "billingPlatforms": "[\"DATAGATE\"]",
+      "siteAddress": "102 Gosport Street, Hemmant, QLD, 4174",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0101",
+      "name": "GBA Consulting Engineers",
+      "billingPlatforms": "[\"ECN\", \"OneBill\"]",
+      "siteAddress": "73 Elm St, Barcaldine, QLD, 4725",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0102",
+      "name": "Geebung Medical Clinic",
+      "billingPlatforms": "[\"ECN\"]",
+      "siteAddress": "Office 2 328 Newman Rd, GEEBUNG, QLD, 4034",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2899",
+      "name": "GEORGE'S LOADER HIRE PTY LTD",
+      "billingPlatforms": "NULL",
+      "siteAddress": "262 Bowhill Road, Willawong, Queensland, 4110",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0103",
+      "name": "Gladstone GP Super Clinic",
+      "billingPlatforms": "[\"ECN\"]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2427",
+      "name": "GMG",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2647",
+      "name": "Goodhew Electrical & Solar",
+      "billingPlatforms": "[\"DATAGATE\"]",
+      "siteAddress": "Unit 15, 26-32 Weippin Street, Cleveland, QLD, 4163",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0104",
+      "name": "Gordon Orchards Pty Ltd",
+      "billingPlatforms": "[\"ECN\",\"Sasboss\"]",
+      "siteAddress": "165 Langbeckers East Road, WOONGARRA, Woongarra, QLD, 4670",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0105",
+      "name": "Gorman & Co",
+      "billingPlatforms": "[\"OneBill\"]",
+      "siteAddress": "Unit 3, 189 Gorman Drive, Googong, NSW, 2620",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0107",
+      "name": "Graphene Manufacturing Australia",
+      "billingPlatforms": "[\"Sasboss\",\"DATAGATE\"]",
+      "siteAddress": "Unit 5, 848 Boundary Road, RICHLANDS, QLD, 4077",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0110",
+      "name": "Greg & Jan Taylor",
+      "billingPlatforms": "[\"ECN\",\"Sasboss\"]",
+      "siteAddress": "44 Mary Street, ALEXANDRA HEADLAND, Queensland, Australia, 4572",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0111",
+      "name": "Groundswell Accounting & Advisory",
+      "billingPlatforms": "[\"Sasboss\"]",
+      "siteAddress": "32 Sunshine Beach Road,, Noosa Heads, QLD, 4567",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0112",
+      "name": "Grunskes By The River",
+      "billingPlatforms": "[\"Sasboss\"]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0113",
+      "name": "Gumdale Dentists",
+      "billingPlatforms": "[\"ECN\"]",
+      "siteAddress": "Shop 22 682-696 New Cleveland Rd, GUMDALE, QLD, 4154",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0114",
+      "name": "Gumdale Medical Center",
+      "billingPlatforms": "[\"ECN\"]",
+      "siteAddress": "Shop 22 682-696 New Cleveland Rd, GUMDALE, QLD, 4154",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2629",
+      "name": "Gumdale Medical Centre",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7379",
+      "name": "GWCP 100/100",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0115",
+      "name": "Haig St Cafe",
+      "billingPlatforms": "[\"OneBill\"]",
+      "siteAddress": "Unit 4-5, 28-30 Musgrave Street, Coolangatta, QLD, 4225",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0116",
+      "name": "Hanwha Mining Services",
+      "billingPlatforms": "[\"DATAGATE\"]",
+      "siteAddress": "GPO Box 274, Brisbane, Queensland, 4001",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0117",
+      "name": "Harajuku Gyoza Albert Lane",
+      "billingPlatforms": "[\"OneBill\"]",
+      "siteAddress": "Shop 10/T & G Building, 141 Queen St, Brisbane City, QLD, 4000",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0118",
+      "name": "Havilah Medical Centre Doreen",
+      "billingPlatforms": "[\"ECN\"]",
+      "siteAddress": "Unit 2 20 Yellow Brick Rd, DOREEN, Victoria, Australia, 3754",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2556",
+      "name": "HAYTER COURT SHOP 1B, 1 STEWART RD, CURRUMBIN WATERS QLD",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7555",
+      "name": "Hazelwood Estate",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": "Hazelwood Estate"
+    },
+    {
+      "externalId": "C2648",
+      "name": "Hefford Hampton Lawyers",
+      "billingPlatforms": "[\"DATAGATE\"]",
+      "siteAddress": "1467 Anzac Avenue, Kallangur, Queensland, 4503",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2903",
+      "name": "Hemmingway Financial Pty Ltd",
+      "billingPlatforms": "[]",
+      "siteAddress": "140 George Street, Bundaberg West, Queensland, Australia, 4670",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0119",
+      "name": "Hervey Bay Garden Centre",
+      "billingPlatforms": "[\"ECN\",\"Sasboss\"]",
+      "siteAddress": "LOT 15 132 SCRUB HILL RD, Hervey Bay, QLD, 4655",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2429",
+      "name": "Hip Pocket",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0120",
+      "name": "Hip Pocket Logan",
+      "billingPlatforms": "[\"DATAGATE\"]",
+      "siteAddress": "1/440 Kingston Road, Corner Queens Road, Slacks Creek, QLD, 4127",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0121",
+      "name": "HKS Financial Planning",
+      "billingPlatforms": "[\"OneBill\"]",
+      "siteAddress": "Level 1, Unit 3, 416 Logan Road, Stones Corner, QLD, 4120",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0122",
+      "name": "Holy Shot",
+      "billingPlatforms": "[\"OneBill\"]",
+      "siteAddress": "938 Brunswick st, Newfarm, QLD, 4005",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2558",
+      "name": "HYATT COMPLEX UN L3-07, 99 ADELAIDE TCE, EAST PERTH WA",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2430",
+      "name": "IHCA",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0123",
+      "name": "Institute for Healthy Communities Australia",
+      "billingPlatforms": "[\"Sasboss\", \"OneBill\"]",
+      "siteAddress": "Level 1, 73-77 Russell Street, 39 Sherwood Road, West End, Queensland, 4101",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0124",
+      "name": "Integrated Oral and Maxillofacial Surgery Pty Ltd",
+      "billingPlatforms": "[\"Sasboss\", \"OneBill\"]",
+      "siteAddress": "5/68 Jessica Boulevard, Minyama, Queensland, Australia, 4575",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0125",
+      "name": "Jack Green",
+      "billingPlatforms": "[\"Sasboss\"]",
+      "siteAddress": "30 Claremont Dr, MAROOCHYDORE, MAROOCHYDORE, QLD, 4558",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0126",
+      "name": "Jayden Adams",
+      "billingPlatforms": "[\"ECN\"]",
+      "siteAddress": "25 Halyard Dr, WURTULLA, Wurtulla, QLD, 4575",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2649",
+      "name": "JDH Industrial",
+      "billingPlatforms": "[\"DATAGATE\"]",
+      "siteAddress": "93 Rochedale Road, Rochedale, QLD, 4123",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2900",
+      "name": "Jellinbah Mining Pty Ltd",
+      "billingPlatforms": "NULL",
+      "siteAddress": "Level 20, 66 Eagle Street, Brisbane, Queensland, Australia, 4000",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0127",
+      "name": "Jema Clinic",
+      "billingPlatforms": "[\"ECN\"]",
+      "siteAddress": "Shop 6 133 Lennox St, MARYBOROUGH, QLD, 4650",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0128",
+      "name": "Jilrift Pty Ltd",
+      "billingPlatforms": "[\"DATAGATE\"]",
+      "siteAddress": "PO Box 108, Fortitude Valley, QLD, 4006",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0129",
+      "name": "Jude Turner",
+      "billingPlatforms": "[\"DATAGATE\"]",
+      "siteAddress": "-, -, -, -, -",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0130",
+      "name": "Just Better Care",
+      "billingPlatforms": "[\"Sasboss\", \"OneBill\"]",
+      "siteAddress": "Level 1, Chermside Health Hub, 621 Gympie Road, Chermside, QLD, 4032",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0131",
+      "name": "Kaleidoscope Australasia Pty Ltd",
+      "billingPlatforms": "[\"Sasboss\"]",
+      "siteAddress": "11 Enterprise Street, Richlands, QLD, 4077",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2565",
+      "name": "KARRATHA CITY SHOPPING CENTRE SHOP 1, 16 SHARPE AV, KARRATHA WA",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0132",
+      "name": "Kawana Family Clinic",
+      "billingPlatforms": "[\"ECN\"]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0133",
+      "name": "KHM Group Investments",
+      "billingPlatforms": "[\"OneBill\"]",
+      "siteAddress": "Shop 2, 1927 Beaudesert Rd, Calamvale, QLD, 4116",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2497",
+      "name": "KSK K108, 1151 CREEK RD, CARINDALE QLD",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2460",
+      "name": "LAGUNA ON HASTINGS SHOP 7, 32 HASTINGS ST, NOOSA HEADS QLD",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2896",
+      "name": "Lake Vermont Resources Pty Ltd",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2650",
+      "name": "Law in Business",
+      "billingPlatforms": "[\"DATAGATE\"]",
+      "siteAddress": "107 Maud Street, Maroochydore, QLD, 4575",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0134",
+      "name": "Lead Childcare Pty Ltd",
+      "billingPlatforms": "[\"DATAGATE\"]",
+      "siteAddress": "144 Cecily Street, Kallangur, QLD, 4503",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2431",
+      "name": "Lead Education",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0135",
+      "name": "Lead Education and Training Pty Ltd ATF the Piara",
+      "billingPlatforms": "[]",
+      "siteAddress": "1467 Anzac Avenue, Kallangur, QLD, 4503",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0136",
+      "name": "Lead Institute",
+      "billingPlatforms": "[\"DATAGATE\",\"Sasboss\"]",
+      "siteAddress": "1467 Anzac Avenue, Kallangur, Queensland, 4503",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0137",
+      "name": "Leading Childcare Pty Ltd",
+      "billingPlatforms": "[\"DATAGATE\"]",
+      "siteAddress": "1467 Anzac Avenue, Kallangur, QLD, 4503",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2651",
+      "name": "Legrand AV Australia",
+      "billingPlatforms": "[\"DATAGATE\"]",
+      "siteAddress": "Unit 7, 8 Metroplex Avenue, Murarrie, QLD, 4172",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0138",
+      "name": "LFF Australia",
+      "billingPlatforms": "[\"DATAGATE\", \"OneBill\"]",
+      "siteAddress": "4B/400 Nudgee Rd, Hendra, QLD, 4011",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2432",
+      "name": "Lifestyle WC",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2652",
+      "name": "Lifestyle Wealth Creation Group",
+      "billingPlatforms": "[\"DATAGATE\"]",
+      "siteAddress": "Agnes St, Morningside, Queensland, 4170",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0139",
+      "name": "LINK TRADING",
+      "billingPlatforms": "[\"DATAGATE\"]",
+      "siteAddress": "Unit 1, 51 Fulcrum St, Richlands, QLD, 4077",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0140",
+      "name": "Little Cha Bateau Bay",
+      "billingPlatforms": "[\"OneBill\"]",
+      "siteAddress": "Shop K08, 12 Bay Village Rd, Bateau Bay, NSW, 2261",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0141",
+      "name": "Little Cha Charlestown",
+      "billingPlatforms": "[\"OneBill\"]",
+      "siteAddress": "Kiosk K803 Charlestown Square, Pearson Street, CHARLESTOWN, NSW, 2290",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7453",
+      "name": "Little Cha Eastgardens",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0142",
+      "name": "Little Cha Erina Fair",
+      "billingPlatforms": "[\"OneBill\"]",
+      "siteAddress": "Shop TK01/Erina Fair Shopping Centre, Terrigal Dr, Erina, NSW, 2250",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0143",
+      "name": "Little Cha Forest Way",
+      "billingPlatforms": "[\"OneBill\"]",
+      "siteAddress": "K03, Forestway Shopping Centre, French Forest, NSW, 2086",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0144",
+      "name": "Little Cha Green Hills",
+      "billingPlatforms": "[\"OneBill\"]",
+      "siteAddress": "Shop K123/Stockland Green Hills, 1 Molly Morgan Drive, East Maitland, NSW, 2323",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0145",
+      "name": "Little Cha Lake Haven",
+      "billingPlatforms": "[\"OneBill\"]",
+      "siteAddress": "Shop K10, Lake Haven centre, Lake Haven, NSW, 2263",
+      "businessName": ""
+    },
+    {
+      "externalId": "C1408",
+      "name": "Little Cha Mt Druitt",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0146",
+      "name": "Little Cha Mt. Druitt",
+      "billingPlatforms": "[\"OneBill\"]",
+      "siteAddress": "Shop K29A/Westfield Mt Druitt, Carlisle Ave, Mount Druitt, NSW, 2770",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0147",
+      "name": "Little Cha St Ives",
+      "billingPlatforms": "[\"OneBill\"]",
+      "siteAddress": "Shop 145/St Ives Shopping Village, 166 Mona Vale Road, St Ives, NSW, 2075",
+      "businessName": ""
+    },
+    {
+      "externalId": "C1413",
+      "name": "Little Cha St. Ives",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0148",
+      "name": "Little Cha Tuggerah",
+      "billingPlatforms": "[\"OneBill\"]",
+      "siteAddress": "Shop K133/Westfield Tuggerah, 50 Wyong Rd, Tuggerah, NSW, 2259",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0149",
+      "name": "Livingstone Low Electrical Pty Ltd (94171)",
+      "billingPlatforms": "[\"OneBill\"]",
+      "siteAddress": "4/4-6 Phoebe Crescent, Kingston, QLD, 4670",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0150",
+      "name": "Locanda Pty Ltd",
+      "billingPlatforms": "[\"ECN\"]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0151",
+      "name": "Logan Central Family Clinic",
+      "billingPlatforms": "[\"ECN\"]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0152",
+      "name": "London Fire And Safe",
+      "billingPlatforms": "[\"Sasboss\"]",
+      "siteAddress": "-, -, -, -, -",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2538",
+      "name": "LOT 19 PALMETTO ST, CHEVALLUM QLD",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2624",
+      "name": "LOT 2, 188 WAYNE GOSS DR, BERRINBA QLD",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0153",
+      "name": "Love to Learn Childcare Pty Ltd",
+      "billingPlatforms": "[]",
+      "siteAddress": "84 Westfield Road, Kelmscott, Western Australia, 6111",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0154",
+      "name": "Loving Tan",
+      "billingPlatforms": "[\"Sasboss\"]",
+      "siteAddress": "Unit 1, 37-39 Qantas Drive, Brisbane Airport, Queensland, Australia, 4008",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0155",
+      "name": "Ma Pa Me",
+      "billingPlatforms": "[\"OneBill\"]",
+      "siteAddress": "Shop 6AC, Little Stanley Street, South Brisbane, QLD, 4101",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0156",
+      "name": "MacKellar Group",
+      "billingPlatforms": "[]",
+      "siteAddress": "Suite 3, 1 Gardak Street, Alexandra Headland, QLD, 4572",
+      "businessName": ""
+    },
+    {
+      "externalId": "C6845",
+      "name": "Makris Gold Coast",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0157",
+      "name": "Mammoth Underground Mine Management Pty Ltd",
+      "billingPlatforms": "[]",
+      "siteAddress": "Level 3, 10 Market St, Brisbane, Queensland, Australia, 4000",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0158",
+      "name": "Maroochydore Doctors at Sunshine Plaza",
+      "billingPlatforms": "[\"ECN\"]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0159",
+      "name": "Mega Electrics",
+      "billingPlatforms": "[\"DATAGATE\", \"Sasboss\", \"OneBill\"]",
+      "siteAddress": "290 Darebin Rd, Fairfield, VIC, 3078",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0160",
+      "name": "Michael McNamara",
+      "billingPlatforms": "[\"OneBill\"]",
+      "siteAddress": "133 WOONGARRA SCENIC DR, BARGARA, QLD, 4670",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0161",
+      "name": "Middlemount Coal Pty Ltd",
+      "billingPlatforms": "[\"DATAGATE\"]",
+      "siteAddress": "MIDDLEMOUNT COAL MINE, MIDDLEMOUNT /DYSART RD, MIDDLEMOUNT, QUEENSLAND, AUSTRALIA, 4746",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2654",
+      "name": "Mischief Travel",
+      "billingPlatforms": "[\"DATAGATE\"]",
+      "siteAddress": "-",
+      "businessName": ""
+    },
+    {
+      "externalId": "C_MOMC",
+      "name": "Mooloolaba Osteopathy and Massage Centre",
+      "billingPlatforms": "[\"OneBill\"]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0162",
+      "name": "Mother Duck - Bellbowrie",
+      "billingPlatforms": "[]",
+      "siteAddress": "38 Sugarwood St, Bellbowrie, Queensland, Australia, 4070",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0163",
+      "name": "Mother Duck - Eatons Hill",
+      "billingPlatforms": "[\"OneBill\"]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0164",
+      "name": "Mother Duck Bracken Ridge",
+      "billingPlatforms": "[\"ECN\"]",
+      "siteAddress": "92 Barrett Street, Bracken Ridge, QLD, 4017",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0165",
+      "name": "Mother Duck Enoggera Pty Ltd",
+      "billingPlatforms": "[\"ECN\"]",
+      "siteAddress": "36 Glenalva Tce, ENOGGERA, Enoggera, QLD, 4051",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0166",
+      "name": "Mount Cotton Medical Centre",
+      "billingPlatforms": "[\"ECN\"]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2630",
+      "name": "Mount Gravatt NBN",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2653",
+      "name": "MSR Collision",
+      "billingPlatforms": "[\"DATAGATE\"]",
+      "siteAddress": "17 Secam Street, Mansfield, QLD",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0167",
+      "name": "NDC PLASTIC MOULDING PTY LTD",
+      "billingPlatforms": "[]",
+      "siteAddress": "3/123 Bancroft Road, Pinkenba, QLD, 4008",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2893",
+      "name": "NICKI'S PROFESSIONAL SECURITY SCREENS AND BLINDS",
+      "billingPlatforms": "NULL",
+      "siteAddress": "45 Figbird Crescent, Buderim, Queensland, Australia, 4556",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0168",
+      "name": "Niclin Constructions Pty Ltd",
+      "billingPlatforms": "[]",
+      "siteAddress": "5B/57 Miller Street,, Murarrie, Queensland, Australia, 4172",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2433",
+      "name": "Niecon",
+      "billingPlatforms": "[]",
+      "siteAddress": "-, -, -, -, -",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0169",
+      "name": "Nina Bambino Dental",
+      "billingPlatforms": "[\"DATAGATE\",\"Sasboss\"]",
+      "siteAddress": "149 Waterworks Rd, Ashgrove, Queensland, 4060",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0170",
+      "name": "Nitty-Gritty Organics",
+      "billingPlatforms": "[\"OneBill\"]",
+      "siteAddress": "5/661 Oxley Rd, Corinda, QLD, 4075",
+      "businessName": ""
+    },
+    {
+      "externalId": "C1406",
+      "name": "Nodo Camp Hill",
+      "billingPlatforms": "[\"OneBill\"]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C9002",
+      "name": "Nodo Grey Street",
+      "billingPlatforms": "[\"OneBill\"]",
+      "siteAddress": "",
+      "businessName": "Nodo Pty Ltd"
+    },
+    {
+      "externalId": "C9001",
+      "name": "Nodo Newstead",
+      "billingPlatforms": "[\"OneBill\"]",
+      "siteAddress": "",
+      "businessName": "Nodo Pty Ltd"
+    },
+    {
+      "externalId": "C0171",
+      "name": "Nodo Pty Ltd",
+      "billingPlatforms": "[\"OneBill\"]",
+      "siteAddress": "1 Ella street, Newstead, QLD, 4006",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0172",
+      "name": "Noma Themba",
+      "billingPlatforms": "[\"Sasboss\"]",
+      "siteAddress": "31 Blackbeauty Court, Kensington, Queensland, Australia, 4670",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0173",
+      "name": "North Brisbane Cardiology Pty Ltd",
+      "billingPlatforms": "[\"ECN\"]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2902",
+      "name": "North Coast Mower Centre",
+      "billingPlatforms": "[]",
+      "siteAddress": "36 Coronation Ave, Nambour, NAMBOUR, QLD, 4560",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0174",
+      "name": "North West Hospital Cardiology",
+      "billingPlatforms": "[\"ECN\"]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0175",
+      "name": "Norwest Strata Management Pty Limited",
+      "billingPlatforms": "[]",
+      "siteAddress": "214/14-16 Lexington Drive, Bella Vista, New South Wales, Australia, 2153",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7459",
+      "name": "Notes Test 1773461064996",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7464",
+      "name": "Notes Test 1773461713605",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7470",
+      "name": "Notes Test 1773461872788",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7478",
+      "name": "Notes Test 1773464994254",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7484",
+      "name": "Notes Test 1773465032906",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7490",
+      "name": "Notes Test 1773472911956",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7496",
+      "name": "Notes Test 1773472945296",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7501",
+      "name": "Notes Test 1773480861375",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7507",
+      "name": "Notes Test 1773480897305",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7512",
+      "name": "Notes Test 1773480956122",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7518",
+      "name": "Notes Test 1773896998194",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7523",
+      "name": "Notes Test 1773897087747",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7528",
+      "name": "Notes Test 1773897220772",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7533",
+      "name": "Notes Test 1773897255695",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7538",
+      "name": "Notes Test 1773898991763",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7543",
+      "name": "Notes Test 1773901664269",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7548",
+      "name": "Notes Test 1773901903556",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7553",
+      "name": "Notes Test 1773901984371",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7583",
+      "name": "Notes Test 1773983860493",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C9008",
+      "name": "Notes Test 1774147644450",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7556",
+      "name": "Novus Glass",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": "Novus Glass"
+    },
+    {
+      "externalId": "C0176",
+      "name": "Nu-Dev Pty Ltd",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0177",
+      "name": "Nurturing Brain Potential",
+      "billingPlatforms": "[\"DATAGATE\",\"Sasboss\"]",
+      "siteAddress": "Unit 2, 449 Lytton Rd, Morningside, Queensland, 4170",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0178",
+      "name": "Oakhurst Gun Works",
+      "billingPlatforms": "[\"ECN\",\"Sasboss\"]",
+      "siteAddress": "67 Woocoo Dr, OAKHURST, Oakhurst, QLD, 4650",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0179",
+      "name": "OceanMed Enterprises Pty Ltd",
+      "billingPlatforms": "[\"ECN\"]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2534",
+      "name": "OFFC 14A, 100 EDWARD ST, BRISBANE CITY QLD",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2617",
+      "name": "OFFC 17 123 EAGLE ST BRISBANE CITY QLD 4000 BRISBANE CITY",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2516",
+      "name": "OFFC T103, 115 DUNNING AV, ROSEBERY NSW",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2569",
+      "name": "OFFC T17, 11 JOHN HINES AV, MINCHINBURY NSW",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2577",
+      "name": "ORANGE CENTRAL SHOP 43, 227 SUMMER ST, ORANGE NSW",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2635",
+      "name": "Osprey",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2469",
+      "name": "OTHER 3, 116 RACECOURSE RD, ASCOT QLD",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0180",
+      "name": "Pacific Flooring Services",
+      "billingPlatforms": "[]",
+      "siteAddress": "Unit 1A, 25 Michlin St, Moorooka, QLD, 4105",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0181",
+      "name": "Paedicare Pty Ltd",
+      "billingPlatforms": "[\"DATAGATE\",\"Sasboss\"]",
+      "siteAddress": "Salmon Building, Suite 6, Level 2, 537 Stanley Street, South Brisbane, QLD, 4101",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0182",
+      "name": "Paxton-Hall Lawyers Pty Ltd",
+      "billingPlatforms": "[]",
+      "siteAddress": "Lvl 10, 15 Adelaide Street, Brisbane City, 4000",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0183",
+      "name": "PD Capital",
+      "billingPlatforms": "[\"Sasboss\"]",
+      "siteAddress": "Suite 7c, Level 7, 307 Queen St, Brisbane, QLD, 4000",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2507",
+      "name": "PEPPERS , 57 EKERTS RD, POKOLBIN NSW",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0184",
+      "name": "Physio On Wheels",
+      "billingPlatforms": "[\"OneBill\"]",
+      "siteAddress": "1185b Old North Road, WARNER, Warner, QLD, 4500",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0185",
+      "name": "PIP Theatre",
+      "billingPlatforms": "[\"DATAGATE\"]",
+      "siteAddress": "Unit 32, 20 Park Road, Milton, QLD, 4064",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2655",
+      "name": "Pleasure Cruises and Safaris",
+      "billingPlatforms": "[\"DATAGATE\"]",
+      "siteAddress": "North Lakes, QLD, 4509",
+      "businessName": ""
+    },
+    {
+      "externalId": "C1411",
+      "name": "Poppy G's Burgers",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0186",
+      "name": "Poppy G's Midland",
+      "billingPlatforms": "[\"OneBill\"]",
+      "siteAddress": "Unit B 2/16A Lloyd St, Midland, WA, 6056",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2434",
+      "name": "Premier Strata Management",
+      "billingPlatforms": "[]",
+      "siteAddress": "6/175 Briens Road, Northmead, NSW, 2152",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2656",
+      "name": "Primary Securities Limited ATF",
+      "billingPlatforms": "[\"DATAGATE\"]",
+      "siteAddress": "Care of CMC Property, 8/481 Gympie Road, Strathpine, QLD, 4500",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0187",
+      "name": "Promogear",
+      "billingPlatforms": "[\"DATAGATE\",\"Sasboss\"]",
+      "siteAddress": "Unit 7 / 500 Lytton Road, Morningside, Queensland, 4170",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2901",
+      "name": "PRW LOGISTICS PTY LTD",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2435",
+      "name": "QCOS Orthopaedic",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0188",
+      "name": "QCOS Orthopaedic Pty Ltd",
+      "billingPlatforms": "[]",
+      "siteAddress": "Level 10, Suite 14 / 24 Chasely Street, Auchenflower, Queensland, 4066",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0189",
+      "name": "Queensland Children's Gastroenterology",
+      "billingPlatforms": "[\"DATAGATE\",\"Sasboss\"]",
+      "siteAddress": "Salmon Building Suite 6, Level2/537 Stanley Street, South Brisbane, QLD, 4101",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0190",
+      "name": "Red Ridge Produce",
+      "billingPlatforms": "[\"ECN\",\"Sasboss\"]",
+      "siteAddress": "3748 Goodwood Rd, KINKUNA, Kinkuna, QLD, 4670",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2898",
+      "name": "Red Roo Australia",
+      "billingPlatforms": "[\"OneBill\"]",
+      "siteAddress": "3/45 Kingtel Place, Geebung, Queensland, Australia, 4034",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0191",
+      "name": "RedRoo Australia",
+      "billingPlatforms": "[\"DATAGATE\"]",
+      "siteAddress": "-, -, -, -, -",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0192",
+      "name": "Reezo Kebab",
+      "billingPlatforms": "[\"OneBill\"]",
+      "siteAddress": "3/8 Dwyer Turn, Joondalup, Western Australia, 6027",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2892",
+      "name": "Renovo Solutions Pty Ltd",
+      "billingPlatforms": "[]",
+      "siteAddress": "42 Manning Street, South Brisbane, QLD, 4101",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0193",
+      "name": "Rentokil Initial Pty Ltd",
+      "billingPlatforms": "[\"DATAGATE\"]",
+      "siteAddress": "9/42 Beerburrum Road, Caboolture, QLD, 4510",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0194",
+      "name": "Res-Com Air Conditioning Pty Ltd",
+      "billingPlatforms": "[\"DATAGATE\"]",
+      "siteAddress": "Unit 4, 40 Proprietary Street, Tingalpa, Queensland, 4173",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2436",
+      "name": "ResCom",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0195",
+      "name": "Rickys Noosa",
+      "billingPlatforms": "[\"ECN\"]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0196",
+      "name": "Rio Capurso",
+      "billingPlatforms": "[]",
+      "siteAddress": "34 Whyandra Close, Doonan, Queensland, Australia, 4562",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0197",
+      "name": "River City Maintenance",
+      "billingPlatforms": "[\"DATAGATE\",\"Sasboss\"]",
+      "siteAddress": "10 Moore Street, Albion, QLD, 4010",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2657",
+      "name": "River Quarter No. 3 Development Co. Pty Ltd",
+      "billingPlatforms": "[\"DATAGATE\"]",
+      "siteAddress": "3a Cambridge Street, West End, QLD, 4101",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0198",
+      "name": "Riverside Development Pty Ltd",
+      "billingPlatforms": "[]",
+      "siteAddress": "Riparian Plaza, Building Management Office, Level 24, 71 Eagle Street, Brisbane, 4000",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2905",
+      "name": "Riverside Marine",
+      "billingPlatforms": "NULL",
+      "siteAddress": "Campbell House, 161 Breakfast Creek Rd, Newstead, QLD, 4006",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0199",
+      "name": "RND Pilates Pty Ltd",
+      "billingPlatforms": "[\"Sasboss\"]",
+      "siteAddress": "-, -, -, -, -",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0200",
+      "name": "Roberts Roofing and Plumbing",
+      "billingPlatforms": "[\"OneBill\"]",
+      "siteAddress": "Shed 1, 23 McLearn Street, Bundaberg, Queensland, QLD, 4670",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0201",
+      "name": "Rochedale Doctors",
+      "billingPlatforms": "[\"ECN\"]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0202",
+      "name": "Rochedale Village Doctors",
+      "billingPlatforms": "[\"ECN\"]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0203",
+      "name": "Rockwell Technology",
+      "billingPlatforms": "[\"Sasboss\", \"OneBill\"]",
+      "siteAddress": "37 Access Avenue, Yatala, QLD, 4207",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0204",
+      "name": "Rode Medical Clinic",
+      "billingPlatforms": "[\"ECN\"]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2475",
+      "name": "ROOM CCTV, 95 NORTH QY, BRISBANE CITY QLD",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2609",
+      "name": "ROOM COMMS FCTY, 776 BRUNSWICK ST, NEW FARM QLD",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0205",
+      "name": "RSSGM Pty Ltd for Zambrero Cranbourne North",
+      "billingPlatforms": "[\"OneBill\"]",
+      "siteAddress": "Retail 2, 1585 Thompsons Rd, Cranbourne North, VIC, 3977",
+      "businessName": "RSSGM Pty Ltd"
+    },
+    {
+      "externalId": "C0206",
+      "name": "Rumi Persian Restaurant",
+      "billingPlatforms": "[\"OneBill\"]",
+      "siteAddress": "8/90 Surf Parade, Broadbeach, QLD, 4218",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0207",
+      "name": "RVC ICT Consulting",
+      "billingPlatforms": "[]",
+      "siteAddress": "14 Page St, NORTH LAKES, QLD, 4509",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2440",
+      "name": "Salter Brothers",
+      "billingPlatforms": "[\"DATAGATE\"]",
+      "siteAddress": "PO Box 108, Fortitude Valley, QLD, 4006",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0208",
+      "name": "Salter Brothers (Clovelly) Pty Ltd",
+      "billingPlatforms": "[\"DATAGATE\"]",
+      "siteAddress": "68 Balmoral Road, Montville, QLD, 4560",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0209",
+      "name": "Salter Brothers (Guesthouse) Pty Ltd",
+      "billingPlatforms": "[\"DATAGATE\"]",
+      "siteAddress": "57 Ekerts Road, Pokolbin, NSW, 2320",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0210",
+      "name": "Salter Brothers (Peak Lodge) Pty Ltd",
+      "billingPlatforms": "[\"DATAGATE\"]",
+      "siteAddress": "Wilkinson Road, Maryvale, QLD, 4370",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0211",
+      "name": "Salter Brothers (Sangoma) Pty Ltd",
+      "billingPlatforms": "[\"DATAGATE\"]",
+      "siteAddress": "70 Grandview Lane, Bowen Mountain, NSW, 2753",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0212",
+      "name": "Salter Brothers (Tamarind) Pty Ltd",
+      "billingPlatforms": "[\"DATAGATE\"]",
+      "siteAddress": "88 Obi Lane South, Maleny, QLD, 4552",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0213",
+      "name": "Salter Brothers (Vineyards) Pty Ltd",
+      "billingPlatforms": "[\"DATAGATE\"]",
+      "siteAddress": "555 Hermitage Road, Pokalbin, NSW, 2320",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7554",
+      "name": "Salter Brothers Hospitality",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": "Salter Brothers Hospitality Pty Ltd"
+    },
+    {
+      "externalId": "C0214",
+      "name": "Salter Brothers Luxury Collection Operations Pty LTD",
+      "billingPlatforms": "[\"DATAGATE\"]",
+      "siteAddress": "168 Knapp St, Fortitude Valley, QLD, 4006",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0216",
+      "name": "Salter Brothers Management Company Pty Ltd t/a Spicers Potts Point",
+      "billingPlatforms": "[\"DATAGATE\"]",
+      "siteAddress": "120 â€“ 124 Victoria Street, Potts Point, NSW, 2011",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2904",
+      "name": "Scout Talent Pty Ltd",
+      "billingPlatforms": "NULL",
+      "siteAddress": "265 Coronation Dr, Milton, Queensland, Australia, 4064",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2465",
+      "name": "SE 1, 200 MARY ST, BRISBANE CITY QLD",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2493",
+      "name": "SE 1, 4 FIRST AV, MAROOCHYDORE QLD",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2479",
+      "name": "SE 2, 74 VICTORIA PDE, ROCKHAMPTON CITY QLD",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2501",
+      "name": "SE 7C, 307 QUEEN ST, BRISBANE CITY QLD",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2552",
+      "name": "SEA COOLUM SHOP 2, 1796 DAVID LOW WAY, COOLUM BEACH QLD",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7457",
+      "name": "Sequential Test A 1773461063644",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7462",
+      "name": "Sequential Test A 1773461712169",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7468",
+      "name": "Sequential Test A 1773461871371",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7476",
+      "name": "Sequential Test A 1773464992954",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7482",
+      "name": "Sequential Test A 1773465031529",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7488",
+      "name": "Sequential Test A 1773472910530",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7494",
+      "name": "Sequential Test A 1773472943910",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7499",
+      "name": "Sequential Test A 1773480860008",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7505",
+      "name": "Sequential Test A 1773480895934",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7510",
+      "name": "Sequential Test A 1773480954704",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7516",
+      "name": "Sequential Test A 1773896996763",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7521",
+      "name": "Sequential Test A 1773897086302",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7526",
+      "name": "Sequential Test A 1773897219367",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7531",
+      "name": "Sequential Test A 1773897254258",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7536",
+      "name": "Sequential Test A 1773898990330",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7541",
+      "name": "Sequential Test A 1773901662855",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7546",
+      "name": "Sequential Test A 1773901902131",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7551",
+      "name": "Sequential Test A 1773901982922",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7581",
+      "name": "Sequential Test A 1773983859182",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C9006",
+      "name": "Sequential Test A 1774147642389",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7458",
+      "name": "Sequential Test B 1773461063644",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7463",
+      "name": "Sequential Test B 1773461712169",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7469",
+      "name": "Sequential Test B 1773461871371",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7477",
+      "name": "Sequential Test B 1773464992954",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7483",
+      "name": "Sequential Test B 1773465031529",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7489",
+      "name": "Sequential Test B 1773472910530",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7495",
+      "name": "Sequential Test B 1773472943910",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7500",
+      "name": "Sequential Test B 1773480860008",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7506",
+      "name": "Sequential Test B 1773480895934",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7511",
+      "name": "Sequential Test B 1773480954704",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7517",
+      "name": "Sequential Test B 1773896996763",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7522",
+      "name": "Sequential Test B 1773897086302",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7527",
+      "name": "Sequential Test B 1773897219367",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7532",
+      "name": "Sequential Test B 1773897254258",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7537",
+      "name": "Sequential Test B 1773898990330",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7542",
+      "name": "Sequential Test B 1773901662855",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7547",
+      "name": "Sequential Test B 1773901902131",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7552",
+      "name": "Sequential Test B 1773901982922",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7582",
+      "name": "Sequential Test B 1773983859182",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C9007",
+      "name": "Sequential Test B 1774147642389",
+      "billingPlatforms": "NULL",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2890",
+      "name": "Serenity Escapes Pty Ltd",
+      "billingPlatforms": "NULL",
+      "siteAddress": "468 The Esplanade, TORQUAY, Queensland, Australia, 4655",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0217",
+      "name": "Seven Digit’s Pty Ltd",
+      "billingPlatforms": "[\"OneBill\"]",
+      "siteAddress": "-, -, -, -, -",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0218",
+      "name": "Shailer Park Medical Centre",
+      "billingPlatforms": "[\"ECN\"]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2505",
+      "name": "SHOP 1, 23 MCLEAN ST, BUNDABERG CENTRAL QLD",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2526",
+      "name": "SHOP 1, 369 MORAYFIELD RD, MORAYFIELD QLD",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2491",
+      "name": "SHOP 1, 6 BUNYA PARK DR, EATONS HILL QLD",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2581",
+      "name": "SHOP 10, 148 THE ESPLANADE , SCARBOROUGH WA",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2550",
+      "name": "SHOP 11, 13 LAKE ST, CAROLINE SPRINGS VIC",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2582",
+      "name": "SHOP 11, 6 SHORELINE DR, HOWRAH TAS",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2546",
+      "name": "SHOP 11, 90 SURF PDE, BROADBEACH QLD",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2527",
+      "name": "SHOP 131, 400 NEWMARKET RD, NEWMARKET QLD",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2470",
+      "name": "SHOP 16, 72 WISES RD, BUDERIM QLD",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2500",
+      "name": "SHOP 1A, 25 MICHLIN ST, MOOROOKA QLD",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2553",
+      "name": "SHOP 1C, 2 CITY CENTRE DR, UPPER COOMERA QLD",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2625",
+      "name": "SHOP 2, 1796 DAVID LOW WAY, COOLUM BEACH QLD",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2519",
+      "name": "SHOP 2, 188 WAYNE GOSS DR, BERRINBA QLD",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2528",
+      "name": "SHOP 2, 2 MASON ST, NORTH LAKES QLD",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2570",
+      "name": "SHOP 2, 3 BERGEN WAY, MINDARIE WA",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2559",
+      "name": "SHOP 2, 97 ELIZABETH ST, MELBOURNE VIC",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2529",
+      "name": "SHOP 2.1, 74 TRIBUNE ST, SOUTH BRISBANE QLD",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2547",
+      "name": "SHOP 22, 248 IPSWICH RD, WOOLLOONGABBA QLD",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2496",
+      "name": "SHOP 3, 1 ELLA ST, NEWSTEAD QLD",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2483",
+      "name": "SHOP 3, 416 LOGAN RD, STONES CORNER QLD",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2585",
+      "name": "SHOP 3, 50 SUBIACO SQUARE RD, SUBIACO WA",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2580",
+      "name": "SHOP 39, 300 POINT COOK RD, POINT COOK VIC",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2524",
+      "name": "SHOP 4, 166 ABBOTSFORD RD, BOWEN HILLS QLD",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2525",
+      "name": "SHOP 47, 16 AMAZONS PL, JINDALEE QLD",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2572",
+      "name": "SHOP 4E, 171 MORAYFIELD RD, MORAYFIELD QLD",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2571",
+      "name": "SHOP 5, 87 MOOLOOLABA ESP, MOOLOOLABA QLD",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2586",
+      "name": "SHOP 6, 40 EVANS ST, SUNBURY VIC",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2603",
+      "name": "Shop 65, 114 GREY STREET, SOUTH BRISBANE QLD",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2531",
+      "name": "Shop 8, 240 Stafford Rd, Stafford QLD",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2542",
+      "name": "SHOP 8, 3050 FRANKSTON-FLINDERS RD, BALNARRING VIC",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2573",
+      "name": "SHOP 9, 48 BARRY MARSHALL PDE, MURDOCH WA",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2591",
+      "name": "SHOP CR6, 3 ARCHIBALD AV, WATERLOO NSW",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2551",
+      "name": "SHOP F116A, 400 CRANBOURNE RD, NARRE WARREN SOUTH VIC",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2566",
+      "name": "SHOP G-038, 80 TAYLORS RD, KEILOR DOWNS VIC",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2522",
+      "name": "SHOP IDF-3B, 108 OLD CLEVELAND RD, CAPALABA QLD",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2487",
+      "name": "SHOP RETAIL 14, 8 CASTLEREAGH ST, SYDNEY NSW",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2560",
+      "name": "SHOP T3-4, 768 STAFFORD RD, EVERTON PARK QLD",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2549",
+      "name": "SHOP T3, 3 ALBERT ST, BUSSELTON WA",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2623",
+      "name": "SHP 1B, 1 STEWART RD, CURRUMBIN WATERS QLD",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C7473",
+      "name": "Signs ETC",
+      "billingPlatforms": "[\"OneBill\"]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0219",
+      "name": "Skimmer Lids Pty Ltd",
+      "billingPlatforms": "[\"ECN\"]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C9003",
+      "name": "Smile IT",
+      "billingPlatforms": "[\"OneBill\"]",
+      "siteAddress": "60 Enterprise Place, Tingalpa QLD 4173",
+      "businessName": "Smile IT Pty Ltd"
+    },
+    {
+      "externalId": "C2441",
+      "name": "Smile IT",
+      "billingPlatforms": "[\"DATAGATE\"]",
+      "siteAddress": "Level 1D Tingalpa Industrial Estate, 60 Enterprise Place, Tingalpa, QLD, 4173",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0220",
+      "name": "Solahart Brisbane",
+      "billingPlatforms": "[\"DATAGATE\"]",
+      "siteAddress": "Unit 2, 6 Gravel Pit Rd, Darra, Queensland, 4076",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2442",
+      "name": "Solar Centre Brisbane",
+      "billingPlatforms": "[\"DATAGATE\"]",
+      "siteAddress": "22/12 Esperance Court, Cleveland, QLD, 4163",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2658",
+      "name": "Solar Centre Ipswich",
+      "billingPlatforms": "[\"DATAGATE\"]",
+      "siteAddress": "3/1 Cairns Rd, Ebbw Vale, QLD, 4304",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0221",
+      "name": "Southside Specialist Medical and Geriatric Centre",
+      "billingPlatforms": "[\"ECN\"]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2443",
+      "name": "Sparrow Group Management",
+      "billingPlatforms": "[]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0222",
+      "name": "Sparrow Group Management Pty Ltd",
+      "billingPlatforms": "[\"Sasboss\"]",
+      "siteAddress": "Level 1, 20 Metroplex Ave, Murrarie, QLD, 4172",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0223",
+      "name": "Specialist Hail Repairs",
+      "billingPlatforms": "[\"DATAGATE\"]",
+      "siteAddress": "37 Access Avenue,, Yatala, QLD, 4207",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0224",
+      "name": "Spicers Hiddenvale",
+      "billingPlatforms": "[\"DATAGATE\"]",
+      "siteAddress": "617 Grandchester-Mt Mort Road, Grandchester, Queensland, 4340",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0225",
+      "name": "Spicers Scenic Rim Trail",
+      "billingPlatforms": "[\"DATAGATE\"]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C2446",
+      "name": "Spring Projects",
+      "billingPlatforms": "[\"DATAGATE\", \"OneBill\"]",
+      "siteAddress": "28 Church Street Fortitude Valley",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0226",
+      "name": "Sta Consulting Engineers",
+      "billingPlatforms": "[\"DATAGATE\",\"Sasboss\"]",
+      "siteAddress": "Freeway Office Park, Building 3, 2728 Logan Road, Eight Mile Plains, QLD, 4113",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0227",
+      "name": "Stafford City Doctors",
+      "billingPlatforms": "[\"ECN\"]",
+      "siteAddress": "",
+      "businessName": ""
+    },
+    {
+      "externalId": "C0228",
+      "name": "Stafford Dental Studio",
+      "billingPlatforms": "[\"ECN\"]",
+      "siteAddress": "",
+      "businessName": ""
+    }
+  ],
+  "messages": [],
+  "stdout": "externalId\tname\tbillingPlatforms\tsiteAddress\tbusinessName\nC2509\t1 WILKINSON RD, MARYVALE QLD\t[]\t\t\nC2574\t11 BROADWAY , NEDLANDS WA\t[]\t\t\nC2480\t11E PETERSEN ST, BUNDABERG EAST QLD\t[]\t\t\nC2510\t13 BROADWATER CL, BARGARA QLD\t[]\t\t\nC2461\t13 WINFIELD RD, ORMEAU QLD\t[]\t\t\nC2490\t133 WOONGARRA SCENIC DR, BARGARA QLD\t[]\t\t\nC2561\t134A STATION ST, FAIRFIELD VIC\t[]\t\t\nC2518\t149 GEORGE ST, BEENLEIGH QLD\t[]\t\t\nC2593\t154 HIGH ST, WODONGA VIC\t[]\t\t\nC2622\t16 A LLOYD ST, MIDLAND WA\t[]\t\t\nC2579\t166 SWAN ST, CREMORNE VIC\t[]\t\t\nC2568\t16A LLOYD ST, MIDLAND WA\t[]\t\t\nC2578\t200 ELLEN ST, PORT PIRIE SA\t[]\t\t\nC2567\t206 GLENFERRIE RD, MALVERN VIC\t[]\t\t\nC2508\t22 CREEDY ST, ROSEWOOD QLD\t[]\t\t\nC2613\t235 BRUNSWICK ST, FORTITUDE VALLEY QLD\t[]\t\t\nC2468\t25 PRODUCTION ST, SVENSSON HEIGHTS QLD\t[]\t\t\nC2541\t254 CARLISLE ST, BALACLAVA VIC\t[]\t\t\nC2597\t27A ANDERSON ST, YARRAVILLE VIC\t[]\t\t\nC2537\t2814 OLD GYMPIE RD, BEERWAH QLD\t[]\t\t\nC2489\t290 DAREBIN RD, FAIRFIELD VIC\t[]\t\t\nC2548\t3 CONNOR ST, BURLEIGH HEADS QLD\t[]\t\t\nC2473\t30 KEDRON AV, MITCHELTON QLD\t[]\t\t\nC2498\t31 BLACKBEAUTY CT, KENSINGTON QLD\t[]\t\t\nC2612\t36 MARSHALL ST, GOONDIWINDI QLD\t[]\t\t\nC2506\t37 ACCESS AV, YATALA QLD\t[]\t\t\nC2557\t378 DECEPTION BAY RD, DECEPTION BAY QLD\t[]\t\t\nC2610\t400 NUDGEE RD, HENDRA QLD\t[]\t\t\nC2476\t43 BERNOULLI ST, DARRA QLD\t[]\t\t\nC2595\t459 PACIFIC HWY, WYOMING NSW\t[]\t\t\nC2540\t461B Dean St, Albury NSW\t[]\t\t\nC2545\t476 CENTRE RD, BENTLEIGH VIC\t[]\t\t\nC2472\t49 DAWSON HWY, BILOELA QLD\t[]\t\t\nC2607\t5 CHURCH LANE, EMERALD QLD\t[]\t\t\nC2515\t500 TORQUAY RD, ARMSTRONG CREEK VIC\t[]\t\t\nC2512\t62 BEAL ST, MEADOWBROOK QLD\t[]\t\t\nC2539\t62 BYNG ST, ORANGE NSW\t[]\t\t\nC2482\t7 BARNSTAPLE ST, TORQUAY QLD\t[]\t\t\nC2478\t73 ELM ST, BARCALDINE QLD\t[]\t\t\nC2606\t74 78 VICTORIA PDE, ROCKHAMPTON CITY QLD\t[]\t\t\nC2588\t778 OLD PRINCES HWY, SUTHERLAND NSW\t[]\t\t\nC2464\t8 AUSTIN ST, NEWSTEAD QLD\t[]\t\t\nC2554\t93 CRONULLA ST, CRONULLA NSW\t[]\t\t\nC0001\tA & K Financial Planning Pty Ltd\t[\"Sasboss\", \"OneBill\"]\tSuite 16 72 Wises Rd, BUDERIM, Queensland, Australia, 4556\t\nC0002\tA M Emerick & T J Morrice\t[\"Sasboss\"]\t136 Tarrants Rd, CALAVOS, QLD, 4670\t\nC2887\tAccountant Ready Services\tNULL\t19B Juliet St, Mackay, Queensland, Australia, 4740\t\nC0003\tActive Living - Allen Developments Pty Ltd\t[\"Sasboss\", \"OneBill\"]\tUnit 3, Eloura Towers, 81 Sixth AV, Maroochydore, QLD, 4558\t\nC0004\tAcumen Building Projects\t[\"OneBill\"]\t38 Piper Street, Caboolture, QLD, 4510\t\nC0005\tAdams Financial Group\t[\"OneBill\"]\tLevel 2, Building A/6, Innovation Pkwy, Birtinya, QLD, 4575\t\nC2889\tAffinage Professional\tNULL\t14 India St, Capalaba, QLD, 4157\t\nC2638\tAffinity Partners Pty Ltd\t[\"DATAGATE\"]\t-, -, -, -, -\t\nC0006\tAgnes Water Beauty Hub\t[\"Sasboss\"]\tTenancy T14, 2875 Round Hill Road, Seventeen Seventy, QLD, 4677\t\nC0007\tAgnes Water Doctors\t[\"Sasboss\"]\t2853 Round Hill Road, Agnes Water, Seventeen Seventy, QLD, 4677\t\nC2EBB\tAir Restore\tNULL\t\t\nC0008\tAlan Powell\t[\"OneBill\"]\tUnit 126, 50 Marshall Street, Burnett Heads, QLD, 4670\t\nC0009\tAlbany Family Doctors\t[\"ECN\"]\tShop 3 715 Albany Creek Rd, Albany Creek, QLD, 4035\t\nC0010\tAll Crops Haulage Pty Ltd\t[\"Sasboss\"]\t28672 Bruce Hwy, Childers, QLD, 4660\t\nC0011\tAllegra Property Management Pty Ltd\t[\"ECN\"]\t468 The Esplanade, TORQUAY, QLD, 4655\t\nC0012\tARM Group Pty Ltd ATF ARM Property Trust No. 2\t[\"Sasboss\", \"OneBill\"]\tPO BOX 7666, EAST BRISBANE, QLD, 4169\t\nC0013\tArmani Tobacconist\t[]\tTenancy T92853 Round Hill Road, Agnes Waters, Queensland, Australia, 4677\t\nC0014\tAromas Noosa\t[\"Sasboss\", \"OneBill\"]\tShop 7 32 Hastings St, NOOSA HEADS, Noosa Heads, QLD, 4567\t\nC2633\tAromas Noosa Heads\t[]\t\t\nC7557\tASDL Ltd\tNULL\t\tASDL Ltd\nC2415\tASG\t[]\t\t\nC0015\tASG Hail Pty Ltd\t[\"DATAGATE\"]\t6 Telford Circuit, Yatala, Queensland, 4207\t\nC0016\tAspley Firstcare Doctors\t[\"ECN\"]\tShop N19 605 Robertson Road, Aspley, QLD, 4034\t\nC0017\tAtkinson's Specialist Shuttles\t[]\t-, -, -, -, -\t\nC0018\tAtlantis Pool Shop\t[\"Sasboss\", \"OneBill\"]\tUnit 4 14 Burke Crescent, North Lakes, North Lakes, QLD, 4509\t\nC0019\tAudem Electrical\t[]\t3/44 Leonard Street, Woolloongabba, QLD, 4102\t\nC2416\tAuriga Group\t[]\t\t\nC0020\tAuriga Group Pty Ltd\t[]\t\t\nC7513\tAus Ships\t[\"SasBoss\"]\t\tAus Ships\nC0021\tAusavo Corporation Pty Ltd\t[\"Sasboss\"]\t9 Kevin Livingston Drive, ISIS CENTRAL, Isis Central, QLD, 4660\t\nC0022\tAusdocs Carindale Pty Ltd\t[\"ECN\", \"OneBill\"]\tShop 2066, Wesfield Carindale, 1151 Creek Road, Carindale, QLD, 4152\t\nC0023\tAusdocs Team Care Pty Ltd T/As Bribie MediPlus\t[\"ECN\"]\t2d/241 Goodwin Drive, Bongaree, QLD, 4507\t\nC2639\tAussie Hail Pty Ltd\t[\"DATAGATE\"]\t-, -, -, -, -\t\nC2615\tAussie Traveller\t[]\t-, -, -, -, -\t\nC0025\tAustralian Air Science Pty Ltd\t[\"DATAGATE\"]\t32 Dividend Street, Mansfield, QLD, 4122\t\nC0026\tAustralian Computer Traders\t[\"DATAGATE\"]\t911 Stanley Street, East Brisbane, Queensland, 4169\t\nC0027\tAustralian Resort Management Pty Ltd\t[\"Sasboss\"]\tLOT 3 UNIT 4 371 CHARLTON ESPLANADE, SCARNESS, QLD, 4655\t\nC0028\tAutonomy & Asset Management Group\t[]\t12/441 Nudgee Rd, Hendra, Queensland, 4011\t\nC2640\tBack Track Adventures\t[\"DATAGATE\"]\t222A Barry Pde, Fortitude Valley, QLD, 4006\t\nC0029\tBack2Health\t[\"DATAGATE\",\"Sasboss\"]\t1/304 Montague Road, West End, QLD, 4101\t\nC0030\tBalanced Business Accounting\t[\"DATAGATE\",\"Sasboss\"]\tShop 1  Ground Floor  76 Old Cleveland Rd, 76 Old Cleveland Road, CAPALABA, Queensland, 4157\t\nC0031\tBalgra Shopping Centre Management Pty Ltd\t[\"DATAGATE\"]\tOracle Building South, Level 2, 17 Elizabeth Avenue, Broadbeach, QLD, 4218\t\nC2543\tBANKSIA GROVE VILLAGE TNCY 11, 1001 JOONDALUP DR, BANKSIA GROVE WA\t[]\t\t\nC0032\tBantan Fiesta Pty Ltd (for Zambrero Swan View)\t[\"OneBill\"]\tDarling Ridge Shopping Centre Un 9, 309 Morrison Rd, Swan View, WA, 6056\t\nC0033\tBanyo Village Medical Centre\t[\"ECN\"]\tShop 1, 299 St Vincents Road, Banyo, QLD, 4500\t\nC0034\tBar Alto\t[\"DATAGATE\"]\t119 Lamington Street, New Farm, QLD, 4005\t\nC2417\tBBA\t[]\t\t\nC2641\tBeechmont Estate\t[\"DATAGATE\"]\t442 Binna Burra Rd, Beechmont, QLD, 4211\t\nC0035\tBeenleigh Road Medical Practice\t[\"ECN\"]\tShop 10, 565 Beenleigh Road, SUNNYBANK, QLD, 4109\t\nC0036\tBELL CRIMINAL LAWYERS PTY LTD\t[\"Sasboss\"]\tLevel 10/193 N Quay, Brisbane City, Queensland, 4000\t\nC2544\tBELRIDGE SHOPPING CENTRE UN 4, 36 GWENDOLINE DR, BELDON WA\t[]\t\t\nC2643\tBetter Business Finance\t[\"DATAGATE\"]\t107 Maud Street, Maroochydore, QLD\t\nC0037\tBGC Engineering\t[]\tLevel 3, 31 Merivale Street, South Brisbane, QLD, 4101\t\nC0038\tBody Corporate for Osprey Mooloolaba CTS4773\t[\"ECN\"]\t\t\nC2418\tBody Corporate Systems\t[]\t\t\nC0039\tBody Corporate Systems Pty Ltd\t[]\tSuite 106, 621 Wynnum Road, Morningside, QLD, 4170\t\nC0042\tBooroodabin\t[\"OneBill\"]\tPO Box 3068, NEWSTEAD, QLD, 4006\t\nC0043\tBoyd Legal\t[\"OneBill\"]\tLevel 12, 200 Mary Street, Brisbane, QLD, 4000\t\nC2608\tBP HOUSE OFFC 10C, 193 NORTH QY, BRISBANE CITY QLD\t[]\t\t\nC0044\tBracken Ridge Family Practice\t[\"Sasboss\"]\tShop 1, 81 Gawain Road,, BRACKEN RIDGE, Bracken Ridge, QLD, 4017\t\nC0045\tBranyan Early Learning Centre\t[\"DATAGATE\",\"Sasboss\"]\t7 Penny Ln, Branyan QLD 4670, Bundaberg, QLD, 4670\t\nC0046\tBrewDog Australia\t[]\t77 Metroplex Ave, Murarrie, QLD, 4172\t\nC0047\tBrimar Pty Ltd\t[\"DATAGATE\"]\t2/333 Queensport Road North, Murarrie, QLD, 4172\t\nC2611\tBROOKHOLLOW UNIT 5, 40 BROOKHOLLOW AV, NORWEST NSW\t[]\t\t\nC2888\tBT LAWYERS PTY LTD\tNULL\tLevel 30/239 George St, Brisbane City, Queensland, Australia, 4000\t\nC2466\tBUDERIM GARDENS RETIREMENT VILLAGE UN 206, 405 MOOLOOLABA RD, BUDERIM QLD\t[]\t\t\nC0048\tBundy Homes\t[\"Sasboss\"]\t1/53 Perry St, Bundaberg North, QLD, 4670\t\nC2592\tBURRENDAH TAVERN , 47 BURRENDAH BVD, WILLETTON WA\t[]\t\t\nC2894\tBUSH TO BEACH LEGAL PTY LTD\tNULL\t50 Owen Creek Rd, Forest Glen, Queensland, 4556\t\nC0049\tButchulla Enterprises Limited\t[\"OneBill\"]\tUnit 2, 52 Ariadne St, River Heads, Queensland, Australia, 4655\t\nC2419\tBuys Court\t[\"DATAGATE\"]\t22 Gillan Street, Norman Park, QLD, 4170\t\nC0050\tBuys Court Pty Ltd\t[\"DATAGATE\"]\t\t\nC0051\tCala Luna Rental\t[\"Sasboss\"]\t6 Cala Luna Pde, YAROOMBA, Taroomba, QLD, 4573\t\nC2644\tCampos Coffee Qld\t[\"DATAGATE\"]\t19/300 Cullen Ave East, Eagle Farm, QLD, 4006\t\nC0052\tCaneland Engineering\t[\"Sasboss\"]\t25 Production Street, Bundaberg, Queensland, Australia, 4670\t\nC0053\tCanossa Medical Centre Pharmacy\t[\"Sasboss\"]\tSE 5 Canossa Hospital 169 Seventeen Mile Rocks Road, Oxley, QLD, 4075\t\nC0054\tCaravan and RV Works\t[\"DATAGATE\"]\t12-14 Enterprise Street, Kunda Park, QLD, 4556\t\nC2645\tCarroll Consulting\t[\"DATAGATE\"]\tLevel 1, 225 Wickham Terrace, Brisbane, QLD, 4000\t\nC2897\tCassels Strata Management\tNULL\tLevel 1, 11 Lang Parade, Milton, QLD, 4064\t\nC0055\tCatolin Pty Ltd T-A Helloworld Strathpine\t[\"Sasboss\", \"OneBill\"]\t58/295 Gympie Rd, STRATHPINE, Strathpine, QLD, 4500\t\nC0056\tCC Innovation Pty Ltd\t[\"DATAGATE\"]\t1467 Anzac Avenue, Kallangur, QLD, 4503\t\nC0057\tCDI Lawyers\t[]\t4/49 Park Rd, Milton, QLD, 4064\t\nC0058\tCF Aust Pty Ltd\t[\"DATAGATE\"]\t6 Telford Circuit, Yatala, Queensland, Australia, 4207\t\nC2523\tCHERMSIDE SHOPPING CENTRE SHOP R2A, 395 HAMILTON RD, CHERMSIDE QLD\t[]\t\t\nC0059\tCirque Apartments - The Shores Motel Group\t[\"OneBill\"]\tROOM COMMS FCTY, 776 BRUNSWICK ST,, NEW FARM, QLD, 4005\t\nC2627\tCity Care Doctors Wintergarden\t[]\t\t\nC0060\tClear Insurance\t[\"Sasboss\"]\tSuite 3, Level 1,, 116 Racecourse Rd, Ascot, Queensland, 4007\t\nC0061\tCleveland Medical\t[\"ECN\"]\tCleveland House Shop 2 120 Bloomfield St, CLEVELAND, QLD, 4163\t\nC2422\tCMC\t[]\t\t\nC0062\tCMC Property Management\t[\"DATAGATE\",\"Sasboss\"]\tPO Box 66, Strathpine Centre, Queensland, 4500\t\nC0063\tCoastal Dental Specialists\t[\"ECN\", \"OneBill\"]\tUnit 202 67 Regatta Bvd, Birtinya, BIRTINYA, QLD, 4575\t\nC0064\tCommunity Lifestyle Agency Inc\t[\"Sasboss\"]\t129 Adelaide Street, Maryborough, Maryborough, QLD, 4650\t\nC0065\tCompass Assurance Services Pty Ltd\t[\"DATAGATE\"]\t60 Enterprise Place, Tingalpa, QLD, 4173\t\nC0066\tComplete Care Doctors\t[]\tSuite 111 55 Creek Rd, MOUNT GRAVATT EAST, QLD, 4122\t\nC0067\tControl Equipment Pty Ltd\t[\"ECN\"]\tUnit 6 30 Enterprise Cres, MALAGA, WA, 6090\t\nC0068\tCore Glass & Aluminium\t[\"ECN\"]\tUnit 1 56 Eagleview Pl, EAGLE FARM, Eagle Farm, QLD, 4009\t\nC2423\tCornwalls\t[]\t\t\nC0069\tCornwalls (QLD)\t[\"OneBill\"]\tLevel 21, 300 Queen Street, Brisbane, 4000\t\nC7471\tCory Johnston\tNULL\t\t\nC2424\tCPM\t[]\t\t\nC0070\tCPM Advisory and Project Management\t[\"DATAGATE\",\"Sasboss\"]\t88 Limestone Street, Ipswich, QLD, 4305\t\nC0071\tCreative Early Learning Group PTY LTD\t[\"DATAGATE\"]\t146 Elliott Heads Road, Avenell Heights, QLD, 4670\t\nC0072\tCreek St Pharmacy\t[\"Sasboss\"]\tShop 1 Ground Floor, 40 Creek Street, Brisbane, QLD, 4000\t\nC0073\tCU@N8S\t[]\t88 Limestone St, Ipswich, QLD, 4305\t\nC0074\tCubico Sustainable Investments\t[]\tLevel 28, 161 Castlereagh St, Sydney, NSW, 2000\t\nC2555\tCURRAMBINE CENTRAL SHOP SP110, 1244 MARMION AV, CURRAMBINE WA\t[]\t\t\nC0075\tDanKel Electrical Pty Ltd\t[\"Sasboss\", \"OneBill\"]\tPO Box 322, Bundaberg, Bundaberg East, QLD, 4670\t\nC2589\tDARLING RIDGE SHOPPING CENTRE UN 9, 309 MORRISON RD, SWAN VIEW WA\t[]\t\t\nC0076\tDenim Co\t[\"OneBill\"]\tShop 9/A Little Stanley St, South Brisbane, Queensland, 4101\t\nC0077\tDJ Steel - Lyndarr Constructions Pty Ltd\t[\"ECN\"]\t16 Mill Rd,, Monto, QLD, 4630\t\nC0078\tDJ Steel Biloela - AJ and KL Fletcher\t[\"Sasboss\", \"OneBill\"]\t49-51 DAWSON HIGHWAY, Biloela, Queensland, Australia, 4715\t\nC0079\tDoctors At Kawana Shopping World\t[\"ECN\"]\tKawana Shopping World Shop 387a 119 Point Cartwright Dr, BUDDINA, QLD, 4575\t\nC0080\tDoctors at Samford Valley\t[\"ECN\"]\tShop 4-5, 39 Main Street, Samford Valley, QLD, 4520\t\nC0081\tDolani Pty Ltd\t[\"DATAGATE\"]\t1467 Anzac Avenue, Kallangur, QLD, 4503\t\nC0082\tDoyles Trade Centre\t[\"DATAGATE\",\"Sasboss\"]\t27 Blackwood Street, Mitchelton, QLD, 4053\t\nC2425\tDrummond House\t[]\t\t\nC7456\tDuplicate Test 1773461062738\tNULL\t\t\nC7467\tDuplicate Test 1773461870429\tNULL\t\t\nC7481\tDuplicate Test 1773465030613\tNULL\t\t\nC7487\tDuplicate Test 1773472909584\tNULL\t\t\nC7493\tDuplicate Test 1773472942990\tNULL\t\t\nC7498\tDuplicate Test 1773480859098\tNULL\t\t\nC7504\tDuplicate Test 1773480895022\tNULL\t\t\nC7509\tDuplicate Test 1773480953761\tNULL\t\t\nC7515\tDuplicate Test 1773896995802\tNULL\t\t\nC7520\tDuplicate Test 1773897085340\tNULL\t\t\nC7525\tDuplicate Test 1773897218441\tNULL\t\t\nC7530\tDuplicate Test 1773897253309\tNULL\t\t\nC7535\tDuplicate Test 1773898989380\tNULL\t\t\nC7540\tDuplicate Test 1773901661885\tNULL\t\t\nC7545\tDuplicate Test 1773901901168\tNULL\t\t\nC7550\tDuplicate Test 1773901981868\tNULL\t\t\nC7580\tDuplicate Test 1773983858316\tNULL\t\t\nC9005\tDuplicate Test 1774147641440\tNULL\t\t\nC0083\tEatons Quality Medical & Skin Cancer\t[\"ECN\"]\t\t\nC0084\tEcoLife Solutions\t[\"ECN\"]\tUnit 1 23 Terrence Rd, BRENDALE, QLD, 4500\t\nC0085\tEdens Landing Doctors\t[\"ECN\",\"Sasboss\"]\tShops 10 & 11, 125-127 Castile Crescent, Edens Landing, QLD, 4207\t\nC0086\tEducation and Care Hub Pty Ltd\t[\"DATAGATE\"]\t1467 Anzac Avenue, Kallangur, QLD, 4503\t\nC2535\tELOUERA TOWERS UN 1, 81 SIXTH AV, MAROOCHYDORE QLD\t[]\t\t\nC0087\tEmergency Medicine Foundation\t[\"DATAGATE\",\"Sasboss\"]\tSuite 1A, 34 Sherwood Road, Toowong, Queensland, 4066\t\nC0088\tEmployment Office\t[]\t\t\nC2426\tEmpowering Hive\t[\"DATAGATE\"]\tShop 111, Alexandra Hills Shopping Centre, 71 Cambridge Drive, Alexandra Hills, QLD, 4161\t\nC0089\tEnergy Pro Electrical\t[\"DATAGATE\",\"Sasboss\"]\t-, -, -, -, -\t\nC0090\tExceed Laser\t[]\t43 Bernoulli Street, Darra, Queensland, 4076\t\nC8C0B\tExetel NBN Service (0701561050)\tNULL\t\t\nC0091\tFast Cut Qld Pty Ltd\t[\"Sasboss\"]\t46 Matheson St, Virginia, Queensland, Australia, 4014\t\nC0092\tFirst National Childers\t[\"Sasboss\", \"OneBill\"]\tPO Box 130, Childers, Childers, QLD, 4660\t\nC0093\tFirstcare Doctors Pty Ltd\t[\"ECN\"]\tUnit A, 181 Elizabeth Street, Brisbane, QLD, 4000\t\nC0094\tFlight Options\t[]\t19 Friendship Ave, Mudjimba, 4564\t\nC0095\tFlutterbys Child Care\t[\"Sasboss\", \"OneBill\"]\t234 Albany Creek Rd, BRIDGEMAN DOWNS, Albany Creek, QLD, 4035\t\nC2562\tFORRESTFIELD FORUM SHOP 23M, 20 STRELITZIA AV, FORRESTFIELD WA\t[]\t\t\nC2646\tFortress Collision Repair Services Pty Ltd\t[\"DATAGATE\"]\t6 Telford Circuit, Yatala, QLD, 4207\t\nC0096\tFox and Thomas\t[]\t36 Marshall St, GOONDIWINDI, QLD, 4390\t\nC0097\tFritzenberger Southbank\t[\"OneBill\"]\tShop 11 & 12, Little Stanley St, South Brisbane, QLD, 4101\t\nC0098\tFroyay Hawthorne\t[\"OneBill\"]\t265 Hawthorne Rd, Hawthorne, QLD, 4171\t\nC0099\tGainsdale Pty Ltd ATF The G.F. Turner Family Trust\t[\"DATAGATE\"]\tPO Box 108, Fortitude Valley, QLD, 4006\t\nC0100\tGateway Containers\t[\"DATAGATE\"]\t102 Gosport Street, Hemmant, QLD, 4174\t\nC0101\tGBA Consulting Engineers\t[\"ECN\", \"OneBill\"]\t73 Elm St, Barcaldine, QLD, 4725\t\nC0102\tGeebung Medical Clinic\t[\"ECN\"]\tOffice 2 328 Newman Rd, GEEBUNG, QLD, 4034\t\nC2899\tGEORGE'S LOADER HIRE PTY LTD\tNULL\t262 Bowhill Road, Willawong, Queensland, 4110\t\nC0103\tGladstone GP Super Clinic\t[\"ECN\"]\t\t\nC2427\tGMG\t[]\t\t\nC2647\tGoodhew Electrical & Solar\t[\"DATAGATE\"]\tUnit 15, 26-32 Weippin Street, Cleveland, QLD, 4163\t\nC0104\tGordon Orchards Pty Ltd\t[\"ECN\",\"Sasboss\"]\t165 Langbeckers East Road, WOONGARRA, Woongarra, QLD, 4670\t\nC0105\tGorman & Co\t[\"OneBill\"]\tUnit 3, 189 Gorman Drive, Googong, NSW, 2620\t\nC0107\tGraphene Manufacturing Australia\t[\"Sasboss\",\"DATAGATE\"]\tUnit 5, 848 Boundary Road, RICHLANDS, QLD, 4077\t\nC0110\tGreg & Jan Taylor\t[\"ECN\",\"Sasboss\"]\t44 Mary Street, ALEXANDRA HEADLAND, Queensland, Australia, 4572\t\nC0111\tGroundswell Accounting & Advisory\t[\"Sasboss\"]\t32 Sunshine Beach Road,, Noosa Heads, QLD, 4567\t\nC0112\tGrunskes By The River\t[\"Sasboss\"]\t\t\nC0113\tGumdale Dentists\t[\"ECN\"]\tShop 22 682-696 New Cleveland Rd, GUMDALE, QLD, 4154\t\nC0114\tGumdale Medical Center\t[\"ECN\"]\tShop 22 682-696 New Cleveland Rd, GUMDALE, QLD, 4154\t\nC2629\tGumdale Medical Centre\t[]\t\t\nC7379\tGWCP 100/100\tNULL\t\t\nC0115\tHaig St Cafe\t[\"OneBill\"]\tUnit 4-5, 28-30 Musgrave Street, Coolangatta, QLD, 4225\t\nC0116\tHanwha Mining Services\t[\"DATAGATE\"]\tGPO Box 274, Brisbane, Queensland, 4001\t\nC0117\tHarajuku Gyoza Albert Lane\t[\"OneBill\"]\tShop 10/T & G Building, 141 Queen St, Brisbane City, QLD, 4000\t\nC0118\tHavilah Medical Centre Doreen\t[\"ECN\"]\tUnit 2 20 Yellow Brick Rd, DOREEN, Victoria, Australia, 3754\t\nC2556\tHAYTER COURT SHOP 1B, 1 STEWART RD, CURRUMBIN WATERS QLD\t[]\t\t\nC7555\tHazelwood Estate\tNULL\t\tHazelwood Estate\nC2648\tHefford Hampton Lawyers\t[\"DATAGATE\"]\t1467 Anzac Avenue, Kallangur, Queensland, 4503\t\nC2903\tHemmingway Financial Pty Ltd\t[]\t140 George Street, Bundaberg West, Queensland, Australia, 4670\t\nC0119\tHervey Bay Garden Centre\t[\"ECN\",\"Sasboss\"]\tLOT 15 132 SCRUB HILL RD, Hervey Bay, QLD, 4655\t\nC2429\tHip Pocket\t[]\t\t\nC0120\tHip Pocket Logan\t[\"DATAGATE\"]\t1/440 Kingston Road, Corner Queens Road, Slacks Creek, QLD, 4127\t\nC0121\tHKS Financial Planning\t[\"OneBill\"]\tLevel 1, Unit 3, 416 Logan Road, Stones Corner, QLD, 4120\t\nC0122\tHoly Shot\t[\"OneBill\"]\t938 Brunswick st, Newfarm, QLD, 4005\t\nC2558\tHYATT COMPLEX UN L3-07, 99 ADELAIDE TCE, EAST PERTH WA\t[]\t\t\nC2430\tIHCA\t[]\t\t\nC0123\tInstitute for Healthy Communities Australia\t[\"Sasboss\", \"OneBill\"]\tLevel 1, 73-77 Russell Street, 39 Sherwood Road, West End, Queensland, 4101\t\nC0124\tIntegrated Oral and Maxillofacial Surgery Pty Ltd\t[\"Sasboss\", \"OneBill\"]\t5/68 Jessica Boulevard, Minyama, Queensland, Australia, 4575\t\nC0125\tJack Green\t[\"Sasboss\"]\t30 Claremont Dr, MAROOCHYDORE, MAROOCHYDORE, QLD, 4558\t\nC0126\tJayden Adams\t[\"ECN\"]\t25 Halyard Dr, WURTULLA, Wurtulla, QLD, 4575\t\nC2649\tJDH Industrial\t[\"DATAGATE\"]\t93 Rochedale Road, Rochedale, QLD, 4123\t\nC2900\tJellinbah Mining Pty Ltd\tNULL\tLevel 20, 66 Eagle Street, Brisbane, Queensland, Australia, 4000\t\nC0127\tJema Clinic\t[\"ECN\"]\tShop 6 133 Lennox St, MARYBOROUGH, QLD, 4650\t\nC0128\tJilrift Pty Ltd\t[\"DATAGATE\"]\tPO Box 108, Fortitude Valley, QLD, 4006\t\nC0129\tJude Turner\t[\"DATAGATE\"]\t-, -, -, -, -\t\nC0130\tJust Better Care\t[\"Sasboss\", \"OneBill\"]\tLevel 1, Chermside Health Hub, 621 Gympie Road, Chermside, QLD, 4032\t\nC0131\tKaleidoscope Australasia Pty Ltd\t[\"Sasboss\"]\t11 Enterprise Street, Richlands, QLD, 4077\t\nC2565\tKARRATHA CITY SHOPPING CENTRE SHOP 1, 16 SHARPE AV, KARRATHA WA\t[]\t\t\nC0132\tKawana Family Clinic\t[\"ECN\"]\t\t\nC0133\tKHM Group Investments\t[\"OneBill\"]\tShop 2, 1927 Beaudesert Rd, Calamvale, QLD, 4116\t\nC2497\tKSK K108, 1151 CREEK RD, CARINDALE QLD\t[]\t\t\nC2460\tLAGUNA ON HASTINGS SHOP 7, 32 HASTINGS ST, NOOSA HEADS QLD\t[]\t\t\nC2896\tLake Vermont Resources Pty Ltd\tNULL\t\t\nC2650\tLaw in Business\t[\"DATAGATE\"]\t107 Maud Street, Maroochydore, QLD, 4575\t\nC0134\tLead Childcare Pty Ltd\t[\"DATAGATE\"]\t144 Cecily Street, Kallangur, QLD, 4503\t\nC2431\tLead Education\t[]\t\t\nC0135\tLead Education and Training Pty Ltd ATF the Piara\t[]\t1467 Anzac Avenue, Kallangur, QLD, 4503\t\nC0136\tLead Institute\t[\"DATAGATE\",\"Sasboss\"]\t1467 Anzac Avenue, Kallangur, Queensland, 4503\t\nC0137\tLeading Childcare Pty Ltd\t[\"DATAGATE\"]\t1467 Anzac Avenue, Kallangur, QLD, 4503\t\nC2651\tLegrand AV Australia\t[\"DATAGATE\"]\tUnit 7, 8 Metroplex Avenue, Murarrie, QLD, 4172\t\nC0138\tLFF Australia\t[\"DATAGATE\", \"OneBill\"]\t4B/400 Nudgee Rd, Hendra, QLD, 4011\t\nC2432\tLifestyle WC\t[]\t\t\nC2652\tLifestyle Wealth Creation Group\t[\"DATAGATE\"]\tAgnes St, Morningside, Queensland, 4170\t\nC0139\tLINK TRADING\t[\"DATAGATE\"]\tUnit 1, 51 Fulcrum St, Richlands, QLD, 4077\t\nC0140\tLittle Cha Bateau Bay\t[\"OneBill\"]\tShop K08, 12 Bay Village Rd, Bateau Bay, NSW, 2261\t\nC0141\tLittle Cha Charlestown\t[\"OneBill\"]\tKiosk K803 Charlestown Square, Pearson Street, CHARLESTOWN, NSW, 2290\t\nC7453\tLittle Cha Eastgardens\tNULL\t\t\nC0142\tLittle Cha Erina Fair\t[\"OneBill\"]\tShop TK01/Erina Fair Shopping Centre, Terrigal Dr, Erina, NSW, 2250\t\nC0143\tLittle Cha Forest Way\t[\"OneBill\"]\tK03, Forestway Shopping Centre, French Forest, NSW, 2086\t\nC0144\tLittle Cha Green Hills\t[\"OneBill\"]\tShop K123/Stockland Green Hills, 1 Molly Morgan Drive, East Maitland, NSW, 2323\t\nC0145\tLittle Cha Lake Haven\t[\"OneBill\"]\tShop K10, Lake Haven centre, Lake Haven, NSW, 2263\t\nC1408\tLittle Cha Mt Druitt\t[]\t\t\nC0146\tLittle Cha Mt. Druitt\t[\"OneBill\"]\tShop K29A/Westfield Mt Druitt, Carlisle Ave, Mount Druitt, NSW, 2770\t\nC0147\tLittle Cha St Ives\t[\"OneBill\"]\tShop 145/St Ives Shopping Village, 166 Mona Vale Road, St Ives, NSW, 2075\t\nC1413\tLittle Cha St. Ives\t[]\t\t\nC0148\tLittle Cha Tuggerah\t[\"OneBill\"]\tShop K133/Westfield Tuggerah, 50 Wyong Rd, Tuggerah, NSW, 2259\t\nC0149\tLivingstone Low Electrical Pty Ltd (94171)\t[\"OneBill\"]\t4/4-6 Phoebe Crescent, Kingston, QLD, 4670\t\nC0150\tLocanda Pty Ltd\t[\"ECN\"]\t\t\nC0151\tLogan Central Family Clinic\t[\"ECN\"]\t\t\nC0152\tLondon Fire And Safe\t[\"Sasboss\"]\t-, -, -, -, -\t\nC2538\tLOT 19 PALMETTO ST, CHEVALLUM QLD\t[]\t\t\nC2624\tLOT 2, 188 WAYNE GOSS DR, BERRINBA QLD\t[]\t\t\nC0153\tLove to Learn Childcare Pty Ltd\t[]\t84 Westfield Road, Kelmscott, Western Australia, 6111\t\nC0154\tLoving Tan\t[\"Sasboss\"]\tUnit 1, 37-39 Qantas Drive, Brisbane Airport, Queensland, Australia, 4008\t\nC0155\tMa Pa Me\t[\"OneBill\"]\tShop 6AC, Little Stanley Street, South Brisbane, QLD, 4101\t\nC0156\tMacKellar Group\t[]\tSuite 3, 1 Gardak Street, Alexandra Headland, QLD, 4572\t\nC6845\tMakris Gold Coast\tNULL\t\t\nC0157\tMammoth Underground Mine Management Pty Ltd\t[]\tLevel 3, 10 Market St, Brisbane, Queensland, Australia, 4000\t\nC0158\tMaroochydore Doctors at Sunshine Plaza\t[\"ECN\"]\t\t\nC0159\tMega Electrics\t[\"DATAGATE\", \"Sasboss\", \"OneBill\"]\t290 Darebin Rd, Fairfield, VIC, 3078\t\nC0160\tMichael McNamara\t[\"OneBill\"]\t133 WOONGARRA SCENIC DR, BARGARA, QLD, 4670\t\nC0161\tMiddlemount Coal Pty Ltd\t[\"DATAGATE\"]\tMIDDLEMOUNT COAL MINE, MIDDLEMOUNT /DYSART RD, MIDDLEMOUNT, QUEENSLAND, AUSTRALIA, 4746\t\nC2654\tMischief Travel\t[\"DATAGATE\"]\t-\t\nC_MOMC\tMooloolaba Osteopathy and Massage Centre\t[\"OneBill\"]\t\t\nC0162\tMother Duck - Bellbowrie\t[]\t38 Sugarwood St, Bellbowrie, Queensland, Australia, 4070\t\nC0163\tMother Duck - Eatons Hill\t[\"OneBill\"]\t\t\nC0164\tMother Duck Bracken Ridge\t[\"ECN\"]\t92 Barrett Street, Bracken Ridge, QLD, 4017\t\nC0165\tMother Duck Enoggera Pty Ltd\t[\"ECN\"]\t36 Glenalva Tce, ENOGGERA, Enoggera, QLD, 4051\t\nC0166\tMount Cotton Medical Centre\t[\"ECN\"]\t\t\nC2630\tMount Gravatt NBN\t[]\t\t\nC2653\tMSR Collision\t[\"DATAGATE\"]\t17 Secam Street, Mansfield, QLD\t\nC0167\tNDC PLASTIC MOULDING PTY LTD\t[]\t3/123 Bancroft Road, Pinkenba, QLD, 4008\t\nC2893\tNICKI'S PROFESSIONAL SECURITY SCREENS AND BLINDS\tNULL\t45 Figbird Crescent, Buderim, Queensland, Australia, 4556\t\nC0168\tNiclin Constructions Pty Ltd\t[]\t5B/57 Miller Street,, Murarrie, Queensland, Australia, 4172\t\nC2433\tNiecon\t[]\t-, -, -, -, -\t\nC0169\tNina Bambino Dental\t[\"DATAGATE\",\"Sasboss\"]\t149 Waterworks Rd, Ashgrove, Queensland, 4060\t\nC0170\tNitty-Gritty Organics\t[\"OneBill\"]\t5/661 Oxley Rd, Corinda, QLD, 4075\t\nC1406\tNodo Camp Hill\t[\"OneBill\"]\t\t\nC9002\tNodo Grey Street\t[\"OneBill\"]\t\tNodo Pty Ltd\nC9001\tNodo Newstead\t[\"OneBill\"]\t\tNodo Pty Ltd\nC0171\tNodo Pty Ltd\t[\"OneBill\"]\t1 Ella street, Newstead, QLD, 4006\t\nC0172\tNoma Themba\t[\"Sasboss\"]\t31 Blackbeauty Court, Kensington, Queensland, Australia, 4670\t\nC0173\tNorth Brisbane Cardiology Pty Ltd\t[\"ECN\"]\t\t\nC2902\tNorth Coast Mower Centre\t[]\t36 Coronation Ave, Nambour, NAMBOUR, QLD, 4560\t\nC0174\tNorth West Hospital Cardiology\t[\"ECN\"]\t\t\nC0175\tNorwest Strata Management Pty Limited\t[]\t214/14-16 Lexington Drive, Bella Vista, New South Wales, Australia, 2153\t\nC7459\tNotes Test 1773461064996\tNULL\t\t\nC7464\tNotes Test 1773461713605\tNULL\t\t\nC7470\tNotes Test 1773461872788\tNULL\t\t\nC7478\tNotes Test 1773464994254\tNULL\t\t\nC7484\tNotes Test 1773465032906\tNULL\t\t\nC7490\tNotes Test 1773472911956\tNULL\t\t\nC7496\tNotes Test 1773472945296\tNULL\t\t\nC7501\tNotes Test 1773480861375\tNULL\t\t\nC7507\tNotes Test 1773480897305\tNULL\t\t\nC7512\tNotes Test 1773480956122\tNULL\t\t\nC7518\tNotes Test 1773896998194\tNULL\t\t\nC7523\tNotes Test 1773897087747\tNULL\t\t\nC7528\tNotes Test 1773897220772\tNULL\t\t\nC7533\tNotes Test 1773897255695\tNULL\t\t\nC7538\tNotes Test 1773898991763\tNULL\t\t\nC7543\tNotes Test 1773901664269\tNULL\t\t\nC7548\tNotes Test 1773901903556\tNULL\t\t\nC7553\tNotes Test 1773901984371\tNULL\t\t\nC7583\tNotes Test 1773983860493\tNULL\t\t\nC9008\tNotes Test 1774147644450\tNULL\t\t\nC7556\tNovus Glass\tNULL\t\tNovus Glass\nC0176\tNu-Dev Pty Ltd\t[]\t\t\nC0177\tNurturing Brain Potential\t[\"DATAGATE\",\"Sasboss\"]\tUnit 2, 449 Lytton Rd, Morningside, Queensland, 4170\t\nC0178\tOakhurst Gun Works\t[\"ECN\",\"Sasboss\"]\t67 Woocoo Dr, OAKHURST, Oakhurst, QLD, 4650\t\nC0179\tOceanMed Enterprises Pty Ltd\t[\"ECN\"]\t\t\nC2534\tOFFC 14A, 100 EDWARD ST, BRISBANE CITY QLD\t[]\t\t\nC2617\tOFFC 17 123 EAGLE ST BRISBANE CITY QLD 4000 BRISBANE CITY\t[]\t\t\nC2516\tOFFC T103, 115 DUNNING AV, ROSEBERY NSW\t[]\t\t\nC2569\tOFFC T17, 11 JOHN HINES AV, MINCHINBURY NSW\t[]\t\t\nC2577\tORANGE CENTRAL SHOP 43, 227 SUMMER ST, ORANGE NSW\t[]\t\t\nC2635\tOsprey\t[]\t\t\nC2469\tOTHER 3, 116 RACECOURSE RD, ASCOT QLD\t[]\t\t\nC0180\tPacific Flooring Services\t[]\tUnit 1A, 25 Michlin St, Moorooka, QLD, 4105\t\nC0181\tPaedicare Pty Ltd\t[\"DATAGATE\",\"Sasboss\"]\tSalmon Building, Suite 6, Level 2, 537 Stanley Street, South Brisbane, QLD, 4101\t\nC0182\tPaxton-Hall Lawyers Pty Ltd\t[]\tLvl 10, 15 Adelaide Street, Brisbane City, 4000\t\nC0183\tPD Capital\t[\"Sasboss\"]\tSuite 7c, Level 7, 307 Queen St, Brisbane, QLD, 4000\t\nC2507\tPEPPERS , 57 EKERTS RD, POKOLBIN NSW\t[]\t\t\nC0184\tPhysio On Wheels\t[\"OneBill\"]\t1185b Old North Road, WARNER, Warner, QLD, 4500\t\nC0185\tPIP Theatre\t[\"DATAGATE\"]\tUnit 32, 20 Park Road, Milton, QLD, 4064\t\nC2655\tPleasure Cruises and Safaris\t[\"DATAGATE\"]\tNorth Lakes, QLD, 4509\t\nC1411\tPoppy G's Burgers\t[]\t\t\nC0186\tPoppy G's Midland\t[\"OneBill\"]\tUnit B 2/16A Lloyd St, Midland, WA, 6056\t\nC2434\tPremier Strata Management\t[]\t6/175 Briens Road, Northmead, NSW, 2152\t\nC2656\tPrimary Securities Limited ATF\t[\"DATAGATE\"]\tCare of CMC Property, 8/481 Gympie Road, Strathpine, QLD, 4500\t\nC0187\tPromogear\t[\"DATAGATE\",\"Sasboss\"]\tUnit 7 / 500 Lytton Road, Morningside, Queensland, 4170\t\nC2901\tPRW LOGISTICS PTY LTD\tNULL\t\t\nC2435\tQCOS Orthopaedic\t[]\t\t\nC0188\tQCOS Orthopaedic Pty Ltd\t[]\tLevel 10, Suite 14 / 24 Chasely Street, Auchenflower, Queensland, 4066\t\nC0189\tQueensland Children's Gastroenterology\t[\"DATAGATE\",\"Sasboss\"]\tSalmon Building Suite 6, Level2/537 Stanley Street, South Brisbane, QLD, 4101\t\nC0190\tRed Ridge Produce\t[\"ECN\",\"Sasboss\"]\t3748 Goodwood Rd, KINKUNA, Kinkuna, QLD, 4670\t\nC2898\tRed Roo Australia\t[\"OneBill\"]\t3/45 Kingtel Place, Geebung, Queensland, Australia, 4034\t\nC0191\tRedRoo Australia\t[\"DATAGATE\"]\t-, -, -, -, -\t\nC0192\tReezo Kebab\t[\"OneBill\"]\t3/8 Dwyer Turn, Joondalup, Western Australia, 6027\t\nC2892\tRenovo Solutions Pty Ltd\t[]\t42 Manning Street, South Brisbane, QLD, 4101\t\nC0193\tRentokil Initial Pty Ltd\t[\"DATAGATE\"]\t9/42 Beerburrum Road, Caboolture, QLD, 4510\t\nC0194\tRes-Com Air Conditioning Pty Ltd\t[\"DATAGATE\"]\tUnit 4, 40 Proprietary Street, Tingalpa, Queensland, 4173\t\nC2436\tResCom\t[]\t\t\nC0195\tRickys Noosa\t[\"ECN\"]\t\t\nC0196\tRio Capurso\t[]\t34 Whyandra Close, Doonan, Queensland, Australia, 4562\t\nC0197\tRiver City Maintenance\t[\"DATAGATE\",\"Sasboss\"]\t10 Moore Street, Albion, QLD, 4010\t\nC2657\tRiver Quarter No. 3 Development Co. Pty Ltd\t[\"DATAGATE\"]\t3a Cambridge Street, West End, QLD, 4101\t\nC0198\tRiverside Development Pty Ltd\t[]\tRiparian Plaza, Building Management Office, Level 24, 71 Eagle Street, Brisbane, 4000\t\nC2905\tRiverside Marine\tNULL\tCampbell House, 161 Breakfast Creek Rd, Newstead, QLD, 4006\t\nC0199\tRND Pilates Pty Ltd\t[\"Sasboss\"]\t-, -, -, -, -\t\nC0200\tRoberts Roofing and Plumbing\t[\"OneBill\"]\tShed 1, 23 McLearn Street, Bundaberg, Queensland, QLD, 4670\t\nC0201\tRochedale Doctors\t[\"ECN\"]\t\t\nC0202\tRochedale Village Doctors\t[\"ECN\"]\t\t\nC0203\tRockwell Technology\t[\"Sasboss\", \"OneBill\"]\t37 Access Avenue, Yatala, QLD, 4207\t\nC0204\tRode Medical Clinic\t[\"ECN\"]\t\t\nC2475\tROOM CCTV, 95 NORTH QY, BRISBANE CITY QLD\t[]\t\t\nC2609\tROOM COMMS FCTY, 776 BRUNSWICK ST, NEW FARM QLD\t[]\t\t\nC0205\tRSSGM Pty Ltd for Zambrero Cranbourne North\t[\"OneBill\"]\tRetail 2, 1585 Thompsons Rd, Cranbourne North, VIC, 3977\tRSSGM Pty Ltd\nC0206\tRumi Persian Restaurant\t[\"OneBill\"]\t8/90 Surf Parade, Broadbeach, QLD, 4218\t\nC0207\tRVC ICT Consulting\t[]\t14 Page St, NORTH LAKES, QLD, 4509\t\nC2440\tSalter Brothers\t[\"DATAGATE\"]\tPO Box 108, Fortitude Valley, QLD, 4006\t\nC0208\tSalter Brothers (Clovelly) Pty Ltd\t[\"DATAGATE\"]\t68 Balmoral Road, Montville, QLD, 4560\t\nC0209\tSalter Brothers (Guesthouse) Pty Ltd\t[\"DATAGATE\"]\t57 Ekerts Road, Pokolbin, NSW, 2320\t\nC0210\tSalter Brothers (Peak Lodge) Pty Ltd\t[\"DATAGATE\"]\tWilkinson Road, Maryvale, QLD, 4370\t\nC0211\tSalter Brothers (Sangoma) Pty Ltd\t[\"DATAGATE\"]\t70 Grandview Lane, Bowen Mountain, NSW, 2753\t\nC0212\tSalter Brothers (Tamarind) Pty Ltd\t[\"DATAGATE\"]\t88 Obi Lane South, Maleny, QLD, 4552\t\nC0213\tSalter Brothers (Vineyards) Pty Ltd\t[\"DATAGATE\"]\t555 Hermitage Road, Pokalbin, NSW, 2320\t\nC7554\tSalter Brothers Hospitality\tNULL\t\tSalter Brothers Hospitality Pty Ltd\nC0214\tSalter Brothers Luxury Collection Operations Pty LTD\t[\"DATAGATE\"]\t168 Knapp St, Fortitude Valley, QLD, 4006\t\nC0216\tSalter Brothers Management Company Pty Ltd t/a Spicers Potts Point\t[\"DATAGATE\"]\t120 â€“ 124 Victoria Street, Potts Point, NSW, 2011\t\nC2904\tScout Talent Pty Ltd\tNULL\t265 Coronation Dr, Milton, Queensland, Australia, 4064\t\nC2465\tSE 1, 200 MARY ST, BRISBANE CITY QLD\t[]\t\t\nC2493\tSE 1, 4 FIRST AV, MAROOCHYDORE QLD\t[]\t\t\nC2479\tSE 2, 74 VICTORIA PDE, ROCKHAMPTON CITY QLD\t[]\t\t\nC2501\tSE 7C, 307 QUEEN ST, BRISBANE CITY QLD\t[]\t\t\nC2552\tSEA COOLUM SHOP 2, 1796 DAVID LOW WAY, COOLUM BEACH QLD\t[]\t\t\nC7457\tSequential Test A 1773461063644\tNULL\t\t\nC7462\tSequential Test A 1773461712169\tNULL\t\t\nC7468\tSequential Test A 1773461871371\tNULL\t\t\nC7476\tSequential Test A 1773464992954\tNULL\t\t\nC7482\tSequential Test A 1773465031529\tNULL\t\t\nC7488\tSequential Test A 1773472910530\tNULL\t\t\nC7494\tSequential Test A 1773472943910\tNULL\t\t\nC7499\tSequential Test A 1773480860008\tNULL\t\t\nC7505\tSequential Test A 1773480895934\tNULL\t\t\nC7510\tSequential Test A 1773480954704\tNULL\t\t\nC7516\tSequential Test A 1773896996763\tNULL\t\t\nC7521\tSequential Test A 1773897086302\tNULL\t\t\nC7526\tSequential Test A 1773897219367\tNULL\t\t\nC7531\tSequential Test A 1773897254258\tNULL\t\t\nC7536\tSequential Test A 1773898990330\tNULL\t\t\nC7541\tSequential Test A 1773901662855\tNULL\t\t\nC7546\tSequential Test A 1773901902131\tNULL\t\t\nC7551\tSequential Test A 1773901982922\tNULL\t\t\nC7581\tSequential Test A 1773983859182\tNULL\t\t\nC9006\tSequential Test A 1774147642389\tNULL\t\t\nC7458\tSequential Test B 1773461063644\tNULL\t\t\nC7463\tSequential Test B 1773461712169\tNULL\t\t\nC7469\tSequential Test B 1773461871371\tNULL\t\t\nC7477\tSequential Test B 1773464992954\tNULL\t\t\nC7483\tSequential Test B 1773465031529\tNULL\t\t\nC7489\tSequential Test B 1773472910530\tNULL\t\t\nC7495\tSequential Test B 1773472943910\tNULL\t\t\nC7500\tSequential Test B 1773480860008\tNULL\t\t\nC7506\tSequential Test B 1773480895934\tNULL\t\t\nC7511\tSequential Test B 1773480954704\tNULL\t\t\nC7517\tSequential Test B 1773896996763\tNULL\t\t\nC7522\tSequential Test B 1773897086302\tNULL\t\t\nC7527\tSequential Test B 1773897219367\tNULL\t\t\nC7532\tSequential Test B 1773897254258\tNULL\t\t\nC7537\tSequential Test B 1773898990330\tNULL\t\t\nC7542\tSequential Test B 1773901662855\tNULL\t\t\nC7547\tSequential Test B 1773901902131\tNULL\t\t\nC7552\tSequential Test B 1773901982922\tNULL\t\t\nC7582\tSequential Test B 1773983859182\tNULL\t\t\nC9007\tSequential Test B 1774147642389\tNULL\t\t\nC2890\tSerenity Escapes Pty Ltd\tNULL\t468 The Esplanade, TORQUAY, Queensland, Australia, 4655\t\nC0217\tSeven Digit’s Pty Ltd\t[\"OneBill\"]\t-, -, -, -, -\t\nC0218\tShailer Park Medical Centre\t[\"ECN\"]\t\t\nC2505\tSHOP 1, 23 MCLEAN ST, BUNDABERG CENTRAL QLD\t[]\t\t\nC2526\tSHOP 1, 369 MORAYFIELD RD, MORAYFIELD QLD\t[]\t\t\nC2491\tSHOP 1, 6 BUNYA PARK DR, EATONS HILL QLD\t[]\t\t\nC2581\tSHOP 10, 148 THE ESPLANADE , SCARBOROUGH WA\t[]\t\t\nC2550\tSHOP 11, 13 LAKE ST, CAROLINE SPRINGS VIC\t[]\t\t\nC2582\tSHOP 11, 6 SHORELINE DR, HOWRAH TAS\t[]\t\t\nC2546\tSHOP 11, 90 SURF PDE, BROADBEACH QLD\t[]\t\t\nC2527\tSHOP 131, 400 NEWMARKET RD, NEWMARKET QLD\t[]\t\t\nC2470\tSHOP 16, 72 WISES RD, BUDERIM QLD\t[]\t\t\nC2500\tSHOP 1A, 25 MICHLIN ST, MOOROOKA QLD\t[]\t\t\nC2553\tSHOP 1C, 2 CITY CENTRE DR, UPPER COOMERA QLD\t[]\t\t\nC2625\tSHOP 2, 1796 DAVID LOW WAY, COOLUM BEACH QLD\t[]\t\t\nC2519\tSHOP 2, 188 WAYNE GOSS DR, BERRINBA QLD\t[]\t\t\nC2528\tSHOP 2, 2 MASON ST, NORTH LAKES QLD\t[]\t\t\nC2570\tSHOP 2, 3 BERGEN WAY, MINDARIE WA\t[]\t\t\nC2559\tSHOP 2, 97 ELIZABETH ST, MELBOURNE VIC\t[]\t\t\nC2529\tSHOP 2.1, 74 TRIBUNE ST, SOUTH BRISBANE QLD\t[]\t\t\nC2547\tSHOP 22, 248 IPSWICH RD, WOOLLOONGABBA QLD\t[]\t\t\nC2496\tSHOP 3, 1 ELLA ST, NEWSTEAD QLD\t[]\t\t\nC2483\tSHOP 3, 416 LOGAN RD, STONES CORNER QLD\t[]\t\t\nC2585\tSHOP 3, 50 SUBIACO SQUARE RD, SUBIACO WA\t[]\t\t\nC2580\tSHOP 39, 300 POINT COOK RD, POINT COOK VIC\t[]\t\t\nC2524\tSHOP 4, 166 ABBOTSFORD RD, BOWEN HILLS QLD\t[]\t\t\nC2525\tSHOP 47, 16 AMAZONS PL, JINDALEE QLD\t[]\t\t\nC2572\tSHOP 4E, 171 MORAYFIELD RD, MORAYFIELD QLD\t[]\t\t\nC2571\tSHOP 5, 87 MOOLOOLABA ESP, MOOLOOLABA QLD\t[]\t\t\nC2586\tSHOP 6, 40 EVANS ST, SUNBURY VIC\t[]\t\t\nC2603\tShop 65, 114 GREY STREET, SOUTH BRISBANE QLD\t[]\t\t\nC2531\tShop 8, 240 Stafford Rd, Stafford QLD\t[]\t\t\nC2542\tSHOP 8, 3050 FRANKSTON-FLINDERS RD, BALNARRING VIC\t[]\t\t\nC2573\tSHOP 9, 48 BARRY MARSHALL PDE, MURDOCH WA\t[]\t\t\nC2591\tSHOP CR6, 3 ARCHIBALD AV, WATERLOO NSW\t[]\t\t\nC2551\tSHOP F116A, 400 CRANBOURNE RD, NARRE WARREN SOUTH VIC\t[]\t\t\nC2566\tSHOP G-038, 80 TAYLORS RD, KEILOR DOWNS VIC\t[]\t\t\nC2522\tSHOP IDF-3B, 108 OLD CLEVELAND RD, CAPALABA QLD\t[]\t\t\nC2487\tSHOP RETAIL 14, 8 CASTLEREAGH ST, SYDNEY NSW\t[]\t\t\nC2560\tSHOP T3-4, 768 STAFFORD RD, EVERTON PARK QLD\t[]\t\t\nC2549\tSHOP T3, 3 ALBERT ST, BUSSELTON WA\t[]\t\t\nC2623\tSHP 1B, 1 STEWART RD, CURRUMBIN WATERS QLD\t[]\t\t\nC7473\tSigns ETC\t[\"OneBill\"]\t\t\nC0219\tSkimmer Lids Pty Ltd\t[\"ECN\"]\t\t\nC9003\tSmile IT\t[\"OneBill\"]\t60 Enterprise Place, Tingalpa QLD 4173\tSmile IT Pty Ltd\nC2441\tSmile IT\t[\"DATAGATE\"]\tLevel 1D Tingalpa Industrial Estate, 60 Enterprise Place, Tingalpa, QLD, 4173\t\nC0220\tSolahart Brisbane\t[\"DATAGATE\"]\tUnit 2, 6 Gravel Pit Rd, Darra, Queensland, 4076\t\nC2442\tSolar Centre Brisbane\t[\"DATAGATE\"]\t22/12 Esperance Court, Cleveland, QLD, 4163\t\nC2658\tSolar Centre Ipswich\t[\"DATAGATE\"]\t3/1 Cairns Rd, Ebbw Vale, QLD, 4304\t\nC0221\tSouthside Specialist Medical and Geriatric Centre\t[\"ECN\"]\t\t\nC2443\tSparrow Group Management\t[]\t\t\nC0222\tSparrow Group Management Pty Ltd\t[\"Sasboss\"]\tLevel 1, 20 Metroplex Ave, Murrarie, QLD, 4172\t\nC0223\tSpecialist Hail Repairs\t[\"DATAGATE\"]\t37 Access Avenue,, Yatala, QLD, 4207\t\nC0224\tSpicers Hiddenvale\t[\"DATAGATE\"]\t617 Grandchester-Mt Mort Road, Grandchester, Queensland, 4340\t\nC0225\tSpicers Scenic Rim Trail\t[\"DATAGATE\"]\t\t\nC2446\tSpring Projects\t[\"DATAGATE\", \"OneBill\"]\t28 Church Street Fortitude Valley\t\nC0226\tSta Consulting Engineers\t[\"DATAGATE\",\"Sasboss\"]\tFreeway Office Park, Building 3, 2728 Logan Road, Eight Mile Plains, QLD, 4113\t\nC0227\tStafford City Doctors\t[\"ECN\"]\t\t\nC0228\tStafford Dental Studio\t[\"ECN\"]\t\t\n",
+  "stderr": "",
+  "execution_time_ms": 46734
+}

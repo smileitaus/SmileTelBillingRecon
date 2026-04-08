@@ -1,0 +1,50 @@
+{
+  "query": "\nUPDATE omada_sites \nSET customerExternalId = 'C0054', matchType = 'manual', matchConfidence = '1.0'\nWHERE omadaSiteId = '690c428efd910e521d32140f';\n\nUPDATE omada_sites \nSET customerExternalId = 'C0077', matchType = 'manual', matchConfidence = '1.0'\nWHERE omadaSiteId = '690d512237e3045484c79638';\n\nSELECT omadaSiteId, omadaSiteName, customerExternalId, matchType, wanIp, wanStatus, deviceCount, clientCount\nFROM omada_sites;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \nUPDATE omada_sites \nSET customerExternalId = 'C0054', matchType = 'manual', matchConfidence = '1.0'\nWHERE omadaSiteId = '690c428efd910e521d32140f';\n\nUPDATE omada_sites \nSET customerExternalId = 'C0077', matchType = 'manual', matchConfidence = '1.0'\nWHERE omadaSiteId = '690d512237e3045484c79638';\n\nSELECT omadaSiteId, omadaSiteName, customerExternalId, matchType, wanIp, wanStatus, deviceCount, clientCount\nFROM omada_sites;\n",
+  "rows": [
+    {
+      "omadaSiteId": "68c7968b02f4f0550e351591",
+      "omadaSiteName": "Smile IT Head Office",
+      "customerExternalId": "C9003",
+      "matchType": "manual",
+      "wanIp": "1.146.10.174",
+      "wanStatus": "active",
+      "deviceCount": "3",
+      "clientCount": "0"
+    },
+    {
+      "omadaSiteId": "690c428efd910e521d32140f",
+      "omadaSiteName": "Caravan Fix Kunda Park",
+      "customerExternalId": "C0054",
+      "matchType": "manual",
+      "wanIp": "180.181.213.195",
+      "wanStatus": "connected",
+      "deviceCount": "1",
+      "clientCount": "15"
+    },
+    {
+      "omadaSiteId": "690d512237e3045484c79638",
+      "omadaSiteName": "JESS DJ STEEL & CONCRETE",
+      "customerExternalId": "C0077",
+      "matchType": "manual",
+      "wanIp": "157.211.3.162",
+      "wanStatus": "connected",
+      "deviceCount": "1",
+      "clientCount": "27"
+    },
+    {
+      "omadaSiteId": "69111de137e3045484c7d62e",
+      "omadaSiteName": "NICKI'S PROFESSIONAL SECURITY SCREENS AND BLINDS",
+      "customerExternalId": "C2893",
+      "matchType": "auto",
+      "wanIp": "157.211.8.165",
+      "wanStatus": "connected",
+      "deviceCount": "1",
+      "clientCount": "24"
+    }
+  ],
+  "messages": [],
+  "stdout": "omadaSiteId\tomadaSiteName\tcustomerExternalId\tmatchType\twanIp\twanStatus\tdeviceCount\tclientCount\n68c7968b02f4f0550e351591\tSmile IT Head Office\tC9003\tmanual\t1.146.10.174\tactive\t3\t0\n690c428efd910e521d32140f\tCaravan Fix Kunda Park\tC0054\tmanual\t180.181.213.195\tconnected\t1\t15\n690d512237e3045484c79638\tJESS DJ STEEL & CONCRETE\tC0077\tmanual\t157.211.3.162\tconnected\t1\t27\n69111de137e3045484c7d62e\tNICKI'S PROFESSIONAL SECURITY SCREENS AND BLINDS\tC2893\tauto\t157.211.8.165\tconnected\t1\t24\n",
+  "stderr": "",
+  "execution_time_ms": 2100
+}

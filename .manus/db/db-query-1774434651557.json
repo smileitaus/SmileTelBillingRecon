@@ -1,0 +1,19 @@
+{
+  "query": "\n-- S0085: Canberra Airport (Spitfire Ave) → Zambrero Majura Park (C0357) - Majura Park is at Canberra Airport\nUPDATE services SET customerExternalId = 'C0357' WHERE externalId = 'S0085' AND (customerExternalId IS NULL OR customerExternalId = '');\n\n-- VOCUS-MOB-13530680: 115 Dunning Ave Rosebery → same customer as S0374 (C2516)\nUPDATE services SET customerExternalId = 'C2516' WHERE externalId = 'VOCUS-MOB-13530680' AND (customerExternalId IS NULL OR customerExternalId = '');\n\n-- AVC000231649853: Hunter Mall Maitland → same customer as S0268 (C0144)\nUPDATE services SET customerExternalId = 'C0144' WHERE externalId = 'AVC000231649853' AND (customerExternalId IS NULL OR customerExternalId = '');\n\n-- S0306: 19 Alexandra St Bardon — no match found in existing services; leave for manual review\n-- S0703: 449 Nepean Hwy Frankston — no match found; leave for manual review  \n-- S0726: 182 Acanthus Av Burleigh Waters — no match found; leave for manual review\n\nSELECT ROW_COUNT() AS last_update;\n\n-- Final count\nSELECT COUNT(*) AS still_unmatched FROM services WHERE customerExternalId IS NULL OR customerExternalId = '';\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- S0085: Canberra Airport (Spitfire Ave) → Zambrero Majura Park (C0357) - Majura Park is at Canberra Airport\nUPDATE services SET customerExternalId = 'C0357' WHERE externalId = 'S0085' AND (customerExternalId IS NULL OR customerExternalId = '');\n\n-- VOCUS-MOB-13530680: 115 Dunning Ave Rosebery → same customer as S0374 (C2516)\nUPDATE services SET customerExternalId = 'C2516' WHERE externalId = 'VOCUS-MOB-13530680' AND (customerExternalId IS NULL OR customerExternalId = '');\n\n-- AVC000231649853: Hunter Mall Maitland → same customer as S0268 (C0144)\nUPDATE services SET customerExternalId = 'C0144' WHERE externalId = 'AVC000231649853' AND (customerExternalId IS NULL OR customerExternalId = '');\n\n-- S0306: 19 Alexandra St Bardon — no match found in existing services; leave for manual review\n-- S0703: 449 Nepean Hwy Frankston — no match found; leave for manual review  \n-- S0726: 182 Acanthus Av Burleigh Waters — no match found; leave for manual review\n\nSELECT ROW_COUNT() AS last_update;\n\n-- Final count\nSELECT COUNT(*) AS still_unmatched FROM services WHERE customerExternalId IS NULL OR customerExternalId = '';\n",
+  "rows": [
+    {
+      "last_update": "1"
+    },
+    {
+      "last_update": "still_unmatched"
+    },
+    {
+      "last_update": "511"
+    }
+  ],
+  "messages": [],
+  "stdout": "last_update\n1\nstill_unmatched\n511\n",
+  "stderr": "",
+  "execution_time_ms": 2507
+}

@@ -1,0 +1,57 @@
+{
+  "query": "\nSELECT os.omadaSiteId, os.omadaSiteName, os.customerExternalId, os.matchType, os.wanIp, os.wanStatus, os.deviceCount, os.clientCount\nFROM omada_sites os;\n\nSELECT externalId, name, businessName \nFROM customers \nWHERE LOWER(name) LIKE '%caravan%' OR LOWER(businessName) LIKE '%caravan%'\n   OR LOWER(name) LIKE '%dj steel%' OR LOWER(businessName) LIKE '%dj steel%'\n   OR LOWER(name) LIKE '%jess%' OR LOWER(businessName) LIKE '%jess%'\n   OR LOWER(name) LIKE '%nicki%' OR LOWER(businessName) LIKE '%nicki%'\n   OR LOWER(name) LIKE '%security screen%' OR LOWER(businessName) LIKE '%security screen%'\nLIMIT 20;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \nSELECT os.omadaSiteId, os.omadaSiteName, os.customerExternalId, os.matchType, os.wanIp, os.wanStatus, os.deviceCount, os.clientCount\nFROM omada_sites os;\n\nSELECT externalId, name, businessName \nFROM customers \nWHERE LOWER(name) LIKE '%caravan%' OR LOWER(businessName) LIKE '%caravan%'\n   OR LOWER(name) LIKE '%dj steel%' OR LOWER(businessName) LIKE '%dj steel%'\n   OR LOWER(name) LIKE '%jess%' OR LOWER(businessName) LIKE '%jess%'\n   OR LOWER(name) LIKE '%nicki%' OR LOWER(businessName) LIKE '%nicki%'\n   OR LOWER(name) LIKE '%security screen%' OR LOWER(businessName) LIKE '%security screen%'\nLIMIT 20;\n",
+  "rows": [
+    {
+      "omadaSiteId": "68c7968b02f4f0550e351591",
+      "omadaSiteName": "Smile IT Head Office",
+      "customerExternalId": "C9003",
+      "matchType": "manual",
+      "wanIp": "1.146.10.174",
+      "wanStatus": "active",
+      "deviceCount": "3",
+      "clientCount": "0"
+    },
+    {
+      "omadaSiteId": "690c428efd910e521d32140f",
+      "omadaSiteName": "Caravan Fix Kunda Park",
+      "customerExternalId": "NULL",
+      "matchType": "unmatched",
+      "wanIp": "180.181.213.195",
+      "wanStatus": "connected",
+      "deviceCount": "1",
+      "clientCount": "15"
+    },
+    {
+      "omadaSiteId": "690d512237e3045484c79638",
+      "omadaSiteName": "JESS DJ STEEL & CONCRETE",
+      "customerExternalId": "NULL",
+      "matchType": "unmatched",
+      "wanIp": "157.211.3.162",
+      "wanStatus": "connected",
+      "deviceCount": "1",
+      "clientCount": "27"
+    },
+    {
+      "omadaSiteId": "69111de137e3045484c7d62e",
+      "omadaSiteName": "NICKI'S PROFESSIONAL SECURITY SCREENS AND BLINDS",
+      "customerExternalId": "C2893",
+      "matchType": "auto",
+      "wanIp": "157.211.8.165",
+      "wanStatus": "connected",
+      "deviceCount": "1",
+      "clientCount": "24"
+    }
+  ],
+  "messages": [
+    "externalId\tname\tbusinessName",
+    "C0054\tCaravan and RV Works\t",
+    "C0077\tDJ Steel - Lyndarr Constructions Pty Ltd\t",
+    "C0078\tDJ Steel Biloela - AJ and KL Fletcher\t",
+    "C2484\tTHE BOULEVARD CENTRE SE 5, 68 JESSICA BVD, MINYAMA QLD\t",
+    "C2893\tNICKI'S PROFESSIONAL SECURITY SCREENS AND BLINDS\t"
+  ],
+  "stdout": "omadaSiteId\tomadaSiteName\tcustomerExternalId\tmatchType\twanIp\twanStatus\tdeviceCount\tclientCount\n68c7968b02f4f0550e351591\tSmile IT Head Office\tC9003\tmanual\t1.146.10.174\tactive\t3\t0\n690c428efd910e521d32140f\tCaravan Fix Kunda Park\tNULL\tunmatched\t180.181.213.195\tconnected\t1\t15\n690d512237e3045484c79638\tJESS DJ STEEL & CONCRETE\tNULL\tunmatched\t157.211.3.162\tconnected\t1\t27\n69111de137e3045484c7d62e\tNICKI'S PROFESSIONAL SECURITY SCREENS AND BLINDS\tC2893\tauto\t157.211.8.165\tconnected\t1\t24\nexternalId\tname\tbusinessName\nC0054\tCaravan and RV Works\t\nC0077\tDJ Steel - Lyndarr Constructions Pty Ltd\t\nC0078\tDJ Steel Biloela - AJ and KL Fletcher\t\nC2484\tTHE BOULEVARD CENTRE SE 5, 68 JESSICA BVD, MINYAMA QLD\t\nC2893\tNICKI'S PROFESSIONAL SECURITY SCREENS AND BLINDS\t\n",
+  "stderr": "",
+  "execution_time_ms": 1813
+}

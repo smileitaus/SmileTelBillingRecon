@@ -1,0 +1,59 @@
+{
+  "query": "\n-- Get the actual customer IDs from the unmatched services\nSELECT s.externalId, s.planName, s.monthlyCost, s.customerExternalId, c.name as customerName\nFROM services s\nJOIN customers c ON s.customerExternalId = c.externalId\nWHERE s.externalId IN ('SKSZDDG', 'SEJX1FL', 'SD5S22R', 'SVFZ32A', 'SNCXJ3U', 'SG3D608', 'SB3PFMC');\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Get the actual customer IDs from the unmatched services\nSELECT s.externalId, s.planName, s.monthlyCost, s.customerExternalId, c.name as customerName\nFROM services s\nJOIN customers c ON s.customerExternalId = c.externalId\nWHERE s.externalId IN ('SKSZDDG', 'SEJX1FL', 'SD5S22R', 'SVFZ32A', 'SNCXJ3U', 'SG3D608', 'SB3PFMC');\n",
+  "rows": [
+    {
+      "externalId": "SB3PFMC",
+      "planName": "LoganCentral",
+      "monthlyCost": "140.00",
+      "customerExternalId": "C0151",
+      "customerName": "Logan Central Family Clinic"
+    },
+    {
+      "externalId": "SD5S22R",
+      "planName": "RVC PBX USER",
+      "monthlyCost": "135.11",
+      "customerExternalId": "C2441",
+      "customerName": "Smile IT"
+    },
+    {
+      "externalId": "SEJX1FL",
+      "planName": "sthsidemed",
+      "monthlyCost": "144.93",
+      "customerExternalId": "C0072",
+      "customerName": "Creek St Pharmacy"
+    },
+    {
+      "externalId": "SG3D608",
+      "planName": "Logan Medical",
+      "monthlyCost": "80.00",
+      "customerExternalId": "C0061",
+      "customerName": "Cleveland Medical"
+    },
+    {
+      "externalId": "SKSZDDG",
+      "planName": "AllegraApHB",
+      "monthlyCost": "135.25",
+      "customerExternalId": "C0011",
+      "customerName": "Allegra Property Management Pty Ltd"
+    },
+    {
+      "externalId": "SNCXJ3U",
+      "planName": "ComplCDocATA",
+      "monthlyCost": "36.01",
+      "customerExternalId": "C0066",
+      "customerName": "Complete Care Doctors"
+    },
+    {
+      "externalId": "SVFZ32A",
+      "planName": "WidebayTransport and Mech",
+      "monthlyCost": "70.00",
+      "customerExternalId": "C0288",
+      "customerName": "Wide Bay Transport & Mechanical"
+    }
+  ],
+  "messages": [],
+  "stdout": "externalId\tplanName\tmonthlyCost\tcustomerExternalId\tcustomerName\nSB3PFMC\tLoganCentral\t140.00\tC0151\tLogan Central Family Clinic\nSD5S22R\tRVC PBX USER\t135.11\tC2441\tSmile IT\nSEJX1FL\tsthsidemed\t144.93\tC0072\tCreek St Pharmacy\nSG3D608\tLogan Medical\t80.00\tC0061\tCleveland Medical\nSKSZDDG\tAllegraApHB\t135.25\tC0011\tAllegra Property Management Pty Ltd\nSNCXJ3U\tComplCDocATA\t36.01\tC0066\tComplete Care Doctors\nSVFZ32A\tWidebayTransport and Mech\t70.00\tC0288\tWide Bay Transport & Mechanical\n",
+  "stderr": "",
+  "execution_time_ms": 1582
+}

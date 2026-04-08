@@ -1,0 +1,114 @@
+{
+  "query": "\n-- Do Zambrero Telstra customers have ANY billing items?\nSELECT \n  bi.customerExternalId,\n  c.name as customerName,\n  bi.description,\n  bi.lineAmount,\n  bi.category,\n  bi.serviceExternalId\nFROM billing_items bi\nJOIN customers c ON bi.customerExternalId = c.externalId\nWHERE bi.customerExternalId IN ('C2785','C1404','C1406','C0357','C0344','C0370','C0323','C0369','C0385','C1407','C0298','C0349')\nORDER BY bi.customerExternalId, bi.lineAmount DESC\nLIMIT 20;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Do Zambrero Telstra customers have ANY billing items?\nSELECT \n  bi.customerExternalId,\n  c.name as customerName,\n  bi.description,\n  bi.lineAmount,\n  bi.category,\n  bi.serviceExternalId\nFROM billing_items bi\nJOIN customers c ON bi.customerExternalId = c.externalId\nWHERE bi.customerExternalId IN ('C2785','C1404','C1406','C0357','C0344','C0370','C0323','C0369','C0385','C1407','C0298','C0349')\nORDER BY bi.customerExternalId, bi.lineAmount DESC\nLIMIT 20;\n",
+  "rows": [
+    {
+      "customerExternalId": "C0323",
+      "customerName": "Zambrero Coolangatta",
+      "description": "SmileTel supplied NBN voice and internet bundle. 36 month plan. Includes:- 1xVoice phone line,1xInternet service,1x4G Back-up, Static IP.  Unlimited calls to standard Australian numbers, Unlimited data allowance, Account management support.",
+      "lineAmount": "122.73",
+      "category": "xero-feb-2026",
+      "serviceExternalId": "S0073"
+    },
+    {
+      "customerExternalId": "C0323",
+      "customerName": "Zambrero Coolangatta",
+      "description": "SmileTel supplied NBN voice and internet bundle. 36 month plan. Includes:- 1xVoice phone line,1xInternet service,1x4G Back-up, Static IP.  Unlimited calls to standard Australian numbers, Unlimited data allowance, Account management support.",
+      "lineAmount": "122.73",
+      "category": "nbn-bundle",
+      "serviceExternalId": "S0073"
+    },
+    {
+      "customerExternalId": "C0344",
+      "customerName": "Zambrero Griffith",
+      "description": "SmileTel supplied NBN voice and internet bundle. Month to month plan. Includes:- 1xVoice phone line,1xInternet service,1x4G Back-up, Static IP.  Unlimited calls to standard Australian numbers, Unlimited data allowance, Account management support.",
+      "lineAmount": "136.36",
+      "category": "nbn-bundle",
+      "serviceExternalId": "S0065"
+    },
+    {
+      "customerExternalId": "C0344",
+      "customerName": "Zambrero Griffith",
+      "description": "SmileTel supplied NBN voice and internet bundle. Month to month plan. Includes:- 1xVoice phone line,1xInternet service,1x4G Back-up, Static IP.  Unlimited calls to standard Australian numbers, Unlimited data allowance, Account management support.",
+      "lineAmount": "136.36",
+      "category": "xero-feb-2026",
+      "serviceExternalId": "S0065"
+    },
+    {
+      "customerExternalId": "C0349",
+      "customerName": "Zambrero Joondalup",
+      "description": "SmileTel supplied NBN voice and internet bundle. Month to month plan. Includes:- 1xVoice phone line,1xInternet service,1x4G Back-up, Static IP.  Unlimited calls to standard Australian numbers, Unlimited data allowance, Account management support.",
+      "lineAmount": "136.36",
+      "category": "xero-feb-2026",
+      "serviceExternalId": "S0080"
+    },
+    {
+      "customerExternalId": "C0349",
+      "customerName": "Zambrero Joondalup",
+      "description": "SmileTel supplied NBN voice and internet bundle. Month to month plan. Includes:- 1xVoice phone line,1xInternet service,1x4G Back-up, Static IP.  Unlimited calls to standard Australian numbers, Unlimited data allowance, Account management support.",
+      "lineAmount": "136.36",
+      "category": "nbn-bundle",
+      "serviceExternalId": "S0080"
+    },
+    {
+      "customerExternalId": "C0357",
+      "customerName": "Zambrero Majura Park",
+      "description": "SmileTel supplied NBN voice and internet bundle. 36 month plan. Includes:- 1xVoice phone line,1xInternet service,1x4G Back-up, Static IP.  Unlimited calls to standard Australian numbers, Unlimited data allowance, Account management support.",
+      "lineAmount": "122.73",
+      "category": "xero-feb-2026",
+      "serviceExternalId": "S0063"
+    },
+    {
+      "customerExternalId": "C0357",
+      "customerName": "Zambrero Majura Park",
+      "description": "SmileTel supplied NBN voice and internet bundle. 36 month plan. Includes:- 1xVoice phone line,1xInternet service,1x4G Back-up, Static IP.  Unlimited calls to standard Australian numbers, Unlimited data allowance, Account management support.",
+      "lineAmount": "122.73",
+      "category": "nbn-bundle",
+      "serviceExternalId": "S0063"
+    },
+    {
+      "customerExternalId": "C0369",
+      "customerName": "Zambrero Nerang",
+      "description": "SmileTel supplied NBN voice and internet bundle. Month to month plan. Includes:- 1xVoice phone line,1xInternet service,1x4G Back-up, Static IP.  Unlimited calls to standard Australian numbers, Unlimited data allowance, Account management support.",
+      "lineAmount": "136.36",
+      "category": "xero-feb-2026",
+      "serviceExternalId": "S0071"
+    },
+    {
+      "customerExternalId": "C0369",
+      "customerName": "Zambrero Nerang",
+      "description": "SmileTel supplied NBN voice and internet bundle. Month to month plan. Includes:- 1xVoice phone line,1xInternet service,1x4G Back-up, Static IP.  Unlimited calls to standard Australian numbers, Unlimited data allowance, Account management support.",
+      "lineAmount": "136.36",
+      "category": "nbn-bundle",
+      "serviceExternalId": "S0071"
+    },
+    {
+      "customerExternalId": "C0370",
+      "customerName": "Zambrero Newtown",
+      "description": "Site Bundle - Recurring: 50/20 Connectivity - Suitable for Enterprise Grade, Premium Dedicated Support, Business Grade Hardware, 24/7 Connectivity Monitoring, 4G Backup, Enhanced Remote Assistance, Unlimited Phone Calls",
+      "lineAmount": "165.43",
+      "category": "xero-feb-2026",
+      "serviceExternalId": "S7019"
+    },
+    {
+      "customerExternalId": "C0385",
+      "customerName": "Zambrero South Hedland",
+      "description": "SmileTel supplied NBN voice and internet bundle. Month to month plan. Includes:- 1xVoice phone line,1xInternet service,1x4G Back-up, Static IP.  Unlimited calls to standard Australian numbers, Unlimited data allowance, Account management support.",
+      "lineAmount": "136.36",
+      "category": "xero-feb-2026",
+      "serviceExternalId": "S0015"
+    },
+    {
+      "customerExternalId": "C0385",
+      "customerName": "Zambrero South Hedland",
+      "description": "SmileTel supplied NBN voice and internet bundle. Month to month plan. Includes:- 1xVoice phone line,1xInternet service,1x4G Back-up, Static IP.  Unlimited calls to standard Australian numbers, Unlimited data allowance, Account management support.",
+      "lineAmount": "136.36",
+      "category": "nbn-bundle",
+      "serviceExternalId": "S0015"
+    }
+  ],
+  "messages": [],
+  "stdout": "customerExternalId\tcustomerName\tdescription\tlineAmount\tcategory\tserviceExternalId\nC0323\tZambrero Coolangatta\tSmileTel supplied NBN voice and internet bundle. 36 month plan. Includes:- 1xVoice phone line,1xInternet service,1x4G Back-up, Static IP.  Unlimited calls to standard Australian numbers, Unlimited data allowance, Account management support.\t122.73\txero-feb-2026\tS0073\nC0323\tZambrero Coolangatta\tSmileTel supplied NBN voice and internet bundle. 36 month plan. Includes:- 1xVoice phone line,1xInternet service,1x4G Back-up, Static IP.  Unlimited calls to standard Australian numbers, Unlimited data allowance, Account management support.\t122.73\tnbn-bundle\tS0073\nC0344\tZambrero Griffith\tSmileTel supplied NBN voice and internet bundle. Month to month plan. Includes:- 1xVoice phone line,1xInternet service,1x4G Back-up, Static IP.  Unlimited calls to standard Australian numbers, Unlimited data allowance, Account management support.\t136.36\tnbn-bundle\tS0065\nC0344\tZambrero Griffith\tSmileTel supplied NBN voice and internet bundle. Month to month plan. Includes:- 1xVoice phone line,1xInternet service,1x4G Back-up, Static IP.  Unlimited calls to standard Australian numbers, Unlimited data allowance, Account management support.\t136.36\txero-feb-2026\tS0065\nC0349\tZambrero Joondalup\tSmileTel supplied NBN voice and internet bundle. Month to month plan. Includes:- 1xVoice phone line,1xInternet service,1x4G Back-up, Static IP.  Unlimited calls to standard Australian numbers, Unlimited data allowance, Account management support.\t136.36\txero-feb-2026\tS0080\nC0349\tZambrero Joondalup\tSmileTel supplied NBN voice and internet bundle. Month to month plan. Includes:- 1xVoice phone line,1xInternet service,1x4G Back-up, Static IP.  Unlimited calls to standard Australian numbers, Unlimited data allowance, Account management support.\t136.36\tnbn-bundle\tS0080\nC0357\tZambrero Majura Park\tSmileTel supplied NBN voice and internet bundle. 36 month plan. Includes:- 1xVoice phone line,1xInternet service,1x4G Back-up, Static IP.  Unlimited calls to standard Australian numbers, Unlimited data allowance, Account management support.\t122.73\txero-feb-2026\tS0063\nC0357\tZambrero Majura Park\tSmileTel supplied NBN voice and internet bundle. 36 month plan. Includes:- 1xVoice phone line,1xInternet service,1x4G Back-up, Static IP.  Unlimited calls to standard Australian numbers, Unlimited data allowance, Account management support.\t122.73\tnbn-bundle\tS0063\nC0369\tZambrero Nerang\tSmileTel supplied NBN voice and internet bundle. Month to month plan. Includes:- 1xVoice phone line,1xInternet service,1x4G Back-up, Static IP.  Unlimited calls to standard Australian numbers, Unlimited data allowance, Account management support.\t136.36\txero-feb-2026\tS0071\nC0369\tZambrero Nerang\tSmileTel supplied NBN voice and internet bundle. Month to month plan. Includes:- 1xVoice phone line,1xInternet service,1x4G Back-up, Static IP.  Unlimited calls to standard Australian numbers, Unlimited data allowance, Account management support.\t136.36\tnbn-bundle\tS0071\nC0370\tZambrero Newtown\tSite Bundle - Recurring: 50/20 Connectivity - Suitable for Enterprise Grade, Premium Dedicated Support, Business Grade Hardware, 24/7 Connectivity Monitoring, 4G Backup, Enhanced Remote Assistance, Unlimited Phone Calls\t165.43\txero-feb-2026\tS7019\nC0385\tZambrero South Hedland\tSmileTel supplied NBN voice and internet bundle. Month to month plan. Includes:- 1xVoice phone line,1xInternet service,1x4G Back-up, Static IP.  Unlimited calls to standard Australian numbers, Unlimited data allowance, Account management support.\t136.36\txero-feb-2026\tS0015\nC0385\tZambrero South Hedland\tSmileTel supplied NBN voice and internet bundle. Month to month plan. Includes:- 1xVoice phone line,1xInternet service,1x4G Back-up, Static IP.  Unlimited calls to standard Australian numbers, Unlimited data allowance, Account management support.\t136.36\tnbn-bundle\tS0015\n",
+  "stderr": "",
+  "execution_time_ms": 1634
+}

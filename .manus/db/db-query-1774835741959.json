@@ -1,0 +1,14 @@
+{
+  "query": "\n-- Find Logan Central Family Clinic customer\nSELECT externalId, name FROM customers WHERE name LIKE '%Logan Central%' LIMIT 5;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Find Logan Central Family Clinic customer\nSELECT externalId, name FROM customers WHERE name LIKE '%Logan Central%' LIMIT 5;\n",
+  "rows": [
+    {
+      "externalId": "C0151",
+      "name": "Logan Central Family Clinic"
+    }
+  ],
+  "messages": [],
+  "stdout": "externalId\tname\nC0151\tLogan Central Family Clinic\n",
+  "stderr": "",
+  "execution_time_ms": 1564
+}

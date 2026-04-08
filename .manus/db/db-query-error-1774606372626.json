@@ -1,0 +1,8 @@
+{
+  "query": "\n-- Get all TIAB services that are unmatched (no customerId) or have contact info\nSELECT \n  s.id,\n  s.externalId,\n  s.serviceType,\n  s.planName,\n  s.customerName,\n  s.customerId,\n  s.supplierName,\n  s.monthlyRevenue,\n  s.monthlyCost\nFROM services s\nWHERE s.supplierName IN ('TIAB', 'Octane', 'Inabox')\n   OR s.planName LIKE '%4G%'\n   OR s.planName LIKE '%SIM%'\n   OR s.planName LIKE '%TIAB%'\nORDER BY s.customerName\nLIMIT 100;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Get all TIAB services that are unmatched (no customerId) or have contact info\nSELECT \n  s.id,\n  s.externalId,\n  s.serviceType,\n  s.planName,\n  s.customerName,\n  s.customerId,\n  s.supplierName,\n  s.monthlyRevenue,\n  s.monthlyCost\nFROM services s\nWHERE s.supplierName IN ('TIAB', 'Octane', 'Inabox')\n   OR s.planName LIKE '%4G%'\n   OR s.planName LIKE '%SIM%'\n   OR s.planName LIKE '%TIAB%'\nORDER BY s.customerName\nLIMIT 100;\n",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1054 (42S22) at line 3: Unknown column 's.customerid' in 'field list'"
+  ]
+}

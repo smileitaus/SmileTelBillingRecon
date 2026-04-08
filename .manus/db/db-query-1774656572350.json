@@ -1,0 +1,21 @@
+{
+  "query": "\nSELECT DISTINCT supplier, COUNT(*) as cnt FROM supplier_workbook_uploads GROUP BY supplier;\nSHOW TABLES LIKE '%workbook%';\nSHOW TABLES LIKE '%line%';\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \nSELECT DISTINCT supplier, COUNT(*) as cnt FROM supplier_workbook_uploads GROUP BY supplier;\nSHOW TABLES LIKE '%workbook%';\nSHOW TABLES LIKE '%line%';\n",
+  "rows": [
+    {
+      "supplier": "SasBoss",
+      "cnt": "2"
+    }
+  ],
+  "messages": [
+    "Tables_in_SkibUwiSvPndpvTSJv52KC (%workbook%)",
+    "supplier_workbook_line_items",
+    "supplier_workbook_uploads",
+    "Tables_in_SkibUwiSvPndpvTSJv52KC (%line%)",
+    "supplier_workbook_line_items",
+    "tiab_supplier_invoice_line_items"
+  ],
+  "stdout": "supplier\tcnt\nSasBoss\t2\nTables_in_SkibUwiSvPndpvTSJv52KC (%workbook%)\nsupplier_workbook_line_items\nsupplier_workbook_uploads\nTables_in_SkibUwiSvPndpvTSJv52KC (%line%)\nsupplier_workbook_line_items\ntiab_supplier_invoice_line_items\n",
+  "stderr": "",
+  "execution_time_ms": 1926
+}

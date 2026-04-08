@@ -1,0 +1,217 @@
+{
+  "query": "-- Check existing ABB services with costs to understand pricing tiers\nSELECT planName, monthlyCost, monthlyRevenue, COUNT(*) as cnt\nFROM services\nWHERE provider = 'ABB' AND monthlyCost > 0\nGROUP BY planName, monthlyCost, monthlyRevenue\nORDER BY monthlyCost DESC\nLIMIT 30;\n\n-- Also check what customer C2615 is and what other services they have\nSELECT c.name, s.externalId, s.planName, s.provider, s.monthlyCost, s.monthlyRevenue\nFROM customers c\nJOIN services s ON s.customerExternalId = c.externalId\nWHERE c.externalId = 'C2615';\n\n-- Check Unknown provider services with revenue to understand scope\nSELECT externalId, planName, provider, monthlyCost, monthlyRevenue\nFROM services\nWHERE provider = 'Unknown' AND monthlyRevenue > 0\nORDER BY monthlyRevenue DESC\nLIMIT 20;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute -- Check existing ABB services with costs to understand pricing tiers\nSELECT planName, monthlyCost, monthlyRevenue, COUNT(*) as cnt\nFROM services\nWHERE provider = 'ABB' AND monthlyCost > 0\nGROUP BY planName, monthlyCost, monthlyRevenue\nORDER BY monthlyCost DESC\nLIMIT 30;\n\n-- Also check what customer C2615 is and what other services they have\nSELECT c.name, s.externalId, s.planName, s.provider, s.monthlyCost, s.monthlyRevenue\nFROM customers c\nJOIN services s ON s.customerExternalId = c.externalId\nWHERE c.externalId = 'C2615';\n\n-- Check Unknown provider services with revenue to understand scope\nSELECT externalId, planName, provider, monthlyCost, monthlyRevenue\nFROM services\nWHERE provider = 'Unknown' AND monthlyRevenue > 0\nORDER BY monthlyRevenue DESC\nLIMIT 20;",
+  "rows": [
+    {
+      "planName": "1000Mbps High CoS",
+      "monthlyCost": "1054.94",
+      "monthlyRevenue": "1309.55",
+      "cnt": "1"
+    },
+    {
+      "planName": "NBN Enterprise Ethernet",
+      "monthlyCost": "768.90",
+      "monthlyRevenue": "1500.00",
+      "cnt": "1"
+    },
+    {
+      "planName": "1000Mbps Low CoS",
+      "monthlyCost": "703.01",
+      "monthlyRevenue": "839.00",
+      "cnt": "1"
+    },
+    {
+      "planName": "NBN Enterprise Ethernet",
+      "monthlyCost": "703.01",
+      "monthlyRevenue": "0.00",
+      "cnt": "1"
+    },
+    {
+      "planName": "1000Mbps Low CoS",
+      "monthlyCost": "703.01",
+      "monthlyRevenue": "0.00",
+      "cnt": "1"
+    },
+    {
+      "planName": "500Mbps Low CoS",
+      "monthlyCost": "579.74",
+      "monthlyRevenue": "0.00",
+      "cnt": "1"
+    },
+    {
+      "planName": "500Mbps Low CoS",
+      "monthlyCost": "579.74",
+      "monthlyRevenue": "620.05",
+      "cnt": "1"
+    },
+    {
+      "planName": "Aussie Fibre 1000Mbps $658.90/mo",
+      "monthlyCost": "548.93",
+      "monthlyRevenue": "6809.87",
+      "cnt": "1"
+    },
+    {
+      "planName": "Aussie Fibre 500Mbps $515.90/mo",
+      "monthlyCost": "515.90",
+      "monthlyRevenue": "0.00",
+      "cnt": "1"
+    },
+    {
+      "planName": "500Mbps Low CoS",
+      "monthlyCost": "505.01",
+      "monthlyRevenue": "499.00",
+      "cnt": "1"
+    },
+    {
+      "planName": "250Mbps High CoS",
+      "monthlyCost": "505.01",
+      "monthlyRevenue": "599.10",
+      "cnt": "1"
+    },
+    {
+      "planName": "Aussie Fibre 500Mps $548.90/mo",
+      "monthlyCost": "438.90",
+      "monthlyRevenue": "0.00",
+      "cnt": "1"
+    },
+    {
+      "planName": "500Mbps/500Mbps",
+      "monthlyCost": "438.90",
+      "monthlyRevenue": "1150.00",
+      "cnt": "1"
+    },
+    {
+      "planName": "250Mbps Low CoS",
+      "monthlyCost": "421.34",
+      "monthlyRevenue": "0.00",
+      "cnt": "1"
+    },
+    {
+      "planName": "250Mbps Low CoS",
+      "monthlyCost": "421.34",
+      "monthlyRevenue": "1350.00",
+      "cnt": "1"
+    },
+    {
+      "planName": "250Mbps Low CoS",
+      "monthlyCost": "406.01",
+      "monthlyRevenue": "449.00",
+      "cnt": "1"
+    },
+    {
+      "planName": "0Mbps/0Mbps",
+      "monthlyCost": "328.90",
+      "monthlyRevenue": "0.00",
+      "cnt": "1"
+    },
+    {
+      "planName": "NBN 1000/400",
+      "monthlyCost": "124.31",
+      "monthlyRevenue": "450.00",
+      "cnt": "1"
+    },
+    {
+      "planName": "Wholesale NBN 1000Mbps/400Mbps",
+      "monthlyCost": "124.31",
+      "monthlyRevenue": "881.84",
+      "cnt": "1"
+    },
+    {
+      "planName": "Wholesale NBN 1000Mbps/400Mbps",
+      "monthlyCost": "124.31",
+      "monthlyRevenue": "189.00",
+      "cnt": "1"
+    },
+    {
+      "planName": "Wholesale NBN 1000Mbps/100Mbps",
+      "monthlyCost": "116.10",
+      "monthlyRevenue": "1618.00",
+      "cnt": "1"
+    },
+    {
+      "planName": "Wholesale NBN 500Mbps/200Mbps",
+      "monthlyCost": "104.51",
+      "monthlyRevenue": "425.40",
+      "cnt": "1"
+    },
+    {
+      "planName": "NBN 500/200",
+      "monthlyCost": "104.51",
+      "monthlyRevenue": "158.33",
+      "cnt": "1"
+    },
+    {
+      "planName": "NBN 500/200",
+      "monthlyCost": "104.51",
+      "monthlyRevenue": "272.00",
+      "cnt": "1"
+    },
+    {
+      "planName": "NBN 250/100",
+      "monthlyCost": "100.10",
+      "monthlyRevenue": "1332.46",
+      "cnt": "1"
+    },
+    {
+      "planName": "NBN 250/100",
+      "monthlyCost": "100.10",
+      "monthlyRevenue": "298.00",
+      "cnt": "1"
+    },
+    {
+      "planName": "NBN 250/100",
+      "monthlyCost": "100.10",
+      "monthlyRevenue": "289.10",
+      "cnt": "1"
+    },
+    {
+      "planName": "NBN 250/100",
+      "monthlyCost": "100.10",
+      "monthlyRevenue": "350.00",
+      "cnt": "1"
+    },
+    {
+      "planName": "NBN 250/100",
+      "monthlyCost": "100.10",
+      "monthlyRevenue": "0.00",
+      "cnt": "1"
+    },
+    {
+      "planName": "Opticomm 100/40",
+      "monthlyCost": "95.45",
+      "monthlyRevenue": "401.82",
+      "cnt": "1"
+    }
+  ],
+  "messages": [
+    "name\texternalId\tplanName\tprovider\tmonthlyCost\tmonthlyRevenue",
+    "Aussie Traveller\tS0477\t250Mbps Low CoS\tABB\t421.34\t1350.00",
+    "Aussie Traveller\tS0478\t250Mbps Low CoS\tABB\t421.34\t0.00",
+    "Aussie Traveller\tS1529\tSmile Tel NBN Enterprise Ethernet Fibre 250mb up/down - 36 Months - Melbourne - Aussie Broadband backboneEach\tUnknown\t0.00\t1000.00",
+    "Aussie Traveller\tS1530\tUp to 200Mbps/100Mbps - Month to Month - Aussie Broadband BackboneEach\tUnknown\t0.00\t350.00",
+    "externalId\tplanName\tprovider\tmonthlyCost\tmonthlyRevenue",
+    "S1131\t4G Internet - 3 Sites - 125GB per Site Per MonthEach\tUnknown\t0.00\t6033.00",
+    "S1590\t3CX 16SC Enterprise Edition Annual Renewal (Hosted)1533581 -\tUnknown\t0.00\t5939.38",
+    "S1468\tSmile Tel NBN Enterprise Ethernet Fibre 1000mb up/down - 36 MonthsEach\tUnknown\t0.00\t4468.00",
+    "S1132\t500mb Business Grade Fibre Up and Down - Route 1 - 36 Month ContractEach\tUnknown\t104.51\t4450.00",
+    "S0866\t1000/1000 Vocus Fibre Internet Service with Unlimited Internet (36Month)- CPE/Router not Included\tUnknown\t0.00\t1780.00",
+    "S0985\tSmile Tel NBN Enterprise Ethernet Fibre 100mb up/down - 36 MonthsEach\tUnknown\t0.00\t1780.00",
+    "S1322\t100mb Business Grade Fibre Up and Down - 36 Month ContractEach\tUnknown\t0.00\t1755.00",
+    "S1109\tLocal Priority 50GB Top-Up (Thursday, 1 January 2026 9:10 pm - Wednesday, 7 January 2026 12:00 am)MAMMOTH-FAILOVER-1TB KITP00070\tUnknown\t0.00\t1430.56",
+    "S0867\t1300826349\tUnknown\t0.00\t1342.36",
+    "S0903\t1000/1000 Fibre Internet Service with Unlimited Internet- Carrier Service Level Assurance  Service Restoration Target <  8Hrs\tUnknown\t0.00\t1250.00",
+    "S1110\tStarlink Subscription - 1TB Priority\tUnknown\t0.00\t1064.00",
+    "S1167\tResidential NBN connection - 21 Cleary Drive\\, Pitt Town\\, NSW\\, 2756 (01/04/2023)\tUnknown\t73.69\t1014.00",
+    "S1529\tSmile Tel NBN Enterprise Ethernet Fibre 250mb up/down - 36 Months - Melbourne - Aussie Broadband backboneEach\tUnknown\t0.00\t1000.00",
+    "S0827\tPremium Fibre 1000mb/36 months,  includes an NTU with built in 4G fail-overEach\tUnknown\t0.00\t989.19",
+    "S1283\tTSF50-R1-50mb-36Month\tUnknown\t0.00\t975.00",
+    "S1011\tSmile It Telstra Premium Fibre - Route 1 50MB/36 MonthsEach\tUnknown\t0.00\t970.00",
+    "S1234\tTSF100-R1-100mb-36Month\tUnknown\t0.00\t930.00",
+    "S0828\tAAPT - NBN Enterprise Ethernet 250/250Mb\\, 36 Month\tUnknown\t0.00\t926.00",
+    "S1310\tLandline-Mobile\tUnknown\t0.00\t881.75",
+    "S1134\tStarlink provides high-speed, low-latency broadband internet across the globe.Each\tUnknown\t0.00\t863.00"
+  ],
+  "stdout": "planName\tmonthlyCost\tmonthlyRevenue\tcnt\n1000Mbps High CoS\t1054.94\t1309.55\t1\nNBN Enterprise Ethernet\t768.90\t1500.00\t1\n1000Mbps Low CoS\t703.01\t839.00\t1\nNBN Enterprise Ethernet\t703.01\t0.00\t1\n1000Mbps Low CoS\t703.01\t0.00\t1\n500Mbps Low CoS\t579.74\t0.00\t1\n500Mbps Low CoS\t579.74\t620.05\t1\nAussie Fibre 1000Mbps $658.90/mo\t548.93\t6809.87\t1\nAussie Fibre 500Mbps $515.90/mo\t515.90\t0.00\t1\n500Mbps Low CoS\t505.01\t499.00\t1\n250Mbps High CoS\t505.01\t599.10\t1\nAussie Fibre 500Mps $548.90/mo\t438.90\t0.00\t1\n500Mbps/500Mbps\t438.90\t1150.00\t1\n250Mbps Low CoS\t421.34\t0.00\t1\n250Mbps Low CoS\t421.34\t1350.00\t1\n250Mbps Low CoS\t406.01\t449.00\t1\n0Mbps/0Mbps\t328.90\t0.00\t1\nNBN 1000/400\t124.31\t450.00\t1\nWholesale NBN 1000Mbps/400Mbps\t124.31\t881.84\t1\nWholesale NBN 1000Mbps/400Mbps\t124.31\t189.00\t1\nWholesale NBN 1000Mbps/100Mbps\t116.10\t1618.00\t1\nWholesale NBN 500Mbps/200Mbps\t104.51\t425.40\t1\nNBN 500/200\t104.51\t158.33\t1\nNBN 500/200\t104.51\t272.00\t1\nNBN 250/100\t100.10\t1332.46\t1\nNBN 250/100\t100.10\t298.00\t1\nNBN 250/100\t100.10\t289.10\t1\nNBN 250/100\t100.10\t350.00\t1\nNBN 250/100\t100.10\t0.00\t1\nOpticomm 100/40\t95.45\t401.82\t1\nname\texternalId\tplanName\tprovider\tmonthlyCost\tmonthlyRevenue\nAussie Traveller\tS0477\t250Mbps Low CoS\tABB\t421.34\t1350.00\nAussie Traveller\tS0478\t250Mbps Low CoS\tABB\t421.34\t0.00\nAussie Traveller\tS1529\tSmile Tel NBN Enterprise Ethernet Fibre 250mb up/down - 36 Months - Melbourne - Aussie Broadband backboneEach\tUnknown\t0.00\t1000.00\nAussie Traveller\tS1530\tUp to 200Mbps/100Mbps - Month to Month - Aussie Broadband BackboneEach\tUnknown\t0.00\t350.00\nexternalId\tplanName\tprovider\tmonthlyCost\tmonthlyRevenue\nS1131\t4G Internet - 3 Sites - 125GB per Site Per MonthEach\tUnknown\t0.00\t6033.00\nS1590\t3CX 16SC Enterprise Edition Annual Renewal (Hosted)1533581 -\tUnknown\t0.00\t5939.38\nS1468\tSmile Tel NBN Enterprise Ethernet Fibre 1000mb up/down - 36 MonthsEach\tUnknown\t0.00\t4468.00\nS1132\t500mb Business Grade Fibre Up and Down - Route 1 - 36 Month ContractEach\tUnknown\t104.51\t4450.00\nS0866\t1000/1000 Vocus Fibre Internet Service with Unlimited Internet (36Month)- CPE/Router not Included\tUnknown\t0.00\t1780.00\nS0985\tSmile Tel NBN Enterprise Ethernet Fibre 100mb up/down - 36 MonthsEach\tUnknown\t0.00\t1780.00\nS1322\t100mb Business Grade Fibre Up and Down - 36 Month ContractEach\tUnknown\t0.00\t1755.00\nS1109\tLocal Priority 50GB Top-Up (Thursday, 1 January 2026 9:10 pm - Wednesday, 7 January 2026 12:00 am)MAMMOTH-FAILOVER-1TB KITP00070\tUnknown\t0.00\t1430.56\nS0867\t1300826349\tUnknown\t0.00\t1342.36\nS0903\t1000/1000 Fibre Internet Service with Unlimited Internet- Carrier Service Level Assurance  Service Restoration Target <  8Hrs\tUnknown\t0.00\t1250.00\nS1110\tStarlink Subscription - 1TB Priority\tUnknown\t0.00\t1064.00\nS1167\tResidential NBN connection - 21 Cleary Drive\\, Pitt Town\\, NSW\\, 2756 (01/04/2023)\tUnknown\t73.69\t1014.00\nS1529\tSmile Tel NBN Enterprise Ethernet Fibre 250mb up/down - 36 Months - Melbourne - Aussie Broadband backboneEach\tUnknown\t0.00\t1000.00\nS0827\tPremium Fibre 1000mb/36 months,  includes an NTU with built in 4G fail-overEach\tUnknown\t0.00\t989.19\nS1283\tTSF50-R1-50mb-36Month\tUnknown\t0.00\t975.00\nS1011\tSmile It Telstra Premium Fibre - Route 1 50MB/36 MonthsEach\tUnknown\t0.00\t970.00\nS1234\tTSF100-R1-100mb-36Month\tUnknown\t0.00\t930.00\nS0828\tAAPT - NBN Enterprise Ethernet 250/250Mb\\, 36 Month\tUnknown\t0.00\t926.00\nS1310\tLandline-Mobile\tUnknown\t0.00\t881.75\nS1134\tStarlink provides high-speed, low-latency broadband internet across the globe.Each\tUnknown\t0.00\t863.00\n",
+  "stderr": "",
+  "execution_time_ms": 1986
+}

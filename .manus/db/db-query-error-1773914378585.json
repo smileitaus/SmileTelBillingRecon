@@ -1,0 +1,8 @@
+{
+  "query": "\nSELECT \n  status,\n  billingPeriod,\n  COUNT(*) AS cnt,\n  SUM(monthlyCost) AS totalCost\nFROM services\nWHERE status = 'terminated' OR terminationStatus IS NOT NULL OR terminationStatus != ''\nGROUP BY status, billingPeriod\nORDER BY cnt DESC;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \nSELECT \n  status,\n  billingPeriod,\n  COUNT(*) AS cnt,\n  SUM(monthlyCost) AS totalCost\nFROM services\nWHERE status = 'terminated' OR terminationStatus IS NOT NULL OR terminationStatus != ''\nGROUP BY status, billingPeriod\nORDER BY cnt DESC;\n",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1054 (42S22) at line 2: Unknown column 'terminationstatus' in 'where clause'"
+  ]
+}

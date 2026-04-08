@@ -1,0 +1,8 @@
+{
+  "query": "SELECT supplier, COUNT(*) as total, SUM(CASE WHEN connectionId IS NOT NULL AND connectionId != '' THEN 1 ELSE 0 END) as has_connection_id FROM services GROUP BY supplier ORDER BY has_connection_id DESC;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute SELECT supplier, COUNT(*) as total, SUM(CASE WHEN connectionId IS NOT NULL AND connectionId != '' THEN 1 ELSE 0 END) as has_connection_id FROM services GROUP BY supplier ORDER BY has_connection_id DESC;",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1054 (42S22) at line 1: Unknown column 'supplier' in 'group statement'"
+  ]
+}

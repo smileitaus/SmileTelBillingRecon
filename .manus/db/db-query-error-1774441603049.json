@@ -1,0 +1,8 @@
+{
+  "query": "\n-- Check the sasboss_pricebook for UCXcel products\nSELECT product_id, product_name, wholesale_price, rrp_price, product_status\nFROM sasboss_pricebook\nWHERE product_name LIKE '%UCXcel%'\nLIMIT 10;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Check the sasboss_pricebook for UCXcel products\nSELECT product_id, product_name, wholesale_price, rrp_price, product_status\nFROM sasboss_pricebook\nWHERE product_name LIKE '%UCXcel%'\nLIMIT 10;\n",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1054 (42S22) at line 3: Unknown column 'wholesale_price' in 'field list'"
+  ]
+}

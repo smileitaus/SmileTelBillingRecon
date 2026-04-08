@@ -1,0 +1,94 @@
+{
+  "query": "\n-- Find all billing items for ASG Hail\nSELECT \n  bi.externalId, bi.description, bi.quantity, bi.unitAmount, bi.lineAmount,\n  bi.invoiceDate, bi.billingPlatform, bi.serviceExternalId, bi.contactName,\n  bi.matchStatus\nFROM billing_items bi\nWHERE bi.contactName LIKE '%ASG%'\nORDER BY bi.invoiceDate DESC\nLIMIT 10;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Find all billing items for ASG Hail\nSELECT \n  bi.externalId, bi.description, bi.quantity, bi.unitAmount, bi.lineAmount,\n  bi.invoiceDate, bi.billingPlatform, bi.serviceExternalId, bi.contactName,\n  bi.matchStatus\nFROM billing_items bi\nWHERE bi.contactName LIKE '%ASG%'\nORDER BY bi.invoiceDate DESC\nLIMIT 10;\n",
+  "rows": [
+    {
+      "externalId": "BI00525",
+      "description": "Adam Blackwell House NBN Up to 100Mbps/40Mbps -36 Month Contract - Unlimited Business - Aussie Broadband BackboneEach",
+      "quantity": "1.00",
+      "unitAmount": "120.00",
+      "lineAmount": "120.00",
+      "invoiceDate": "2026-02-04",
+      "billingPlatform": "",
+      "serviceExternalId": "S0775",
+      "contactName": "ASG Hail Pty Ltd",
+      "matchStatus": "service-matched"
+    },
+    {
+      "externalId": "BI00524",
+      "description": "Upgraded speed Smile Tel NBN Enterprise Ethernet Fibre 100mb up/down - 36 Months5 Kilcoy Drive, TomagoEach",
+      "quantity": "1.00",
+      "unitAmount": "750.00",
+      "lineAmount": "750.00",
+      "invoiceDate": "2026-02-04",
+      "billingPlatform": "",
+      "serviceExternalId": "S0776",
+      "contactName": "ASG Hail Pty Ltd",
+      "matchStatus": "service-matched"
+    },
+    {
+      "externalId": "BI00409",
+      "description": "Other",
+      "quantity": "1.00",
+      "unitAmount": "400.00",
+      "lineAmount": "400.00",
+      "invoiceDate": "2026-02-01",
+      "billingPlatform": "",
+      "serviceExternalId": "S0777",
+      "contactName": "ASG Hail Pty Ltd",
+      "matchStatus": "service-matched"
+    },
+    {
+      "externalId": "BI00406",
+      "description": "Voice - Services",
+      "quantity": "1.00",
+      "unitAmount": "1837.08",
+      "lineAmount": "1837.08",
+      "invoiceDate": "2026-02-01",
+      "billingPlatform": "",
+      "serviceExternalId": "S0773",
+      "contactName": "ASG Hail Pty Ltd",
+      "matchStatus": "service-matched"
+    },
+    {
+      "externalId": "BI00408",
+      "description": "Voice - Line Rental",
+      "quantity": "1.00",
+      "unitAmount": "52.50",
+      "lineAmount": "52.50",
+      "invoiceDate": "2026-02-01",
+      "billingPlatform": "",
+      "serviceExternalId": "S0772",
+      "contactName": "ASG Hail Pty Ltd",
+      "matchStatus": "service-matched"
+    },
+    {
+      "externalId": "BI00407",
+      "description": "Voice - Direct In Dial Numbers",
+      "quantity": "1.00",
+      "unitAmount": "142.50",
+      "lineAmount": "142.50",
+      "invoiceDate": "2026-02-01",
+      "billingPlatform": "",
+      "serviceExternalId": "S0771",
+      "contactName": "ASG Hail Pty Ltd",
+      "matchStatus": "service-matched"
+    },
+    {
+      "externalId": "BI00405",
+      "description": "Voice - Telephone Usage",
+      "quantity": "1.00",
+      "unitAmount": "515.14",
+      "lineAmount": "515.14",
+      "invoiceDate": "2026-02-01",
+      "billingPlatform": "",
+      "serviceExternalId": "S0774",
+      "contactName": "ASG Hail Pty Ltd",
+      "matchStatus": "service-matched"
+    }
+  ],
+  "messages": [],
+  "stdout": "externalId\tdescription\tquantity\tunitAmount\tlineAmount\tinvoiceDate\tbillingPlatform\tserviceExternalId\tcontactName\tmatchStatus\nBI00525\tAdam Blackwell House NBN Up to 100Mbps/40Mbps -36 Month Contract - Unlimited Business - Aussie Broadband BackboneEach\t1.00\t120.00\t120.00\t2026-02-04\t\tS0775\tASG Hail Pty Ltd\tservice-matched\nBI00524\tUpgraded speed Smile Tel NBN Enterprise Ethernet Fibre 100mb up/down - 36 Months5 Kilcoy Drive, TomagoEach\t1.00\t750.00\t750.00\t2026-02-04\t\tS0776\tASG Hail Pty Ltd\tservice-matched\nBI00409\tOther\t1.00\t400.00\t400.00\t2026-02-01\t\tS0777\tASG Hail Pty Ltd\tservice-matched\nBI00406\tVoice - Services\t1.00\t1837.08\t1837.08\t2026-02-01\t\tS0773\tASG Hail Pty Ltd\tservice-matched\nBI00408\tVoice - Line Rental\t1.00\t52.50\t52.50\t2026-02-01\t\tS0772\tASG Hail Pty Ltd\tservice-matched\nBI00407\tVoice - Direct In Dial Numbers\t1.00\t142.50\t142.50\t2026-02-01\t\tS0771\tASG Hail Pty Ltd\tservice-matched\nBI00405\tVoice - Telephone Usage\t1.00\t515.14\t515.14\t2026-02-01\t\tS0774\tASG Hail Pty Ltd\tservice-matched\n",
+  "stderr": "",
+  "execution_time_ms": 1523
+}

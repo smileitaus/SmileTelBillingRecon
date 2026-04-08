@@ -1,0 +1,95 @@
+{
+  "query": "\n-- phone_numbers are CommsCode/NetSIP DID numbers (geographic/1300/1800)\n-- services.phoneNumber for mobiles are mobile numbers like 0408xxxxxx\n-- Let's see what the 200 phone_numbers with customers look like\nSELECT number, numberType, customerExternalId FROM phone_numbers \nWHERE customerExternalId IS NOT NULL AND customerExternalId != ''\nLIMIT 8;\n\n-- And what unmatched service phone numbers look like\nSELECT REPLACE(phoneNumber,' ','') AS stripped_phone, serviceType, supplierName\nFROM services\nWHERE (customerExternalId IS NULL OR customerExternalId = '')\n  AND phoneNumber IS NOT NULL AND phoneNumber != ''\n  AND phoneNumber NOT LIKE '%Unknown%'\nLIMIT 8;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- phone_numbers are CommsCode/NetSIP DID numbers (geographic/1300/1800)\n-- services.phoneNumber for mobiles are mobile numbers like 0408xxxxxx\n-- Let's see what the 200 phone_numbers with customers look like\nSELECT number, numberType, customerExternalId FROM phone_numbers \nWHERE customerExternalId IS NOT NULL AND customerExternalId != ''\nLIMIT 8;\n\n-- And what unmatched service phone numbers look like\nSELECT REPLACE(phoneNumber,' ','') AS stripped_phone, serviceType, supplierName\nFROM services\nWHERE (customerExternalId IS NULL OR customerExternalId = '')\n  AND phoneNumber IS NOT NULL AND phoneNumber != ''\n  AND phoneNumber NOT LIKE '%Unknown%'\nLIMIT 8;\n",
+  "rows": [
+    {
+      "number": "0738813335",
+      "numberType": "geographic",
+      "customerExternalId": "C0009"
+    },
+    {
+      "number": "0738632226",
+      "numberType": "geographic",
+      "customerExternalId": "C0016"
+    },
+    {
+      "number": "0733985225",
+      "numberType": "geographic",
+      "customerExternalId": "C0022"
+    },
+    {
+      "number": "0754062081",
+      "numberType": "geographic",
+      "customerExternalId": "C0079"
+    },
+    {
+      "number": "0732892366",
+      "numberType": "geographic",
+      "customerExternalId": "C0080"
+    },
+    {
+      "number": "0749787868",
+      "numberType": "geographic",
+      "customerExternalId": "C0103"
+    },
+    {
+      "number": "0738299088",
+      "numberType": "geographic",
+      "customerExternalId": "C0166"
+    },
+    {
+      "number": "0746409077",
+      "numberType": "geographic",
+      "customerExternalId": "C0284"
+    },
+    {
+      "number": "stripped_phone",
+      "numberType": "serviceType",
+      "customerExternalId": "supplierName"
+    },
+    {
+      "number": "0738912724",
+      "numberType": "Internet",
+      "customerExternalId": "Telstra"
+    },
+    {
+      "number": "0738467857",
+      "numberType": "Internet",
+      "customerExternalId": "Telstra"
+    },
+    {
+      "number": "0738630705",
+      "numberType": "Internet",
+      "customerExternalId": "Telstra"
+    },
+    {
+      "number": "0408280923",
+      "numberType": "Mobile",
+      "customerExternalId": "Telstra"
+    },
+    {
+      "number": "0417986051",
+      "numberType": "Mobile",
+      "customerExternalId": "Telstra"
+    },
+    {
+      "number": "0427561709",
+      "numberType": "Mobile",
+      "customerExternalId": "Telstra"
+    },
+    {
+      "number": "0428262713",
+      "numberType": "Mobile",
+      "customerExternalId": "Telstra"
+    },
+    {
+      "number": "0428752373",
+      "numberType": "Mobile",
+      "customerExternalId": "Telstra"
+    }
+  ],
+  "messages": [],
+  "stdout": "number\tnumberType\tcustomerExternalId\n0738813335\tgeographic\tC0009\n0738632226\tgeographic\tC0016\n0733985225\tgeographic\tC0022\n0754062081\tgeographic\tC0079\n0732892366\tgeographic\tC0080\n0749787868\tgeographic\tC0103\n0738299088\tgeographic\tC0166\n0746409077\tgeographic\tC0284\nstripped_phone\tserviceType\tsupplierName\n0738912724\tInternet\tTelstra\n0738467857\tInternet\tTelstra\n0738630705\tInternet\tTelstra\n0408280923\tMobile\tTelstra\n0417986051\tMobile\tTelstra\n0427561709\tMobile\tTelstra\n0428262713\tMobile\tTelstra\n0428752373\tMobile\tTelstra\n",
+  "stderr": "",
+  "execution_time_ms": 1816
+}
