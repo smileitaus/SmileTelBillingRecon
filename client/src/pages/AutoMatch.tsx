@@ -469,7 +469,8 @@ function AliasMatchTab() {
         </div>
       ) : (
         <div className="bg-card border border-border rounded-lg overflow-hidden">
-          <table className="w-full text-sm">
+          <div className="overflow-x-auto">
+          <table className="w-full text-sm min-w-[600px]">
             <thead>
               <tr className="border-b border-border bg-muted/30">
                 <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wide w-8">
@@ -623,6 +624,7 @@ function AliasMatchTab() {
               })}
             </tbody>
           </table>
+          </div>
         </div>
       )}
 
@@ -988,7 +990,8 @@ function AddressMatchTab() {
         </div>
       ) : (
         <div className="bg-card border border-border rounded-lg overflow-hidden">
-          <table className="w-full text-sm">
+          <div className="overflow-x-auto">
+          <table className="w-full text-sm min-w-[600px]">
             <thead>
               <tr className="border-b border-border bg-muted/30">
                 <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wide w-8">
@@ -1142,6 +1145,7 @@ function AddressMatchTab() {
               })}
             </tbody>
           </table>
+          </div>
         </div>
       )}
 
@@ -1231,7 +1235,7 @@ function BulkActivateTab() {
               </p>
             </div>
             <div className="bg-card border border-border rounded-lg p-4">
-              <p className="text-xs text-muted-foreground uppercase tracking-wide">Monthly Cost (preview)</p>
+              <p className="text-xs text-muted-foreground uppercase tracking-wide">Monthly Cost ex GST (preview)</p>
               <p className="text-3xl font-bold text-amber-600 mt-1">
                 ${totalMonthly.toLocaleString('en-AU', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
               </p>
@@ -1278,7 +1282,7 @@ function BulkActivateTab() {
                       <th className="text-left px-4 py-2 font-medium">Service ID</th>
                       <th className="text-left px-4 py-2 font-medium">Customer</th>
                       <th className="text-left px-4 py-2 font-medium">Address</th>
-                      <th className="text-right px-4 py-2 font-medium">Monthly Cost</th>
+                      <th className="text-right px-4 py-2 font-medium">Monthly Cost (ex GST)</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -1365,13 +1369,49 @@ export default function AutoMatch() {
   const [activeTab, setActiveTab] = useState<"alias" | "address" | "bulk" | "proposals">("bulk");
   const { data: pendingCount = 0 } = trpc.billing.customers.proposals.pendingCount.useQuery(undefined, { refetchInterval: 30_000 });
 
+  const [autoMatchJobId, setAutoMatchJobId] = useState<string | null>(null);
+  const autoMatchStatusQuery = trpc.billing.globalAutoMatchStatus.useQuery(
+    { jobId: autoMatchJobId! },
+    {
+      enabled: !!autoMatchJobId,
+      refetchInterval: (query) => {
+        const status = (query.state.data as any)?.status;
+        return status === 'running' ? 3000 : false;
+      },
+    }
+  );
+  const utils = trpc.useUtils();
+
+  // Watch for job completion
+  React.useEffect(() => {
+    if (!autoMatchJobId) return;
+    const status = (autoMatchStatusQuery.data as any)?.status;
+    if (status === 'done') {
+      const result = (autoMatchStatusQuery.data as any)?.result;
+      setAutoMatchJobId(null);
+      // Invalidate dashboard + revenue queries so they reflect the new assignments immediately
+      utils.billing.summary.invalidate();
+      utils.billing.margin.list.invalidate();
+      utils.billing.margin.grouped.invalidate();
+      utils.billing.supplierAccounts.invalidate();
+      toast.success(
+        `Auto-Match complete — ${result?.applied ?? 0} new assignment${result?.applied !== 1 ? 's' : ''} across ${result?.customersProcessed ?? 0} customers. Dashboard updated.`,
+        { duration: 6000 }
+      );
+    } else if (status === 'error') {
+      const error = (autoMatchStatusQuery.data as any)?.error;
+      setAutoMatchJobId(null);
+      toast.error(`Billing auto-match failed: ${error}`);
+    }
+  }, [autoMatchJobId, autoMatchStatusQuery.data]);
+  const isAutoMatchRunning = !!autoMatchJobId;
+
   const globalBillingMatchMutation = trpc.billing.globalAutoMatch.useMutation({
     onSuccess: (result: any) => {
-      toast.success(
-        `Billing auto-match complete: ${result?.matched ?? 0} service${
-          result?.matched !== 1 ? 's' : ''
-        } matched across ${result?.customersProcessed ?? 0} customers`
-      );
+      if (result?.jobId) {
+        setAutoMatchJobId(result.jobId);
+        toast.info('Auto-match started — running in background, may take a few minutes…');
+      }
     },
     onError: (err: any) => toast.error(`Billing auto-match failed: ${err.message}`),
   });
@@ -1392,12 +1432,12 @@ export default function AutoMatch() {
         </div>
         {/* Global Billing Auto-Match — runs across ALL customers without opening each screen */}
         <button
-          onClick={() => globalBillingMatchMutation.mutate({ minConfidence: 100 })}
-          disabled={globalBillingMatchMutation.isPending}
+          onClick={() => globalBillingMatchMutation.mutate({ minConfidence: 70 })}
+          disabled={globalBillingMatchMutation.isPending || isAutoMatchRunning}
           className="flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold transition-colors disabled:opacity-60 disabled:cursor-not-allowed shadow-sm"
-          title="Auto-match 100% confident service → billing item links across all customers without opening each screen"
+          title="Auto-match service → billing item links across all customers (70%+ confidence). Runs in background."
         >
-          {globalBillingMatchMutation.isPending ? (
+          {(globalBillingMatchMutation.isPending || isAutoMatchRunning) ? (
             <><Loader2 className="w-4 h-4 animate-spin" />Running…</>
           ) : (
             <><Zap className="w-4 h-4" />Auto-Match Billing Items</>

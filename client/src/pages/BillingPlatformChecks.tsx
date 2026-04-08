@@ -27,12 +27,49 @@ import {
   DollarSign,
   ExternalLink,
   FileText,
+  WifiOff,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { exportToCSV } from "@/lib/exportCsv";
 
 const PLATFORMS = ["OneBill", "SasBoss", "ECN", "Halo", "DataGate"];
 const PRIORITIES = ["critical", "high", "medium", "low"];
+
+// ─── Active Outages Panel ─────────────────────────────────────────────────────
+function ActiveOutagesPanel() {
+  const { data: outageServices, isLoading } = trpc.billing.getActiveOutagesServices.useQuery(undefined, {
+    staleTime: 5 * 60 * 1000,
+    refetchInterval: 5 * 60 * 1000,
+  });
+  if (isLoading || !outageServices || outageServices.length === 0) return null;
+  return (
+    <div className="mb-4 rounded-lg border border-red-200 bg-red-50 p-4">
+      <div className="flex items-center gap-2 mb-3">
+        <WifiOff className="w-4 h-4 text-red-600" />
+        <span className="text-sm font-semibold text-red-800">
+          {outageServices.length} service{outageServices.length !== 1 ? 's' : ''} with active Carbon API outage{outageServices.length !== 1 ? 's' : ''}
+        </span>
+      </div>
+      <div className="space-y-1.5">
+        {outageServices.slice(0, 10).map((svc) => (
+          <div key={svc.externalId} className="flex items-center justify-between text-xs">
+            <span className="text-red-700 font-medium">{svc.externalId}</span>
+            <span className="text-red-600 truncate max-w-[200px] mx-2">{svc.planName ?? '—'}</span>
+            <a
+              href={`/services/${svc.externalId}`}
+              className="text-red-700 hover:text-red-900 underline"
+            >
+              View
+            </a>
+          </div>
+        ))}
+        {outageServices.length > 10 && (
+          <p className="text-xs text-red-600 mt-1">…and {outageServices.length - 10} more</p>
+        )}
+      </div>
+    </div>
+  );
+}
 
 const PRIORITY_STYLES: Record<string, string> = {
   critical: "bg-red-100 text-red-800 border-red-200",
@@ -218,6 +255,95 @@ function DetailPill({ icon, label, value }: { icon: React.ReactNode; label: stri
   );
 }
 
+function UnverifiedServicesPanel() {
+  const [expanded, setExpanded] = useState(false);
+  const utils = trpc.useUtils();
+  const { data: unverified = [], isLoading } = trpc.billing.platformChecks.getUnverifiedServices.useQuery();
+  const opticommCount = unverified.filter((s: any) => s.suggestedProvider === 'Opticomm').length;
+  const unknownCount = unverified.length - opticommCount;
+
+  const bulkReclassify = trpc.billing.platformChecks.bulkReclassifyProvider.useMutation({
+    onSuccess: (result) => {
+      toast.success(`Reclassified ${result.updated} service${result.updated !== 1 ? 's' : ''} to Opticomm`);
+      utils.billing.platformChecks.getUnverifiedServices.invalidate();
+    },
+    onError: (err) => toast.error(err.message),
+  });
+
+  if (isLoading || unverified.length === 0) return null;
+
+  return (
+    <div className="bg-orange-50 border border-orange-200 rounded-lg mb-6">
+      <button
+        onClick={() => setExpanded(e => !e)}
+        className="w-full flex items-center justify-between p-4 text-left"
+      >
+        <div className="flex items-center gap-3">
+          <AlertTriangle className="w-5 h-5 text-orange-600 shrink-0" />
+          <div>
+            <p className="text-sm font-semibold text-orange-900">
+              Data Quality: {unverified.length} unverified ABB service{unverified.length !== 1 ? 's' : ''}
+            </p>
+            <p className="text-xs text-orange-700 mt-0.5">
+              {opticommCount > 0 && <span className="font-medium">{opticommCount} likely Opticomm misclassification{opticommCount !== 1 ? 's' : ''}</span>}
+              {opticommCount > 0 && unknownCount > 0 && ' · '}
+              {unknownCount > 0 && <span>{unknownCount} ABB service{unknownCount !== 1 ? 's' : ''} without Carbon API confirmation</span>}
+            </p>
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
+          {opticommCount > 0 && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                bulkReclassify.mutate({
+                  planNamePattern: 'opticomm',
+                  fromProvider: 'ABB',
+                  toProvider: 'Opticomm',
+                });
+              }}
+              disabled={bulkReclassify.isPending}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-orange-600 text-white rounded-md hover:bg-orange-700 disabled:opacity-50 transition-colors"
+            >
+              {bulkReclassify.isPending ? (
+                <Loader2 className="w-3 h-3 animate-spin" />
+              ) : null}
+              Fix {opticommCount} Opticomm → Change Provider
+            </button>
+          )}
+          {expanded ? <ChevronUp className="w-4 h-4 text-orange-600" /> : <ChevronDown className="w-4 h-4 text-orange-600" />}
+        </div>
+      </button>
+      {expanded && (
+        <div className="border-t border-orange-200 divide-y divide-orange-100">
+          {unverified.map((svc: any) => (
+            <div key={svc.externalId} className="flex items-center justify-between px-4 py-3">
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-mono text-orange-800 font-semibold">{svc.externalId}</span>
+                  {svc.suggestedProvider && (
+                    <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-red-100 text-red-700 border border-red-200 font-semibold">
+                      Likely {svc.suggestedProvider}
+                    </span>
+                  )}
+                </div>
+                <p className="text-xs text-orange-700 mt-0.5 truncate">{svc.planName || 'Unknown plan'} · {svc.customerExternalId || 'Unassigned'}</p>
+                <p className="text-[11px] text-orange-600 mt-0.5">{svc.verificationIssue}</p>
+              </div>
+              <a
+                href={`/services/${svc.externalId}`}
+                className="ml-3 text-xs font-medium text-orange-800 underline underline-offset-2 hover:text-orange-900 shrink-0"
+              >
+                Review
+              </a>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function BillingPlatformChecks() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("open");
@@ -318,6 +444,11 @@ export default function BillingPlatformChecks() {
           Export CSV
         </Button>
       </div>
+
+      {/* Data Quality — Active Outages */}
+      <ActiveOutagesPanel />
+      {/* Data Quality — Unverified Services */}
+      <UnverifiedServicesPanel />
 
       {/* Summary cards */}
       {summary && (

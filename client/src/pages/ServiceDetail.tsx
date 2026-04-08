@@ -6,7 +6,7 @@
  * Discovery notes and termination status workflow
  */
 
-import { Link, useParams } from "wouter";
+import { Link, useParams, useSearch } from "wouter";
 import {
   ArrowLeft,
   Wifi,
@@ -37,6 +37,8 @@ import {
   Calendar,
   User,
   Activity,
+  RefreshCw,
+  ClipboardList,
 } from "lucide-react";
 import { useServiceDetail } from "@/hooks/useData";
 import { trpc } from "@/lib/trpc";
@@ -45,6 +47,11 @@ import { toast } from "sonner";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { ProviderBadge } from "@/components/ProviderBadge";
 import ServiceEditPanel from "@/components/ServiceEditPanel";
+import CarbonDiagnosticsPanel from "@/components/CarbonDiagnosticsPanel";
+import CarbonOutagesPanel from "@/components/CarbonOutagesPanel";
+import { OmadaDevicePanel } from "@/components/OmadaDevicePanel";
+import { OmadaSitePanel } from "@/components/OmadaSitePanel";
+import { WhyMatchedPopover } from "@/components/WhyMatchedPopover";
 
 function ServiceTypeIcon({ type }: { type: string }) {
   switch (type) {
@@ -428,7 +435,13 @@ function CostHistoryPanel({ serviceExternalId }: { serviceExternalId: string }) 
 const BILLING_PLATFORMS = ["OneBill", "SasBoss", "ECN", "Halo", "DataGate"];
 function BillingPlatformEditor({ service }: { service: any }) {
   const [editing, setEditing] = useState(false);
-  const currentPlatforms: string[] = service.billingPlatform ? JSON.parse(service.billingPlatform) : [];
+  let currentPlatforms: string[] = [];
+  try {
+    const bp = service.billingPlatform ? JSON.parse(service.billingPlatform) : [];
+    currentPlatforms = Array.isArray(bp) ? bp : [];
+  } catch {
+    currentPlatforms = [];
+  }
   const [selected, setSelected] = useState<string[]>(currentPlatforms);
   const updatePlatform = trpc.billing.updateBillingPlatform.useMutation();
   const utils = trpc.useUtils();
@@ -512,9 +525,12 @@ function ServiceStatusActions({ service }: { service: any }) {
   const updateStatus = trpc.billing.updateStatus.useMutation();
   const terminateMutation = trpc.billing.terminate.useMutation();
   const restoreMutation = trpc.billing.restore.useMutation();
+  const submitForReview = trpc.billing.review.submitForReview.useMutation();
   const utils = trpc.useUtils();
   const [showTerminateConfirm, setShowTerminateConfirm] = useState(false);
   const [terminateReason, setTerminateReason] = useState("");
+  const [showReviewConfirm, setShowReviewConfirm] = useState(false);
+  const [reviewNote, setReviewNote] = useState("");
 
   const invalidateAll = () => {
     utils.billing.services.byId.invalidate({ id: service.externalId });
@@ -561,8 +577,29 @@ function ServiceStatusActions({ service }: { service: any }) {
     } catch { toast.error("Failed to restore service"); }
   };
 
+  const handleSendToReview = async () => {
+    try {
+      await submitForReview.mutateAsync({
+        targetType: 'service',
+        targetId: service.externalId,
+        targetName: service.planName || service.serviceType || service.externalId,
+        note: reviewNote || 'Sent to review queue for manual QA',
+        issueType: 'manual_review',
+        issueDescription: reviewNote || 'Service flagged for manual QA review',
+        customerName: service.customerName || '',
+        customerExternalId: service.customerExternalId || '',
+        monthlyAmount: parseFloat(service.monthlyCost || 0),
+        priority: 'medium',
+      });
+      toast.success('Service sent to review queue');
+      setShowReviewConfirm(false);
+      setReviewNote('');
+      invalidateAll();
+    } catch { toast.error('Failed to send to review queue'); }
+  };
+
   const currentStatus = service.status;
-  const isPending = updateStatus.isPending || terminateMutation.isPending || restoreMutation.isPending;
+  const isPending = updateStatus.isPending || terminateMutation.isPending || restoreMutation.isPending || submitForReview.isPending;
 
   return (
     <div className="flex flex-wrap gap-2">
@@ -597,8 +634,39 @@ function ServiceStatusActions({ service }: { service: any }) {
         </div>
       )}
 
+      {/* Review confirmation inline */}
+      {showReviewConfirm && (
+        <div className="w-full bg-amber-50 border border-amber-200 rounded-lg p-4 space-y-3">
+          <p className="text-sm font-medium text-amber-800">Send to Review Queue</p>
+          <p className="text-xs text-muted-foreground">This service will be added to the manual QA review queue for the team to investigate before any action is taken.</p>
+          <input
+            type="text"
+            placeholder="Reason for review (optional)"
+            value={reviewNote}
+            onChange={e => setReviewNote(e.target.value)}
+            className="w-full text-sm border border-border rounded-md px-3 py-2 bg-background outline-none focus:ring-2 focus:ring-ring/20"
+          />
+          <div className="flex gap-2">
+            <button
+              onClick={handleSendToReview}
+              disabled={isPending}
+              className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium bg-amber-600 text-white rounded-md hover:bg-amber-700 transition-colors disabled:opacity-50"
+            >
+              {submitForReview.isPending ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <ClipboardList className="w-3.5 h-3.5" />}
+              Add to Review Queue
+            </button>
+            <button
+              onClick={() => { setShowReviewConfirm(false); setReviewNote(''); }}
+              className="inline-flex items-center px-4 py-2 text-sm border border-border rounded-md hover:bg-accent transition-colors"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Main action buttons */}
-      {!showTerminateConfirm && (
+      {!showTerminateConfirm && !showReviewConfirm && (
         <>
           {currentStatus !== "terminated" && (
             <button
@@ -629,6 +697,16 @@ function ServiceStatusActions({ service }: { service: any }) {
               Unflag
             </button>
           )}
+          {currentStatus !== "terminated" && (
+            <button
+              onClick={() => setShowReviewConfirm(true)}
+              disabled={isPending}
+              className="inline-flex items-center gap-2 px-3 py-2 text-sm border border-amber-300 text-amber-700 bg-amber-50 rounded-md hover:bg-amber-100 transition-colors disabled:opacity-50"
+            >
+              <ClipboardList className="w-3.5 h-3.5" />
+              Review
+            </button>
+          )}
           {currentStatus === "terminated" && (
             <button
               onClick={handleRestore}
@@ -647,11 +725,25 @@ function ServiceStatusActions({ service }: { service: any }) {
 
 export default function ServiceDetail() {
   const params = useParams<{ id: string }>();
+  const rawSearch = useSearch();
+  const fromFilter = new URLSearchParams(rawSearch).get("from") ?? "";
+  const backToList = fromFilter ? `/customers?${fromFilter}` : "/customers";
   const { service, location, customer, isLoading } = useServiceDetail(
     params.id || ""
   );
   const [editPanelOpen, setEditPanelOpen] = useState(false);
   const utils = trpc.useUtils();
+  const reverify = trpc.billing.reverifyWithCarbonApi.useMutation({
+    onSuccess: (result) => {
+      if (result.matched) {
+        toast.success(result.message);
+        utils.billing.services.byId.invalidate({ id: params.id || '' });
+      } else {
+        toast.error(result.message);
+      }
+    },
+    onError: (err) => toast.error(err.message),
+  });
 
   if (isLoading) {
     return (
@@ -666,7 +758,7 @@ export default function ServiceDetail() {
       <div className="p-8 text-center text-muted-foreground">
         <p>Service not found</p>
         <Link
-          href="/customers"
+          href={backToList}
           className="text-sm underline mt-2 inline-block"
         >
           Back to customers
@@ -685,7 +777,7 @@ export default function ServiceDetail() {
       {/* Breadcrumb */}
       {customer ? (
         <Link
-          href={`/customers/${customer.externalId || customer.id}`}
+          href={`/customers/${customer.externalId || customer.id}${fromFilter ? `?from=${encodeURIComponent(fromFilter)}` : ""}`}
           className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors mb-4"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
@@ -693,7 +785,7 @@ export default function ServiceDetail() {
         </Link>
       ) : (
         <Link
-          href="/customers"
+          href={backToList}
           className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors mb-4"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
@@ -754,13 +846,18 @@ export default function ServiceDetail() {
             <h1 className={`text-xl font-bold tracking-tight ${isTerminated ? "line-through text-muted-foreground" : ""}`}>
               {service.serviceType} — {service.planName || "Unknown Plan"}
             </h1>
-            <button
-              onClick={() => setEditPanelOpen(true)}
-              className="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
-            >
-              <Pencil className="w-3 h-3" />
-              Edit / Reassign
-            </button>
+            <div className="flex items-center gap-2">
+              {service.customerExternalId && (
+                <WhyMatchedPopover serviceExternalId={service.externalId} />
+              )}
+              <button
+                onClick={() => setEditPanelOpen(true)}
+                className="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
+              >
+                <Pencil className="w-3 h-3" />
+                Edit / Reassign
+              </button>
+            </div>
           </div>
           <div className="flex items-center gap-3 mt-1.5">
             <StatusBadge status={service.status} />
@@ -817,6 +914,36 @@ export default function ServiceDetail() {
                 serviceExternalId={service.externalId}
                 currentAvc={service.connectionId}
               />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Provider Verification Warning Banner */}
+      {service.provider === 'ABB' && !(service as any).carbonServiceId && !isTerminated && (
+        <div className="bg-orange-50 border border-orange-200 rounded-lg p-4 mb-4 flex items-start gap-3">
+          <AlertTriangle className="w-5 h-5 text-orange-600 shrink-0 mt-0.5" />
+          <div className="flex-1">
+            <p className="text-sm font-medium text-orange-800">
+              Provider unverified — no Carbon API confirmation
+            </p>
+            <p className="text-xs text-orange-700 mt-1">
+              This service is recorded as <strong>ABB / Aussie Broadband</strong> but has not been confirmed by the Carbon API.
+              It may have been imported from a spreadsheet with an incorrect provider assignment.
+              {(service as any).planName?.toLowerCase().includes('opticomm') && (
+                <span className="block mt-1 font-medium">
+                  The plan name "{(service as any).planName}" suggests this may be an <strong>Opticomm</strong> service, not ABB.
+                </span>
+              )}
+            </p>
+            <div className="mt-2 flex items-center gap-2">
+              <span className="text-xs text-orange-700">Correct the provider using</span>
+              <button
+                onClick={() => setEditPanelOpen(true)}
+                className="text-xs font-medium text-orange-800 underline underline-offset-2 hover:text-orange-900"
+              >
+                Edit / Reassign
+              </button>
             </div>
           </div>
         </div>
@@ -948,8 +1075,8 @@ export default function ServiceDetail() {
         </div>
       )}
 
-      {/* Carbon API Data (ABB) */}
-      {(service.carbonServiceId || service.avcId || service.technology || service.speedTier || service.carbonPlanName || service.carbonAlias) && (
+      {/* Carbon API Data (ABB) — shown for all ABB provider services, verified or not */}
+      {(service.provider === 'ABB' || service.carbonServiceId || service.avcId || service.technology || service.speedTier || service.carbonPlanName || service.carbonAlias) && (
         <div className="bg-card border border-green-200 rounded-lg p-5 mb-4">
           <div className="flex items-center gap-2 mb-3">
             <Database className="w-4 h-4 text-green-600" />
@@ -958,6 +1085,34 @@ export default function ServiceDetail() {
             </h2>
             <ProviderBadge provider="ABB" size="sm" />
           </div>
+          {/* Verification status row */}
+          {service.provider === 'ABB' && !service.carbonServiceId && (
+            <div className="flex items-center justify-between py-2 mb-1 border-b border-border">
+              <div className="flex items-center gap-2">
+                <AlertTriangle className="w-3.5 h-3.5 text-orange-500 shrink-0" />
+                <span className="text-xs text-orange-700 font-medium">Not verified — no matching Carbon API record found</span>
+              </div>
+              <button
+                onClick={() => reverify.mutate({ serviceExternalId: service.externalId })}
+                disabled={reverify.isPending}
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-semibold bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50 transition-colors shrink-0"
+                title="Search the live Carbon API for a matching service record"
+              >
+                {reverify.isPending ? (
+                  <Loader2 className="w-3 h-3 animate-spin" />
+                ) : (
+                  <RefreshCw className="w-3 h-3" />
+                )}
+                Re-verify
+              </button>
+            </div>
+          )}
+          {service.provider === 'ABB' && service.carbonServiceId && (
+            <div className="flex items-center gap-2 py-2 mb-1 border-b border-border">
+              <Check className="w-3.5 h-3.5 text-green-600 shrink-0" />
+              <span className="text-xs text-green-700 font-medium">Verified via Carbon API</span>
+            </div>
+          )}
           <DetailRow label="Carbon ID" value={service.carbonServiceId} mono />
           <DetailRow label="AVC ID" value={service.avcId} mono />
           <DetailRow label="Alias" value={service.carbonAlias} />
@@ -972,13 +1127,35 @@ export default function ServiceDetail() {
           <DetailRow label="Open Date" value={service.openDate} />
           {service.carbonMonthlyCost && parseFloat(String(service.carbonMonthlyCost)) > 0 && (
             <DetailRow
-              label="Carbon Cost"
+              label="Carbon Cost (Ex GST)"
               value={`$${parseFloat(String(service.carbonMonthlyCost)).toLocaleString("en-AU", { minimumFractionDigits: 2 })}/mo`}
               mono
             />
           )}
         </div>
       )}
+
+      {/* Carbon Service Outages — shown for ABB services with a carbonServiceId */}
+      {service.carbonServiceId && service.carbonServiceId.trim() !== '' && (
+        <CarbonOutagesPanel carbonServiceId={service.carbonServiceId} />
+      )}
+
+      {/* Carbon Remote Diagnostics — shown only for ABB services with a carbonServiceId */}
+      {service.carbonServiceId && service.carbonServiceId.trim() !== '' && (
+        <CarbonDiagnosticsPanel
+          serviceExternalId={service.externalId}
+          carbonServiceId={service.carbonServiceId}
+          customerExternalId={service.customerExternalId}
+        />
+      )}
+
+      {/* Omada Network Panel — shown when the customer has an Omada site linked */}
+      {service.customerExternalId && service.customerExternalId.trim() !== '' && (
+        <OmadaSitePanel customerExternalId={service.customerExternalId} />
+      )}
+
+      {/* Omada Device Panel — shown when a specific device is cached for this service */}
+      <OmadaDevicePanel serviceExternalId={service.externalId} />
 
       {/* Cost History */}
       <CostHistoryPanel serviceExternalId={service.externalId} />

@@ -116,3 +116,6 @@ temp/
 INV-*.csv
 scripts/*.json
 *.bak.json
+
+# Manus internal query cache
+.manus/

@@ -18,7 +18,8 @@ import {
   Phone, Wifi, Smartphone, Globe, Package, Briefcase, Building2,
   Clock, ChevronDown, ChevronRight, GripVertical, X, CheckCircle2,
   Zap, TrendingUp, TrendingDown, AlertTriangle, Archive, Loader2,
-  RefreshCw, DollarSign, ArrowRight, Info, Inbox, Wand2, AlertCircle
+  RefreshCw, DollarSign, ArrowRight, Info, Inbox, Wand2, AlertCircle, ShieldOff,
+  HardDrive, Headphones, Box, MapPinOff
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -52,6 +53,7 @@ interface UnassignedService {
   connectionId?: string;
   simSerialNumber?: string;
   deviceName?: string;
+  billingPlatform?: string | null;
 }
 
 interface AssignedService {
@@ -78,8 +80,13 @@ interface BillingItemWithAssignments {
   lineAmount: number;
   category: string;
   matchStatus: string;
+  billingPlatform?: string;
+  matchConfidence?: string;
   assignedServices: AssignedService[];
   totalCost: number;
+  supplierServicesCost: number;
+  bundleFixedCostTotal: number;
+  bundleFixedCostInputs: Array<{ slotType: string; monthlyCostExGst: number; costSource: string }>;
   margin: number;
   marginPercent: number | null;
 }
@@ -141,6 +148,9 @@ function fmt(n: number) {
   return n.toLocaleString("en-AU", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
+// Known billing platforms for the quick-assign dropdown
+const BILLING_PLATFORMS = ['OneBill', 'SasBoss', 'ECN', 'Halo', 'DataGate', 'TIAB', 'Vocus', 'ABB', 'Telstra', 'Other'];
+
 // ─── Service Card (draggable) ─────────────────────────────────────────────────
 
 function ServiceCard({
@@ -148,11 +158,13 @@ function ServiceCard({
   isDragging,
   onDragStart,
   onDragEnd,
+  onAssignBillingPlatform,
 }: {
   service: UnassignedService;
   isDragging: boolean;
   onDragStart: (e: React.DragEvent, service: UnassignedService) => void;
   onDragEnd: () => void;
+  onAssignBillingPlatform?: (serviceExternalId: string, platform: string) => void;
 }) {
   const cfg = CATEGORY_CONFIG[service.serviceCategory as ServiceCategory];
   const billingType = getBillingTypeForCategory(service.serviceCategory);
@@ -179,11 +191,41 @@ function ServiceCard({
           {service.planName && service.planName !== service.serviceTypeDetail && (
             <p className="text-xs text-muted-foreground mt-0.5 truncate">{service.planName}</p>
           )}
-          {service.locationAddress && (
+          {service.locationAddress && service.locationAddress !== 'Unknown Location' ? (
             <p className="text-xs text-muted-foreground/70 truncate">{service.locationAddress}</p>
+          ) : (
+            <span className="inline-flex items-center gap-0.5 text-[9px] font-medium text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded-full mt-0.5">
+              <MapPinOff className="w-2.5 h-2.5" />
+              No location
+            </span>
           )}
           {(service.phoneNumber || service.simSerialNumber) && (
             <p className="text-xs text-muted-foreground/70 truncate">{service.phoneNumber || service.simSerialNumber}</p>
+          )}
+          {/* Billing platform quick-assign */}
+          {!service.billingPlatform && onAssignBillingPlatform && (
+            <div
+              className="mt-1"
+              onMouseDown={(e) => e.stopPropagation()}
+              onDragStart={(e) => e.preventDefault()}
+            >
+              <select
+                className="text-[10px] text-amber-700 bg-amber-50 border border-amber-200 rounded px-1.5 py-0.5 cursor-pointer hover:bg-amber-100 transition-colors w-full"
+                defaultValue=""
+                onChange={(e) => {
+                  if (e.target.value) onAssignBillingPlatform(service.externalId, e.target.value);
+                }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <option value="" disabled>⚠ No billing platform — assign</option>
+                {BILLING_PLATFORMS.map(p => <option key={p} value={p}>{p}</option>)}
+              </select>
+            </div>
+          )}
+          {service.billingPlatform && (
+            <span className="inline-flex items-center gap-0.5 text-[9px] font-medium text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded-full mt-0.5">
+              {service.billingPlatform}
+            </span>
           )}
         </div>
         <div className="shrink-0 text-right">
@@ -344,7 +386,23 @@ function BillingItemDropTarget({
       <div className="flex items-start gap-3 px-3 py-2.5">
         <div className="flex-1 min-w-0">
           <p className="text-sm font-medium truncate">{item.description}</p>
-          <p className="text-xs text-muted-foreground">{item.invoiceNumber} · {item.invoiceDate?.slice(0, 10)}</p>
+          <p className="text-xs text-muted-foreground">
+            {item.invoiceNumber} · {item.invoiceDate?.slice(0, 10)}
+            {item.billingPlatform && (
+              <span className={`ml-1.5 inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium ${
+                item.billingPlatform === 'DataGate' ? 'bg-sky-100 text-sky-700 border border-sky-200' :
+                item.billingPlatform === 'Xero' ? 'bg-blue-100 text-blue-700 border border-blue-200' :
+                item.billingPlatform === 'SasBoss' ? 'bg-amber-100 text-amber-700 border border-amber-200' :
+                item.billingPlatform === 'ChannelHaus' ? 'bg-violet-100 text-violet-700 border border-violet-200' :
+                'bg-gray-100 text-gray-600 border border-gray-200'
+              }`}>
+                {item.billingPlatform}
+                {item.matchConfidence && item.matchConfidence !== 'high' && (
+                  <span className="ml-1 opacity-60">({item.matchConfidence})</span>
+                )}
+              </span>
+            )}
+          </p>
         </div>
         <div className="shrink-0 text-right">
           <p className="text-sm font-semibold text-teal-700">${fmt(item.lineAmount)}</p>
@@ -355,12 +413,69 @@ function BillingItemDropTarget({
       {/* Margin row */}
       {hasAssignments && (
         <div className="flex items-center gap-3 px-3 pb-2 text-xs">
-          <span className="text-muted-foreground">Cost: <span className="font-medium text-orange-600">${fmt(item.totalCost)}</span></span>
+          <span className="text-muted-foreground">
+            Cost: <span className="font-medium text-orange-600">${fmt(item.totalCost)}</span>
+            {item.bundleFixedCostTotal > 0 && (
+              <span className="ml-1 text-[10px] text-violet-600 font-normal">
+                ({fmt(item.supplierServicesCost ?? (item.totalCost - item.bundleFixedCostTotal))} svcs + {fmt(item.bundleFixedCostTotal)} bundle)
+              </span>
+            )}
+          </span>
           <span className={cn("flex items-center gap-0.5 font-semibold", marginPositive ? "text-teal-700" : "text-rose-600")}>
             {marginPositive ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
             {marginPositive ? "+" : ""}${fmt(item.margin)}
             {item.marginPercent !== null && ` (${Math.round(item.marginPercent)}%)`}
           </span>
+        </div>
+      )}
+
+      {/* Bundle fixed cost rows — always visible so margin is transparent */}
+      {item.bundleFixedCostInputs && item.bundleFixedCostInputs.length > 0 && (
+        <div className="px-3 pb-2 space-y-1.5">
+          <div className="flex items-center gap-1.5 mb-1">
+            <div className="flex-1 h-px bg-violet-200/60" />
+            <span className="text-[10px] text-violet-500 font-medium uppercase tracking-wider">Bundle Fixed Costs</span>
+            <div className="flex-1 h-px bg-violet-200/60" />
+          </div>
+          {item.bundleFixedCostInputs.map((bc, idx) => {
+            const slotIcons: Record<string, React.ReactNode> = {
+              hardware:    <HardDrive className="w-3 h-3 text-orange-500" />,
+              sip_channel: <Phone className="w-3 h-3 text-green-500" />,
+              support:     <Headphones className="w-3 h-3 text-cyan-500" />,
+              internet:    <Wifi className="w-3 h-3 text-blue-500" />,
+              sim_4g:      <Smartphone className="w-3 h-3 text-purple-500" />,
+              other:       <Box className="w-3 h-3 text-gray-400" />,
+            };
+            const slotLabels: Record<string, string> = {
+              hardware:    'Hardware Rental',
+              sip_channel: 'SIP Channel',
+              support:     'Support',
+              internet:    'Internet (NBN)',
+              sim_4g:      '4G SIM',
+              other:       'Other',
+            };
+            return (
+              <div
+                key={idx}
+                className="flex items-center justify-between gap-2 bg-violet-50/60 border border-violet-100 rounded px-2 py-1.5"
+              >
+                <div className="flex items-center gap-1.5 min-w-0">
+                  {slotIcons[bc.slotType] ?? <Box className="w-3 h-3 text-gray-400" />}
+                  <span className="text-xs font-medium text-violet-800 truncate">
+                    {slotLabels[bc.slotType] ?? bc.slotType}
+                  </span>
+                  <span className="inline-flex items-center px-1 py-0 rounded text-[10px] font-medium bg-violet-100 text-violet-600 border border-violet-200">
+                    bundle
+                  </span>
+                </div>
+                <div className="flex items-center gap-2 shrink-0">
+                  <span className="text-xs text-orange-600 font-medium">
+                    ${fmt(bc.monthlyCostExGst)}/mo
+                  </span>
+                </div>
+              </div>
+            );
+          })}
         </div>
       )}
 
@@ -446,12 +561,14 @@ function CategoryGroup({
   dragState,
   onDragStart,
   onDragEnd,
+  onAssignBillingPlatform,
 }: {
   category: ServiceCategory;
   services: UnassignedService[];
   dragState: { draggingId: string | null };
   onDragStart: (e: React.DragEvent, service: UnassignedService) => void;
   onDragEnd: () => void;
+  onAssignBillingPlatform?: (serviceExternalId: string, platform: string) => void;
 }) {
   const [collapsed, setCollapsed] = useState(false);
   const cfg = CATEGORY_CONFIG[category];
@@ -478,6 +595,7 @@ function CategoryGroup({
               isDragging={dragState.draggingId === svc.externalId}
               onDragStart={onDragStart}
               onDragEnd={onDragEnd}
+              onAssignBillingPlatform={onAssignBillingPlatform}
             />
           ))}
         </div>
@@ -527,6 +645,13 @@ export function ReconciliationBoard({ customerExternalId }: { customerExternalId
       { enabled: !!customerExternalId, staleTime: 30_000 }
     );
 
+  // Outage-suppressed services: unbilled services hidden from the leakage list due to active outage
+  const { data: suppressedServices = [] } =
+    trpc.billing.customers.suppressedUnbilledServices.useQuery(
+      { customerExternalId },
+      { enabled: !!customerExternalId, staleTime: 60_000 }
+    );
+
   // ── Mutations ─────────────────────────────────────────────────────────────
   const assignMutation = trpc.billing.customers.billingAssignments.assign.useMutation({
     onSuccess: () => {
@@ -556,6 +681,21 @@ export function ReconciliationBoard({ customerExternalId }: { customerExternalId
     },
     onError: (err) => toast.error(`Failed: ${err.message}`),
   });
+
+  const updateServiceMutation = trpc.billing.services.update.useMutation({
+    onSuccess: () => {
+      refetchServices();
+      toast.success('Billing platform updated');
+    },
+    onError: (err) => toast.error(`Failed to update: ${err.message}`),
+  });
+
+  const handleAssignBillingPlatform = useCallback((serviceExternalId: string, platform: string) => {
+    updateServiceMutation.mutate({
+      serviceExternalId,
+      updates: { billingPlatform: [platform] },
+    });
+  }, [updateServiceMutation]);
 
   const syncCostsMutation = trpc.billing.recalculateCosts.useMutation({
     onSuccess: (result) => {
@@ -828,6 +968,31 @@ export function ReconciliationBoard({ customerExternalId }: { customerExternalId
         </div>
       </div>
 
+      {/* Outage Suppression Banner — shown when services are hidden from leakage list due to active outage */}
+      {suppressedServices.length > 0 && (
+        <div className="flex items-start gap-3 px-4 py-3 mb-3 bg-indigo-50 border border-indigo-200 rounded-lg">
+          <ShieldOff className="w-4 h-4 text-indigo-600 shrink-0 mt-0.5" />
+          <div className="flex-1 min-w-0">
+            <p className="text-xs font-semibold text-indigo-800">
+              {suppressedServices.length} service{suppressedServices.length !== 1 ? 's' : ''} suppressed from billing alerts due to active outage
+            </p>
+            <p className="text-xs text-indigo-600 mt-0.5">
+              These services are unbilled but are excluded from the leakage list because they currently have an active Carbon outage.
+              They will reappear once the outage is resolved.
+            </p>
+            <div className="flex flex-wrap gap-1.5 mt-2">
+              {suppressedServices.map((s: any) => (
+                <span key={s.externalId} className="inline-flex items-center gap-1 text-[10px] bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-full border border-indigo-200">
+                  <ShieldOff className="w-2.5 h-2.5" />
+                  {s.planName || s.externalId}
+                  {s.outageTitle && <span className="opacity-70">— {s.outageTitle}</span>}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Auto-match running indicator */}
       {autoMatchRunning && (
         <div className="flex items-center gap-2 px-3 py-2 mb-3 bg-blue-50 border border-blue-200 rounded-lg text-xs">
@@ -915,6 +1080,7 @@ export function ReconciliationBoard({ customerExternalId }: { customerExternalId
                   dragState={dragState}
                   onDragStart={handleDragStart}
                   onDragEnd={handleDragEnd}
+                  onAssignBillingPlatform={handleAssignBillingPlatform}
                 />
               ))}
             </div>

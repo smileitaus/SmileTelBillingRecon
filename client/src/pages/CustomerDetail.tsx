@@ -5,7 +5,7 @@
  * AVC tracking with missing-AVC icons and inline editing
  */
 
-import { Link, useParams } from "wouter";
+import { Link, useParams, useSearch } from "wouter";
 import {
   ArrowLeft,
   MapPin,
@@ -31,6 +31,8 @@ import {
   ChevronDown,
   ChevronUp,
   History,
+  MapPinOff,
+  ClipboardList,
 } from "lucide-react";
 import { useCustomerDetail } from "@/hooks/useData";
 import { trpc } from "@/lib/trpc";
@@ -48,8 +50,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { ProviderBadge } from "@/components/ProviderBadge";
+import { WhyMatchedPopover } from "@/components/WhyMatchedPopover";
 import { Badge } from "@/components/ui/badge";
 import { ReconciliationBoard } from "@/components/ReconciliationBoard";
+import { OmadaSitePanel } from "@/components/OmadaSitePanel";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useMemo } from "react";
 
@@ -490,17 +494,50 @@ function AvcInlineEditor({
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function ServiceRow({ service, customerExternalId, onTerminated }: { service: any; customerExternalId?: string; onTerminated?: () => void }) {
+function ServiceRow({ service, customerExternalId, onTerminated, fromFilter = "" }: { service: any; customerExternalId?: string; onTerminated?: () => void; fromFilter?: string }) {
   const hasAvc = service.connectionId && service.connectionId.trim() !== "";
   const isTerminated = service.status === "terminated";
   const isFlagged = service.status === "flagged_for_termination";
   const isUnmatched = service.status === "unmatched" && service.provider === "Unknown";
   const hasNotes = service.discoveryNotes && service.discoveryNotes.trim() !== "";
+  const isUnlocated = !service.locationAddress || service.locationAddress === 'Unknown Location' || service.locationAddress.trim() === '';
   const [showConfirm, setShowConfirm] = useState(false);
   const [showMatchDialog, setShowMatchDialog] = useState(false);
   const terminateMutation = trpc.billing.terminate.useMutation();
   const restoreMutation = trpc.billing.restore.useMutation();
+  const inheritLocationMutation = trpc.billing.services.inheritLocation.useMutation();
+  const submitForReview = trpc.billing.review.submitForReview.useMutation();
   const utils = trpc.useUtils();
+  const [showReviewConfirm, setShowReviewConfirm] = useState(false);
+  const [reviewNote, setReviewNote] = useState("");
+  const [sitePicker, setSitePicker] = useState<{
+    candidates: Array<{ address: string; locationExternalId: string | null; serviceType: string; provider: string | null; serviceExternalId: string }>;
+  } | null>(null);
+
+  const applyInheritedLocation = async (chosenAddress?: string) => {
+    try {
+      const result = await inheritLocationMutation.mutateAsync({
+        serviceExternalId: service.externalId,
+        chosenAddress,
+      });
+      if (result.updated) {
+        toast.success(`Location inherited: ${result.address}`);
+        utils.billing.customers.byId.invalidate();
+        setSitePicker(null);
+      } else if (result.needsPicker && result.candidates) {
+        // Multiple sites found — show picker
+        setSitePicker({ candidates: result.candidates });
+      } else {
+        toast.error(result.reason || 'Could not inherit location');
+      }
+    } catch { toast.error('Failed to inherit location'); }
+  };
+
+  const handleInheritLocation = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    applyInheritedLocation();
+  };
 
   const handleTerminate = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -535,7 +572,7 @@ function ServiceRow({ service, customerExternalId, onTerminated }: { service: an
 
   return (
     <>
-      <Link href={`/services/${service.externalId || service.id}`} asChild>
+      <Link href={`/services/${service.externalId || service.id}${fromFilter ? `?from=${encodeURIComponent(fromFilter)}` : ""}`} asChild>
         <div className={`flex items-center gap-3 px-4 py-2.5 hover:bg-accent/50 transition-colors cursor-pointer group border-b border-border/30 last:border-0 ${isTerminated ? "opacity-60" : isFlagged ? "bg-rose-50/30" : ""}`}>
           <div className={`w-7 h-7 rounded-md flex items-center justify-center ${isTerminated ? "bg-gray-100 text-gray-400" : isFlagged ? "bg-rose-50 text-rose-600" : "bg-muted text-muted-foreground"}`}>
             <ServiceTypeIcon type={service.serviceType} />
@@ -578,6 +615,17 @@ function ServiceRow({ service, customerExternalId, onTerminated }: { service: an
           <div className="shrink-0 hidden md:block">
             <StatusPill status={service.status} billingLinked={service.billingLinked} />
           </div>
+          {/* Inherit location from co-located service — for unknown-location services */}
+          {isUnlocated && !isTerminated && customerExternalId && (
+            <button
+              onClick={handleInheritLocation}
+              disabled={inheritLocationMutation.isPending}
+              title="Inherit location from co-located ABB/Internet service"
+              className="shrink-0 p-1.5 rounded text-amber-600 opacity-0 group-hover:opacity-100 hover:bg-amber-50 transition-all disabled:opacity-50"
+            >
+              {inheritLocationMutation.isPending ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <MapPinOff className="w-3.5 h-3.5" />}
+            </button>
+          )}
           {/* Link to supplier service button — only for unmatched Xero stubs */}
           {isUnmatched && customerExternalId && (
             <button
@@ -586,6 +634,16 @@ function ServiceRow({ service, customerExternalId, onTerminated }: { service: an
               className="shrink-0 p-1.5 rounded text-amber-600 opacity-0 group-hover:opacity-100 hover:bg-amber-50 transition-all"
             >
               <LinkIcon className="w-3.5 h-3.5" />
+            </button>
+          )}
+          {/* Quick review button */}
+          {!isTerminated && (
+            <button
+              onClick={(e) => { e.preventDefault(); e.stopPropagation(); setShowReviewConfirm(true); }}
+              title="Send to review queue"
+              className="shrink-0 p-1.5 rounded text-amber-600 opacity-0 group-hover:opacity-100 hover:bg-amber-50 transition-all"
+            >
+              <ClipboardList className="w-3.5 h-3.5" />
             </button>
           )}
           {/* Quick terminate / restore button */}
@@ -607,9 +665,60 @@ function ServiceRow({ service, customerExternalId, onTerminated }: { service: an
               {restoreMutation.isPending ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Check className="w-3.5 h-3.5" />}
             </button>
           )}
+          {/* Why matched? provenance popover */}
+          {service.status === 'active' && service.externalId && (
+            <WhyMatchedPopover serviceExternalId={service.externalId} />
+          )}
           <ChevronRight className="w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
         </div>
       </Link>
+      {/* Inline review row */}
+      {showReviewConfirm && (
+        <div className="px-4 py-3 bg-amber-50 border-b border-amber-200 flex items-center gap-3">
+          <ClipboardList className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+          <input
+            type="text"
+            placeholder="Reason for review (optional)"
+            value={reviewNote}
+            onChange={e => setReviewNote(e.target.value)}
+            onClick={e => e.stopPropagation()}
+            className="text-xs flex-1 border border-border rounded px-2 py-1 bg-background outline-none"
+          />
+          <button
+            onClick={async (e) => {
+              e.preventDefault(); e.stopPropagation();
+              try {
+                await submitForReview.mutateAsync({
+                  targetType: 'service',
+                  targetId: service.externalId,
+                  targetName: service.planName || service.serviceType || service.externalId,
+                  note: reviewNote || 'Sent to review queue for manual QA',
+                  issueType: 'manual_review',
+                  issueDescription: reviewNote || 'Service flagged for manual QA review',
+                  customerName: service.customerName || '',
+                  customerExternalId: customerExternalId || '',
+                  monthlyAmount: parseFloat(service.monthlyCost || 0),
+                  priority: 'medium',
+                });
+                toast.success('Sent to review queue');
+                setShowReviewConfirm(false);
+                setReviewNote('');
+              } catch { toast.error('Failed to send to review'); }
+            }}
+            disabled={submitForReview.isPending}
+            className="text-xs px-3 py-1.5 bg-amber-600 text-white rounded-md hover:bg-amber-700 disabled:opacity-50 inline-flex items-center gap-1 shrink-0"
+          >
+            {submitForReview.isPending ? <Loader2 className="w-3 h-3 animate-spin" /> : <ClipboardList className="w-3 h-3" />}
+            Add to Review
+          </button>
+          <button
+            onClick={(e) => { e.preventDefault(); e.stopPropagation(); setShowReviewConfirm(false); setReviewNote(''); }}
+            className="text-xs px-3 py-1.5 border border-border rounded-md hover:bg-accent shrink-0"
+          >
+            Cancel
+          </button>
+        </div>
+      )}
       {/* Inline confirmation row */}
       {showConfirm && (
         <div className="px-4 py-3 bg-destructive/5 border-b border-destructive/20 flex items-center gap-3">
@@ -639,6 +748,37 @@ function ServiceRow({ service, customerExternalId, onTerminated }: { service: an
           onClose={() => setShowMatchDialog(false)}
           onMatched={() => { utils.billing.customers.byId.invalidate(); onTerminated?.(); }}
         />
+      )}
+      {/* Site-picker dialog — shown when multiple distinct addresses are found */}
+      {sitePicker && (
+        <Dialog open onOpenChange={() => setSitePicker(null)}>
+          <DialogContent className="max-w-md">
+            <DialogHeader>
+              <DialogTitle>Select Site Address</DialogTitle>
+            </DialogHeader>
+            <p className="text-sm text-muted-foreground mb-3">
+              This customer has multiple site addresses. Choose the correct location for this service:
+            </p>
+            <div className="flex flex-col gap-2">
+              {sitePicker.candidates.map((c) => (
+                <button
+                  key={c.serviceExternalId}
+                  onClick={() => applyInheritedLocation(c.address)}
+                  disabled={inheritLocationMutation.isPending}
+                  className="text-left px-4 py-3 rounded-lg border border-border hover:border-primary hover:bg-primary/5 transition-all group disabled:opacity-50"
+                >
+                  <div className="text-sm font-medium text-foreground group-hover:text-primary">{c.address}</div>
+                  <div className="text-xs text-muted-foreground mt-0.5">
+                    From {c.serviceType} service{c.provider ? ` — ${c.provider}` : ''}
+                  </div>
+                </button>
+              ))}
+            </div>
+            <DialogFooter className="mt-2">
+              <Button variant="ghost" size="sm" onClick={() => setSitePicker(null)}>Cancel</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       )}
     </>
   );
@@ -784,6 +924,9 @@ function UnmatchedBillingRow({
 
 export default function CustomerDetail() {
   const params = useParams<{ id: string }>();
+  const rawSearch = useSearch();
+  const fromFilter = new URLSearchParams(rawSearch).get("from") ?? "";
+  const backToList = fromFilter ? `/customers?${fromFilter}` : "/customers";
   const [showEditDialog, setShowEditDialog] = useState(false);
   const [showUnmatchedBilling, setShowUnmatchedBilling] = useState(true);
   const {
@@ -795,6 +938,14 @@ export default function CustomerDetail() {
   } = useCustomerDetail(params.id || "");
 
   const utils = trpc.useUtils();
+  const setCustomerTypeMutation = trpc.billing.customers.setCustomerType.useMutation({
+    onSuccess: (data) => {
+      utils.billing.customers.byId.invalidate({ id: params.id || '' });
+      utils.billing.customers.list.invalidate();
+      toast.success(data.customerType === 'retail_offering' ? 'Marked as Retail Offering' : 'Marked as Standard customer');
+    },
+    onError: (err) => toast.error(`Failed: ${err.message}`),
+  });
   const { data: unmatchedBillingServices = [], isLoading: isLoadingUnmatched } =
     trpc.billing.customers.unmatchedBillingServices.useQuery(
       { customerExternalId: params.id || "" },
@@ -813,6 +964,17 @@ export default function CustomerDetail() {
       utils.billing.summary.invalidate();
     },
   });
+  const bulkInheritMutation = trpc.billing.services.bulkInheritLocations.useMutation({
+    onSuccess: (data) => {
+      utils.billing.customers.byId.invalidate({ id: params.id || '' });
+      if (data.updated > 0) {
+        toast.success(`Inherited location for ${data.updated} service${data.updated !== 1 ? 's' : ''}`);
+      } else {
+        toast.info('No locations could be inherited — no co-located ABB service found');
+      }
+    },
+    onError: (err) => toast.error(`Failed to inherit locations: ${err.message}`),
+  });
 
   if (isLoading) {
     return (
@@ -827,7 +989,7 @@ export default function CustomerDetail() {
       <div className="p-8 text-center text-muted-foreground">
         <p>Customer not found</p>
         <Link
-          href="/customers"
+          href={backToList}
           className="text-sm underline mt-2 inline-block"
         >
           Back to customers
@@ -836,32 +998,35 @@ export default function CustomerDetail() {
     );
   }
 
-  const totalCost = customerServices.reduce(
+  // Active services = all except terminated (terminated shown separately in Flagged & Terminated section)
+  const activeServices = customerServices.filter((s) => s.status !== "terminated");
+
+  const totalCost = activeServices.reduce(
     (sum, s) => sum + Number(s.monthlyCost),
     0
   );
-  const matchedCount = customerServices.filter(
+  const matchedCount = activeServices.filter(
     (s) => s.status === "active"
   ).length;
-  const unmatchedCount = customerServices.filter(
+  const unmatchedCount = activeServices.filter(
     (s) => s.status === "unmatched"
   ).length;
-  const flaggedCount = customerServices.filter(
+  const flaggedCount = activeServices.filter(
     (s) => s.status === "flagged_for_termination"
   ).length;
   const terminatedCount = customerServices.filter(
     (s) => s.status === "terminated"
   ).length;
 
-  // AVC tracking — Internet services only
-  const internetServices = customerServices.filter((s) => s.serviceType === "Internet");
+  // AVC tracking — Internet services only (exclude terminated)
+  const internetServices = activeServices.filter((s) => s.serviceType === "Internet");
   const servicesWithAvc = internetServices.filter(
     (s) => s.connectionId && s.connectionId.trim() !== ""
   ).length;
   const servicesMissingAvc = internetServices.length - servicesWithAvc;
 
-  // Provider breakdown for this customer
-  const providerBreakdown = customerServices.reduce((acc: Record<string, { count: number; cost: number }>, s) => {
+  // Provider breakdown for this customer (exclude terminated)
+  const providerBreakdown = activeServices.reduce((acc: Record<string, { count: number; cost: number }>, s) => {
     const provider = s.provider || 'Unknown';
     if (!acc[provider]) acc[provider] = { count: 0, cost: 0 };
     acc[provider].count++;
@@ -872,13 +1037,14 @@ export default function CustomerDetail() {
   // Build a set of location IDs that have actual location records
   const locationIdSet = new Set(customerLocations.map(l => l.externalId));
 
-  // Services that belong to a known location record
+  // Services that belong to a known location record (exclude terminated)
   const locatedLocations = customerLocations.filter(
     (l) => l.address && l.address !== "Unknown Location"
   );
 
   // Services without a matching location record (either no locationExternalId, or their locationExternalId doesn't match any location)
-  const orphanedServices = customerServices.filter(
+  // Exclude terminated services from the main location groups
+  const orphanedServices = activeServices.filter(
     (s) => !s.locationExternalId || !locationIdSet.has(s.locationExternalId)
   );
 
@@ -894,7 +1060,7 @@ export default function CustomerDetail() {
     <div className="p-6 lg:p-8">
       {/* Breadcrumb */}
       <Link
-        href="/customers"
+        href={backToList}
         className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors mb-4"
       >
         <ArrowLeft className="w-3.5 h-3.5" />
@@ -908,6 +1074,15 @@ export default function CustomerDetail() {
             <h1 className="text-xl font-bold tracking-tight">{customer.name}</h1>
             {customer.businessName && (
               <p className="text-sm text-muted-foreground mt-0.5">{customer.businessName}</p>
+            )}
+            {customer.parentCustomerExternalId && (
+              <Link
+                href={`/customers/${customer.parentCustomerExternalId}`}
+                className="inline-flex items-center gap-1 text-xs text-teal hover:underline mt-0.5"
+              >
+                <LinkIcon className="w-3 h-3" />
+                Part of {customer.parentCustomerName || customer.parentCustomerExternalId}
+              </Link>
             )}
           </div>
           <button
@@ -935,6 +1110,22 @@ export default function CustomerDetail() {
               {customer.ownershipType === 'C' ? 'Corporate' : customer.ownershipType === 'F' ? 'Franchise' : customer.ownershipType}
             </span>
           )}
+          {/* Retail Offering toggle */}
+          <button
+            onClick={() => setCustomerTypeMutation.mutate({
+              externalId: customer.externalId,
+              customerType: customer.customerType === 'retail_offering' ? 'standard' : 'retail_offering',
+            })}
+            disabled={setCustomerTypeMutation.isPending}
+            title={customer.customerType === 'retail_offering' ? 'Click to remove Retail Offering classification' : 'Click to mark as Retail Offering'}
+            className={`text-[10px] px-2 py-0.5 rounded font-medium uppercase tracking-wider border transition-colors ${
+              customer.customerType === 'retail_offering'
+                ? 'bg-violet-100 text-violet-800 border-violet-300 hover:bg-violet-200'
+                : 'bg-muted text-muted-foreground border-transparent hover:bg-accent hover:text-foreground'
+            }`}
+          >
+            {setCustomerTypeMutation.isPending ? '...' : customer.customerType === 'retail_offering' ? '✦ Retail Offering' : '+ Retail Offering'}
+          </button>
         </div>
       </div>
       {/* Customer Edit Dialog */}
@@ -999,7 +1190,7 @@ export default function CustomerDetail() {
             Total Services
           </p>
           <p className="text-2xl font-bold mt-1 data-value">
-            {customerServices.length}
+            {activeServices.length}
           </p>
         </div>
         <div className="bg-card border border-border rounded-lg px-4 py-3">
@@ -1115,7 +1306,7 @@ export default function CustomerDetail() {
                 {customerServices
                   .filter((s) => s.status === "flagged_for_termination")
                   .map((svc) => (
-                    <ServiceRow key={svc.id} service={svc} customerExternalId={customer?.externalId} />
+                    <ServiceRow key={svc.id} service={svc} customerExternalId={customer?.externalId} fromFilter={fromFilter} />
                   ))}
               </div>
             </div>
@@ -1140,12 +1331,17 @@ export default function CustomerDetail() {
                 {customerServices
                   .filter((s) => s.status === "terminated")
                   .map((svc) => (
-                    <ServiceRow key={svc.id} service={svc} customerExternalId={customer?.externalId} />
+                    <ServiceRow key={svc.id} service={svc} customerExternalId={customer?.externalId} fromFilter={fromFilter} />
                   ))}
               </div>
             </div>
           )}
         </div>
+      )}
+
+      {/* Omada Network Panel */}
+      {customer?.externalId && (
+        <OmadaSitePanel customerExternalId={customer.externalId} />
       )}
 
       {/* Reconciliation Board — unified billing assignment, drag-and-drop, category grouping */}
@@ -1201,7 +1397,7 @@ export default function CustomerDetail() {
               <div>
                 {locServices.map(
                   (svc: { id: number; externalId?: string }) => (
-                    <ServiceRow key={svc.id} service={svc} customerExternalId={customer?.externalId} />
+                    <ServiceRow key={svc.id} service={svc} customerExternalId={customer?.externalId} fromFilter={fromFilter} />
                   )
                 )}
               </div>
@@ -1234,7 +1430,7 @@ export default function CustomerDetail() {
               </div>
               <div>
                 {svcs.map((svc) => (
-                  <ServiceRow key={svc.id} service={svc} customerExternalId={customer?.externalId} />
+                  <ServiceRow key={svc.id} service={svc} customerExternalId={customer?.externalId} fromFilter={fromFilter} />
                 ))}
               </div>
             </div>
@@ -1252,14 +1448,25 @@ export default function CustomerDetail() {
                   Services without a confirmed site address
                 </p>
               </div>
-              <span className="text-xs text-muted-foreground shrink-0">
+              <span className="text-xs text-muted-foreground shrink-0 mr-2">
                 {unlocatedServices.length} service
                 {unlocatedServices.length !== 1 ? "s" : ""}
               </span>
+              <Button
+                size="sm"
+                variant="outline"
+                className="h-7 text-xs gap-1.5 text-amber-700 border-amber-300 hover:bg-amber-50"
+                onClick={() => customer && bulkInheritMutation.mutate({ customerExternalId: customer.externalId })}
+                disabled={bulkInheritMutation.isPending}
+                title="Inherit location from co-located ABB service for all unknown-location services"
+              >
+                {bulkInheritMutation.isPending ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <MapPinOff className="w-3.5 h-3.5" />}
+                Inherit All
+              </Button>
             </div>
             <div>
               {unlocatedServices.map((svc) => (
-                <ServiceRow key={svc.id} service={svc} customerExternalId={customer?.externalId} />
+                <ServiceRow key={svc.id} service={svc} customerExternalId={customer?.externalId} fromFilter={fromFilter} />
               ))}
             </div>
           </div>

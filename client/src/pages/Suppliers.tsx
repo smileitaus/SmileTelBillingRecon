@@ -12,7 +12,7 @@ import {
   Building2, Upload, CheckCircle, AlertCircle, Clock,
   ChevronDown, ChevronUp, Link2, MapPin, FileText,
   RefreshCw, Search, X, ExternalLink, Layers, DollarSign,
-  TrendingUp, Wifi, Phone
+  TrendingUp, Wifi, Phone, Info
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -22,6 +22,7 @@ import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter
 } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow
 } from "@/components/ui/table";
@@ -33,6 +34,7 @@ const SUPPLIER_COLORS: Record<string, { bg: string; text: string; border: string
   Exetel:  { bg: "bg-green-50",  text: "text-green-800",  border: "border-green-200" },
   SasBoss: { bg: "bg-purple-50", text: "text-purple-800", border: "border-purple-200" },
   Vocus:   { bg: "bg-red-50",    text: "text-red-800",    border: "border-red-200" },
+  NetSIP:  { bg: "bg-teal-50",   text: "text-teal-800",   border: "border-teal-200" },
   default: { bg: "bg-gray-50",   text: "text-gray-800",   border: "border-gray-200" },
 };
 
@@ -188,7 +190,7 @@ function AaptPanel() {
             { label: "Total Services", value: stats.totalServices, icon: Layers },
             { label: "Matched", value: stats.matchedServices, icon: CheckCircle, color: "text-green-600" },
             { label: "Unmatched", value: stats.unmatchedServices, icon: AlertCircle, color: "text-amber-600" },
-            { label: "Monthly Cost", value: formatCurrency(stats.totalMonthlyCost), icon: DollarSign },
+            { label: "Monthly Cost (ex GST)", value: formatCurrency(stats.totalMonthlyCost), icon: DollarSign },
           ].map(({ label, value, icon: Icon, color }) => (
             <div key={label} className="rounded-lg border bg-card p-3">
               <div className="flex items-center gap-2 text-muted-foreground text-xs mb-1">
@@ -227,7 +229,7 @@ function AaptPanel() {
                   <TableHead>Your ID / Label</TableHead>
                   <TableHead>Address</TableHead>
                   <TableHead>Customer</TableHead>
-                  <TableHead className="text-right">Monthly Cost</TableHead>
+                  <TableHead className="text-right">Monthly Cost (ex GST)</TableHead>
                   <TableHead>Status</TableHead>
                 </TableRow>
               </TableHeader>
@@ -268,7 +270,7 @@ function AaptPanel() {
                     <TableHead>Product Type</TableHead>
                     <TableHead>Your ID / Access ID</TableHead>
                     <TableHead>Address</TableHead>
-                    <TableHead className="text-right">Monthly Cost</TableHead>
+                    <TableHead className="text-right">Monthly Cost (ex GST)</TableHead>
                     <TableHead></TableHead>
                   </TableRow>
                 </TableHeader>
@@ -499,25 +501,241 @@ function VocusPanel() {
   );
 }
 
-// ── SasBoss / Access4 Product Cost Pricebook Panel ─────────────────────────
+// ── NetSIP Panel ─────────────────────────────────────────────────────────────
+function NetSIPPanel() {
+  const { data: numbers, isLoading: numbersLoading } = trpc.numbers.list.useQuery({
+    provider: "NetSIP", page: 1, pageSize: 200
+  });
+
+  const allNumbers = numbers?.numbers ?? [];
+  const didBlocks = allNumbers.filter((n: any) => n.numberType === 'did_block' || n.numberType === 'did_block_100');
+  const individual = allNumbers.filter((n: any) => n.numberType === 'did');
+  const numbers1300 = allNumbers.filter((n: any) => n.numberType === '1300');
+
+  const accounts = [
+    { acct: 'NSP011058', name: 'Smile IT (Main)',          monthly: 279.66, channels: 30, note: 'Main SIP account. 2x 1300, 100-DID packs, MS Teams ×10.' },
+    { acct: 'NSP011241', name: 'Smile IT (Wholesale Test)', monthly: 5.50,   channels: 5,  note: '⚠️ Test/wholesale account — review for cancellation.' },
+    { acct: 'NSP009387', name: 'CDI Lawyers',              monthly: 413.35, channels: 8,  note: '100-DID pack 617351854##. MS Teams ×4. Via Trimble Networks.' },
+    { acct: 'NSP000019', name: 'Trimble Networks',         monthly: 301.67, channels: 50, note: 'Reseller main account. 2x 1300, 100-DID packs, MS Teams ×7.' },
+    { acct: 'NSP010568', name: 'NDC Plastic Moulding',     monthly: 82.15,  channels: 1,  note: '2x 10-DID packs. MS Teams ×1. Consistent $82.15/mo.' },
+    { acct: 'NSP010335', name: 'Mackellar Mining',         monthly: 219.10, channels: 4,  note: '2x 10-DID packs. MS Teams ×4. Via Trimble Networks.' },
+    { acct: 'NSP010341', name: 'Body Corporate Systems',   monthly: 256.00, channels: 4,  note: '100-DID pack, Fax-to-Email, MS Teams ×4.' },
+  ];
+  const totalMonthly = accounts.reduce((s, a) => s + a.monthly, 0);
+
+  return (
+    <div className="space-y-4">
+      {/* Stats row */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        {[
+          { label: 'SIP Accounts', value: accounts.length },
+          { label: 'DID Numbers', value: allNumbers.length },
+          { label: 'Monthly Cost', value: `$${totalMonthly.toFixed(2)}`, color: 'text-teal-700' },
+          { label: 'SIP Channels', value: accounts.reduce((s, a) => s + a.channels, 0) },
+        ].map(({ label, value, color }) => (
+          <div key={label} className="rounded-md border bg-muted/30 p-3 text-center">
+            <div className={`text-lg font-bold ${color ?? ''}`}>{value}</div>
+            <div className="text-xs text-muted-foreground">{label}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* Info banner */}
+      <div className="rounded-md bg-teal-50 border border-teal-200 p-3 text-xs text-teal-800 flex gap-2">
+        <Info className="h-4 w-4 shrink-0 mt-0.5" />
+        <div>
+          <strong>NetSIP (Aussie Broadband)</strong> — ABN 19 131 968 744. Portal:{' '}
+          <a href="https://portal.overthewire.com.au" target="_blank" rel="noopener noreferrer" className="underline">portal.overthewire.com.au</a>.
+          Smile IT holds two reseller accounts: <strong>NSP011058</strong> (direct) and <strong>NSP000019</strong> (via Trimble Networks).
+          Customer sub-accounts billed monthly. CDRs available on portal. Billing: accounts@netsip.com.au.
+        </div>
+      </div>
+
+      {/* Account table */}
+      <div>
+        <div className="text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wide">SIP Accounts — Mar 2026 Invoices</div>
+        <div className="rounded-md border overflow-hidden">
+          <Table>
+            <TableHeader>
+              <TableRow className="bg-muted/50">
+                <TableHead className="text-xs">Account #</TableHead>
+                <TableHead className="text-xs">Customer</TableHead>
+                <TableHead className="text-xs text-center">Channels</TableHead>
+                <TableHead className="text-xs">Monthly Cost</TableHead>
+                <TableHead className="text-xs">Notes</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {accounts.map((a) => (
+                <TableRow key={a.acct} className="text-xs">
+                  <TableCell className="font-mono text-teal-700">{a.acct}</TableCell>
+                  <TableCell className="font-medium">{a.name}</TableCell>
+                  <TableCell className="text-center">{a.channels}</TableCell>
+                  <TableCell className="font-mono">${a.monthly.toFixed(2)}</TableCell>
+                  <TableCell className="text-muted-foreground max-w-[280px] truncate">{a.note}</TableCell>
+                </TableRow>
+              ))}
+              <TableRow className="bg-muted/30 font-semibold text-xs">
+                <TableCell colSpan={2}>Total</TableCell>
+                <TableCell className="text-center">{accounts.reduce((s, a) => s + a.channels, 0)}</TableCell>
+                <TableCell className="font-mono">${totalMonthly.toFixed(2)}</TableCell>
+                <TableCell />
+              </TableRow>
+            </TableBody>
+          </Table>
+        </div>
+      </div>
+
+      {/* DID Numbers tabs */}
+      <div>
+        <div className="text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wide">DID / Phone Numbers ({allNumbers.length} total)</div>
+        <Tabs defaultValue="1300">
+          <TabsList className="h-8">
+            <TabsTrigger value="1300" className="text-xs h-7">1300 Numbers ({numbers1300.length})</TabsTrigger>
+            <TabsTrigger value="blocks" className="text-xs h-7">DID Blocks ({didBlocks.length})</TabsTrigger>
+            <TabsTrigger value="individual" className="text-xs h-7">Individual DIDs ({individual.length})</TabsTrigger>
+          </TabsList>
+          {([{ key: '1300', rows: numbers1300 }, { key: 'blocks', rows: didBlocks }, { key: 'individual', rows: individual }] as const).map(({ key, rows }) => (
+            <TabsContent key={key} value={key} className="mt-2">
+              {numbersLoading ? (
+                <div className="flex items-center gap-2 py-4 text-muted-foreground text-sm"><RefreshCw className="h-4 w-4 animate-spin" />Loading…</div>
+              ) : rows.length === 0 ? (
+                <div className="text-center py-6 text-muted-foreground text-sm"><Phone className="h-8 w-8 mx-auto mb-2 opacity-30" />No numbers</div>
+              ) : (
+                <div className="rounded-md border overflow-hidden">
+                  <Table>
+                    <TableHeader>
+                      <TableRow className="bg-muted/50">
+                        <TableHead className="text-xs">Number</TableHead>
+                        <TableHead className="text-xs">Type</TableHead>
+                        <TableHead className="text-xs">Customer</TableHead>
+                        <TableHead className="text-xs">Account</TableHead>
+                        <TableHead className="text-xs">Cost/mo</TableHead>
+                        <TableHead className="text-xs">Notes</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {rows.map((n: any) => (
+                        <TableRow key={n.id} className="text-xs">
+                          <TableCell className="font-mono">{n.numberDisplay || n.number}</TableCell>
+                          <TableCell><Badge variant="outline" className="text-[10px]">{n.numberType}</Badge></TableCell>
+                          <TableCell className="text-muted-foreground">{n.customerName || '—'}</TableCell>
+                          <TableCell className="font-mono text-teal-700 text-[10px]">{n.providerServiceCode}</TableCell>
+                          <TableCell className="font-mono">${Number(n.monthlyCost || 0).toFixed(2)}</TableCell>
+                          <TableCell className="text-muted-foreground max-w-[200px] truncate">{n.notes || '—'}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              )}
+            </TabsContent>
+          ))}
+        </Tabs>
+      </div>
+
+      {/* Action items */}
+      <div className="rounded-md border border-amber-200 bg-amber-50 p-3 text-xs text-amber-800 space-y-1">
+        <div className="font-semibold flex items-center gap-1"><AlertCircle className="h-3.5 w-3.5" />Action Items</div>
+        <div>• <strong>NSP011241 (Wholesale Test)</strong> — Review for cancellation. $5.50/mo, 5 channels, no DIDs.</div>
+        <div>• <strong>Mackellar Mining</strong> — New customer created. Confirm direct contact details and billing address.</div>
+        <div>• <strong>CDI Lawyers &amp; Mackellar Mining</strong> — Billed via Trimble Networks reseller. Confirm billing arrangement.</div>
+        <div>• <strong>All accounts</strong> — Upload future invoices as PDFs monthly to keep cost history current.</div>
+      </div>
+    </div>
+  );
+}
+
+// ── SasBoss / Access4 Unified Pricebook Panel ─────────────────────────────────
+function fmt(v: any, decimals = 2) {
+  const n = parseFloat(v);
+  return isNaN(n) ? "—" : `$${n.toFixed(decimals)}`;
+}
+
+function DriftBadge({ drift }: { drift: number | null }) {
+  if (drift == null) return <span className="text-muted-foreground text-[10px]">—</span>;
+  if (Math.abs(drift) <= 0.005) return <Badge variant="outline" className="text-[10px] text-green-700 border-green-300">✓ Match</Badge>;
+  return (
+    <Badge variant="outline" className={`text-[10px] ${drift > 0 ? 'text-orange-700 border-orange-300' : 'text-red-700 border-red-300'}`}>
+      {drift > 0 ? `+${drift.toFixed(2)}` : drift.toFixed(2)}
+    </Badge>
+  );
+}
+
+// Source badge colour map
+const SOURCE_STYLES: Record<string, { bg: string; text: string; label: string }> = {
+  "Excel Upload": { bg: "bg-green-100", text: "text-green-800", label: "📂 Excel Upload" },
+  "Live API":     { bg: "bg-blue-100",  text: "text-blue-800",  label: "⚡ Live API" },
+  "Invoice":      { bg: "bg-amber-100", text: "text-amber-800", label: "🧾 Invoice" },
+  "Calculated":   { bg: "bg-purple-100",text: "text-purple-800",label: "∑ Calculated" },
+  "Manual":       { bg: "bg-gray-100",  text: "text-gray-700",  label: "✏️ Manual" },
+};
+
+function ColHeader({ label, source, detail }: { label: string; source: string; detail: string }) {
+  const style = SOURCE_STYLES[source] ?? SOURCE_STYLES["Manual"];
+  return (
+    <TooltipProvider delayDuration={200}>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <div className="flex items-center gap-1 cursor-help select-none">
+            <span>{label}</span>
+            <Info className="h-3 w-3 text-muted-foreground/60 flex-shrink-0" />
+          </div>
+        </TooltipTrigger>
+        <TooltipContent side="top" className="max-w-[220px] text-xs space-y-1.5 p-3">
+          <div className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium ${style.bg} ${style.text}`}>
+            {style.label}
+          </div>
+          <p className="text-muted-foreground leading-snug">{detail}</p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  );
+}
+
 function SasBossPanel() {
-  const { data: products, isLoading, refetch } = trpc.billing.productCosts.list.useQuery({ supplier: "SasBoss" });
+  const utils = trpc.useUtils();
+  const [pbTab, setPbTab] = useState<"unified" | "simple">("unified");
+  const [search, setSearch] = useState("");
+  const [filterSheet, setFilterSheet] = useState("all");
+  const [onlyDrift, setOnlyDrift] = useState(false);
+
+  // Unified pricebook
+  const { data: sheets } = trpc.sasbossApi.getPricebookSheets.useQuery();
+  const { data: pbItems, isLoading: pbLoading, refetch: refetchPb } = trpc.sasbossApi.getUnifiedPricebook.useQuery({
+    sheet: filterSheet === "all" ? undefined : filterSheet,
+    search: search || undefined,
+    onlyDrift,
+  });
+
+  // Simple cost map (legacy)
+  const { data: products, isLoading: simpleLoading, refetch: refetchSimple } = trpc.billing.productCosts.list.useQuery({ supplier: "SasBoss" });
   const updateMutation = trpc.billing.productCosts.update.useMutation({
-    onSuccess: () => { toast.success("Cost updated"); refetch(); setEditRow(null); },
+    onSuccess: () => { toast.success("Cost updated"); refetchSimple(); setEditRow(null); },
     onError: (e) => toast.error(e.message),
   });
+
+  // Sync prices mutation
+  const syncPricesMutation = trpc.sasbossApi.syncPrices.useMutation({
+    onSuccess: (r) => {
+      if (r.ok) {
+        toast.success(`Prices synced — ${r.matched} matched, ${r.unmatched} unmatched from ${r.totalApiProducts} API products`);
+      } else {
+        toast.warning(`Sync completed with errors: ${r.errors.join('; ')} — ${r.matched} matched`);
+      }
+      refetchPb();
+    },
+    onError: (e) => toast.error(`Sync failed: ${e.message}`),
+  });
+
   const [editRow, setEditRow] = useState<any>(null);
   const [editWholesale, setEditWholesale] = useState("");
   const [editRrp, setEditRrp] = useState("");
   const [editNotes, setEditNotes] = useState("");
-  const [search, setSearch] = useState("");
-  const [filterCat, setFilterCat] = useState("all");
 
   const categories = Array.from(new Set((products ?? []).map((p: any) => p.productCategory).filter(Boolean)));
-  const filtered = (products ?? []).filter((p: any) => {
-    const matchSearch = !search || p.productName?.toLowerCase().includes(search.toLowerCase());
-    const matchCat = filterCat === "all" || p.productCategory === filterCat;
-    return matchSearch && matchCat;
+  const filteredSimple = (products ?? []).filter((p: any) => {
+    return !search || p.productName?.toLowerCase().includes(search.toLowerCase());
   });
 
   function openEdit(p: any) {
@@ -527,78 +745,217 @@ function SasBossPanel() {
     setEditNotes(p.notes ?? "");
   }
 
+  const driftCount = (pbItems ?? []).filter((p: any) => p.hasDrift).length;
+  const lastSynced = (pbItems ?? []).find((p: any) => p.api_last_synced)?.api_last_synced;
+
   return (
     <div className="space-y-4">
-      <div className="flex items-center gap-2">
+      {/* Header row */}
+      <div className="flex items-center gap-2 flex-wrap">
         <DollarSign className="h-4 w-4 text-purple-600" />
-        <span className="font-semibold text-sm">Access4 Diamond Pricebook</span>
-        <Badge variant="outline" className="text-[10px]">108 products</Badge>
-        <span className="text-xs text-muted-foreground ml-auto">Diamond Tier wholesale costs — edit to override</span>
+        <span className="font-semibold text-sm">Access4 / SasBoss Pricebook</span>
+        {lastSynced && (
+          <span className="text-[10px] text-muted-foreground">API synced {new Date(lastSynced).toLocaleDateString()}</span>
+        )}
+        {driftCount > 0 && (
+          <Badge variant="outline" className="text-[10px] text-orange-700 border-orange-300">
+            {driftCount} price drift{driftCount !== 1 ? 's' : ''}
+          </Badge>
+        )}
+        <div className="ml-auto flex items-center gap-2">
+          <Button
+            size="sm"
+            variant="outline"
+            className="h-7 text-xs gap-1"
+            onClick={() => syncPricesMutation.mutate()}
+            disabled={syncPricesMutation.isPending}
+          >
+            {syncPricesMutation.isPending
+              ? <><RefreshCw className="h-3 w-3 animate-spin" />Syncing…</>
+              : <><RefreshCw className="h-3 w-3" />Sync Prices from API</>}
+          </Button>
+        </div>
       </div>
 
-      {/* Filters */}
-      <div className="flex gap-2">
-        <div className="relative flex-1">
-          <Search className="absolute left-2.5 top-2.5 h-3.5 w-3.5 text-muted-foreground" />
-          <Input placeholder="Search products…" className="pl-8 h-8 text-sm" value={search} onChange={e => setSearch(e.target.value)} />
-        </div>
-        <select
-          className="h-8 text-sm rounded-md border border-input bg-background px-2 text-muted-foreground"
-          value={filterCat}
-          onChange={e => setFilterCat(e.target.value)}
-        >
-          <option value="all">All Categories</option>
-          {categories.map((c: any) => <option key={c} value={c}>{c}</option>)}
-        </select>
-      </div>
+      <Tabs value={pbTab} onValueChange={v => setPbTab(v as any)}>
+        <TabsList className="h-7">
+          <TabsTrigger value="unified" className="text-xs h-6">Unified Pricebook</TabsTrigger>
+          <TabsTrigger value="simple" className="text-xs h-6">Cost Map (Legacy)</TabsTrigger>
+        </TabsList>
 
-      {isLoading ? (
-        <div className="flex items-center gap-2 text-sm text-muted-foreground py-4">
-          <RefreshCw className="h-4 w-4 animate-spin" />Loading pricebook…
-        </div>
-      ) : (
-        <div className="rounded-md border overflow-hidden">
-          <Table>
-            <TableHeader>
-              <TableRow className="bg-muted/40">
-                <TableHead className="text-xs">Category</TableHead>
-                <TableHead className="text-xs">Product</TableHead>
-                <TableHead className="text-xs text-right">Wholesale (Diamond)</TableHead>
-                <TableHead className="text-xs text-right">RRP</TableHead>
-                <TableHead className="text-xs text-right">Margin</TableHead>
-                <TableHead className="text-xs">Notes</TableHead>
-                <TableHead className="w-10"></TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filtered.map((p: any) => {
-                const wc = parseFloat(p.wholesaleCost);
-                const rrp = parseFloat(p.defaultRetailPrice);
-                const margin = rrp > 0 ? ((rrp - wc) / rrp * 100).toFixed(0) : "—";
-                return (
-                  <TableRow key={p.id} className="text-xs hover:bg-muted/30">
-                    <TableCell className="text-muted-foreground">{p.productCategory || "—"}</TableCell>
-                    <TableCell className="font-medium">{p.productName}</TableCell>
-                    <TableCell className="text-right font-mono text-green-700">${wc.toFixed(2)}</TableCell>
-                    <TableCell className="text-right font-mono text-muted-foreground">${rrp.toFixed(2)}</TableCell>
-                    <TableCell className="text-right">
-                      <Badge variant="outline" className={`text-[10px] ${Number(margin) >= 30 ? 'text-green-700 border-green-300' : Number(margin) >= 15 ? 'text-yellow-700 border-yellow-300' : 'text-red-700 border-red-300'}`}>
-                        {margin}%
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-muted-foreground max-w-[160px] truncate">{p.notes || "—"}</TableCell>
-                    <TableCell>
-                      <Button variant="ghost" size="sm" className="h-6 w-6 p-0" onClick={() => openEdit(p)}>
-                        <span className="text-xs">✏️</span>
-                      </Button>
-                    </TableCell>
+        {/* ── Unified Pricebook Tab ── */}
+        <TabsContent value="unified" className="space-y-3 mt-3">
+          {/* Filters */}
+          <div className="flex gap-2 flex-wrap">
+            <div className="relative flex-1 min-w-[180px]">
+              <Search className="absolute left-2.5 top-2.5 h-3.5 w-3.5 text-muted-foreground" />
+              <Input placeholder="Search products…" className="pl-8 h-8 text-sm" value={search} onChange={e => setSearch(e.target.value)} />
+            </div>
+            <select
+              className="h-8 text-sm rounded-md border border-input bg-background px-2 text-muted-foreground"
+              value={filterSheet}
+              onChange={e => setFilterSheet(e.target.value)}
+            >
+              <option value="all">All Sheets</option>
+              {(sheets ?? []).map((s: string) => <option key={s} value={s}>{s}</option>)}
+            </select>
+            <Button
+              size="sm"
+              variant={onlyDrift ? "default" : "outline"}
+              className="h-8 text-xs"
+              onClick={() => setOnlyDrift(d => !d)}
+            >
+              {onlyDrift ? "Showing Drift Only" : "Show Drift Only"}
+            </Button>
+          </div>
+
+          {pbLoading ? (
+            <div className="flex items-center gap-2 text-sm text-muted-foreground py-4">
+              <RefreshCw className="h-4 w-4 animate-spin" />Loading unified pricebook…
+            </div>
+          ) : (
+            <div className="rounded-md border overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow className="bg-muted/40">
+                    <TableHead className="text-xs">
+                      <ColHeader label="Sheet" source="Excel Upload" detail="Category grouping from the Access4 Diamond Pricebook Excel file. Imported manually when Access4 releases a new pricebook (typically quarterly)." />
+                    </TableHead>
+                    <TableHead className="text-xs">
+                      <ColHeader label="Product" source="Excel Upload" detail="Product name from the Excel pricebook. The billing name (buy_name) shown below in grey is the name used to match against supplier invoice line items." />
+                    </TableHead>
+                    <TableHead className="text-xs text-right">
+                      <ColHeader label="PB Buy" source="Excel Upload" detail="Your Diamond Tier wholesale buy price from the Access4 pricebook Excel file. This is the cost SmileTel pays Access4 per service per month (ex GST)." />
+                    </TableHead>
+                    <TableHead className="text-xs text-right">
+                      <ColHeader label="PB RRP" source="Excel Upload" detail="Recommended Retail Price from the Access4 pricebook Excel file. This is Access4's suggested sell price to end customers (ex GST)." />
+                    </TableHead>
+                    <TableHead className="text-xs text-right">
+                      <ColHeader label="PB NFR" source="Excel Upload" detail="Not-For-Resale price from the Access4 pricebook Excel file. Applies to internal/demo services that are not billed to customers." />
+                    </TableHead>
+                    <TableHead className="text-xs text-right">
+                      <ColHeader label="API Buy" source="Live API" detail="Live Diamond Tier buy price fetched directly from the SasBoss Billing API (api.sasboss.com.au:10001). Updated each time you click 'Sync Prices from API'. Highlighted orange if it differs from PB Buy." />
+                    </TableHead>
+                    <TableHead className="text-xs text-right">
+                      <ColHeader label="API RRP" source="Live API" detail="Live RRP fetched from the SasBoss Billing API. May differ from the Excel pricebook RRP if Access4 has updated pricing between pricebook releases." />
+                    </TableHead>
+                    <TableHead className="text-xs text-right">
+                      <ColHeader label="API Bundled" source="Live API" detail="Bundled tier buy price from the SasBoss Billing API. Applies when a customer is on a bundled call plan rather than PAYG. Null if the product has no bundled tier." />
+                    </TableHead>
+                    <TableHead className="text-xs text-right">
+                      <ColHeader label="API Unlimited" source="Live API" detail="Unlimited tier buy price from the SasBoss Billing API. Applies when a customer is on an unlimited call plan. Null if the product has no unlimited tier." />
+                    </TableHead>
+                    <TableHead className="text-xs text-right">
+                      <ColHeader label="Drift" source="Calculated" detail="Difference between API Buy and PB Buy (API − PB). Green tick = prices match. Orange = API is higher than pricebook. Red = API is lower. Investigate any drift before the next invoice cycle." />
+                    </TableHead>
+                    <TableHead className="text-xs text-right">
+                      <ColHeader label="Services" source="Invoice" detail="Count of active services currently assigned this product across all customers. Sourced from imported supplier invoices and service records." />
+                    </TableHead>
+                    <TableHead className="text-xs text-right">
+                      <ColHeader label="Avg Sell" source="Invoice" detail="Average monthly sell price SmileTel charges customers for this product, calculated from imported OneBill invoice data. Compare against PB Buy to check margin health." />
+                    </TableHead>
+                    <TableHead className="text-xs text-right">
+                      <ColHeader label="Total Rev" source="Invoice" detail="Total monthly revenue from all active services using this product, from imported OneBill invoice data. Blank if no services are currently assigned." />
+                    </TableHead>
                   </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
-        </div>
-      )}
+                </TableHeader>
+                <TableBody>
+                  {(pbItems ?? []).length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={13} className="text-center text-xs text-muted-foreground py-6">
+                        {onlyDrift ? 'No price drift detected — all API prices match pricebook.' : 'No products found. Import a pricebook or sync prices from the API.'}
+                      </TableCell>
+                    </TableRow>
+                  ) : (pbItems ?? []).map((p: any) => (
+                    <TableRow key={p.id} className={`text-xs hover:bg-muted/30 ${p.hasDrift ? 'bg-orange-50/40' : ''}`}>
+                      <TableCell className="text-muted-foreground text-[10px] max-w-[100px] truncate">{p.sheet_name || "—"}</TableCell>
+                      <TableCell className="font-medium max-w-[200px]">
+                        <div className="truncate" title={p.product_name}>{p.product_name}</div>
+                        {p.buy_name && p.buy_name !== p.product_name && (
+                          <div className="text-[10px] text-muted-foreground truncate" title={p.buy_name}>{p.buy_name}</div>
+                        )}
+                      </TableCell>
+                      <TableCell className="text-right font-mono text-green-700">{fmt(p.partner_buy_price)}</TableCell>
+                      <TableCell className="text-right font-mono text-muted-foreground">{fmt(p.partner_sell_price)}</TableCell>
+                      <TableCell className="text-right font-mono text-blue-600">{fmt(p.nfr_partner_price)}</TableCell>
+                      <TableCell className="text-right font-mono">
+                        {p.api_buy_price != null
+                          ? <span className={p.hasDrift ? 'text-orange-700 font-semibold' : 'text-green-700'}>{fmt(p.api_buy_price)}</span>
+                          : <span className="text-muted-foreground">—</span>}
+                      </TableCell>
+                      <TableCell className="text-right font-mono text-muted-foreground">{p.api_rrp != null ? fmt(p.api_rrp) : '—'}</TableCell>
+                      <TableCell className="text-right font-mono text-purple-600">{p.api_buy_bundled != null ? fmt(p.api_buy_bundled) : '—'}</TableCell>
+                      <TableCell className="text-right font-mono text-indigo-600">{p.api_buy_unlimited != null ? fmt(p.api_buy_unlimited) : '—'}</TableCell>
+                      <TableCell className="text-right"><DriftBadge drift={p.driftAmount} /></TableCell>
+                      <TableCell className="text-right">{p.active_service_count > 0 ? p.active_service_count : '—'}</TableCell>
+                      <TableCell className="text-right font-mono">{p.avg_sell_price != null ? fmt(p.avg_sell_price) : '—'}</TableCell>
+                      <TableCell className="text-right font-mono">{p.total_monthly_revenue != null && parseFloat(p.total_monthly_revenue) > 0 ? fmt(p.total_monthly_revenue) : '—'}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          )}
+          <p className="text-[10px] text-muted-foreground">All prices ex GST. PB = imported Excel pricebook. API = live SasBoss Billing API. Drift = API Buy − PB Buy.</p>
+        </TabsContent>
+
+        {/* ── Simple Cost Map Tab ── */}
+        <TabsContent value="simple" className="space-y-3 mt-3">
+          <div className="flex gap-2">
+            <div className="relative flex-1">
+              <Search className="absolute left-2.5 top-2.5 h-3.5 w-3.5 text-muted-foreground" />
+              <Input placeholder="Search products…" className="pl-8 h-8 text-sm" value={search} onChange={e => setSearch(e.target.value)} />
+            </div>
+          </div>
+          {simpleLoading ? (
+            <div className="flex items-center gap-2 text-sm text-muted-foreground py-4">
+              <RefreshCw className="h-4 w-4 animate-spin" />Loading…
+            </div>
+          ) : (
+            <div className="rounded-md border overflow-hidden">
+              <Table>
+                <TableHeader>
+                  <TableRow className="bg-muted/40">
+                    <TableHead className="text-xs">Category</TableHead>
+                    <TableHead className="text-xs">Product</TableHead>
+                    <TableHead className="text-xs text-right">Wholesale (Diamond)</TableHead>
+                    <TableHead className="text-xs text-right">RRP</TableHead>
+                    <TableHead className="text-xs text-right">Margin</TableHead>
+                    <TableHead className="text-xs">Notes</TableHead>
+                    <TableHead className="w-10"></TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filteredSimple.map((p: any) => {
+                    const wc = parseFloat(p.wholesaleCost);
+                    const rrp = parseFloat(p.defaultRetailPrice);
+                    const margin = rrp > 0 ? ((rrp - wc) / rrp * 100).toFixed(0) : "—";
+                    return (
+                      <TableRow key={p.id} className="text-xs hover:bg-muted/30">
+                        <TableCell className="text-muted-foreground">{p.productCategory || "—"}</TableCell>
+                        <TableCell className="font-medium">{p.productName}</TableCell>
+                        <TableCell className="text-right font-mono text-green-700">${wc.toFixed(2)}</TableCell>
+                        <TableCell className="text-right font-mono text-muted-foreground">${rrp.toFixed(2)}</TableCell>
+                        <TableCell className="text-right">
+                          <Badge variant="outline" className={`text-[10px] ${Number(margin) >= 30 ? 'text-green-700 border-green-300' : Number(margin) >= 15 ? 'text-yellow-700 border-yellow-300' : 'text-red-700 border-red-300'}`}>
+                            {margin}%
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="text-muted-foreground max-w-[160px] truncate">{p.notes || "—"}</TableCell>
+                        <TableCell>
+                          <Button variant="ghost" size="sm" className="h-6 w-6 p-0" onClick={() => openEdit(p)}>
+                            <span className="text-xs">✏️</span>
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            </div>
+          )}
+        </TabsContent>
+      </Tabs>
 
       {/* Edit dialog */}
       {editRow && (
@@ -670,7 +1027,7 @@ function SupplierCard({ supplier }: { supplier: any }) {
           </div>
           <div className="text-center">
             <div className="font-semibold">{supplier.totalMonthlyCost ? formatCurrency(supplier.totalMonthlyCost) : "—"}</div>
-            <div className="text-xs text-muted-foreground">Monthly Cost</div>
+            <div className="text-xs text-muted-foreground">Monthly Cost (ex GST)</div>
           </div>
           {supplier.lastInvoiceDate && (
             <div className="text-center">
@@ -695,6 +1052,8 @@ function SupplierCard({ supplier }: { supplier: any }) {
             <SasBossPanel />
           ) : supplier.name === "Vocus" ? (
             <VocusPanel />
+          ) : supplier.name === "NetSIP" ? (
+            <NetSIPPanel />
           ) : (
             <div className="space-y-3">
               {/* Generic supplier info */}

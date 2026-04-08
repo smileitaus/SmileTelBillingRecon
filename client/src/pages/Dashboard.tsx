@@ -18,7 +18,9 @@ import {
   LinkIcon,
   Flag,
   ZapOff,
+  RefreshCw,
 } from "lucide-react";
+import { useState, useEffect } from "react";
 import { useSummary, useSupplierAccounts, useCustomerSearch } from "@/hooks/useData";
 import { ProviderBadge, PROVIDER_COLORS } from "@/components/ProviderBadge";
 
@@ -28,12 +30,14 @@ function StatCard({
   icon: Icon,
   subtext,
   accent,
+  billingPeriod,
 }: {
   label: string;
   value: string | number;
   icon: React.ElementType;
   subtext?: string;
   accent?: "teal" | "amber" | "rose" | "gray" | "orange";
+  billingPeriod?: string | null;
 }) {
   const accentColor =
     accent === "teal"
@@ -49,7 +53,7 @@ function StatCard({
                 : "text-foreground";
 
   return (
-    <div className="bg-card border border-border rounded-lg px-5 py-4">
+    <div className="bg-card border border-border rounded-lg px-5 py-4 flex flex-col" style={{ minHeight: "110px" }}>
       <div className="flex items-center justify-between mb-3">
         <span className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">
           {label}
@@ -59,6 +63,11 @@ function StatCard({
       <p className={`text-2xl font-bold data-value ${accentColor}`}>{value}</p>
       {subtext && (
         <p className="text-xs text-muted-foreground mt-1">{subtext}</p>
+      )}
+      {billingPeriod && (
+        <p className="text-[10px] text-muted-foreground/60 mt-auto pt-2 border-t border-border/40">
+          Data as of {billingPeriod}
+        </p>
       )}
     </div>
   );
@@ -128,9 +137,26 @@ function ProviderBar({
 }
 
 export default function Dashboard() {
-  const { summary, isLoading: summaryLoading } = useSummary();
+  const { summary, isLoading: summaryLoading, dataUpdatedAt, refetch } = useSummary();
   const { supplierAccounts, isLoading: accountsLoading } = useSupplierAccounts();
   const { filtered: customers } = useCustomerSearch();
+
+  // Live "last updated" label — recalculates every 15s so it stays accurate
+  const [, setTick] = useState(0);
+  useEffect(() => {
+    const id = setInterval(() => setTick((t) => t + 1), 15_000);
+    return () => clearInterval(id);
+  }, []);
+
+  const lastUpdatedLabel = dataUpdatedAt
+    ? (() => {
+        const diffMs = Date.now() - dataUpdatedAt;
+        if (diffMs < 10_000) return "just now";
+        if (diffMs < 60_000) return `${Math.floor(diffMs / 1000)}s ago`;
+        if (diffMs < 3_600_000) return `${Math.floor(diffMs / 60_000)}m ago`;
+        return new Date(dataUpdatedAt).toLocaleTimeString();
+      })()
+    : null;
 
   if (summaryLoading || !summary) {
     return (
@@ -153,28 +179,48 @@ export default function Dashboard() {
   const servicesByProvider = (summary.servicesByProvider || {}) as Record<string, { count: number; cost: number }>;
 
   return (
-    <div className="p-6 lg:p-8">
+    <div className="p-4 sm:p-6 lg:p-8 max-w-[1600px] mx-auto">
       {/* Header */}
-      <div className="mb-6">
-        <h1 className="text-xl font-bold tracking-tight">Dashboard</h1>
-        <p className="text-sm text-muted-foreground mt-1">
-          Multi-supplier billing reconciliation overview
-        </p>
+      <div className="mb-6 flex items-start justify-between gap-4">
+        <div>
+          <h1 className="text-xl font-bold tracking-tight">Dashboard</h1>
+          <p className="text-sm text-muted-foreground mt-1">
+            Multi-supplier billing reconciliation overview
+          </p>
+        </div>
+        <div className="flex items-center gap-3 shrink-0 mt-0.5">
+          {lastUpdatedLabel && (
+            <span className="text-xs text-muted-foreground">
+              Updated {lastUpdatedLabel}
+            </span>
+          )}
+          <button
+            onClick={() => refetch()}
+            disabled={summaryLoading}
+            className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground border border-border rounded-md px-2.5 py-1.5 transition-colors disabled:opacity-50"
+            title="Refresh dashboard data"
+          >
+            <RefreshCw className={`w-3 h-3 ${summaryLoading ? 'animate-spin' : ''}`} />
+            Refresh
+          </button>
+        </div>
       </div>
 
       {/* Summary Stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-7 gap-3 mb-8">
+      <div className="grid gap-3 mb-8" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(min(180px, 100%), 1fr))" }}>
         <StatCard
           label="Total Services"
           value={summary.totalServices}
           icon={Wifi}
           subtext={`Across ${summary.totalLocations} locations`}
+          billingPeriod={(summary as any).latestBillingPeriod}
         />
         <StatCard
           label="Monthly Spend (ex GST)"
           value={`$${Number(summary.totalMonthlyCost).toLocaleString("en-AU", { minimumFractionDigits: 2 })}`}
           icon={DollarSign}
           subtext="Supplier cost, ex GST"
+          billingPeriod={(summary as any).latestBillingPeriod}
         />
         <StatCard
           label="Matched"
@@ -182,6 +228,7 @@ export default function Dashboard() {
           icon={CheckCircle2}
           subtext="Linked to a customer"
           accent="teal"
+          billingPeriod={(summary as any).latestBillingPeriod}
         />
         <StatCard
           label="Unmatched"
@@ -189,6 +236,7 @@ export default function Dashboard() {
           icon={AlertTriangle}
           subtext="Require review"
           accent="amber"
+          billingPeriod={(summary as any).latestBillingPeriod}
         />
         <StatCard
           label="Flagged"
@@ -196,6 +244,7 @@ export default function Dashboard() {
           icon={Flag}
           subtext="For termination"
           accent={(summary.flaggedServices ?? 0) > 0 ? "rose" : "gray"}
+          billingPeriod={(summary as any).latestBillingPeriod}
         />
         <StatCard
           label="AVC Coverage"
@@ -203,6 +252,7 @@ export default function Dashboard() {
           icon={LinkIcon}
           subtext={`${summary.servicesMissingAvc ?? 0} missing AVC ID`}
           accent={((summary.servicesMissingAvc ?? 0) > 0) ? "rose" : "teal"}
+          billingPeriod={(summary as any).latestBillingPeriod}
         />
         <StatCard
           label="No Data Use"
@@ -210,6 +260,7 @@ export default function Dashboard() {
           icon={ZapOff}
           subtext="Termination prospects"
           accent={(summary.noDataUseServices ?? 0) > 0 ? "orange" : "gray"}
+          billingPeriod={(summary as any).latestBillingPeriod}
         />
       </div>
 
@@ -223,25 +274,25 @@ export default function Dashboard() {
             label="Internet"
             count={servicesByType.Internet || 0}
             total={summary.totalServices}
-            color="oklch(0.637 0.137 175.8)"
+            color="#10b981"
           />
           <ServiceTypeBar
             label="Mobile"
             count={servicesByType.Mobile || 0}
             total={summary.totalServices}
-            color="oklch(0.55 0.15 260)"
+            color="#3b82f6"
           />
           <ServiceTypeBar
             label="Voice"
             count={servicesByType.Voice || 0}
             total={summary.totalServices}
-            color="oklch(0.666 0.16 75.8)"
+            color="#f59e0b"
           />
           <ServiceTypeBar
             label="Other"
             count={servicesByType.Other || 0}
             total={summary.totalServices}
-            color="oklch(0.7 0.01 56)"
+            color="#9ca3af"
           />
         </div>
 
@@ -325,12 +376,13 @@ export default function Dashboard() {
               <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
             </div>
           ) : (
-            <table className="w-full">
+            <div className="overflow-x-auto">
+            <table className="w-full min-w-[280px]">
               <thead>
                 <tr className="border-b border-border text-[10px] text-muted-foreground uppercase tracking-wider">
-                  <th className="text-left px-5 py-2 font-semibold">Account</th>
-                  <th className="text-right px-5 py-2 font-semibold">Services</th>
-                  <th className="text-right px-5 py-2 font-semibold">Monthly</th>
+                  <th className="text-left px-4 py-2 font-semibold">Account</th>
+                  <th className="text-right px-4 py-2 font-semibold">Svcs</th>
+                  <th className="text-right px-4 py-2 font-semibold">Monthly</th>
                 </tr>
               </thead>
               <tbody>
@@ -339,13 +391,13 @@ export default function Dashboard() {
                   .sort((a: { monthlyCost: number }, b: { monthlyCost: number }) => b.monthlyCost - a.monthlyCost)
                   .map((acct: { accountNumber: string; serviceCount: number; monthlyCost: number }) => (
                     <tr key={acct.accountNumber} className="border-b border-border/30 last:border-0">
-                      <td className="px-5 py-2.5">
+                      <td className="px-4 py-2.5">
                         <span className="data-value text-sm">{acct.accountNumber}</span>
                       </td>
-                      <td className="px-5 py-2.5 text-right">
+                      <td className="px-4 py-2.5 text-right">
                         <span className="data-value text-sm">{acct.serviceCount}</span>
                       </td>
-                      <td className="px-5 py-2.5 text-right">
+                      <td className="px-4 py-2.5 text-right">
                         <span className="data-value text-sm">
                           ${Number(acct.monthlyCost).toLocaleString("en-AU", { minimumFractionDigits: 2 })}
                         </span>
@@ -354,6 +406,7 @@ export default function Dashboard() {
                   ))}
               </tbody>
             </table>
+          </div>
           )}
         </div>
       </div>

@@ -358,7 +358,8 @@ function ExetelPreview({
           Recurring Services ({invoice.recurringRows.length})
         </h3>
         <div className="border border-border rounded-lg overflow-hidden">
-          <table className="w-full text-xs">
+          <div className="overflow-x-auto">
+          <table className="w-full text-xs min-w-[500px]">
             <thead className="bg-muted/50">
               <tr>
                 <th className="text-left px-3 py-2 font-medium">Service #</th>
@@ -386,6 +387,7 @@ function ExetelPreview({
               ))}
             </tbody>
           </table>
+          </div>
         </div>
       </div>
 
@@ -400,7 +402,8 @@ function ExetelPreview({
           </button>
           {showOnceOff && (
             <div className="border border-border rounded-lg overflow-hidden">
-              <table className="w-full text-xs">
+              <div className="overflow-x-auto">
+              <table className="w-full text-xs min-w-[500px]">
                 <thead className="bg-muted/50">
                   <tr>
                     <th className="text-left px-3 py-2 font-medium">Service #</th>
@@ -438,6 +441,7 @@ function ExetelPreview({
                   ))}
                 </tbody>
               </table>
+              </div>
             </div>
           )}
         </div>
@@ -623,7 +627,8 @@ function PdfInvoicePreview({
           Services ({invoice.services.length})
         </h3>
         <div className="border border-border rounded-lg overflow-hidden">
-          <table className="w-full text-xs">
+          <div className="overflow-x-auto">
+          <table className="w-full text-xs min-w-[500px]">
             <thead className="bg-muted/50">
               <tr>
                 <th className="text-left px-3 py-2 font-medium">Name</th>
@@ -647,6 +652,7 @@ function PdfInvoicePreview({
               ))}
             </tbody>
           </table>
+          </div>
         </div>
       </div>
 
@@ -716,7 +722,7 @@ function AbbCarbonSyncSection() {
           </div>
         </div>
         <button
-          onClick={() => syncMutation.mutate()}
+          onClick={() => syncMutation.mutate({ forceRefresh: false })}
           disabled={syncMutation.isPending}
           className="inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold bg-green-700 text-white rounded-md hover:bg-green-800 disabled:opacity-50 transition-colors"
         >
@@ -881,6 +887,22 @@ export default function SupplierInvoices() {
   const [isParsing, setIsParsing] = useState(false);
   const [importResults, setImportResults] = useState<ImportResult[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  // Track the raw file for S3 upload after parsing
+  const [pendingFile, setPendingFile] = useState<File | null>(null);
+  const [savedFileUrl, setSavedFileUrl] = useState<string | null>(null);
+  const [isSavingFile, setIsSavingFile] = useState(false);
+
+  const uploadStandaloneFileMutation = trpc.billing.uploadStandaloneInvoiceFile.useMutation({
+    onSuccess: (result) => {
+      setSavedFileUrl(result.url);
+      setIsSavingFile(false);
+      toast.success('Invoice PDF saved to cloud storage');
+    },
+    onError: (err) => {
+      setIsSavingFile(false);
+      toast.error('Failed to save file: ' + err.message);
+    },
+  });
 
   const importExetelMutation = trpc.billing.importExetelInvoice.useMutation({
     onSuccess: (result) => {
@@ -985,6 +1007,8 @@ export default function SupplierInvoices() {
     (file: File) => {
       setParseError(null);
       setParsedInvoice(null);
+      setPendingFile(file);
+      setSavedFileUrl(null);
 
       const isPdf = file.name.toLowerCase().endsWith(".pdf") || file.type === "application/pdf";
       const isCsv = file.name.toLowerCase().endsWith(".csv") || file.type === "text/csv";
@@ -1188,12 +1212,55 @@ export default function SupplierInvoices() {
         <div className="mt-4">
           <div className="flex items-center justify-between mb-3">
             <h2 className="text-sm font-semibold">Invoice Preview</h2>
-            <button
-              onClick={() => setParsedInvoice(null)}
-              className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1"
-            >
-              <X className="w-3 h-3" /> Clear
-            </button>
+            <div className="flex items-center gap-2">
+              {/* Save original file to S3 */}
+              {pendingFile && !savedFileUrl && (
+                <button
+                  onClick={() => {
+                    if (!pendingFile) return;
+                    setIsSavingFile(true);
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                      const base64 = (e.target?.result as string).split(',')[1];
+                      const supplier = parsedInvoice.type === 'pdf' ? parsedInvoice.supplier
+                        : parsedInvoice.type === 'csv' ? 'Exetel'
+                        : 'SasBoss';
+                      uploadStandaloneFileMutation.mutate({
+                        base64,
+                        filename: pendingFile.name,
+                        mimeType: pendingFile.type || 'application/pdf',
+                        supplier,
+                        invoiceNumber: parsedInvoice.type === 'pdf' ? parsedInvoice.invoiceNumber
+                          : parsedInvoice.type === 'csv' ? parsedInvoice.invoiceNumber
+                          : parsedInvoice.workbookName,
+                      });
+                    };
+                    reader.readAsDataURL(pendingFile);
+                  }}
+                  disabled={isSavingFile}
+                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200 rounded-md hover:bg-blue-100 disabled:opacity-50 transition-colors"
+                >
+                  {isSavingFile ? <RefreshCw className="w-3 h-3 animate-spin" /> : <FileText className="w-3 h-3" />}
+                  {isSavingFile ? 'Saving…' : 'Save PDF to Cloud'}
+                </button>
+              )}
+              {savedFileUrl && (
+                <a
+                  href={savedFileUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-green-50 text-green-700 border border-green-200 rounded-md hover:bg-green-100 transition-colors"
+                >
+                  <CheckCircle className="w-3 h-3" /> PDF Saved — View
+                </a>
+              )}
+              <button
+                onClick={() => { setParsedInvoice(null); setPendingFile(null); setSavedFileUrl(null); }}
+                className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1"
+              >
+                <X className="w-3 h-3" /> Clear
+              </button>
+            </div>
           </div>
           {parsedInvoice.type === "xlsx" ? (
             <SasBossPreview

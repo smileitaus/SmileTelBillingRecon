@@ -26,7 +26,24 @@ import CustomerWorkbookMatching from "./pages/CustomerWorkbookMatching";
 import CustomerBillingMatch from "./pages/CustomerBillingMatch";
 import UnmatchedBillingQueue from "./pages/UnmatchedBillingQueue";
 import BlitzTerminationReview from "./pages/BlitzTerminationReview";
+import TerminationArchive from "./pages/TerminationArchive";
+import TerminationManagement from "./pages/TerminationManagement";
 import Suppliers from "./pages/Suppliers";
+import SupplierIntegrations from "./pages/SupplierIntegrations";
+import OutageMonitor from "./pages/OutageMonitor";
+import UsageAlerts from "./pages/UsageAlerts";
+import OmadaFleet from "./pages/OmadaFleet";
+import TiabDashboard from "./pages/TiabDashboard";
+import VocusDashboard from "./pages/VocusDashboard";
+import RateCards from "./pages/RateCards";
+import SasBossPricebook from "./pages/SasBossPricebook";
+import NumberManagement from "./pages/NumberManagement";
+import StyleGuide from "./pages/StyleGuide";
+import InternetPricebook from "./pages/InternetPricebook";
+import RetailBundles from "./pages/RetailBundles";
+import PaymentPlans from "./pages/PaymentPlans";
+import BillingCycle from "./pages/BillingCycle";
+import StarlinkPage from "./pages/Starlink";
 import { useState } from "react";
 import { trpc } from "@/lib/trpc";
 
@@ -245,7 +262,24 @@ function Router() {
           <Route path="/customers/:id/billing-match" component={CustomerBillingMatch} />
           <Route path="/billing-queue" component={UnmatchedBillingQueue} />
           <Route path="/blitz-termination" component={BlitzTerminationReview} />
+          <Route path="/termination-archive" component={TerminationArchive} />
+          <Route path="/termination-management" component={TerminationManagement} />
           <Route path="/suppliers" component={Suppliers} />
+          <Route path="/integrations" component={SupplierIntegrations} />
+          <Route path="/rate-cards" component={RateCards} />
+          <Route path="/pricebook" component={SasBossPricebook} />
+          <Route path="/outages" component={OutageMonitor} />
+          <Route path="/usage-alerts" component={UsageAlerts} />
+          <Route path="/omada" component={OmadaFleet} />
+          <Route path="/tiab" component={TiabDashboard} />
+          <Route path="/vocus" component={VocusDashboard} />
+          <Route path="/numbers" component={NumberManagement} />
+          <Route path="/internet-pricebook" component={InternetPricebook} />
+          <Route path="/retail-bundles" component={RetailBundles} />
+          <Route path="/payment-plans" component={PaymentPlans} />
+          <Route path="/billing-cycle" component={BillingCycle} />
+          <Route path="/starlink" component={StarlinkPage} />
+          <Route path="/style-guide" component={StyleGuide} />
           <Route path="/404" component={NotFound} />
           <Route component={NotFound} />
         </Switch>

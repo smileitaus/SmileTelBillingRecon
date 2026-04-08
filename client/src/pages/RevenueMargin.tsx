@@ -28,12 +28,15 @@ import {
   ChevronDown,
   ChevronRight,
   HelpCircle,
+  X,
+  Package,
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { ProviderBadge } from "@/components/ProviderBadge";
 import { exportToCSV } from "@/lib/exportCsv";
 import { useDebounce } from "@/hooks/useDebounce";
+import { KNOWN_SUPPLIERS, supplierLabel } from "@shared/suppliers";
 
 function ServiceTypeIcon({ type }: { type: string }) {
   switch (type) {
@@ -80,8 +83,31 @@ function MarginBadge({ margin }: { margin: number | null }) {
   );
 }
 
-function CostCell({ cost }: { cost: number }) {
+const CONFIRMED_ZERO_COST_SOURCES = [
+  'sasboss_pricebook',
+  'access4_diamond_pricebook_excel',
+  'access4_diamond_pricebook',
+  'retail_only_no_wholesale',
+  'access4_invoice_corrected',
+  'pricebook-derived',
+  'product_map',
+];
+
+function CostCell({ cost, costSource }: { cost: number; costSource?: string }) {
   if (cost === 0) {
+    // Confirmed zero-cost from a known pricebook source — show as $0.00, not Unknown
+    if (costSource && CONFIRMED_ZERO_COST_SOURCES.includes(costSource)) {
+      const sourceLabel =
+        costSource === 'sasboss_pricebook' ? 'SasBoss pricebook' :
+        costSource === 'retail_only_no_wholesale' ? 'retail-only product' :
+        costSource === 'access4_diamond_pricebook_excel' ? 'Access4 pricebook' :
+        costSource;
+      return (
+        <span className="data-value text-sm text-muted-foreground" title={`Confirmed $0.00 wholesale cost (${sourceLabel})`}>
+          $0.00
+        </span>
+      );
+    }
     return (
       <span className="inline-flex items-center gap-1 text-xs text-muted-foreground italic">
         <HelpCircle className="w-3 h-3" />
@@ -94,6 +120,143 @@ function CostCell({ cost }: { cost: number }) {
 
 function formatCurrency(val: number) {
   return `$${val.toLocaleString("en-AU", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+}
+
+// ── Group Detail Slide-out Panel ─────────────────────────────────────────────
+function GroupDetailPanel({ groupId, onClose }: { groupId: string; onClose: () => void }) {
+  const { data, isLoading } = trpc.billing.margin.groupDetail.useQuery({ groupId }, {
+    enabled: !!groupId,
+    staleTime: 30_000,
+  });
+
+  const typeLabel = data?.type === 'voice_pack' ? '📞 Voice Pack'
+    : data?.type === 'data_bundle' ? '🌐 Data Bundle'
+    : '📦 Service Bundle';
+
+  const typeColour = data?.type === 'voice_pack'
+    ? 'bg-blue-50 text-blue-700 border-blue-200'
+    : data?.type === 'data_bundle'
+    ? 'bg-teal-50 text-teal-700 border-teal-200'
+    : 'bg-purple-50 text-purple-700 border-purple-200';
+
+  return (
+    <div className="fixed inset-0 z-50 flex justify-end" onClick={onClose}>
+      {/* Backdrop */}
+      <div className="absolute inset-0 bg-black/30" />
+      {/* Panel */}
+      <div
+        className="relative z-10 w-full max-w-lg bg-card border-l border-border shadow-2xl flex flex-col overflow-hidden"
+        onClick={e => e.stopPropagation()}
+      >
+        {/* Header */}
+        <div className="flex items-center justify-between px-5 py-4 border-b border-border bg-muted/30">
+          <div className="flex items-center gap-2">
+            <Package className="w-4 h-4 text-muted-foreground" />
+            <span className="font-semibold text-sm">Revenue Group Detail</span>
+          </div>
+          <button onClick={onClose} className="p-1 rounded hover:bg-accent transition-colors">
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+
+        {isLoading ? (
+          <div className="flex-1 flex items-center justify-center">
+            <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
+          </div>
+        ) : !data ? (
+          <div className="flex-1 flex items-center justify-center text-muted-foreground text-sm">Group not found</div>
+        ) : (
+          <div className="flex-1 overflow-y-auto">
+            {/* Group summary */}
+            <div className="px-5 py-4 border-b border-border space-y-3">
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className={`inline-flex items-center gap-1 px-2 py-0.5 text-xs rounded-full border ${typeColour}`}>
+                  {typeLabel}
+                </span>
+                {data.isLoss && (
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 text-xs rounded-full border bg-red-100 text-red-800 border-red-300 font-bold">
+                    <TrendingDown className="w-3 h-3" /> Loss
+                  </span>
+                )}
+              </div>
+              <div>
+                <p className="text-base font-semibold">{data.name}</p>
+                <p className="text-xs text-muted-foreground">{data.customerName}</p>
+              </div>
+              <div className="grid grid-cols-3 gap-3">
+                <div className="bg-muted/40 rounded-lg p-3 text-center">
+                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1">Revenue</p>
+                  <p className="text-sm font-semibold text-emerald-700">{formatCurrency(data.totalRevenue)}</p>
+                </div>
+                <div className="bg-muted/40 rounded-lg p-3 text-center">
+                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1">Total Cost</p>
+                  <p className={`text-sm font-semibold ${data.isLoss ? 'text-red-700' : 'text-foreground'}`}>
+                    {formatCurrency(data.totalCost)}
+                  </p>
+                </div>
+                <div className="bg-muted/40 rounded-lg p-3 text-center">
+                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1">Margin</p>
+                  {data.groupMargin !== null ? (
+                    <p className={`text-sm font-bold ${
+                      data.groupMargin < 0 ? 'text-red-700' :
+                      data.groupMargin < 20 ? 'text-amber-700' :
+                      data.groupMargin < 50 ? 'text-teal-700' : 'text-emerald-700'
+                    }`}>
+                      {data.groupMargin.toFixed(1)}%
+                    </p>
+                  ) : (
+                    <p className="text-sm text-muted-foreground">—</p>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Component services */}
+            <div className="px-5 py-3">
+              <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold mb-3">
+                {data.services.length} Component Service{data.services.length !== 1 ? 's' : ''}
+              </p>
+              <div className="space-y-2">
+                {data.services.map((s: any) => {
+                  const cost = parseFloat(s.monthlyCost || '0');
+                  const isConfirmedZero = cost === 0 && s.costSource && [
+                    'sasboss_pricebook','access4_diamond_pricebook_excel',
+                    'retail_only_no_wholesale','access4_diamond_pricebook',
+                  ].includes(s.costSource);
+                  return (
+                    <div key={s.id} className="flex items-center justify-between py-2 px-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors">
+                      <div className="flex items-center gap-2 min-w-0">
+                        <ServiceTypeIcon type={s.serviceType} />
+                        <div className="min-w-0">
+                          <Link href={`/services/${s.externalId}`} onClick={onClose}
+                            className="text-xs font-medium hover:text-primary transition-colors truncate block">
+                            {s.planName || s.serviceType}
+                          </Link>
+                          <p className="text-[10px] text-muted-foreground">
+                            {s.phoneNumber || s.connectionId || s.externalId}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="text-right flex-shrink-0 ml-3">
+                        {isConfirmedZero ? (
+                          <span className="text-xs text-muted-foreground">$0.00</span>
+                        ) : cost > 0 ? (
+                          <span className="text-xs font-medium">{formatCurrency(cost)}</span>
+                        ) : (
+                          <span className="text-xs text-muted-foreground italic">Unknown</span>
+                        )}
+                        <p className="text-[10px] text-muted-foreground">cost/mo</p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
 }
 
 // ── Grouped by Customer Row ──────────────────────────────────────────────────
@@ -160,7 +323,7 @@ function CustomerGroupRow({ group }: { group: any }) {
               </Link>
             </td>
             <td className="px-4 py-2.5 text-right">
-              <CostCell cost={s.monthlyCost} />
+              <CostCell cost={s.monthlyCost} costSource={s.costSource} />
             </td>
             <td className="px-4 py-2.5 text-right">
               <span className="data-value text-xs text-emerald-700">{formatCurrency(s.monthlyRevenue)}</span>
@@ -185,6 +348,10 @@ export default function RevenueMargin() {
   const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
   const [searchInput, setSearchInput] = useState("");
   const [groupByCustomer, setGroupByCustomer] = useState(false);
+  const [customerTypeFilter, setCustomerTypeFilter] = useState("all");
+  const [selectedGroupId, setSelectedGroupId] = useState<string | null>(null);
+  const openGroup = useCallback((groupId: string) => setSelectedGroupId(groupId), []);
+  const closeGroup = useCallback(() => setSelectedGroupId(null), []);
 
   // Debounce search — only fires query after 350ms of inactivity
   const search = useDebounce(searchInput, 350);
@@ -195,17 +362,23 @@ export default function RevenueMargin() {
     provider: providerFilter,
     search: search || undefined,
     costReviewNeeded: costReviewNeeded || undefined,
+    customerType: customerTypeFilter !== 'all' ? customerTypeFilter : undefined,
   };
 
-  const { data: services, isLoading: listLoading } = trpc.billing.margin.list.useQuery(queryInput, {
+  const { data: listData, isLoading: listLoading } = trpc.billing.margin.list.useQuery(queryInput, {
     enabled: !groupByCustomer,
     refetchOnWindowFocus: true,
     staleTime: 0,
+    refetchInterval: 30_000,
   });
 
+  // Unwrap the new { services, latestBillingPeriod } envelope
+  const services = listData?.services;
+  const latestBillingPeriod = listData?.latestBillingPeriod ?? null;
+
   const { data: grouped, isLoading: groupedLoading } = trpc.billing.margin.grouped.useQuery(
-    { marginFilter, serviceType: serviceTypeFilter, provider: providerFilter, search: search || undefined },
-    { enabled: groupByCustomer, refetchOnWindowFocus: true, staleTime: 0 }
+    { marginFilter, serviceType: serviceTypeFilter, provider: providerFilter, search: search || undefined, customerType: customerTypeFilter !== 'all' ? customerTypeFilter : undefined },
+    { enabled: groupByCustomer, refetchOnWindowFocus: true, staleTime: 0, refetchInterval: 30_000 }
   );
 
   const isLoading = groupByCustomer ? groupedLoading : listLoading;
@@ -262,56 +435,103 @@ export default function RevenueMargin() {
   const displayCount = groupByCustomer ? (grouped?.length ?? 0) : sorted.length;
 
   return (
+    <>
     <div className="p-6 lg:p-8">
       {/* Header */}
-      <div className="mb-6">
-        <h1 className="text-xl font-bold tracking-tight">Revenue & Margin Analysis</h1>
-        <p className="text-sm text-muted-foreground mt-1">
-          Feb 2026 Xero billing matched to supplier costs — filter by margin to find underperforming services.
-          Costs come from supplier invoices; services without a matched supplier invoice show cost as "Unknown".
-        </p>
+      <div className="mb-6 flex items-start justify-between gap-4">
+        <div>
+          <h1 className="text-xl font-bold tracking-tight">Revenue & Margin Analysis</h1>
+          <p className="text-sm text-muted-foreground mt-1">
+            Feb 2026 Xero billing matched to supplier costs — filter by margin to find underperforming services.
+            Costs come from supplier invoices; services without a matched supplier invoice show cost as "Unknown".
+          </p>
+        </div>
+        <button
+          onClick={() => setCustomerTypeFilter(customerTypeFilter === 'retail_offering' ? 'all' : 'retail_offering')}
+          className={`shrink-0 flex items-center gap-1.5 px-3 py-2 text-sm font-medium rounded-md border transition-colors ${
+            customerTypeFilter === 'retail_offering'
+              ? 'bg-teal-500/20 text-teal-400 border-teal-500/40 hover:bg-teal-500/30'
+              : 'bg-card text-muted-foreground border-border hover:text-foreground hover:border-teal-500/40'
+          }`}
+        >
+          <span className="text-xs">✦</span>
+          Retail Bundles
+        </button>
       </div>
 
       {/* Summary Cards */}
       {stats && (
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3 mb-6">
-          <div className="bg-card border border-border rounded-lg p-4">
-            <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">Known Cost (ex GST)</p>
-            <p className="text-lg font-bold data-value mt-1">{formatCurrency(stats.totalKnownCost)}</p>
-            <p className="text-[10px] text-muted-foreground mt-0.5">{stats.withKnownCost} services</p>
-          </div>
-          <div className="bg-card border border-border rounded-lg p-4">
-            <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">Total Revenue (ex GST)</p>
-            <p className="text-lg font-bold data-value mt-1 text-emerald-700">{formatCurrency(stats.totalRevenue)}</p>
-            <p className="text-[10px] text-muted-foreground mt-0.5">{stats.total} services</p>
-          </div>
-          <div className="bg-card border border-border rounded-lg p-4">
-            <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">Overall Margin</p>
-            {stats.overallMargin !== null ? (
-              <p className={`text-lg font-bold data-value mt-1 ${stats.overallMargin < 20 ? "text-red-700" : "text-emerald-700"}`}>
-                {stats.overallMargin.toFixed(1)}%
-              </p>
-            ) : (
-              <p className="text-lg font-bold text-muted-foreground mt-1">—</p>
-            )}
-            <p className="text-[10px] text-muted-foreground mt-0.5">where cost known</p>
-          </div>
-          <div className="bg-card border border-muted rounded-lg p-4 cursor-pointer hover:bg-muted/30 transition-colors" onClick={() => { setMarginFilter("all"); setCostReviewNeeded(false); setGroupByCustomer(false); }}>
-            <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">Cost Unknown</p>
-            <p className="text-lg font-bold text-muted-foreground mt-1">{stats.withUnknownCost}</p>
-          </div>
-          <div className="bg-card border border-red-200 rounded-lg p-4 cursor-pointer hover:bg-red-50/50 transition-colors" onClick={() => { setMarginFilter("negative"); setGroupByCustomer(false); }}>
-            <p className="text-[10px] uppercase tracking-wider text-red-700 font-semibold">Negative</p>
-            <p className="text-lg font-bold text-red-700 mt-1">{stats.negative}</p>
-          </div>
-          <div className="bg-card border border-red-100 rounded-lg p-4 cursor-pointer hover:bg-red-50/30 transition-colors" onClick={() => { setMarginFilter("low"); setGroupByCustomer(false); }}>
-            <p className="text-[10px] uppercase tracking-wider text-red-600 font-semibold">Low (&lt;20%)</p>
-            <p className="text-lg font-bold text-red-600 mt-1">{stats.low}</p>
-          </div>
-          <div className="bg-card border border-emerald-200 rounded-lg p-4 cursor-pointer hover:bg-emerald-50/30 transition-colors" onClick={() => { setMarginFilter("high"); setGroupByCustomer(false); }}>
-            <p className="text-[10px] uppercase tracking-wider text-emerald-700 font-semibold">High (&gt;50%)</p>
-            <p className="text-lg font-bold text-emerald-700 mt-1">{stats.high}</p>
-          </div>
+          {/* Reusable footer snippet */}
+          {([
+            {
+              label: "Known Cost (ex GST)",
+              value: <p className="text-lg font-bold data-value mt-1">{formatCurrency(stats.totalKnownCost)}</p>,
+              sub: <p className="text-[10px] text-muted-foreground mt-0.5">{stats.withKnownCost} services</p>,
+              cls: "border-border",
+            },
+            {
+              label: "Total Revenue (ex GST)",
+              value: <p className="text-lg font-bold data-value mt-1 text-emerald-700">{formatCurrency(stats.totalRevenue)}</p>,
+              sub: <p className="text-[10px] text-muted-foreground mt-0.5">{stats.total} services</p>,
+              cls: "border-border",
+            },
+            {
+              label: "Overall Margin",
+              value: stats.overallMargin !== null
+                ? <p className={`text-lg font-bold data-value mt-1 ${stats.overallMargin < 20 ? "text-red-700" : "text-emerald-700"}`}>{stats.overallMargin.toFixed(1)}%</p>
+                : <p className="text-lg font-bold text-muted-foreground mt-1">—</p>,
+              sub: <p className="text-[10px] text-muted-foreground mt-0.5">where cost known</p>,
+              cls: "border-border",
+              onClick: undefined,
+            },
+            {
+              label: "Cost Unknown",
+              value: <p className="text-lg font-bold text-muted-foreground mt-1">{stats.withUnknownCost}</p>,
+              sub: null,
+              cls: "border-muted cursor-pointer hover:bg-muted/30 transition-colors",
+              onClick: () => { setMarginFilter("all"); setCostReviewNeeded(false); setGroupByCustomer(false); },
+            },
+            {
+              label: "Negative",
+              labelCls: "text-red-700",
+              value: <p className="text-lg font-bold text-red-700 mt-1">{stats.negative}</p>,
+              sub: null,
+              cls: "border-red-200 cursor-pointer hover:bg-red-50/50 transition-colors",
+              onClick: () => { setMarginFilter("negative"); setGroupByCustomer(false); },
+            },
+            {
+              label: "Low (<20%)",
+              labelCls: "text-red-600",
+              value: <p className="text-lg font-bold text-red-600 mt-1">{stats.low}</p>,
+              sub: null,
+              cls: "border-red-100 cursor-pointer hover:bg-red-50/30 transition-colors",
+              onClick: () => { setMarginFilter("low"); setGroupByCustomer(false); },
+            },
+            {
+              label: "High (>50%)",
+              labelCls: "text-emerald-700",
+              value: <p className="text-lg font-bold text-emerald-700 mt-1">{stats.high}</p>,
+              sub: null,
+              cls: "border-emerald-200 cursor-pointer hover:bg-emerald-50/30 transition-colors",
+              onClick: () => { setMarginFilter("high"); setGroupByCustomer(false); },
+            },
+          ] as Array<{ label: string; labelCls?: string; value: React.ReactNode; sub: React.ReactNode | null; cls: string; onClick?: () => void }>).map((card) => (
+            <div
+              key={card.label}
+              className={`bg-card border ${card.cls} rounded-lg p-4 flex flex-col`}
+              onClick={card.onClick}
+            >
+              <p className={`text-[10px] uppercase tracking-wider font-semibold ${card.labelCls ?? "text-muted-foreground"}`}>{card.label}</p>
+              {card.value}
+              {card.sub}
+              {latestBillingPeriod && (
+                <p className="text-[10px] text-muted-foreground/60 mt-auto pt-2 border-t border-border/40">
+                  Data as of {latestBillingPeriod}
+                </p>
+              )}
+            </div>
+          ))}
         </div>
       )}
 
@@ -380,21 +600,9 @@ export default function RevenueMargin() {
           className="px-2 py-1.5 text-xs border border-border rounded-md bg-card"
         >
           <option value="all">All Providers</option>
-          <option value="Telstra">Telstra</option>
-          <option value="ABB">ABB / Aussie Broadband</option>
-          <option value="Exetel">Exetel</option>
-          <option value="Vocus">Vocus</option>
-          <option value="SasBoss">SasBoss</option>
-          <option value="SmileTel">SmileTel</option>
-          <option value="ChannelHaus">Channel Haus</option>
-          <option value="Legion">Legion Telecom</option>
-          <option value="Tech-e">Tech-e</option>
-          <option value="VineDirect">Vine Direct</option>
-          <option value="Infinet">Infinet</option>
-          <option value="Blitznet">Blitznet</option>
-          <option value="AAPT">AAPT</option>
-          <option value="Optus">Optus</option>
-          <option value="OptiComm">OptiComm</option>
+          {KNOWN_SUPPLIERS.map((s) => (
+            <option key={s} value={s}>{supplierLabel(s)}</option>
+          ))}
         </select>
 
         <div className="w-px h-5 bg-border mx-1" />
@@ -572,6 +780,38 @@ export default function RevenueMargin() {
                                   Cost Review Needed
                                 </span>
                               )}
+                              {s.monthlyCost === 0 && s.costSource === 'sasboss_pricebook' && (
+                                <span className="inline-flex items-center gap-0.5 mt-0.5 px-1.5 py-0.5 text-[10px] rounded bg-violet-50 text-violet-700 border border-violet-200" title="Confirmed $0.00 wholesale cost from SasBoss pricebook">
+                                  $0 (SasBoss Pricebook)
+                                </span>
+                              )}
+                              {s.monthlyCost === 0 && s.costSource === 'retail_only_no_wholesale' && (
+                                <span className="inline-flex items-center gap-0.5 mt-0.5 px-1.5 py-0.5 text-[10px] rounded bg-violet-50 text-violet-700 border border-violet-200" title="Retail-only product — no wholesale cost">
+                                  $0 (Retail Only)
+                                </span>
+                              )}
+                              {s.revenueGroupId && s.groupName && (() => {
+                                const grpRevenue = parseFloat(s.groupTotalRevenue || '0');
+                                const grpCost = parseFloat(s.groupTotalCost || '0');
+                                const isGroupLoss = grpCost > grpRevenue && grpRevenue > 0;
+                                const badgeColour = isGroupLoss
+                                  ? 'bg-red-50 text-red-700 border-red-300 hover:bg-red-100'
+                                  : s.groupType === 'data_bundle'
+                                  ? 'bg-teal-50 text-teal-700 border-teal-200 hover:bg-teal-100'
+                                  : 'bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100';
+                                return (
+                                  <button
+                                    type="button"
+                                    onClick={e => { e.preventDefault(); e.stopPropagation(); openGroup(s.revenueGroupId); }}
+                                    className={`inline-flex items-center gap-0.5 mt-0.5 px-1.5 py-0.5 text-[10px] rounded border cursor-pointer transition-colors ${badgeColour}`}
+                                    title={`Click to view group detail. Revenue billed as "${s.groupName}". Group total: ${formatCurrency(grpRevenue)}.${isGroupLoss ? ' ⚠ Group is at a loss.' : ''}`}
+                                  >
+                                    {isGroupLoss && <TrendingDown className="w-2.5 h-2.5" />}
+                                    {s.groupType === 'voice_pack' ? '📞' : s.groupType === 'data_bundle' ? '🌐' : '📦'} {s.groupName}
+                                    {isGroupLoss && <span className="font-bold ml-0.5">LOSS</span>}
+                                  </button>
+                                );
+                              })()}
                             </div>
                           </Link>
                         </td>
@@ -588,10 +828,17 @@ export default function RevenueMargin() {
                           <ProviderBadge provider={s.provider} size="xs" />
                         </td>
                         <td className="px-4 py-3 text-right">
-                          <CostCell cost={s.monthlyCost} />
+                          <CostCell cost={s.monthlyCost} costSource={s.costSource} />
                         </td>
                         <td className="px-4 py-3 text-right">
-                          <span className="data-value text-sm text-emerald-700">{formatCurrency(s.monthlyRevenue)}</span>
+                          {s.revenueGroupId && s.groupTotalRevenue ? (
+                            <div className="text-right">
+                              <span className="data-value text-sm text-emerald-700">{formatCurrency(parseFloat(s.groupTotalRevenue))}</span>
+                              <p className="text-[10px] text-muted-foreground mt-0.5">group total</p>
+                            </div>
+                          ) : (
+                            <span className="data-value text-sm text-emerald-700">{formatCurrency(s.monthlyRevenue)}</span>
+                          )}
                         </td>
                         <td className="px-4 py-3 text-right">
                           <MarginBadge margin={s.marginPercent} />
@@ -606,5 +853,11 @@ export default function RevenueMargin() {
         )
       )}
     </div>
+
+    {/* Group Detail Slide-out Panel */}
+    {selectedGroupId && (
+      <GroupDetailPanel groupId={selectedGroupId} onClose={closeGroup} />
+    )}
+    </>
   );
 }

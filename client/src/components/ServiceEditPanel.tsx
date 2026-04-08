@@ -20,6 +20,8 @@ import {
   CheckCircle2,
 } from "lucide-react";
 
+import { KNOWN_SUPPLIERS, supplierLabel } from "@shared/suppliers";
+
 const BILLING_PLATFORMS = ["OneBill", "SasBoss", "ECN", "Halo", "DataGate"];
 const STATUS_OPTIONS = [
   { value: "active", label: "Active" },
@@ -199,6 +201,7 @@ export default function ServiceEditPanel({ serviceExternalId, onClose, onSaved }
       monthlyCost: service.monthlyCost != null ? String(service.monthlyCost) : "",
       serviceType: service.serviceType || "",
       provider: service.supplierName || service.provider || "",
+      supplierName: service.supplierName || "",
       // Standard fields
       serviceTypeDetail: service.serviceTypeDetail || "",
       planName: service.planName || "",
@@ -366,9 +369,64 @@ export default function ServiceEditPanel({ serviceExternalId, onClose, onSaved }
                     />
                   </FieldGroup>
                   <FieldGroup label="Provider">
-                    <TextInput value={f("provider")} onChange={setF("provider")} placeholder="e.g. Telstra, ABB, SasBoss" />
+                    <div className="relative">
+                      <select
+                        value={KNOWN_SUPPLIERS.includes(f("provider") as any) ? f("provider") : f("provider") ? "__custom__" : ""}
+                        onChange={(e) => {
+                          if (e.target.value !== "__custom__") {
+                            setF("provider")(e.target.value);
+                          }
+                        }}
+                        className="w-full px-3 py-2 text-sm bg-background border border-border rounded-md outline-none focus:ring-2 focus:ring-ring transition-all"
+                      >
+                        <option value="">Select provider...</option>
+                        {KNOWN_SUPPLIERS.map((s) => (
+                          <option key={s} value={s}>{s}</option>
+                        ))}
+                        <option value="__custom__">Other (custom)...</option>
+                      </select>
+                      {f("provider") && !KNOWN_SUPPLIERS.includes(f("provider") as any) && (
+                        <div className="mt-1.5">
+                          <TextInput
+                            value={f("provider")}
+                            onChange={setF("provider")}
+                            placeholder="Enter custom provider name"
+                          />
+                        </div>
+                      )}
+                    </div>
                   </FieldGroup>
                 </div>
+                <FieldGroup label="Supplier">
+                  <div className="relative">
+                    <select
+                      value={KNOWN_SUPPLIERS.includes(f("supplierName") as any) ? f("supplierName") : f("supplierName") ? "__custom__" : ""}
+                      onChange={(e) => {
+                        if (e.target.value === "__custom__") {
+                          // Keep current value, user will type in the text input
+                        } else {
+                          setF("supplierName")(e.target.value);
+                        }
+                      }}
+                      className="w-full px-3 py-2 text-sm bg-background border border-border rounded-md outline-none focus:ring-2 focus:ring-ring transition-all"
+                    >
+                      <option value="">Select supplier...</option>
+                      {KNOWN_SUPPLIERS.map((s) => (
+                        <option key={s} value={s}>{s}</option>
+                      ))}
+                      <option value="__custom__">Other (custom)...</option>
+                    </select>
+                    {f("supplierName") && !KNOWN_SUPPLIERS.includes(f("supplierName") as any) && (
+                      <div className="mt-1.5">
+                        <TextInput
+                          value={f("supplierName")}
+                          onChange={setF("supplierName")}
+                          placeholder="Enter custom supplier name"
+                        />
+                      </div>
+                    )}
+                  </div>
+                </FieldGroup>
               </div>
 
               {/* Status */}

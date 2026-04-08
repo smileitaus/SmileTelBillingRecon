@@ -1,25 +1,70 @@
 import { trpc } from "@/lib/trpc";
 import { useState, useMemo, useCallback } from "react";
+import { useSearchParams } from "wouter";
 import { useDebounce } from "@/hooks/useDebounce";
 
 // ==================== Dashboard / Summary ====================
 export function useSummary() {
-  const { data, isLoading, error } = trpc.billing.summary.useQuery(undefined, {
+  const { data, isLoading, error, dataUpdatedAt, refetch } = trpc.billing.summary.useQuery(undefined, {
     // Always re-fetch on mount and window focus so the dashboard stays current
     staleTime: 0,
     refetchOnWindowFocus: true,
-    // Auto-refresh every 60 seconds so the dashboard reflects recent data changes
-    refetchInterval: 60_000,
+    // Auto-refresh every 30 seconds so the dashboard reflects recent data changes
+    refetchInterval: 30_000,
   });
-  return { summary: data ?? null, isLoading, error };
+  return { summary: data ?? null, isLoading, error, dataUpdatedAt, refetch };
 }
 
 // ==================== Customer List with Search & Filters ====================
 export function useCustomerSearch() {
-  const [query, setQuery] = useState("");
-  const [statusFilter, setStatusFilter] = useState<string>("all");
-  const [platformFilter, setPlatformFilter] = useState<string>("all");
-  const [supplierFilter, setSupplierFilter] = useState<string>("all");
+  // All filter state lives in URL search params so navigation preserves filters
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const query = searchParams.get("q") ?? "";
+  const statusFilter = searchParams.get("status") ?? "all";
+  const platformFilter = searchParams.get("platform") ?? "all";
+  const supplierFilter = searchParams.get("supplier") ?? "all";
+  const customerTypeFilter = searchParams.get("type") ?? "all";
+
+  const setQuery = useCallback((v: string) => {
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+      if (v) next.set("q", v); else next.delete("q");
+      return next;
+    });
+  }, [setSearchParams]);
+
+  const setStatusFilter = useCallback((v: string) => {
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+      if (v && v !== "all") next.set("status", v); else next.delete("status");
+      return next;
+    });
+  }, [setSearchParams]);
+
+  const setPlatformFilter = useCallback((v: string) => {
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+      if (v && v !== "all") next.set("platform", v); else next.delete("platform");
+      return next;
+    });
+  }, [setSearchParams]);
+
+  const setSupplierFilter = useCallback((v: string) => {
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+      if (v && v !== "all") next.set("supplier", v); else next.delete("supplier");
+      return next;
+    });
+  }, [setSearchParams]);
+
+  const setCustomerTypeFilter = useCallback((v: string) => {
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+      if (v && v !== "all") next.set("type", v); else next.delete("type");
+      return next;
+    });
+  }, [setSearchParams]);
 
   // Debounce the search query so API calls only fire after 350ms of inactivity
   const debouncedQuery = useDebounce(query, 350);
@@ -29,9 +74,12 @@ export function useCustomerSearch() {
     status: statusFilter !== "all" ? statusFilter : undefined,
     platform: platformFilter !== "all" ? platformFilter : undefined,
     supplier: supplierFilter !== "all" ? supplierFilter : undefined,
+    customerType: customerTypeFilter !== "all" ? customerTypeFilter : undefined,
   }, {
     // Always re-fetch on mount so the list is fresh after a merge or navigation
     staleTime: 0,
+    refetchOnWindowFocus: true,
+    refetchInterval: 30_000,
   });
 
   const allCustomers = useMemo(
@@ -44,6 +92,9 @@ export function useCustomerSearch() {
     [allCustomers]
   );
 
+  // Build a filter query string for use in back-navigation links
+  const filterSearch = searchParams.toString();
+
   // Client-side sorting is still done in the component
   return {
     query,
@@ -54,10 +105,13 @@ export function useCustomerSearch() {
     setPlatformFilter,
     supplierFilter,
     setSupplierFilter,
+    customerTypeFilter,
+    setCustomerTypeFilter,
     filtered: allCustomers,
     totalActive: allCustomers.length,
     totalWithServices,
     isLoading,
+    filterSearch,
   };
 }
 
@@ -85,6 +139,8 @@ export function useCustomerDetail(customerId: string) {
     const map: Record<string, typeof customerServices> = {};
     if (!customerServices) return map;
     for (const s of customerServices) {
+      // Exclude terminated services from location groups — they appear in Flagged & Terminated section
+      if (s.status === "terminated") continue;
       const locId = s.locationExternalId || "unknown";
       if (!map[locId]) map[locId] = [];
       map[locId]!.push(s);
@@ -118,7 +174,11 @@ export function useServiceDetail(serviceId: string) {
 
 // ==================== Supplier Accounts ====================
 export function useSupplierAccounts() {
-  const { data, isLoading } = trpc.billing.supplierAccounts.useQuery();
+  const { data, isLoading } = trpc.billing.supplierAccounts.useQuery(undefined, {
+    staleTime: 0,
+    refetchOnWindowFocus: true,
+    refetchInterval: 30_000,
+  });
   return { supplierAccounts: data ?? [], isLoading };
 }
 
@@ -128,12 +188,12 @@ export function useGlobalSearch() {
 
   const search = useCallback(
     async (q: string) => {
-      if (!q || q.length < 2) return { customers: [], services: [] };
+      if (!q || q.length < 2) return { customers: [], services: [], vocusNbn: [], vocusMobile: [] };
       try {
         const result = await utils.billing.search.fetch({ query: q });
         return result;
       } catch {
-        return { customers: [], services: [] };
+        return { customers: [], services: [], vocusNbn: [], vocusMobile: [] };
       }
     },
     [utils]

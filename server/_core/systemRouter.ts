@@ -13,6 +13,16 @@ export const systemRouter = router({
       ok: true,
     })),
 
+  serverIp: publicProcedure.query(async () => {
+    try {
+      const res = await fetch("https://api.ipify.org?format=json");
+      const json = await res.json() as { ip: string };
+      return { ip: json.ip };
+    } catch {
+      return { ip: "unavailable" };
+    }
+  }),
+
   notifyOwner: adminProcedure
     .input(
       z.object({

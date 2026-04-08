@@ -5,7 +5,7 @@
  * AVC coverage column with warning icons for missing AVCs
  */
 
-import { Link } from "wouter";
+import { Link, useSearch } from "wouter";
 import {
   Search,
   Filter,
@@ -17,6 +17,7 @@ import {
   Download,
   UserPlus,
   Receipt,
+  WifiOff,
 } from "lucide-react";
 import { useCustomerSearch } from "@/hooks/useData";
 import { useState, useMemo } from "react";
@@ -24,6 +25,7 @@ import { trpc } from "@/lib/trpc";
 import { ProviderBadge, ProviderLogo } from "@/components/ProviderBadge";
 import { exportToCSV } from "@/lib/exportCsv";
 import { CreateCustomerDialog } from "@/components/CreateCustomerDialog";
+import { KNOWN_SUPPLIERS, supplierLabel } from "@shared/suppliers";
 
 type SortKey =
   | "name"
@@ -62,15 +64,24 @@ export default function CustomerList() {
     setPlatformFilter,
     supplierFilter,
     setSupplierFilter,
+    customerTypeFilter,
+    setCustomerTypeFilter,
     filtered,
     totalActive,
     totalWithServices,
     isLoading,
+    filterSearch,
   } = useCustomerSearch();
 
   const [sortKey, setSortKey] = useState<SortKey>("name");
   const [sortDir, setSortDir] = useState<SortDir>("asc");
   const [showCreateCustomer, setShowCreateCustomer] = useState(false);
+
+  // Fetch outage status for all ABB customers (cached 5 min, refreshes every 5 min)
+  const { data: customerOutageStatus = {} } = trpc.billing.getCustomerOutageStatus.useQuery(undefined, {
+    staleTime: 5 * 60_000,
+    refetchInterval: 5 * 60_000,
+  });
 
   const sorted = useMemo(() => {
     const arr = [...filtered];
@@ -133,13 +144,26 @@ export default function CustomerList() {
             {totalActive} customers total &middot; {totalWithServices} with active services
           </p>
         </div>
-        <button
-          onClick={() => setShowCreateCustomer(true)}
-          className="shrink-0 flex items-center gap-2 px-4 py-2 text-sm font-medium bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
-        >
-          <UserPlus className="w-4 h-4" />
-          New Customer
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setCustomerTypeFilter(customerTypeFilter === 'retail_offering' ? 'all' : 'retail_offering')}
+            className={`shrink-0 flex items-center gap-1.5 px-3 py-2 text-sm font-medium rounded-md border transition-colors ${
+              customerTypeFilter === 'retail_offering'
+                ? 'bg-teal-500/20 text-teal-400 border-teal-500/40 hover:bg-teal-500/30'
+                : 'bg-card text-muted-foreground border-border hover:text-foreground hover:border-teal-500/40'
+            }`}
+          >
+            <span className="text-xs">✦</span>
+            Retail Bundles
+          </button>
+          <button
+            onClick={() => setShowCreateCustomer(true)}
+            className="shrink-0 flex items-center gap-2 px-4 py-2 text-sm font-medium bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
+          >
+            <UserPlus className="w-4 h-4" />
+            New Customer
+          </button>
+        </div>
       </div>
 
       {/* Create Customer Dialog */}
@@ -200,21 +224,19 @@ export default function CustomerList() {
             className="text-sm bg-card border border-border rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-ring/20"
           >
             <option value="all">All Suppliers</option>
-            <option value="Telstra">Telstra</option>
-            <option value="ABB">ABB / Aussie Broadband</option>
-            <option value="Exetel">Exetel</option>
-            <option value="Vocus">Vocus</option>
-            <option value="SasBoss">SasBoss</option>
-            <option value="SmileTel">SmileTel</option>
-            <option value="ChannelHaus">Channel Haus</option>
-            <option value="Legion">Legion Telecom</option>
-            <option value="Tech-e">Tech-e</option>
-            <option value="VineDirect">Vine Direct</option>
-            <option value="Infinet">Infinet</option>
-            <option value="Blitznet">Blitznet</option>
-            <option value="AAPT">AAPT</option>
-            <option value="Optus">Optus</option>
-            <option value="OptiComm">OptiComm</option>
+            {KNOWN_SUPPLIERS.map((s) => (
+              <option key={s} value={s}>{supplierLabel(s)}</option>
+            ))}
+          </select>
+
+          <select
+            value={customerTypeFilter}
+            onChange={(e) => setCustomerTypeFilter(e.target.value)}
+            className="text-sm bg-card border border-border rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-ring/20"
+          >
+            <option value="all">All Customer Types</option>
+            <option value="retail_offering">✦ Retail Offering</option>
+            <option value="standard">Standard</option>
           </select>
         </div>
       </div>
@@ -244,7 +266,8 @@ export default function CustomerList() {
 
       {/* Table */}
       <div className="bg-card border border-border rounded-lg overflow-hidden">
-        <table className="w-full">
+        <div className="overflow-x-auto">
+        <table className="w-full min-w-[700px]">
           <thead>
             <tr className="border-b border-border text-xs text-muted-foreground uppercase tracking-wider">
               <th className="text-left px-4 py-3 font-semibold">
@@ -271,10 +294,16 @@ export default function CustomerList() {
           </thead>
           <tbody>
             {sorted.map((customer) => (
-              <CustomerRow key={customer.id} customer={customer} />
+              <CustomerRow
+                key={customer.id}
+                customer={customer}
+                hasActiveOutage={!!(customerOutageStatus as Record<string, boolean>)[customer.externalId]}
+                filterSearch={filterSearch}
+              />
             ))}
           </tbody>
         </table>
+        </div>
 
         {sorted.length === 0 && (
           <div className="px-4 py-12 text-center text-sm text-muted-foreground">
@@ -286,7 +315,7 @@ export default function CustomerList() {
   );
 }
 
-function CustomerRow({ customer }: { customer: any }) {
+function CustomerRow({ customer, hasActiveOutage = false, filterSearch = "" }: { customer: any; hasActiveOutage?: boolean; filterSearch?: string }) {
   // Query the customer's services to check AVC coverage
   const { data: customerServices } = trpc.billing.customers.services.useQuery(
     { customerId: customer.externalId },
@@ -312,7 +341,7 @@ function CustomerRow({ customer }: { customer: any }) {
   }, [customerServices]);
 
   return (
-    <Link href={`/customers/${customer.externalId}`} asChild>
+    <Link href={`/customers/${customer.externalId}${filterSearch ? `?from=${encodeURIComponent(filterSearch)}` : ""}`} asChild>
       <tr className="border-b border-border/50 last:border-0 hover:bg-accent/50 transition-colors cursor-pointer group">
         <td className="px-4 py-3">
           <div>
@@ -334,6 +363,23 @@ function CustomerRow({ customer }: { customer: any }) {
                 >
                   <Receipt className="w-2.5 h-2.5" />
                   {customer.unmatchedBillingCount}
+                </span>
+              )}
+              {hasActiveOutage && (
+                <span
+                  className="inline-flex items-center gap-0.5 text-[10px] text-red-600 bg-red-50 border border-red-200 px-1.5 py-0.5 rounded font-semibold"
+                  title="Active network outage on one or more services"
+                >
+                  <WifiOff className="w-2.5 h-2.5" />
+                  Outage
+                </span>
+              )}
+              {customer.customerType === 'retail_offering' && (
+                <span
+                  className="inline-flex items-center text-[10px] text-violet-700 bg-violet-50 border border-violet-200 px-1.5 py-0.5 rounded font-medium"
+                  title="Retail Offering customer"
+                >
+                  ✦ Retail
                 </span>
               )}
             </div>

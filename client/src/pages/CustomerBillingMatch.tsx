@@ -84,6 +84,10 @@ import {
   Activity,
   Globe,
   X,
+  MapPin,
+  Layers,
+  Headphones,
+  Box,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -301,6 +305,8 @@ type UnassignedService = {
   speedTier?: string;
   simSerialNumber?: string;
   deviceName?: string;
+  vocusServiceId?: string | null;
+  vocusPlanCost?: number | null;
 };
 
 type AssignedService = {
@@ -325,10 +331,26 @@ type BillingItemWithAssignments = {
   unitAmount: number;
   category: string | null;
   matchStatus: string | null;
+  billingPlatform?: string | null;
+  matchConfidence?: string | null;
   assignedServices: AssignedService[];
   totalCost: number;
+  supplierServicesCost: number;
+  bundleFixedCostTotal: number;
+  bundleFixedCostInputs: Array<{ slotType: string; monthlyCostExGst: number; costSource: string }>;
   margin: number;
   marginPercent: number | null;
+  // Parsed attributes from description
+  parsedSpeedTier?: string | null;
+  parsedContractMonths?: number | null;
+  parsedServiceStartDate?: string | null;
+  parsedServiceEndDate?: string | null;
+  parsedAvcId?: string | null;
+  parsedHardwareStatus?: string | null;
+  parsedSipChannels?: number | null;
+  parsedDataAllowance?: string | null;
+  parsedHas4gBackup?: boolean | number | null;
+  retailBundleComponent?: string | null;
 };
 
 type FuzzyProposal = {
@@ -345,6 +367,72 @@ type BucketAssignment = {
   serviceExternalId: string;
   bucket: SpecialBucketId;
 };
+
+// ─── Parsed Attribute Chips ──────────────────────────────────────────────────
+function ParsedAttributeChips({ item }: { item: BillingItemWithAssignments }) {
+  const chips: { label: string; color: string }[] = [];
+
+  if (item.parsedSpeedTier) {
+    chips.push({ label: `⚡ ${item.parsedSpeedTier} Mbps`, color: "bg-teal-100 text-teal-800" });
+  }
+  if (item.parsedContractMonths !== null && item.parsedContractMonths !== undefined) {
+    const label = item.parsedContractMonths === 0 ? "📅 M2M" : `📅 ${item.parsedContractMonths}mo contract`;
+    chips.push({ label, color: "bg-blue-100 text-blue-800" });
+  }
+  if (item.parsedSipChannels !== null && item.parsedSipChannels !== undefined) {
+    chips.push({ label: `📞 ${item.parsedSipChannels} SIP ch`, color: "bg-indigo-100 text-indigo-800" });
+  }
+  if (item.parsedHas4gBackup) {
+    chips.push({ label: "📶 4G Backup", color: "bg-emerald-100 text-emerald-800" });
+  }
+  if (item.parsedHardwareStatus) {
+    const hwLabels: Record<string, string> = {
+      included: "🖥 HW Included",
+      byod: "🖥 BYOD",
+      rental: "🖥 Rental",
+      one_time: "🖥 One-time",
+    };
+    chips.push({ label: hwLabels[item.parsedHardwareStatus] ?? `🖥 ${item.parsedHardwareStatus}`, color: "bg-orange-100 text-orange-800" });
+  }
+  if (item.parsedDataAllowance) {
+    chips.push({ label: `💾 ${item.parsedDataAllowance.toUpperCase()}`, color: "bg-purple-100 text-purple-800" });
+  }
+  if (item.parsedAvcId) {
+    chips.push({ label: `🔗 ${item.parsedAvcId}`, color: "bg-slate-100 text-slate-700" });
+  }
+  if (item.parsedServiceStartDate) {
+    chips.push({ label: `▶ ${item.parsedServiceStartDate}`, color: "bg-gray-100 text-gray-600" });
+  }
+  if (item.parsedServiceEndDate) {
+    chips.push({ label: `⏹ ${item.parsedServiceEndDate}`, color: "bg-red-100 text-red-700" });
+  }
+  if (item.retailBundleComponent) {
+    const compLabels: Record<string, string> = {
+      nbn: "📡 NBN Bundle",
+      "4g_sim": "📱 4G SIM",
+      hardware: "🖥 Hardware",
+      sip: "📞 SIP",
+      support: "🛠 Support",
+      installation: "🔧 Installation",
+    };
+    chips.push({ label: compLabels[item.retailBundleComponent] ?? item.retailBundleComponent, color: "bg-violet-100 text-violet-800" });
+  }
+
+  if (chips.length === 0) return null;
+
+  return (
+    <div className="flex flex-wrap gap-1 mt-1.5">
+      {chips.map((chip, i) => (
+        <span
+          key={i}
+          className={`inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium ${chip.color}`}
+        >
+          {chip.label}
+        </span>
+      ))}
+    </div>
+  );
+}
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 function fmt(n: number) {
@@ -399,6 +487,18 @@ function DraggableServiceCard({
   onEscalate?: () => void;
   compact?: boolean;
 }) {
+  const [editingCost, setEditingCost] = useState(false);
+  const [costInput, setCostInput] = useState('');
+  const utils = trpc.useUtils();
+  const setSimCostMutation = trpc.billing.customers.setVocusSimPlanCost.useMutation({
+    onSuccess: () => {
+      utils.billing.customers.billingAssignments.unassignedServices.invalidate();
+      toast.success('SIM cost updated');
+      setEditingCost(false);
+    },
+    onError: (err) => toast.error(`Failed: ${err.message}`),
+  });
+  const isVocusSim = !!service.vocusServiceId;
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: service.externalId,
     data: { service },
@@ -478,9 +578,55 @@ function DraggableServiceCard({
               </p>
             </>
           )}
-          <p className="text-xs font-semibold text-orange-600 mt-1">
-            {fmt(service.monthlyCost)}/mo
-          </p>
+          {/* Cost display — with inline edit for Vocus SIM */}
+          {isVocusSim && editingCost ? (
+            <div className="flex items-center gap-1 mt-1">
+              <span className="text-xs text-muted-foreground">$</span>
+              <input
+                autoFocus
+                type="number"
+                step="0.01"
+                min="0"
+                value={costInput}
+                onChange={(e) => setCostInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    const v = parseFloat(costInput);
+                    if (!isNaN(v) && v >= 0) setSimCostMutation.mutate({ vocusServiceId: service.vocusServiceId!, planCost: v });
+                  }
+                  if (e.key === 'Escape') setEditingCost(false);
+                }}
+                className="w-20 text-xs border border-border rounded px-1 py-0.5 font-mono"
+                placeholder="0.00"
+              />
+              <button
+                onClick={() => {
+                  const v = parseFloat(costInput);
+                  if (!isNaN(v) && v >= 0) setSimCostMutation.mutate({ vocusServiceId: service.vocusServiceId!, planCost: v });
+                }}
+                disabled={setSimCostMutation.isPending}
+                className="text-xs text-green-700 hover:text-green-900 font-medium"
+              >
+                {setSimCostMutation.isPending ? '...' : 'Save'}
+              </button>
+              <button onClick={() => setEditingCost(false)} className="text-xs text-muted-foreground hover:text-foreground">✕</button>
+            </div>
+          ) : (
+            <div className="flex items-center gap-1 mt-1">
+              <p className={`text-xs font-semibold ${service.monthlyCost === 0 && isVocusSim ? 'text-red-500' : 'text-orange-600'}`}>
+                {fmt(service.monthlyCost)}/mo
+              </p>
+              {isVocusSim && !compact && (
+                <button
+                  onClick={() => { setCostInput(service.monthlyCost > 0 ? String(service.monthlyCost) : ''); setEditingCost(true); }}
+                  className="text-[10px] text-muted-foreground hover:text-foreground underline"
+                  title="Set Vocus wholesale plan cost"
+                >
+                  {service.monthlyCost === 0 ? 'Set cost' : 'Edit cost'}
+                </button>
+              )}
+            </div>
+          )}
         </div>
         {!compact && (
           <div className="flex flex-col gap-1 shrink-0">
@@ -540,18 +686,40 @@ function DroppableBillingItem({
       <div className="p-3">
         <div className="flex items-start justify-between gap-2">
           <div className="flex-1 min-w-0">
-            <p className="font-medium text-sm leading-snug truncate">
-              {item.description}
-            </p>
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <p className="font-medium text-sm leading-snug truncate">
+                {item.description}
+              </p>
+              {item.retailBundleComponent && (
+                <span className="text-[10px] px-1.5 py-0.5 bg-violet-100 text-violet-800 border border-violet-200 rounded font-medium uppercase tracking-wider shrink-0">
+                  ✦ {item.retailBundleComponent}
+                </span>
+              )}
+            </div>
             <p className="text-xs text-muted-foreground mt-0.5">
               {item.invoiceNumber} · {item.invoiceDate}
+              {item.billingPlatform && (
+                <span className={`ml-1.5 inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium ${
+                  item.billingPlatform === 'DataGate' ? 'bg-sky-100 text-sky-700 border border-sky-200' :
+                  item.billingPlatform === 'Xero' ? 'bg-blue-100 text-blue-700 border border-blue-200' :
+                  item.billingPlatform === 'SasBoss' ? 'bg-amber-100 text-amber-700 border border-amber-200' :
+                  item.billingPlatform === 'ChannelHaus' ? 'bg-violet-100 text-violet-700 border border-violet-200' :
+                  'bg-gray-100 text-gray-600 border border-gray-200'
+                }`}>
+                  {item.billingPlatform}
+                  {item.matchConfidence && item.matchConfidence !== 'high' && (
+                    <span className="ml-1 opacity-60">({item.matchConfidence})</span>
+                  )}
+                </span>
+              )}
             </p>
+            <ParsedAttributeChips item={item} />
           </div>
           <div className="text-right shrink-0">
             <p className="font-semibold text-sm text-emerald-700">
               {fmt(item.lineAmount)}
             </p>
-            <p className="text-xs text-muted-foreground">revenue</p>
+            <p className="text-xs text-muted-foreground">revenue (ex GST)</p>
           </div>
         </div>
         <div className="flex items-center justify-between mt-2 pt-2 border-t border-border/50">
@@ -561,6 +729,11 @@ function DroppableBillingItem({
               <span className="font-medium text-foreground">
                 {fmt(item.totalCost)}
               </span>
+              {item.bundleFixedCostTotal > 0 && (
+                <span className="ml-1 text-[10px] text-violet-600 font-normal">
+                  ({fmt(item.supplierServicesCost)} svcs + {fmt(item.bundleFixedCostTotal)} bundle)
+                </span>
+              )}
             </span>
             <MarginBadge
               margin={item.margin}
@@ -573,6 +746,9 @@ function DroppableBillingItem({
           >
             {item.assignedServices.length} service
             {item.assignedServices.length !== 1 ? "s" : ""}
+            {item.bundleFixedCostInputs && item.bundleFixedCostInputs.length > 0 && (
+              <span className="text-violet-500">+ {item.bundleFixedCostInputs.length} bundle</span>
+            )}
             {expanded ? (
               <ChevronDown className="w-3 h-3" />
             ) : (
@@ -580,8 +756,58 @@ function DroppableBillingItem({
             )}
           </button>
         </div>
-        {expanded && item.assignedServices.length > 0 && (
+        {/* Bundle fixed cost rows — always visible so margin is transparent */}
+        {item.bundleFixedCostInputs && item.bundleFixedCostInputs.length > 0 && (
+          <div className="mt-2 pt-2 border-t border-violet-100 space-y-1.5">
+            <div className="flex items-center gap-1.5 mb-1">
+              <div className="flex-1 h-px bg-violet-200/60" />
+              <span className="text-[10px] text-violet-500 font-medium uppercase tracking-wider">Bundle Fixed Costs</span>
+              <div className="flex-1 h-px bg-violet-200/60" />
+            </div>
+            {item.bundleFixedCostInputs.map((bc, idx) => {
+              const slotIcons: Record<string, React.ReactNode> = {
+                hardware:    <HardDrive className="w-3 h-3 text-orange-500" />,
+                sip_channel: <Phone className="w-3 h-3 text-green-500" />,
+                support:     <Headphones className="w-3 h-3 text-cyan-500" />,
+                internet:    <Wifi className="w-3 h-3 text-blue-500" />,
+                sim_4g:      <Smartphone className="w-3 h-3 text-purple-500" />,
+                other:       <Box className="w-3 h-3 text-gray-400" />,
+              };
+              const slotLabels: Record<string, string> = {
+                hardware:    'Hardware Rental',
+                sip_channel: 'SIP Channel',
+                support:     'Support',
+                internet:    'Internet (NBN)',
+                sim_4g:      '4G SIM',
+                other:       'Other',
+              };
+              return (
+                <div
+                  key={idx}
+                  className="flex items-center justify-between gap-2 bg-violet-50/60 border border-violet-100 rounded px-2 py-1.5"
+                >
+                  <div className="flex items-center gap-1.5 min-w-0">
+                    {slotIcons[bc.slotType] ?? <Box className="w-3 h-3 text-gray-400" />}
+                    <span className="text-xs font-medium text-violet-800 truncate">
+                      {slotLabels[bc.slotType] ?? bc.slotType}
+                    </span>
+                    <span className="inline-flex items-center px-1 py-0 rounded text-[10px] font-medium bg-violet-100 text-violet-600 border border-violet-200">
+                      bundle
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2 shrink-0">
+                    <span className="text-xs text-orange-600 font-medium">
+                      {fmt(bc.monthlyCostExGst)}/mo
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+        {expanded && (
           <div className="mt-2 space-y-1.5 pt-2 border-t border-border/50">
+            {/* Assigned supplier services */}
             {item.assignedServices.map((svc) => (
               <div
                 key={svc.assignmentId}
@@ -614,6 +840,10 @@ function DroppableBillingItem({
                 </div>
               </div>
             ))}
+            {/* Empty state when expanded but nothing assigned yet */}
+            {item.assignedServices.length === 0 && (
+              <p className="text-xs text-muted-foreground text-center py-1">No services assigned yet — drag from the left panel</p>
+            )}
           </div>
         )}
         {isOver && (
@@ -799,6 +1029,55 @@ function CategoryGroup({
   );
 }
 
+// ─── Site Group Component ────────────────────────────────────────────────────
+function SiteGroup({
+  address,
+  services,
+  activeServiceId,
+  onMarkUnbillable,
+  onEscalate,
+}: {
+  address: string;
+  services: UnassignedService[];
+  activeServiceId?: string;
+  onMarkUnbillable: (svc: UnassignedService) => void;
+  onEscalate: (svc: UnassignedService) => void;
+}) {
+  const [open, setOpen] = useState(true);
+  const totalCost = services.reduce((s, svc) => s + svc.monthlyCost, 0);
+  const isNoAddress = address === "(No Site Address)";
+  return (
+    <Collapsible open={open} onOpenChange={setOpen}>
+      <CollapsibleTrigger className="w-full flex items-center justify-between px-3 py-2 rounded-lg border border-teal-200 bg-teal-50 hover:opacity-90 transition-opacity">
+        <div className="flex items-center gap-2 min-w-0">
+          <MapPin className={`w-3.5 h-3.5 shrink-0 ${isNoAddress ? "text-muted-foreground" : "text-teal-700"}`} />
+          <span className={`text-xs font-semibold truncate ${isNoAddress ? "text-muted-foreground italic" : "text-teal-800"}`}>
+            {address}
+          </span>
+        </div>
+        <div className="flex items-center gap-2 shrink-0">
+          <span className="text-xs text-muted-foreground font-medium">{fmt(totalCost)}/mo</span>
+          <Badge variant="secondary" className="text-xs">{services.length}</Badge>
+          {open ? <ChevronDown className="w-3.5 h-3.5 text-muted-foreground" /> : <ChevronRight className="w-3.5 h-3.5 text-muted-foreground" />}
+        </div>
+      </CollapsibleTrigger>
+      <CollapsibleContent>
+        <div className="mt-1.5 space-y-1.5 pl-1">
+          {services.map((svc) => (
+            <DraggableServiceCard
+              key={svc.externalId}
+              service={svc}
+              isDragging={activeServiceId === svc.externalId}
+              onMarkUnbillable={() => onMarkUnbillable(svc)}
+              onEscalate={() => onEscalate(svc)}
+            />
+          ))}
+        </div>
+      </CollapsibleContent>
+    </Collapsible>
+  );
+}
+
 // ─── Main Component ───────────────────────────────────────────────────────────
 export default function CustomerBillingMatch() {
   const { id: customerId } = useParams<{ id: string }>();
@@ -813,6 +1092,7 @@ export default function CustomerBillingMatch() {
   const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
   const [serviceSearch, setServiceSearch] = useState("");
   const [billingSearch, setBillingSearch] = useState("");
+  const [groupBySite, setGroupBySite] = useState(false);
 
   // Dialogs
   const [showUnbillableDialog, setShowUnbillableDialog] = useState(false);
@@ -831,6 +1111,11 @@ export default function CustomerBillingMatch() {
 
   // ── Queries ───────────────────────────────────────────────────────────────
   const { data: customer } = trpc.billing.customers.byId.useQuery({ id: customerId });
+  // Retail bundle cost inputs — only fetched for retail_offering customers
+  const { data: bundleCostData } = trpc.retailBundles.getBundleCostInputsForCustomer.useQuery(
+    { customerExternalId: customerId },
+    { enabled: customer?.customerType === 'retail_offering' }
+  );
   const {
     data: billingItemsRaw = [],
     refetch: refetchItems,
@@ -862,11 +1147,19 @@ export default function CustomerBillingMatch() {
       customerExternalId: customerId,
     });
 
+  // ── Utils for cache invalidation ─────────────────────────────────────────
+  const utils = trpc.useUtils();
+  const invalidateDashboard = () => {
+    utils.billing.summary.invalidate();
+    utils.billing.dashboardTotals.invalidate();
+  };
+
   // ── Mutations ─────────────────────────────────────────────────────────────
   const assignMutation = trpc.billing.customers.billingAssignments.assign.useMutation({
     onSuccess: () => {
       refetchItems();
       refetchServices();
+      invalidateDashboard();
     },
     onError: (err) => toast.error(`Assignment failed: ${err.message}`),
   });
@@ -874,6 +1167,7 @@ export default function CustomerBillingMatch() {
     onSuccess: () => {
       refetchItems();
       refetchServices();
+      invalidateDashboard();
     },
     onError: (err) => toast.error(`Remove failed: ${err.message}`),
   });
@@ -881,6 +1175,7 @@ export default function CustomerBillingMatch() {
     onSuccess: () => {
       refetchServices();
       refetchUnbillable();
+      invalidateDashboard();
       setShowUnbillableDialog(false);
       setUnbillableTarget(null);
       setUnbillableNotes("");
@@ -892,6 +1187,7 @@ export default function CustomerBillingMatch() {
     onSuccess: () => {
       refetchServices();
       refetchUnbillable();
+      invalidateDashboard();
       toast.success("Service restored to unassigned");
     },
     onError: (err) => toast.error(`Failed: ${err.message}`),
@@ -900,6 +1196,7 @@ export default function CustomerBillingMatch() {
     onSuccess: () => {
       refetchServices();
       refetchEscalated();
+      invalidateDashboard();
       setShowEscalateDialog(false);
       setEscalateTarget(null);
       setEscalateNotes("");
@@ -911,6 +1208,7 @@ export default function CustomerBillingMatch() {
     onSuccess: () => {
       refetchServices();
       refetchEscalated();
+      invalidateDashboard();
       toast.success("Escalation resolved");
     },
     onError: (err) => toast.error(`Failed: ${err.message}`),
@@ -1054,6 +1352,31 @@ export default function CustomerBillingMatch() {
     (cat) => (groupedServices[cat]?.length ?? 0) > 0
   );
 
+  // Site-based grouping: group services by locationAddress
+  const groupedBySite = useMemo(() => {
+    const sites: Record<string, UnassignedService[]> = {};
+    for (const svc of filteredServices) {
+      const addr = (svc.locationAddress || "").trim() || "(No Site Address)";
+      if (!sites[addr]) sites[addr] = [];
+      sites[addr].push(svc);
+    }
+    return Object.entries(sites).sort(([a], [b]) => {
+      if (a === "(No Site Address)") return 1;
+      if (b === "(No Site Address)") return -1;
+      return a.localeCompare(b);
+    });
+  }, [filteredServices]);
+
+  // Show site toggle only when customer has multiple distinct site addresses
+  const hasMultipleSites = useMemo(() => {
+    const addrs = new Set(
+      (unassignedServicesRaw as UnassignedService[])
+        .map((s) => (s.locationAddress || "").trim())
+        .filter(Boolean)
+    );
+    return addrs.size > 1;
+  }, [unassignedServicesRaw]);
+
   const billingItems = useMemo(() => {
     if (!billingSearch.trim())
       return billingItemsRaw as BillingItemWithAssignments[];
@@ -1074,11 +1397,14 @@ export default function CustomerBillingMatch() {
     (s, i) => s + i.totalCost,
     0
   );
-  const totalSupplierCost =
+  const supplierServiceCost =
     (unassignedServicesRaw as UnassignedService[]).reduce(
       (s, u) => s + u.monthlyCost,
       0
     ) + assignedCost;
+  // For retail bundle customers, include fixed bundle costs (Hardware, SIP, Support) in total cost
+  const bundleFixedCost = bundleCostData?.totalFixedCost ?? 0;
+  const totalSupplierCost = supplierServiceCost + bundleFixedCost;
   const totalMargin = totalRevenue - totalSupplierCost;
   const totalMarginPct =
     totalRevenue > 0 ? (totalMargin / totalRevenue) * 100 : null;
@@ -1114,19 +1440,19 @@ export default function CustomerBillingMatch() {
           {/* Summary bar */}
           <div className="flex items-center gap-4 text-sm flex-wrap">
             <div className="text-center">
-              <p className="text-xs text-muted-foreground">Xero Revenue</p>
+              <p className="text-xs text-muted-foreground">Xero Revenue (ex GST)</p>
               <p className="font-semibold text-emerald-700">
                 {fmt(totalRevenue)}
               </p>
             </div>
             <div className="text-center">
-              <p className="text-xs text-muted-foreground">Supplier Cost</p>
+              <p className="text-xs text-muted-foreground">Supplier Cost (ex GST)</p>
               <p className="font-semibold text-orange-600">
                 {fmt(totalSupplierCost)}
               </p>
             </div>
             <div className="text-center">
-              <p className="text-xs text-muted-foreground">Net Margin</p>
+              <p className="text-xs text-muted-foreground">Net Margin (ex GST)</p>
               <p
                 className={`font-semibold ${
                   totalMargin >= 0 ? "text-emerald-700" : "text-red-600"
@@ -1182,14 +1508,30 @@ export default function CustomerBillingMatch() {
                 These are <strong>supplier costs</strong> — what SmileTel pays
                 ABB, SasBoss, Telstra, etc.
               </p>
-              <div className="relative mb-3">
-                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
-                <Input
-                  placeholder="Search services..."
-                  value={serviceSearch}
-                  onChange={(e) => setServiceSearch(e.target.value)}
-                  className="pl-8 h-8 text-xs"
-                />
+              <div className="flex items-center gap-2 mb-3">
+                <div className="relative flex-1">
+                  <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
+                  <Input
+                    placeholder="Search services..."
+                    value={serviceSearch}
+                    onChange={(e) => setServiceSearch(e.target.value)}
+                    className="pl-8 h-8 text-xs"
+                  />
+                </div>
+                {hasMultipleSites && (
+                  <button
+                    onClick={() => setGroupBySite((v) => !v)}
+                    title={groupBySite ? "Switch to category view" : "Switch to site view"}
+                    className={`shrink-0 flex items-center gap-1.5 px-2.5 h-8 rounded-md border text-xs font-medium transition-colors ${
+                      groupBySite
+                        ? "bg-teal-600 text-white border-teal-600 hover:bg-teal-700"
+                        : "bg-background text-muted-foreground border-border hover:bg-muted"
+                    }`}
+                  >
+                    {groupBySite ? <MapPin className="w-3.5 h-3.5" /> : <Layers className="w-3.5 h-3.5" />}
+                    {groupBySite ? "By Site" : "By Type"}
+                  </button>
+                )}
               </div>
               <div className="flex-1 overflow-y-auto pr-1 space-y-2">
                 {unassignedCount === 0 && bucketServiceIds.size === 0 ? (
@@ -1205,6 +1547,23 @@ export default function CustomerBillingMatch() {
                     <Search className="w-6 h-6 mx-auto mb-2 opacity-40" />
                     <p className="text-sm">No services match your search</p>
                   </div>
+                ) : groupBySite ? (
+                  groupedBySite.map(([addr, svcs]) => (
+                    <SiteGroup
+                      key={addr}
+                      address={addr}
+                      services={svcs}
+                      activeServiceId={activeService?.externalId}
+                      onMarkUnbillable={(svc) => {
+                        setUnbillableTarget(svc);
+                        setShowUnbillableDialog(true);
+                      }}
+                      onEscalate={(svc) => {
+                        setEscalateTarget(svc);
+                        setShowEscalateDialog(true);
+                      }}
+                    />
+                  ))
                 ) : (
                   orderedCategories.map((cat) => (
                     <CategoryGroup
@@ -1356,6 +1715,15 @@ export default function CustomerBillingMatch() {
                 These are <strong>customer revenue</strong> — what SmileTel
                 charges this customer via Xero.
               </p>
+              {/* Retail Offering banner — shown when items exist */}
+              {customer?.customerType === 'retail_offering' && (billingItemsRaw as BillingItemWithAssignments[]).length > 0 && (
+                <div className="border border-violet-200 bg-violet-50 rounded-lg px-3 py-2 mb-2 flex items-center gap-2">
+                  <span className="text-violet-600 text-xs">✦</span>
+                  <p className="text-xs text-violet-800">
+                    <strong>Retail Offering</strong> — drag the NBN and SIM services onto the Retail Bundle billing item below.
+                  </p>
+                </div>
+              )}
               <div className="relative mb-3">
                 <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
                 <Input
@@ -1368,11 +1736,40 @@ export default function CustomerBillingMatch() {
               <div className="flex-1 overflow-y-auto pr-1 space-y-2">
                 {(billingItemsRaw as BillingItemWithAssignments[]).length ===
                 0 ? (
-                  <div className="border rounded-lg p-8 text-center text-muted-foreground">
-                    <p className="font-medium">No billing items found</p>
-                    <p className="text-xs mt-1">
-                      Import Xero billing data for this customer first.
-                    </p>
+                  <div className="space-y-2">
+                    {/* Retail Bundle prompt for retail_offering customers */}
+                    {customer?.customerType === 'retail_offering' && (
+                      <div className="border border-violet-200 bg-violet-50 rounded-lg p-4">
+                        <div className="flex items-start gap-2">
+                          <span className="text-violet-600 mt-0.5">✦</span>
+                          <div>
+                            <p className="text-sm font-semibold text-violet-900">Retail Offering Customer</p>
+                            <p className="text-xs text-violet-700 mt-0.5">This customer is billed via a SmileTel Retail Bundle. Drag the NBN service and Mobile SIM onto a Retail Bundle billing item in Xero, then import it here to match costs.</p>
+                            <div className="mt-2 space-y-1">
+                              <p className="text-xs font-medium text-violet-800">Expected bundle components:</p>
+                              {(unassignedServicesRaw as UnassignedService[]).filter(s => s.provider === 'Vocus' || s.provider === 'ABB' || s.provider === 'Aussie Broadband').map(s => (
+                                <div key={s.externalId} className="flex items-center gap-2 text-xs text-violet-700">
+                                  <span className="w-1.5 h-1.5 rounded-full bg-violet-400 shrink-0" />
+                                  <span>{s.planName || s.serviceType}</span>
+                                  <ProviderBadge provider={s.provider} size="xs" />
+                                  {s.monthlyCost > 0 ? (
+                                    <span className="text-violet-600 font-mono">{fmt(s.monthlyCost)}/mo cost</span>
+                                  ) : (
+                                    <span className="text-red-500 font-mono">cost not set</span>
+                                  )}
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                    <div className="border rounded-lg p-8 text-center text-muted-foreground">
+                      <p className="font-medium">No Xero billing items found</p>
+                      <p className="text-xs mt-1">
+                        Import Xero billing data for this customer first.
+                      </p>
+                    </div>
                   </div>
                 ) : (
                   billingItems.map((item) => (
@@ -1390,6 +1787,92 @@ export default function CustomerBillingMatch() {
                       expanded={expandedItems.has(item.externalId)}
                     />
                   ))
+                )}
+
+                {/* Bundle Fixed Costs — shown for retail_offering customers */}
+                {bundleCostData && bundleCostData.costInputs.length > 0 && (
+                  <div className="mt-4">
+                    <h3 className="text-xs font-semibold uppercase tracking-wide mb-2 flex items-center gap-1.5 text-violet-700">
+                      <Layers className="w-3.5 h-3.5" />
+                      Bundle Fixed Costs
+                      <span className="ml-auto text-xs font-mono font-semibold text-violet-700">
+                        ${bundleCostData.totalFixedCost.toFixed(2)}/mo
+                      </span>
+                    </h3>
+                    <div className="border border-violet-200 rounded-lg overflow-hidden bg-violet-50/40">
+                      {/* Bundle header */}
+                      <div className="flex items-center gap-2 px-3 py-2 bg-violet-100/60 border-b border-violet-200">
+                        <span className="text-violet-600 text-xs">✦</span>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs font-semibold text-violet-900 truncate">
+                            {bundleCostData.subscriberName}
+                          </p>
+                          <p className="text-[10px] text-violet-600 truncate">
+                            {bundleCostData.legacyProductName}
+                            {bundleCostData.oneBillAccountNumber && (
+                              <span className="ml-1 opacity-70">· OB#{bundleCostData.oneBillAccountNumber}</span>
+                            )}
+                          </p>
+                        </div>
+                        <div className="shrink-0 text-right">
+                          <p className="text-[10px] text-violet-600">Retail price</p>
+                          <p className="text-xs font-mono font-semibold text-violet-800">
+                            ${bundleCostData.retailPriceExGst.toFixed(2)}/mo
+                          </p>
+                        </div>
+                      </div>
+                      {/* Cost input rows */}
+                      <div className="divide-y divide-violet-100">
+                        {bundleCostData.costInputs.map((ci) => {
+                          const SLOT_ICON: Record<string, React.ReactNode> = {
+                            internet: <Wifi className="w-3.5 h-3.5" />,
+                            sim_4g: <Smartphone className="w-3.5 h-3.5" />,
+                            'hard-drive': <HardDrive className="w-3.5 h-3.5" />,
+                            hardware: <HardDrive className="w-3.5 h-3.5" />,
+                            sip_channel: <Phone className="w-3.5 h-3.5" />,
+                            support: <Briefcase className="w-3.5 h-3.5" />,
+                            headphones: <Briefcase className="w-3.5 h-3.5" />,
+                            other: <Package className="w-3.5 h-3.5" />,
+                          };
+                          const sourceColor: Record<string, string> = {
+                            carbon: 'bg-teal-100 text-teal-700',
+                            tiab: 'bg-blue-100 text-blue-700',
+                            vocus: 'bg-emerald-100 text-emerald-700',
+                            default: 'bg-gray-100 text-gray-600',
+                            manual: 'bg-amber-100 text-amber-700',
+                            service_link: 'bg-violet-100 text-violet-700',
+                          };
+                          const srcClass = sourceColor[ci.costSource] ?? 'bg-gray-100 text-gray-600';
+                          return (
+                            <div key={ci.id} className="flex items-center gap-2 px-3 py-1.5">
+                              <span className="text-violet-500 shrink-0">
+                                {SLOT_ICON[ci.icon] ?? SLOT_ICON[ci.slotType] ?? <Package className="w-3.5 h-3.5" />}
+                              </span>
+                              <span className="flex-1 text-xs text-violet-900 truncate">{ci.label}</span>
+                              {ci.linkedServicePlanName && (
+                                <span className="text-[10px] text-violet-500 truncate max-w-[100px]">
+                                  {ci.linkedServicePlanName}
+                                </span>
+                              )}
+                              <span className={`text-[10px] px-1.5 py-0.5 rounded font-medium shrink-0 ${srcClass}`}>
+                                {ci.costSource === 'service_link' ? 'linked' : ci.costSource}
+                              </span>
+                              <span className="text-xs font-mono font-semibold text-violet-800 shrink-0">
+                                ${ci.monthlyCostExGst.toFixed(2)}
+                              </span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                      {/* Total row */}
+                      <div className="flex items-center justify-between px-3 py-2 bg-violet-100/60 border-t border-violet-200">
+                        <span className="text-xs font-semibold text-violet-800">Total fixed costs</span>
+                        <span className="text-xs font-mono font-bold text-violet-900">
+                          ${bundleCostData.totalFixedCost.toFixed(2)}/mo
+                        </span>
+                      </div>
+                    </div>
+                  </div>
                 )}
 
                 {/* Special Assignment Buckets */}

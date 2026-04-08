@@ -1616,7 +1616,8 @@ export default function UnmatchedServices() {
                   <div>
                     <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">Services to be assigned</p>
                     <div className="rounded-md border overflow-hidden max-h-64 overflow-y-auto">
-                      <table className="w-full text-xs">
+                      <div className="overflow-x-auto">
+                      <table className="w-full text-xs min-w-[400px]">
                         <thead className="bg-muted/50 sticky top-0">
                           <tr>
                             <th className="text-left px-3 py-2 font-medium">Service</th>
@@ -1634,6 +1635,7 @@ export default function UnmatchedServices() {
                           ))}
                         </tbody>
                       </table>
+                      </div>
                     </div>
                   </div>
                 )}

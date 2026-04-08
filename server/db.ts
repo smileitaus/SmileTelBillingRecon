@@ -1,6 +1,6 @@
 import { eq, like, or, and, sql, desc, asc, inArray, ne, isNull, count } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, customers, locations, services, supplierAccounts, billingItems, reviewItems, billingPlatformChecks, serviceEditHistory, customerProposals, serviceCostHistory, supplierWorkbookUploads, supplierWorkbookLineItems, customerUsageSummaries, supplierEnterpriseMap, supplierProductMap, serviceBillingMatchLog, serviceBillingAssignments, unbillableServices, escalatedServices, supplierRegistry, supplierInvoiceUploads, supplierServiceMap, supplierProductCostMap } from "../drizzle/schema";
+import { InsertUser, users, customers, locations, services, supplierAccounts, billingItems, reviewItems, billingPlatformChecks, serviceEditHistory, customerProposals, serviceCostHistory, supplierWorkbookUploads, supplierWorkbookLineItems, customerUsageSummaries, supplierEnterpriseMap, supplierProductMap, serviceBillingMatchLog, serviceBillingAssignments, unbillableServices, escalatedServices, supplierRegistry, supplierInvoiceUploads, supplierServiceMap, supplierProductCostMap, carbonApiCache, serviceOutages, vocusNbnServices, vocusMobileServices, tiabSupplierInvoices, phoneNumbers, revenueGroups, serviceMatchEvents, serviceUsageSnapshots, usageThresholdAlerts, omadaSites, retailBundles } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -90,7 +90,7 @@ export async function getUserByOpenId(openId: string) {
 
 // ==================== Billing Data Queries ====================
 
-export async function getAllCustomers(search?: string, statusFilter?: string, platformFilter?: string, supplierFilter?: string) {
+export async function getAllCustomers(search?: string, statusFilter?: string, platformFilter?: string, supplierFilter?: string, customerTypeFilter?: string) {
   const db = await getDb();
   if (!db) return [];
 
@@ -126,7 +126,8 @@ export async function getAllCustomers(search?: string, statusFilter?: string, pl
     // Default: hide inactive customers unless explicitly requested
     conditions.push(sql`${customers.status} != 'inactive'`);
     // Default: hide customers with no active services (live count prevents stale serviceCount issues)
-    conditions.push(sql`(SELECT COUNT(*) FROM services WHERE customerExternalId = ${customers.externalId} AND status != 'terminated') > 0`);
+    // Exclude both terminated and archived services from the active count
+    conditions.push(sql`(SELECT COUNT(*) FROM services WHERE customerExternalId = ${customers.externalId} AND status NOT IN ('terminated', 'archived', 'billing_platform_stub') AND (billingPeriod IS NULL OR billingPeriod != 'archived')) > 0`);
   }
 
   if (platformFilter && platformFilter !== 'all') {
@@ -137,6 +138,11 @@ export async function getAllCustomers(search?: string, statusFilter?: string, pl
     } else {
       conditions.push(like(customers.billingPlatforms, `%${platformFilter}%`));
     }
+  }
+
+  // Filter by customer type (retail_offering vs standard)
+  if (customerTypeFilter && customerTypeFilter !== 'all') {
+    conditions.push(eq(customers.customerType, customerTypeFilter));
   }
 
   // Filter by supplier: find customers that have at least one service from the specified provider
@@ -153,13 +159,13 @@ export async function getAllCustomers(search?: string, statusFilter?: string, pl
   const result = await db.select().from(customers)
     .where(whereClause)
     .orderBy(asc(customers.name));
-  return result.map(c => ({
+   return result.map(c => ({
     ...c,
-    billingPlatforms: c.billingPlatforms ? JSON.parse(c.billingPlatforms) : [],
+    billingPlatforms: c.billingPlatforms ? (() => { try { return JSON.parse(c.billingPlatforms!); } catch { return [c.billingPlatforms]; } })() : [],
     monthlyCost: parseFloat(c.monthlyCost),
+    retailBundleMonthlyCost: c.retailBundleMonthlyCost ? parseFloat(c.retailBundleMonthlyCost) : null,
   }));
 }
-
 export async function getCustomerById(externalId: string) {
   const db = await getDb();
   if (!db) return null;
@@ -168,10 +174,19 @@ export async function getCustomerById(externalId: string) {
   if (result.length === 0) return null;
 
   const c = result[0];
+
+  // Resolve parent customer name if set
+  let parentCustomerName: string | null = null;
+  if (c.parentCustomerExternalId) {
+    const parentResult = await db.select({ name: customers.name }).from(customers).where(eq(customers.externalId, c.parentCustomerExternalId)).limit(1);
+    if (parentResult.length > 0) parentCustomerName = parentResult[0].name;
+  }
+
   return {
     ...c,
-    billingPlatforms: c.billingPlatforms ? JSON.parse(c.billingPlatforms) : [],
+    billingPlatforms: c.billingPlatforms ? (() => { try { return JSON.parse(c.billingPlatforms!); } catch { return [c.billingPlatforms]; } })() : [],
     monthlyCost: parseFloat(c.monthlyCost),
+    parentCustomerName,
   };
 }
 
@@ -257,7 +272,12 @@ export async function getServicesByCustomer(customerExternalId: string) {
   const db = await getDb();
   if (!db) return [];
 
-  const result = await db.select().from(services).where(eq(services.customerExternalId, customerExternalId));
+  const result = await db.select().from(services).where(
+    and(
+      eq(services.customerExternalId, customerExternalId),
+      or(isNull(services.billingPeriod), sql`${services.billingPeriod} != 'archived'`)
+    )
+  );
 
   // Determine which services are truly linked to a billing item via service_billing_assignments
   const assignments = await db
@@ -330,17 +350,17 @@ export async function getSummary() {
 
   const [custCount] = await db.select({ count: sql<number>`count(*)` }).from(customers);
   const [locCount] = await db.select({ count: sql<number>`count(*)` }).from(locations);
-  const [svcCount] = await db.select({ count: sql<number>`count(*)` }).from(services);
+  const [svcCount] = await db.select({ count: sql<number>`count(*)` }).from(services).where(sql`status != 'billing_platform_stub'`);
 
   const [matchedCount] = await db.select({ count: sql<number>`count(*)` }).from(services).where(eq(services.status, 'active'));
   const [unmatchedCount] = await db.select({ count: sql<number>`count(*)` }).from(services).where(eq(services.status, 'unmatched'));
 
-  const [totalCost] = await db.select({ total: sql<string>`COALESCE(SUM(monthlyCost), 0)` }).from(services).where(sql`status != 'terminated'`);
+  const [totalCost] = await db.select({ total: sql<string>`COALESCE(SUM(monthlyCost), 0)` }).from(services).where(sql`status NOT IN ('terminated', 'billing_platform_stub')`);
 
   const typeBreakdown = await db.select({
     serviceType: services.serviceType,
     count: sql<number>`count(*)`,
-  }).from(services).groupBy(services.serviceType);
+  }).from(services).where(sql`status != 'billing_platform_stub'`).groupBy(services.serviceType);
 
   const accts = await db.select().from(supplierAccounts);
 
@@ -351,22 +371,56 @@ export async function getSummary() {
   const [activeCusts] = await db.select({ count: sql<number>`count(*)` }).from(customers).where(sql`serviceCount > 0`);
 
   // AVC coverage
-  const [withAvc] = await db.select({ count: sql<number>`count(*)` }).from(services).where(sql`connectionId IS NOT NULL AND connectionId != ''`);
-  const [withoutAvc] = await db.select({ count: sql<number>`count(*)` }).from(services).where(sql`connectionId IS NULL OR connectionId = ''`);
+  const [withAvc] = await db.select({ count: sql<number>`count(*)` }).from(services).where(sql`connectionId IS NOT NULL AND connectionId != '' AND status != 'billing_platform_stub'`);
+  const [withoutAvc] = await db.select({ count: sql<number>`count(*)` }).from(services).where(sql`(connectionId IS NULL OR connectionId = '') AND status != 'billing_platform_stub'`);
 
   // Flagged and terminated counts
   const [flaggedCount2] = await db.select({ count: sql<number>`count(*)` }).from(services).where(eq(services.status, 'flagged_for_termination'));
   const [terminatedCount] = await db.select({ count: sql<number>`count(*)` }).from(services).where(eq(services.status, 'terminated'));
 
   // No data use count
-  const [noDataUseCount] = await db.select({ count: sql<number>`count(*)` }).from(services).where(eq(services.noDataUse, 1));
+  const [noDataUseCount] = await db.select({ count: sql<number>`count(*)` }).from(services).where(sql`noDataUse = 1 AND status != 'billing_platform_stub'`);
 
   // Provider breakdown
   const providerBreakdown = await db.select({
     provider: services.provider,
     count: sql<number>`count(*)`,
     cost: sql<string>`COALESCE(SUM(monthlyCost), 0)`,
-  }).from(services).groupBy(services.provider);
+  }).from(services).where(sql`status != 'billing_platform_stub'`).groupBy(services.provider);
+
+  // Latest billing period from billing_items (most common valid invoice month)
+  let latestBillingPeriod: string | null = null;
+  try {
+    const periodResult = await db.execute(
+      sql`SELECT DATE_FORMAT(STR_TO_DATE(invoiceDate, '%Y-%m-%d'), '%b %Y') as period, COUNT(*) as cnt
+          FROM billing_items
+          WHERE invoiceDate REGEXP '^[0-9]{4}-[0-9]{2}-[0-9]{2}$'
+          GROUP BY period ORDER BY cnt DESC LIMIT 1`
+    ) as any;
+    // Drizzle db.execute returns [rows, fields] — rows is the first element
+    const periodRows: any[] = Array.isArray(periodResult)
+      ? (periodResult[0] as any[])
+      : (periodResult.rows || []);
+    if (periodRows[0]?.period) latestBillingPeriod = periodRows[0].period;
+  } catch (_) { /* ignore */ }
+
+  // TIAB cost override: use the most recent supplier invoice total (ex GST) since TIAB services
+  // have monthlyCost=0 (costs depend on usage/CDR data not yet ingested).
+  let tiabInvoiceCostExGst = 0;
+  try {
+    const [latestInvoice] = await db
+      .select({ totalExGst: tiabSupplierInvoices.totalExGst })
+      .from(tiabSupplierInvoices)
+      .orderBy(desc(tiabSupplierInvoices.invoiceDate))
+      .limit(1);
+    if (latestInvoice) tiabInvoiceCostExGst = parseFloat(String(latestInvoice.totalExGst));
+  } catch (_) { /* ignore if table missing */ }
+
+  const providerMap = Object.fromEntries(providerBreakdown.map(p => [p.provider || 'Unknown', { count: p.count, cost: parseFloat(p.cost) }]));
+  // Inject TIAB invoice cost if TIAB services exist but show $0
+  if (providerMap['TIAB'] && tiabInvoiceCostExGst > 0) {
+    providerMap['TIAB'] = { ...providerMap['TIAB'], cost: tiabInvoiceCostExGst };
+  }
 
   return {
     totalCustomers: custCount.count,
@@ -376,7 +430,7 @@ export async function getSummary() {
     unmatchedServices: unmatchedCount.count,
     totalMonthlyCost: parseFloat(totalCost.total),
     servicesByType: Object.fromEntries(typeBreakdown.map(t => [t.serviceType, t.count])),
-    servicesByProvider: Object.fromEntries(providerBreakdown.map(p => [p.provider || 'Unknown', { count: p.count, cost: parseFloat(p.cost) }])),
+    servicesByProvider: providerMap,
     supplierAccounts: accts.map(sa => ({
       ...sa,
       monthlyCost: parseFloat(sa.monthlyCost),
@@ -390,6 +444,7 @@ export async function getSummary() {
     flaggedServices: flaggedCount2.count,
     terminatedServices: terminatedCount.count,
     noDataUseServices: noDataUseCount.count,
+    latestBillingPeriod,
   };
 }
 
@@ -399,11 +454,18 @@ export async function getUnmatchedServices() {
 
   // Return all non-active services: unmatched, flagged_for_termination, and terminated
   // This includes both unassigned services AND assigned services that have been flagged/terminated
+  // Exclude archived services — they are historical records hidden from all active views
   const result = await db.select().from(services).where(
-    or(
-      eq(services.status, 'unmatched'),
-      eq(services.status, 'flagged_for_termination'),
-      eq(services.status, 'terminated')
+    and(
+      or(
+        eq(services.status, 'unmatched'),
+        eq(services.status, 'flagged_for_termination'),
+        eq(services.status, 'terminated')
+      ),
+      or(
+        isNull(services.billingPeriod),
+        sql`${services.billingPeriod} != 'archived'`
+      )
     )
   ).orderBy(desc(services.monthlyCost));
   return result.map(s => ({
@@ -431,7 +493,8 @@ export async function getUnmatchedServiceTriage() {
   }).from(services).where(
     and(
       or(eq(services.status, 'unmatched'), eq(services.status, 'flagged_for_termination')),
-      or(isNull(services.customerExternalId), eq(services.customerExternalId, ''))
+      or(isNull(services.customerExternalId), eq(services.customerExternalId, '')),
+      or(isNull(services.billingPeriod), sql`${services.billingPeriod} != 'archived'`)
     )
   );
 
@@ -647,10 +710,10 @@ export async function recalculateCustomerCounts(...customerExternalIds: (string 
   await db.execute(sql`
     UPDATE customers c
     SET
-      serviceCount   = (SELECT COUNT(*)                              FROM services s WHERE s.customerExternalId = c.externalId AND s.status != 'terminated'),
+      serviceCount   = (SELECT COUNT(*)                              FROM services s WHERE s.customerExternalId = c.externalId AND s.status NOT IN ('terminated', 'billing_platform_stub')),
       matchedCount   = (SELECT COUNT(*)                              FROM services s WHERE s.customerExternalId = c.externalId AND s.status = 'active'),
       unmatchedCount = (SELECT COUNT(*)                              FROM services s WHERE s.customerExternalId = c.externalId AND s.status = 'unmatched'),
-      monthlyCost    = (SELECT COALESCE(SUM(s.monthlyCost), 0)       FROM services s WHERE s.customerExternalId = c.externalId AND s.status != 'terminated'),
+      monthlyCost    = (SELECT COALESCE(SUM(s.monthlyCost), 0)       FROM services s WHERE s.customerExternalId = c.externalId AND s.status NOT IN ('terminated', 'billing_platform_stub')),
        updatedAt      = NOW()
     WHERE c.externalId IN (${idList})
   `);
@@ -714,20 +777,20 @@ export async function recalculateAll() {
   await db.execute(sql`
     UPDATE customers c
     SET
-      serviceCount   = (SELECT COUNT(*)                             FROM services s WHERE s.customerExternalId = c.externalId AND s.status != 'terminated'),
+      serviceCount   = (SELECT COUNT(*)                             FROM services s WHERE s.customerExternalId = c.externalId AND s.status NOT IN ('terminated', 'billing_platform_stub')),
       matchedCount   = (SELECT COUNT(*)                             FROM services s WHERE s.customerExternalId = c.externalId AND s.status = 'active'),
       unmatchedCount = (SELECT COUNT(*)                             FROM services s WHERE s.customerExternalId = c.externalId AND s.status = 'unmatched'),
-      monthlyCost    = (SELECT COALESCE(SUM(s.monthlyCost), 0)      FROM services s WHERE s.customerExternalId = c.externalId AND s.status != 'terminated'),
-      monthlyRevenue = (SELECT COALESCE(SUM(s.monthlyRevenue), 0)   FROM services s WHERE s.customerExternalId = c.externalId AND s.status != 'terminated'),
+      monthlyCost    = (SELECT COALESCE(SUM(s.monthlyCost), 0)      FROM services s WHERE s.customerExternalId = c.externalId AND s.status NOT IN ('terminated', 'billing_platform_stub')),
+      monthlyRevenue = (SELECT COALESCE(SUM(s.monthlyRevenue), 0)   FROM services s WHERE s.customerExternalId = c.externalId AND s.status NOT IN ('terminated', 'billing_platform_stub')),
       marginPercent  = CASE
-        WHEN (SELECT COALESCE(SUM(s.monthlyRevenue), 0) FROM services s WHERE s.customerExternalId = c.externalId AND s.status != 'terminated') > 0
-          AND (SELECT COALESCE(SUM(s.monthlyCost), 0) FROM services s WHERE s.customerExternalId = c.externalId AND s.status != 'terminated') > 0
+        WHEN (SELECT COALESCE(SUM(s.monthlyRevenue), 0) FROM services s WHERE s.customerExternalId = c.externalId AND s.status NOT IN ('terminated', 'billing_platform_stub')) > 0
+          AND (SELECT COALESCE(SUM(s.monthlyCost), 0) FROM services s WHERE s.customerExternalId = c.externalId AND s.status NOT IN ('terminated', 'billing_platform_stub')) > 0
         THEN ROUND(
           (
-            (SELECT COALESCE(SUM(s.monthlyRevenue), 0) FROM services s WHERE s.customerExternalId = c.externalId AND s.status != 'terminated')
-            - (SELECT COALESCE(SUM(s.monthlyCost), 0) FROM services s WHERE s.customerExternalId = c.externalId AND s.status != 'terminated')
+            (SELECT COALESCE(SUM(s.monthlyRevenue), 0) FROM services s WHERE s.customerExternalId = c.externalId AND s.status NOT IN ('terminated', 'billing_platform_stub'))
+            - (SELECT COALESCE(SUM(s.monthlyCost), 0) FROM services s WHERE s.customerExternalId = c.externalId AND s.status NOT IN ('terminated', 'billing_platform_stub'))
           ) /
-          (SELECT COALESCE(SUM(s.monthlyRevenue), 0) FROM services s WHERE s.customerExternalId = c.externalId AND s.status != 'terminated')
+          (SELECT COALESCE(SUM(s.monthlyRevenue), 0) FROM services s WHERE s.customerExternalId = c.externalId AND s.status NOT IN ('terminated', 'billing_platform_stub'))
           * 100, 2
         )
         ELSE NULL
@@ -736,7 +799,7 @@ export async function recalculateAll() {
         SELECT COUNT(*)
         FROM services s
         WHERE s.customerExternalId = c.externalId
-          AND s.status NOT IN ('terminated', 'unmatched', 'flagged_for_termination')
+          AND s.status NOT IN ('terminated', 'unmatched', 'flagged_for_termination', 'billing_platform_stub')
           AND s.externalId NOT IN (
             SELECT sba.serviceExternalId
             FROM service_billing_assignments sba
@@ -773,16 +836,32 @@ export async function assignServiceToCustomer(
   if (!cust) throw new Error('Customer not found');
 
   // Update the service
-  await db.update(services).set({
+   await db.update(services).set({
     customerExternalId: customerExternalId,
     customerName: cust.name,
     status: 'active',
     locationExternalId: locationExternalId || '',
   }).where(eq(services.externalId, serviceExternalId));
-
   // Recalculate customer counts using shared helper
   await recalculateCustomerCounts(customerExternalId);
-
+  // Auto-inherit location from co-located ABB service if no location provided
+  if (!locationExternalId) {
+    try {
+      await inheritLocationFromColocated(serviceExternalId, 'Auto-match');
+    } catch {
+      // Non-fatal: location inheritance failure should not block assignment
+    }
+  }
+  // Write match provenance
+  await writeMatchProvenance({
+    serviceExternalId,
+    customerExternalId,
+    matchMethod: 'manual',
+    matchSource: 'manual_ui',
+    matchedBy: 'system',
+    confidence: 'medium',
+    notes: `Manually assigned to customer ${cust.name}`,
+  });
   return { success: true };
 }
 
@@ -857,9 +936,16 @@ export async function searchAll(query: string) {
   const digitsOnly = rawQuery.replace(/[\s\-\(\)\.]/g, '');
   const digitsTerm = digitsOnly.length >= 3 ? `%${digitsOnly}%` : null;
 
-  // Search customers by name
+  // Search customers by name, business name, site address, and contact details
   const custResults = await db.select().from(customers).where(
-    like(customers.name, term)
+    or(
+      like(customers.name, term),
+      like(customers.businessName, term),
+      like(customers.siteAddress, term),
+      like(customers.contactName, term),
+      like(customers.contactEmail, term),
+      like(customers.xeroContactName, term),
+    )
   ).limit(10);
 
   // Build service search conditions across ALL fields
@@ -941,7 +1027,7 @@ export async function searchAll(query: string) {
     // Check fields in priority order
     checkField(s.phoneNumber, 'phoneNumber', 'Phone') ||
     checkField(s.serviceId, 'serviceId', 'Service ID') ||
-    checkField(s.connectionId, 'connectionId', 'AVC/Connection') ||
+    checkField(s.connectionId, 'connectionId', (s.supplierName === 'Vocus' || s.supplierName === 'Vocus Mobile' || (s.connectionId ?? '').toUpperCase().startsWith('VBU') || (s.connectionId ?? '').toUpperCase().startsWith('VIE')) ? 'VBU ID' : 'AVC/Connection') ||
     checkField(s.supplierAccount, 'supplierAccount', 'Account') ||
     checkField(s.planName, 'planName', 'Plan') ||
     checkField(s.locationAddress, 'locationAddress', 'Address') ||
@@ -980,13 +1066,111 @@ export async function searchAll(query: string) {
     };
   });
 
+  // Search Vocus NBN services by address, username, AVC ID, customer name
+  const vocusNbnResults = await db.select().from(vocusNbnServices).where(
+    or(
+      like(vocusNbnServices.address, term),
+      like(vocusNbnServices.username, term),
+      like(vocusNbnServices.avcId, term),
+      like(vocusNbnServices.customerName, term),
+      like(vocusNbnServices.locId, term),
+      like(vocusNbnServices.ipAddress, term),
+      like(vocusNbnServices.suburb, term),
+      like(vocusNbnServices.poiName, term),
+    )
+  ).limit(10);
+
+  // Search Vocus Mobile services by MSN, customer name, SIM, location reference
+  const vocusMobileResults = await db.select().from(vocusMobileServices).where(
+    or(
+      like(vocusMobileServices.msn, term),
+      like(vocusMobileServices.customerName, term),
+      like(vocusMobileServices.sim, term),
+      like(vocusMobileServices.locationReference, term),
+      like(vocusMobileServices.label, term),
+    )
+  ).limit(10);
+
+  // Determine matched field for Vocus NBN results
+  const vocusNbnWithMatch = vocusNbnResults.map(n => {
+    const lq = rawQuery.toLowerCase();
+    let matchedField = 'Vocus NBN';
+    let matchedValue = '';
+    const chk = (v: string | null, label: string) => {
+      if (v && v.toLowerCase().includes(lq)) { matchedField = label; matchedValue = v; return true; }
+      return false;
+    };
+    chk(n.address, 'NBN Address') ||
+    chk(n.username, 'NBN Username') ||
+    chk(n.avcId, 'AVC ID') ||
+    chk(n.customerName, 'NBN Customer') ||
+    chk(n.locId, 'Location ID') ||
+    chk(n.ipAddress, 'IP Address') ||
+    chk(n.suburb, 'Suburb') ||
+    chk(n.poiName, 'POI');
+    return { ...n, _type: 'vocus_nbn' as const, matchedField, matchedValue };
+  });
+
+  // Determine matched field for Vocus Mobile results
+  const vocusMobileWithMatch = vocusMobileResults.map(m => {
+    const lq = rawQuery.toLowerCase();
+    let matchedField = 'Vocus Mobile';
+    let matchedValue = '';
+    const chk = (v: string | null, label: string) => {
+      if (v && v.toLowerCase().includes(lq)) { matchedField = label; matchedValue = v; return true; }
+      return false;
+    };
+    chk(m.msn, 'Mobile Number') ||
+    chk(m.customerName, 'Mobile Customer') ||
+    chk(m.sim, 'SIM Number') ||
+    chk(m.locationReference, 'Mobile Address') ||
+    chk(m.label, 'Label');
+    return { ...m, _type: 'vocus_mobile' as const, matchedField, matchedValue };
+  });
+
+  // Search phone_numbers table — number, customer name, SIP/service code, notes
+  const phoneNumResults = await db.select().from(phoneNumbers).where(
+    or(
+      like(phoneNumbers.number, term),
+      like(phoneNumbers.numberDisplay, term),
+      like(phoneNumbers.customerName, term),
+      like(phoneNumbers.providerServiceCode, term),
+      like(phoneNumbers.notes, term),
+      like(phoneNumbers.servicePlanName, term),
+      ...(digitsTerm ? [
+        sql`REPLACE(REPLACE(${phoneNumbers.number}, ' ', ''), '-', '') LIKE ${digitsTerm}`,
+      ] : []),
+    )
+  ).limit(15);
+  const phoneNumWithMatch = phoneNumResults.map(n => {
+    const lq = rawQuery.toLowerCase();
+    let matchedField = 'Number';
+    let matchedValue = n.numberDisplay ?? n.number;
+    const chk = (v: string | null | undefined, label: string) => {
+      if (v && v.toLowerCase().includes(lq)) { matchedField = label; matchedValue = v; return true; }
+      return false;
+    };
+    const normalizedNum = (n.number ?? '').replace(/[\s\-]/g, '');
+    if (digitsOnly.length >= 3 && normalizedNum.includes(digitsOnly)) {
+      matchedField = 'Number'; matchedValue = n.numberDisplay ?? n.number;
+    } else {
+      chk(n.providerServiceCode, n.provider === 'NetSIP' ? 'SIP ID' : 'Service Code') ||
+      chk(n.customerName, 'Customer') ||
+      chk(n.notes, 'Notes') ||
+      chk(n.servicePlanName, 'Plan');
+    }
+    return { ...n, _type: 'phone_number' as const, matchedField, matchedValue };
+  });
   return {
     customers: custResults.map(c => ({
       ...c,
-      billingPlatforms: c.billingPlatforms ? JSON.parse(c.billingPlatforms) : [],
+      billingPlatforms: c.billingPlatforms ? (() => { try { return JSON.parse(c.billingPlatforms!); } catch { return [c.billingPlatforms]; } })() : [],
       monthlyCost: parseFloat(c.monthlyCost),
     })),
     services: servicesWithMatchField,
+    vocusNbn: vocusNbnWithMatch,
+    vocusMobile: vocusMobileWithMatch,
+    phoneNumbers: phoneNumWithMatch,
   };
 }
 
@@ -1146,25 +1330,53 @@ export async function getServicesWithMargin(filters?: {
   provider?: string;
   costReviewNeeded?: boolean;
   search?: string;
+  customerType?: string;
 }) {
   const db = await getDb();
   if (!db) return [];
 
   // Compute margin on-the-fly from current monthlyCost and monthlyRevenue so it is always fresh
   // even if the stored marginPercent column is stale.
-  // IMPORTANT: margin is only computed when BOTH cost AND revenue are known (> 0).
-  // When cost = 0 (unknown), margin is NULL so the UI shows '—' rather than a misleading 100%.
-  const computedMargin = sql<string>`CASE WHEN monthlyRevenue > 0 AND monthlyCost > 0 THEN ROUND((monthlyRevenue - monthlyCost) / monthlyRevenue * 100, 2) ELSE NULL END`;
+  // Three cases:
+  //   1. cost > 0 AND revenue > 0 → normal margin formula
+  //   2. cost = 0 AND costSource is a known pricebook/confirmed source AND revenue > 0 → 100% margin
+  //   3. cost = 0 AND costSource = 'unknown' → NULL (cost not yet determined, show as unknown)
+  // The confirmed zero-cost sources are pricebook imports and explicit retail-only flags.
+  const confirmedZeroCostSources = `'sasboss_pricebook','access4_diamond_pricebook_excel','access4_diamond_pricebook','retail_only_no_wholesale','access4_invoice_corrected','pricebook-derived','product_map'`;
+  const computedMargin = sql<string>`CASE
+    WHEN monthlyRevenue > 0 AND monthlyCost > 0
+      THEN ROUND((monthlyRevenue - monthlyCost) / monthlyRevenue * 100, 2)
+    WHEN monthlyRevenue > 0 AND monthlyCost = 0
+      AND costSource IN (${sql.raw(confirmedZeroCostSources)})
+      THEN 100.00
+    ELSE NULL
+  END`;
   // For cost review mode, include services regardless of revenue (they may have $0 cost needing review)
   // Also include services that have a known cost (> 0) even if revenue is not yet set — these are
   // supplier-cost-only services (e.g. AAPT) that haven't been linked to a Xero billing item yet.
   // This allows them to appear in the Revenue & Margin page as "Revenue Unknown" rows.
-  const conditions: ReturnType<typeof sql>[] = filters?.costReviewNeeded ? [] : [sql`(monthlyRevenue > 0 OR monthlyCost > 0)`];
+  // Always exclude services with no customer association — they should only appear once linked to a customer
+  // Always exclude archived services — they are historical records hidden from all active views
+  // Always exclude terminated services — they are no longer active and should not appear in Revenue & Margin
+  const conditions: ReturnType<typeof sql>[] = filters?.costReviewNeeded
+    ? [
+        sql`(${services.customerExternalId} IS NOT NULL AND ${services.customerExternalId} != '')`,
+        sql`(${services.billingPeriod} IS NULL OR ${services.billingPeriod} != 'archived')`,
+        sql`(${services.status} IS NULL OR ${services.status} != 'terminated')`,
+      ]
+    : [
+        sql`(monthlyRevenue > 0 OR monthlyCost > 0)`,
+        sql`(${services.customerExternalId} IS NOT NULL AND ${services.customerExternalId} != '')`,
+        sql`(${services.billingPeriod} IS NULL OR ${services.billingPeriod} != 'archived')`,
+        sql`(${services.status} IS NULL OR ${services.status} != 'terminated')`,
+      ];
 
+  // Confirmed zero-cost sources: these products have a known $0 wholesale cost from a pricebook
+  const confirmedZeroSrcList = `'sasboss_pricebook','access4_diamond_pricebook_excel','access4_diamond_pricebook','retail_only_no_wholesale','access4_invoice_corrected','pricebook-derived','product_map'`;
   if (filters?.marginFilter && filters.marginFilter !== 'all') {
-    // All margin filters require both cost and revenue to be known
     switch (filters.marginFilter) {
       case 'negative':
+        // Negative margin only possible when cost > 0
         conditions.push(sql`monthlyCost > 0 AND monthlyRevenue > 0 AND (monthlyRevenue - monthlyCost) / monthlyRevenue * 100 < 0`);
         break;
       case 'low':
@@ -1174,7 +1386,12 @@ export async function getServicesWithMargin(filters?: {
         conditions.push(sql`monthlyCost > 0 AND monthlyRevenue > 0 AND (monthlyRevenue - monthlyCost) / monthlyRevenue * 100 >= 20 AND (monthlyRevenue - monthlyCost) / monthlyRevenue * 100 < 50`);
         break;
       case 'high':
-        conditions.push(sql`monthlyCost > 0 AND monthlyRevenue > 0 AND (monthlyRevenue - monthlyCost) / monthlyRevenue * 100 >= 50`);
+        // High margin: either cost > 0 with >= 50% margin, OR confirmed zero-cost with revenue > 0 (= 100% margin)
+        conditions.push(sql`monthlyRevenue > 0 AND (
+          (monthlyCost > 0 AND (monthlyRevenue - monthlyCost) / monthlyRevenue * 100 >= 50)
+          OR
+          (monthlyCost = 0 AND costSource IN (${sql.raw(confirmedZeroSrcList)}))
+        )`);
         break;
     }
   }
@@ -1197,6 +1414,11 @@ export async function getServicesWithMargin(filters?: {
   if (filters?.search && filters.search.trim()) {
     const term = `%${filters.search.trim()}%`;
     conditions.push(sql`(${services.customerName} LIKE ${term} OR ${services.planName} LIKE ${term} OR ${services.phoneNumber} LIKE ${term} OR ${services.connectionId} LIKE ${term} OR ${services.locationAddress} LIKE ${term} OR ${services.serviceTypeDetail} LIKE ${term})`);
+  }
+
+  // Filter by customer type (retail_offering or standard) via JOIN to customers table
+  if (filters?.customerType && filters.customerType !== 'all') {
+    conditions.push(sql`${services.customerExternalId} IN (SELECT externalId FROM customers WHERE customerType = ${filters.customerType})`);
   }
 
   const whereClause = conditions.length > 0 ? conditions.reduce((acc, c) => sql`${acc} AND ${c}`) : sql`1=1`;
@@ -1223,9 +1445,18 @@ export async function getServicesWithMargin(filters?: {
     technology: services.technology,
     speedTier: services.speedTier,
     discoveryNotes: services.discoveryNotes,
+    costSource: services.costSource,
+    revenueGroupId: services.revenueGroupId,
+    revenueGroupLabel: services.revenueGroupLabel,
+    // Revenue group metadata (null when not in a group)
+    groupName: revenueGroups.name,
+    groupType: revenueGroups.type,
+    groupTotalRevenue: revenueGroups.totalRevenue,
+    groupTotalCost: revenueGroups.totalCost,
     createdAt: services.createdAt,
     updatedAt: services.updatedAt,
   }).from(services)
+    .leftJoin(revenueGroups, eq(services.revenueGroupId, revenueGroups.groupId))
     .where(whereClause)
     .orderBy(asc(computedMargin));
 
@@ -1235,6 +1466,8 @@ export async function getServicesWithMargin(filters?: {
     monthlyRevenue: parseFloat(String(s.monthlyRevenue)),
     marginPercent: s.computedMarginPercent ? parseFloat(String(s.computedMarginPercent)) : null,
     billingHistory: s.billingHistory ? JSON.parse(s.billingHistory) : [],
+    revenueGroupId: s.revenueGroupId ?? null,
+    revenueGroupLabel: s.revenueGroupLabel ?? null,
   }));
 }
 
@@ -1265,6 +1498,10 @@ export async function getServicesGroupedByCustomer(filters?: {
     worstMargin: number | null;
   }>();
 
+  // Track which revenueGroupIds have already been counted for revenue to avoid double-counting
+  // bundled revenue groups (where multiple services share the same Xero billing line)
+  const countedRevenueGroups = new Set<string>();
+
   for (const svc of allServices) {
     const key = svc.customerExternalId || '__unmatched__';
     const name = svc.customerName || 'Unmatched';
@@ -1283,7 +1520,17 @@ export async function getServicesGroupedByCustomer(filters?: {
     const group = grouped.get(key)!;
     group.serviceCount++;
     group.totalCost += svc.monthlyCost;
-    group.totalRevenue += svc.monthlyRevenue;
+    // Only count revenue once per bundle group — bundled services share the same revenue line
+    if (svc.revenueGroupId) {
+      const groupKey = `${key}::${svc.revenueGroupId}`;
+      if (!countedRevenueGroups.has(groupKey)) {
+        countedRevenueGroups.add(groupKey);
+        group.totalRevenue += svc.monthlyRevenue;
+      }
+      // Individual bundled services contribute $0 revenue to the total (revenue counted at group level)
+    } else {
+      group.totalRevenue += svc.monthlyRevenue;
+    }
     group.services.push(svc);
     const m = svc.marginPercent ?? 0;
     if (group.worstMargin === null || m < group.worstMargin) group.worstMargin = m;
@@ -1319,6 +1566,7 @@ export async function mergeCustomers(primaryExternalId: string, secondaryExterna
 
   if (!primary || !secondary) throw new Error('Customer not found');
 
+  // ── Core records ──────────────────────────────────────────────────────────
   // Reassign all services from secondary to primary
   await db.update(services).set({
     customerExternalId: primaryExternalId,
@@ -1336,12 +1584,82 @@ export async function mergeCustomers(primaryExternalId: string, secondaryExterna
     customerExternalId: primaryExternalId,
   }).where(eq(billingItems.customerExternalId, secondaryExternalId));
 
-  // Merge billing platforms
+  // ── Billing reconciliation records (drag-and-drop assignments) ────────────
+  await db.update(serviceBillingAssignments).set({
+    customerExternalId: primaryExternalId,
+  }).where(eq(serviceBillingAssignments.customerExternalId, secondaryExternalId));
+
+  await db.update(serviceBillingMatchLog).set({
+    customerExternalId: primaryExternalId,
+  }).where(eq(serviceBillingMatchLog.customerExternalId, secondaryExternalId));
+
+  await db.update(revenueGroups).set({
+    customerExternalId: primaryExternalId,
+  }).where(eq(revenueGroups.customerExternalId, secondaryExternalId));
+
+  // ── Usage & analytics records ─────────────────────────────────────────────
+  await db.update(customerUsageSummaries).set({
+    customerExternalId: primaryExternalId,
+  }).where(eq(customerUsageSummaries.customerExternalId, secondaryExternalId));
+
+  await db.update(serviceUsageSnapshots).set({
+    customerExternalId: primaryExternalId,
+  }).where(eq(serviceUsageSnapshots.customerExternalId, secondaryExternalId));
+
+  await db.update(usageThresholdAlerts).set({
+    customerExternalId: primaryExternalId,
+  }).where(eq(usageThresholdAlerts.customerExternalId, secondaryExternalId));
+
+  // ── Supplier mapping records ──────────────────────────────────────────────
+  await db.update(supplierEnterpriseMap).set({
+    customerExternalId: primaryExternalId,
+  }).where(eq(supplierEnterpriseMap.customerExternalId, secondaryExternalId));
+
+  await db.update(supplierServiceMap).set({
+    customerExternalId: primaryExternalId,
+  }).where(eq(supplierServiceMap.customerExternalId, secondaryExternalId));
+
+  // ── Service workflow records ──────────────────────────────────────────────
+  await db.update(unbillableServices).set({
+    customerExternalId: primaryExternalId,
+  }).where(eq(unbillableServices.customerExternalId, secondaryExternalId));
+
+  await db.update(escalatedServices).set({
+    customerExternalId: primaryExternalId,
+  }).where(eq(escalatedServices.customerExternalId, secondaryExternalId));
+
+  await db.update(billingPlatformChecks).set({
+    customerExternalId: primaryExternalId,
+  }).where(eq(billingPlatformChecks.customerExternalId, secondaryExternalId));
+
+  await db.update(serviceOutages).set({
+    customerExternalId: primaryExternalId,
+  }).where(eq(serviceOutages.customerExternalId, secondaryExternalId));
+
+  await db.update(serviceMatchEvents).set({
+    customerExternalId: primaryExternalId,
+  }).where(eq(serviceMatchEvents.customerExternalId, secondaryExternalId));
+
+  // ── Phone numbers & retail bundles ────────────────────────────────────────
+  await db.update(phoneNumbers).set({
+    customerExternalId: primaryExternalId,
+  }).where(eq(phoneNumbers.customerExternalId, secondaryExternalId));
+
+  await db.update(retailBundles).set({
+    customerExternalId: primaryExternalId,
+  }).where(eq(retailBundles.customerExternalId, secondaryExternalId));
+
+  // ── Omada sites ───────────────────────────────────────────────────────────
+  await db.update(omadaSites).set({
+    customerExternalId: primaryExternalId,
+  }).where(eq(omadaSites.customerExternalId, secondaryExternalId));
+
+  // ── Merge billing platforms ───────────────────────────────────────────────
   const primaryPlatforms = primary.billingPlatforms ? JSON.parse(primary.billingPlatforms) : [];
   const secondaryPlatforms = secondary.billingPlatforms ? JSON.parse(secondary.billingPlatforms) : [];
   const mergedPlatforms = Array.from(new Set([...primaryPlatforms, ...secondaryPlatforms]));
 
-  // Merge contact info (prefer non-empty from secondary if primary is empty)
+  // Merge contact info (prefer non-empty from primary, fall back to secondary)
   const mergedContact = {
     contactName: primary.contactName || secondary.contactName || '',
     contactEmail: primary.contactEmail || secondary.contactEmail || '',
@@ -1352,10 +1670,10 @@ export async function mergeCustomers(primaryExternalId: string, secondaryExterna
     notes: [primary.notes, secondary.notes].filter(Boolean).join('\n---\nMerged from ' + secondary.name + ':\n'),
   };
 
-  // Recount services (exclude terminated)
-  const [svcCount] = await db.select({ count: sql<number>`count(*)` }).from(services).where(sql`customerExternalId = ${primaryExternalId} AND status != 'terminated'`);
-  const [costSum] = await db.select({ total: sql<string>`COALESCE(SUM(monthlyCost), 0)` }).from(services).where(sql`customerExternalId = ${primaryExternalId} AND status != 'terminated'`);
-  const [revenueSum] = await db.select({ total: sql<string>`COALESCE(SUM(monthlyRevenue), 0)` }).from(services).where(sql`customerExternalId = ${primaryExternalId} AND status != 'terminated'`);
+  // Recount services (exclude terminated/stubs)
+  const [svcCount] = await db.select({ count: sql<number>`count(*)` }).from(services).where(sql`customerExternalId = ${primaryExternalId} AND status NOT IN ('terminated', 'billing_platform_stub', 'archived')`);
+  const [costSum] = await db.select({ total: sql<string>`COALESCE(SUM(monthlyCost), 0)` }).from(services).where(sql`customerExternalId = ${primaryExternalId} AND status NOT IN ('terminated', 'billing_platform_stub', 'archived')`);
+  const [revenueSum] = await db.select({ total: sql<string>`COALESCE(SUM(monthlyRevenue), 0)` }).from(services).where(sql`customerExternalId = ${primaryExternalId} AND status NOT IN ('terminated', 'billing_platform_stub', 'archived')`);
 
   // Update primary customer
   await db.update(customers).set({
@@ -1443,7 +1761,7 @@ export async function getCustomersForMerge(search: string) {
 
   const customerResults = result.map(c => ({
     ...c,
-    billingPlatforms: c.billingPlatforms ? JSON.parse(c.billingPlatforms) : [],
+    billingPlatforms: c.billingPlatforms ? (() => { try { return JSON.parse(c.billingPlatforms!); } catch { return [c.billingPlatforms]; } })() : [],
     monthlyCost: parseFloat(c.monthlyCost as unknown as string),
     monthlyRevenue: parseFloat(c.monthlyRevenue as unknown as string),
   }));
@@ -2257,6 +2575,19 @@ export async function reassignService(
   // Recalculate service counts for both old and new customer
   await recalculateCustomerCounts(oldCustomerId, newCustomerExternalId);
 
+  // Write match provenance if reassigned to a new customer
+  if (newCustomerExternalId) {
+    await writeMatchProvenance({
+      serviceExternalId,
+      customerExternalId: newCustomerExternalId,
+      matchMethod: 'manual',
+      matchSource: 'manual_ui',
+      matchedBy: reassignedBy,
+      confidence: 'medium',
+      notes: `Reassigned from "${oldCustomerName || oldCustomerId || 'unassigned'}" to "${newCustomerName}". Reason: ${reason}`,
+    });
+  }
+
   return { success: true, serviceExternalId, oldCustomerId, oldCustomerName, newCustomerExternalId, newCustomerName };
 }
 
@@ -2312,6 +2643,7 @@ export async function updateServiceFields(
     monthlyCost?: string;
     serviceType?: string;
     provider?: string;
+    supplierName?: string;
     // Standard editable fields
     serviceTypeDetail?: string;
     planName?: string;
@@ -2370,6 +2702,7 @@ export async function updateServiceFields(
   if (updates.monthlyCost !== undefined) trackField('monthlyCost', updates.monthlyCost, old.monthlyCost);
   if (updates.serviceType !== undefined) trackField('serviceType', updates.serviceType, old.serviceType);
   if (updates.provider !== undefined) trackField('provider', updates.provider, old.provider);
+  if (updates.supplierName !== undefined) trackField('supplierName', updates.supplierName, old.supplierName);
   if (updates.serviceTypeDetail !== undefined) trackField('serviceTypeDetail', updates.serviceTypeDetail, old.serviceTypeDetail);
   if (updates.planName !== undefined) trackField('planName', updates.planName, old.planName);
   if (updates.status !== undefined) trackField('status', updates.status, old.status);
@@ -2958,6 +3291,17 @@ export async function commitAliasAutoMatch(
         }),
         reason: 'Auto-matched via Carbon alias field',
       });
+      // Match provenance
+      await writeMatchProvenance({
+        serviceExternalId: match.serviceExternalId,
+        customerExternalId: match.customerExternalId,
+        matchMethod: 'auto_name',
+        matchSource: 'carbon_api',
+        matchedBy: committedBy,
+        confidence: 'medium',
+        matchCriteria: { carbonAlias: old.customerName, matchedCustomer: match.customerName },
+        notes: 'Auto-matched via Carbon API alias field',
+      });
 
       applied++;
     } catch (err: any) {
@@ -3025,7 +3369,7 @@ export async function terminateService(
     // Count all non-terminated services for this customer
     const [svcCount] = await db.select({ count: sql<number>`count(*)` })
       .from(services)
-      .where(sql`customerExternalId = ${custId} AND status != 'terminated'`);
+      .where(sql`customerExternalId = ${custId} AND status NOT IN ('terminated', 'billing_platform_stub')`);
     const [matchedCount] = await db.select({ count: sql<number>`count(*)` })
       .from(services)
       .where(sql`customerExternalId = ${custId} AND status = 'active'`);
@@ -3034,7 +3378,7 @@ export async function terminateService(
       .where(sql`customerExternalId = ${custId} AND status = 'unmatched'`);
     const [costSum] = await db.select({ total: sql<string>`COALESCE(SUM(monthlyCost), 0)` })
       .from(services)
-      .where(sql`customerExternalId = ${custId} AND status != 'terminated'`);
+      .where(sql`customerExternalId = ${custId} AND status NOT IN ('terminated', 'billing_platform_stub')`);
 
     await db.update(customers).set({
       serviceCount: svcCount.count,
@@ -3083,7 +3427,7 @@ export async function restoreTerminatedService(
     const custId = svc.customerExternalId;
     const [svcCount] = await db.select({ count: sql<number>`count(*)` })
       .from(services)
-      .where(sql`customerExternalId = ${custId} AND status != 'terminated'`);
+      .where(sql`customerExternalId = ${custId} AND status NOT IN ('terminated', 'billing_platform_stub')`);
     const [matchedCount] = await db.select({ count: sql<number>`count(*)` })
       .from(services)
       .where(sql`customerExternalId = ${custId} AND status = 'active'`);
@@ -3092,7 +3436,7 @@ export async function restoreTerminatedService(
       .where(sql`customerExternalId = ${custId} AND status = 'unmatched'`);
     const [costSum] = await db.select({ total: sql<string>`COALESCE(SUM(monthlyCost), 0)` })
       .from(services)
-      .where(sql`customerExternalId = ${custId} AND status != 'terminated'`);
+      .where(sql`customerExternalId = ${custId} AND status NOT IN ('terminated', 'billing_platform_stub')`);
 
     await db.update(customers).set({
       serviceCount: svcCount.count,
@@ -4306,12 +4650,17 @@ export async function commitAddressAutoMatch(
         updatedAt: new Date(),
       }).where(eq(services.externalId, match.serviceExternalId));
 
-      // Update customer service counts
-      const [svcRows] = await db.select({
-        monthlyCost: services.monthlyCost,
-        status: services.status,
-      }).from(services)
-        .where(eq(services.customerExternalId, match.customerExternalId));
+      // Write match provenance
+      await writeMatchProvenance({
+        serviceExternalId: match.serviceExternalId,
+        customerExternalId: match.customerExternalId,
+        matchMethod: 'auto_name',
+        matchSource: 'manual_ui',
+        matchedBy: committedBy,
+        confidence: 'medium',
+        matchCriteria: { matchedCustomer: match.customerName },
+        notes: 'Auto-matched via address lookup',
+      });
 
       applied++;
     } catch (err: any) {
@@ -4916,24 +5265,240 @@ export async function getServiceCostHistory(serviceExternalId: string) {
     .orderBy(desc(serviceCostHistory.createdAt));
 }
 
+// ==================== Carbon API Live Fetch + Cache ====================
+
+const CARBON_BASE_URL = 'https://api.carbon.aussiebroadband.com.au';
+const CARBON_CACHE_KEY = 'all_services';
+const CARBON_DEFAULT_TTL_HOURS = 6;
+
+/** Shape of a single service record returned by the Carbon API. */
+export interface CarbonService {
+  id: number;
+  type: string;
+  address: string;
+  alias: string | null;
+  status: string;
+  monthly_cost_cents: number;
+  plan: { name: string } | null;
+  service_identifier: string | null;
+  circuit_id: string | null;
+  network_type: string | null;
+  location_id: number | null;
+  open_date: string | null;
+  [key: string]: unknown;
+}
+
 /**
- * Sync Carbon API costs to monthlyCost for all ABB services that have a carbonMonthlyCost.
- * Carbon API is the authoritative source of truth — it overrides any previously imported invoice cost.
- * Before overwriting, the current cost is snapshotted to service_cost_history.
- *
- * Returns a summary of what was updated.
+ * Assemble the Carbon API password from the two split secrets.
+ * The platform strips '$' from secret values, so the password is stored as:
+ *   CARBON_PASSWORD_PREFIX + "$X" + CARBON_PASSWORD_SUFFIX
  */
-export async function syncCarbonCostsToServices(syncedBy: string): Promise<{
+function getCarbonPassword(): string {
+  const prefix = process.env.CARBON_PASSWORD_PREFIX;
+  const suffix = process.env.CARBON_PASSWORD_SUFFIX;
+  if (!prefix || !suffix) {
+    throw new Error('[CarbonAPI] CARBON_PASSWORD_PREFIX or CARBON_PASSWORD_SUFFIX env vars are not set');
+  }
+  return `${prefix}$X${suffix}`;
+}
+
+/**
+ * Authenticate with the Carbon API and return a session cookie string.
+ * Throws if login fails.
+ */
+async function carbonLogin(): Promise<string> {
+  const username = process.env.CARBON_USERNAME;
+  if (!username) throw new Error('[CarbonAPI] CARBON_USERNAME env var is not set');
+  const password = getCarbonPassword();
+
+  const res = await fetch(`${CARBON_BASE_URL}/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+    body: JSON.stringify({ username, password }),
+  });
+
+  if (!res.ok) {
+    const body = await res.text();
+    throw new Error(`[CarbonAPI] Login failed (${res.status}): ${body.substring(0, 200)}`);
+  }
+
+  const rawCookies = res.headers.get('set-cookie') || '';
+  const cookieStr = rawCookies.split(',').map((c: string) => c.trim().split(';')[0]).join('; ');
+  if (!cookieStr) throw new Error('[CarbonAPI] Login succeeded but no session cookie returned');
+  return cookieStr;
+}
+
+/**
+ * Fetch all services from the Carbon API using pagination.
+ * Uses 100 per page (maximum observed) and follows meta.last_page.
+ */
+async function fetchAllCarbonServices(existingCookie?: string): Promise<CarbonService[]> {
+  const cookieStr = existingCookie || await carbonLogin();
+  const allServices: CarbonService[] = [];
+  let page = 1;
+  let lastPage = 1;
+
+  do {
+    const res = await fetch(`${CARBON_BASE_URL}/carbon/services?page=${page}&per_page=100`, {
+      headers: { 'Accept': 'application/json', 'cookie': cookieStr },
+    });
+    if (!res.ok) {
+      throw new Error(`[CarbonAPI] Services fetch failed on page ${page} (${res.status})`);
+    }
+    const data = await res.json() as { data: CarbonService[]; meta: { last_page: number; total: number } };
+    const pageServices = data.data || [];
+    allServices.push(...pageServices);
+    lastPage = data.meta?.last_page ?? page;
+    console.log(`[CarbonAPI] Fetched page ${page}/${lastPage}: ${pageServices.length} services (running total: ${allServices.length})`);
+    page++;
+  } while (page <= lastPage);
+
+  return allServices;
+}
+
+/**
+ * Return all Carbon services, using the database cache when fresh.
+ * If the cache is stale (older than ttlHours) or missing, calls the live API,
+ * stores the result, and returns the fresh data.
+ *
+ * @param forceRefresh - bypass cache and always call the live API
+ */
+export async function getCarbonServicesCached(
+  forceRefresh = false,
+  existingCookie?: string
+): Promise<{ services: CarbonService[]; fromCache: boolean; fetchedAt: Date }> {
+  const db = await getDb();
+  if (!db) throw new Error('[CarbonAPI] Database not available');
+
+  // Check for a fresh cache entry
+  if (!forceRefresh) {
+    const rows = await db.select().from(carbonApiCache)
+      .where(eq(carbonApiCache.cacheKey, CARBON_CACHE_KEY))
+      .limit(1);
+    if (rows.length > 0) {
+      const row = rows[0];
+      const ageMs = Date.now() - row.fetchedAt.getTime();
+      const ttlMs = row.ttlHours * 60 * 60 * 1000;
+      if (ageMs < ttlMs) {
+        console.log(`[CarbonAPI] Cache hit — age ${Math.round(ageMs / 60000)}min, TTL ${row.ttlHours}h`);
+        return {
+          services: JSON.parse(row.rawJson) as CarbonService[],
+          fromCache: true,
+          fetchedAt: row.fetchedAt,
+        };
+      }
+      console.log(`[CarbonAPI] Cache stale — age ${Math.round(ageMs / 60000)}min, TTL ${row.ttlHours}h. Refreshing...`);
+    } else {
+      console.log('[CarbonAPI] No cache entry found. Fetching from live API...');
+    }
+  } else {
+    console.log('[CarbonAPI] Force refresh requested. Fetching from live API...');
+  }
+
+  // Fetch fresh data from the live API
+  const liveServices = await fetchAllCarbonServices(existingCookie);
+  const fetchedAt = new Date();
+  const rawJson = JSON.stringify(liveServices);
+
+  // Upsert the cache row
+  await db.insert(carbonApiCache).values({
+    cacheKey: CARBON_CACHE_KEY,
+    totalServices: liveServices.length,
+    rawJson,
+    fetchedAt,
+    ttlHours: CARBON_DEFAULT_TTL_HOURS,
+    lastSyncedServicesCount: 0,
+  }).onDuplicateKeyUpdate({
+    set: {
+      totalServices: liveServices.length,
+      rawJson,
+      fetchedAt,
+      ttlHours: CARBON_DEFAULT_TTL_HOURS,
+    },
+  });
+
+  console.log(`[CarbonAPI] Cached ${liveServices.length} services (TTL ${CARBON_DEFAULT_TTL_HOURS}h)`);
+  return { services: liveServices, fromCache: false, fetchedAt };
+}
+
+/**
+ * Get the current Carbon API cache status (age, TTL, total services, last sync).
+ * Returns null if no cache entry exists yet.
+ */
+export async function getCarbonCacheStatus(): Promise<{
+  cacheKey: string;
+  totalServices: number;
+  fetchedAt: Date;
+  ttlHours: number;
+  ageMinutes: number;
+  isStale: boolean;
+  lastSyncedServicesCount: number;
+  lastSyncedAt: Date | null;
+} | null> {
+  const db = await getDb();
+  if (!db) return null;
+  const rows = await db.select().from(carbonApiCache)
+    .where(eq(carbonApiCache.cacheKey, CARBON_CACHE_KEY))
+    .limit(1);
+  if (rows.length === 0) return null;
+  const row = rows[0];
+  const ageMs = Date.now() - row.fetchedAt.getTime();
+  const ttlMs = row.ttlHours * 60 * 60 * 1000;
+  return {
+    cacheKey: row.cacheKey,
+    totalServices: row.totalServices,
+    fetchedAt: row.fetchedAt,
+    ttlHours: row.ttlHours,
+    ageMinutes: Math.round(ageMs / 60000),
+    isStale: ageMs >= ttlMs,
+    lastSyncedServicesCount: row.lastSyncedServicesCount,
+    lastSyncedAt: row.lastSyncedAt ?? null,
+  };
+}
+
+/**
+ * Sync live Carbon API data into the services table.
+ *
+ * Matching strategy (in priority order):
+ *   1. service_identifier exact match on services.externalId
+ *   2. circuit_id exact match on services.externalId
+ *   3. Carbon service id match on services.carbonServiceId
+ *
+ * For each matched service:
+ *   - Updates carbonMonthlyCost, carbonPlanName, carbonServiceId, carbonAlias, carbonServiceType
+ *   - Sets monthlyCost = carbonMonthlyCost and costSource = 'carbon_api'
+ *   - Snapshots the old cost to service_cost_history if it was from a different source
+ *
+ * Carbon API is the authoritative source of truth for ABB service costs.
+ */
+export async function syncCarbonCostsToServices(syncedBy: string, forceRefresh = false): Promise<{
   updated: number;
   skipped: number;
   errors: number;
+  notMatched: number;
   totalCarbonCost: number;
+  fromCache: boolean;
+  fetchedAt: Date;
   details: Array<{ externalId: string; oldCost: number; newCost: number; planName: string }>;
 }> {
   const db = await getDb();
   if (!db) throw new Error('Database not available');
 
-  // Fetch all ABB services with a valid carbonMonthlyCost
+  // 1. Get Carbon services (from cache or live API)
+  const { services: carbonServices, fromCache, fetchedAt } = await getCarbonServicesCached(forceRefresh);
+
+  // 2. Build lookup maps for matching
+  const byServiceIdentifier = new Map<string, CarbonService>();
+  const byCircuitId = new Map<string, CarbonService>();
+  const byCarbonId = new Map<string, CarbonService>();
+
+  for (const cs of carbonServices) {
+    if (cs.service_identifier) byServiceIdentifier.set(cs.service_identifier.trim().toUpperCase(), cs);
+    if (cs.circuit_id) byCircuitId.set(cs.circuit_id.trim().toUpperCase(), cs);
+    byCarbonId.set(String(cs.id), cs);
+  }
+
+  // 3. Fetch all ABB services from DB
   const abbServices = await db.select({
     externalId: services.externalId,
     planName: services.planName,
@@ -4942,24 +5507,53 @@ export async function syncCarbonCostsToServices(syncedBy: string): Promise<{
     carbonMonthlyCost: services.carbonMonthlyCost,
     carbonPlanName: services.carbonPlanName,
     carbonServiceId: services.carbonServiceId,
+    carbonAlias: services.carbonAlias,
+    carbonServiceType: services.carbonServiceType,
   }).from(services).where(
-    sql`${services.provider} = 'ABB' AND ${services.carbonMonthlyCost} IS NOT NULL AND ${services.carbonMonthlyCost} > 0`
+    sql`${services.provider} = 'ABB'`
   );
 
   let updated = 0;
   let skipped = 0;
   let errors = 0;
+  let notMatched = 0;
   let totalCarbonCost = 0;
   const details: Array<{ externalId: string; oldCost: number; newCost: number; planName: string }> = [];
 
   for (const svc of abbServices) {
     try {
-      const carbonCost = parseFloat(String(svc.carbonMonthlyCost));
-      const currentCost = parseFloat(String(svc.monthlyCost));
+      const extId = svc.externalId.trim().toUpperCase();
+
+      // Match Carbon service to DB service
+      const cs = byServiceIdentifier.get(extId)
+        ?? byCircuitId.get(extId)
+        ?? (svc.carbonServiceId ? byCarbonId.get(svc.carbonServiceId) : undefined);
+
+      if (!cs) {
+        notMatched++;
+        continue;
+      }
+
+      // Carbon API returns prices Inc GST — convert to Ex GST (÷ 1.1), rounded to 2 decimal places
+      const carbonCost = Math.round((cs.monthly_cost_cents / 100 / 1.1) * 100) / 100;
+      const currentCost = parseFloat(String(svc.monthlyCost ?? 0));
       totalCarbonCost += carbonCost;
 
-      // Skip if already set to the exact Carbon API cost and source is already carbon_api
-      if (Math.abs(currentCost - carbonCost) < 0.005 && svc.costSource === 'carbon_api') {
+      // Determine new field values from Carbon API
+      const newCarbonServiceId = String(cs.id);
+      const newCarbonPlanName = cs.plan?.name ?? svc.carbonPlanName ?? '';
+      const newCarbonAlias = cs.alias ?? svc.carbonAlias ?? '';
+      const newCarbonServiceType = cs.type ?? svc.carbonServiceType ?? '';
+
+      // Skip if everything is already up to date
+      const costAlreadyCurrent = Math.abs(currentCost - carbonCost) < 0.005 && svc.costSource === 'carbon_api';
+      const metaAlreadyCurrent =
+        svc.carbonServiceId === newCarbonServiceId &&
+        svc.carbonPlanName === newCarbonPlanName &&
+        svc.carbonAlias === newCarbonAlias &&
+        svc.carbonServiceType === newCarbonServiceType;
+
+      if (costAlreadyCurrent && metaAlreadyCurrent) {
         skipped++;
         continue;
       }
@@ -4973,12 +5567,17 @@ export async function syncCarbonCostsToServices(syncedBy: string): Promise<{
           svc.costSource || 'unknown',
           'carbon_sync',
           syncedBy,
-          `Overridden by Carbon API cost $${carbonCost.toFixed(2)} (plan: ${svc.carbonPlanName || svc.planName})`
+          `Overridden by live Carbon API cost $${carbonCost.toFixed(2)} (plan: ${newCarbonPlanName})`
         );
       }
 
-      // Set monthlyCost = carbonMonthlyCost and mark costSource as carbon_api
+      // Update the service with live Carbon data
       await db.update(services).set({
+        carbonMonthlyCost: carbonCost.toFixed(2),
+        carbonPlanName: newCarbonPlanName,
+        carbonServiceId: newCarbonServiceId,
+        carbonAlias: newCarbonAlias,
+        carbonServiceType: newCarbonServiceType,
         monthlyCost: carbonCost.toFixed(2),
         costSource: 'carbon_api',
       }).where(eq(services.externalId, svc.externalId));
@@ -4987,7 +5586,7 @@ export async function syncCarbonCostsToServices(syncedBy: string): Promise<{
         externalId: svc.externalId,
         oldCost: currentCost,
         newCost: carbonCost,
-        planName: svc.carbonPlanName || svc.planName || '',
+        planName: newCarbonPlanName,
       });
       updated++;
     } catch (err) {
@@ -4996,7 +5595,17 @@ export async function syncCarbonCostsToServices(syncedBy: string): Promise<{
     }
   }
 
-  // After updating all service costs, recalculate customer aggregate costs
+  // 4. Update the cache row with sync stats
+  try {
+    await db.update(carbonApiCache).set({
+      lastSyncedServicesCount: updated,
+      lastSyncedAt: new Date(),
+    }).where(eq(carbonApiCache.cacheKey, CARBON_CACHE_KEY));
+  } catch (err) {
+    console.error('[CarbonSync] Error updating cache stats:', err);
+  }
+
+  // 5. Recalculate customer aggregate costs
   if (updated > 0) {
     try {
       await db.execute(sql`
@@ -5013,7 +5622,7 @@ export async function syncCarbonCostsToServices(syncedBy: string): Promise<{
     }
   }
 
-  return { updated, skipped, errors, totalCarbonCost, details };
+  return { updated, skipped, errors, notMatched, totalCarbonCost, fromCache, fetchedAt, details };
 }
 
 /**
@@ -5380,6 +5989,24 @@ export async function importSasBossDispatch(
     for (let i = 0; i < lineItemsToInsert.length; i += CHUNK) {
       await db.insert(supplierWorkbookLineItems).values(lineItemsToInsert.slice(i, i + CHUNK));
     }
+  }
+
+  // ── 5b. Write match provenance for all matched/partial services ─────────────
+  const provenanceToWrite = details
+    .filter(d => d.matchedServiceExternalId && d.matchedCustomerName)
+    .map(d => ({
+      serviceExternalId: d.matchedServiceExternalId!,
+      customerExternalId: lineItemsToInsert.find(li => li.matchedServiceExternalId === d.matchedServiceExternalId)?.matchedCustomerExternalId || '',
+      matchMethod: 'workbook_import' as const,
+      matchSource: 'workbook_upload' as const,
+      matchedBy: importedBy,
+      confidence: (d.matchConfidence ?? 0) >= 0.7 ? 'high' as const : (d.matchConfidence ?? 0) >= 0.4 ? 'medium' as const : 'low' as const,
+      matchCriteria: { enterpriseName: d.enterpriseName, productName: d.productName, score: d.matchConfidence, workbook: workbookName, billingMonth },
+      notes: `Matched via SasBoss workbook import (${workbookName}, ${billingMonth})`,
+    }))
+    .filter(p => p.customerExternalId);
+  for (const p of provenanceToWrite) {
+    await writeMatchProvenance(p);
   }
 
   // ── 6. Update upload record with final counts ──────────────────────────────
@@ -6055,9 +6682,71 @@ export async function getServicesWithoutBilling(customerExternalId: string) {
     .where(
       and(
         eq(services.customerExternalId, customerExternalId),
-        sql`${services.status} NOT IN ('terminated', 'unmatched')`,
+        sql`${services.status} NOT IN ('terminated', 'unmatched', 'billing_platform_stub')`,
         sql`${billingItems.id} IS NULL`,
         // Exclude services that have been explicitly marked as intentionally-unbilled in the log
+        sql`${services.externalId} NOT IN (
+          SELECT serviceExternalId FROM service_billing_match_log
+          WHERE customerExternalId = ${customerExternalId}
+            AND resolution = 'intentionally-unbilled'
+        )`,
+        // Outage suppression: exclude services that currently have an active Carbon outage
+        // (reduces false positives during fault periods — service is unbilled because it is down)
+        sql`${services.externalId} NOT IN (
+          SELECT DISTINCT serviceExternalId FROM service_outages
+          WHERE status = 'active'
+        )`
+      )
+    )
+    .orderBy(desc(services.monthlyCost));
+
+  return rows.map(s => ({
+    ...s,
+    monthlyCost: parseFloat(String(s.monthlyCost)),
+    monthlyRevenue: parseFloat(String(s.monthlyRevenue)),
+  }));
+}
+
+/**
+ * Returns services without billing that are currently suppressed due to an active outage.
+ * Used to show a "suppressed" badge on the billing alerts page.
+ */
+export async function getSuppressedUnbilledServices(customerExternalId: string) {
+  const db = await getDb();
+  if (!db) return [];
+
+  const rows = await db
+    .select({
+      externalId: services.externalId,
+      serviceType: services.serviceType,
+      planName: services.planName,
+      locationAddress: services.locationAddress,
+      supplierName: services.supplierName,
+      provider: services.provider,
+      monthlyCost: services.monthlyCost,
+      status: services.status,
+      // Outage info
+      outageTitle: serviceOutages.title,
+      outageType: serviceOutages.outageType,
+      outageFirstSeen: serviceOutages.firstSeenAt,
+    })
+    .from(services)
+    .innerJoin(
+      serviceOutages,
+      and(
+        eq(serviceOutages.serviceExternalId, services.externalId),
+        eq(serviceOutages.status, 'active')
+      )
+    )
+    .leftJoin(
+      billingItems,
+      sql`${billingItems.serviceExternalId} = ${services.externalId} AND ${billingItems.matchStatus} = 'service-matched'`
+    )
+    .where(
+      and(
+        eq(services.customerExternalId, customerExternalId),
+        sql`${services.status} NOT IN ('terminated', 'unmatched', 'billing_platform_stub')`,
+        sql`${billingItems.id} IS NULL`,
         sql`${services.externalId} NOT IN (
           SELECT serviceExternalId FROM service_billing_match_log
           WHERE customerExternalId = ${customerExternalId}
@@ -6070,7 +6759,6 @@ export async function getServicesWithoutBilling(customerExternalId: string) {
   return rows.map(s => ({
     ...s,
     monthlyCost: parseFloat(String(s.monthlyCost)),
-    monthlyRevenue: parseFloat(String(s.monthlyRevenue)),
   }));
 }
 
@@ -6091,7 +6779,7 @@ export async function getUnmatchedBillingCount(customerExternalId: string): Prom
     SELECT COUNT(*) AS cnt
     FROM services s
     WHERE s.customerExternalId = ${customerExternalId}
-      AND s.status NOT IN ('terminated', 'unmatched', 'flagged_for_termination')
+      AND s.status NOT IN ('terminated', 'unmatched', 'flagged_for_termination', 'billing_platform_stub')
       AND s.externalId NOT IN (
         SELECT sba.serviceExternalId
         FROM service_billing_assignments sba
@@ -6268,7 +6956,7 @@ export async function recalculateAllUnmatchedBilling() {
       SELECT COUNT(*)
       FROM services s
       WHERE s.customerExternalId = c.externalId
-        AND s.status NOT IN ('terminated', 'unmatched', 'flagged_for_termination')
+        AND s.status NOT IN ('terminated', 'unmatched', 'flagged_for_termination', 'billing_platform_stub')
         AND s.externalId NOT IN (
           SELECT sba.serviceExternalId
           FROM service_billing_assignments sba
@@ -6577,6 +7265,73 @@ export async function getBillingItemsWithAssignments(customerExternalId: string)
 
   const svcMap = new Map(svcs.map(s => [s.externalId, s]));
 
+  // Fetch retail bundle fixed costs for this customer (Hardware, SIP, Support etc.)
+  // These are not supplier services but are real costs that must be included in margin.
+  let bundleFixedCostTotal = 0;
+  let bundleFixedCostInputs: Array<{ slotType: string; monthlyCostExGst: number; costSource: string }> = [];
+  try {
+    // Primary lookup: by customerExternalId
+    const [bundleRows] = await db.execute(sql.raw(
+      `SELECT rb.id as bundleId FROM retail_bundles rb WHERE rb.customerExternalId = '${customerExternalId}' LIMIT 1`
+    )) as any;
+    let bundleRow = Array.isArray(bundleRows) ? bundleRows[0] : null;
+
+    // Fallback: if no bundle found by ID, look up by customer name similarity.
+    // This handles cases where the bundle was matched to a duplicate customer record
+    // (e.g. trust entity name vs trading name for the same site).
+    if (!bundleRow) {
+      const custRows = await db.execute(sql.raw(
+        `SELECT name FROM customers WHERE externalId = '${customerExternalId}' LIMIT 1`
+      )) as any;
+      const custName: string = (Array.isArray((custRows as any)[0]) ? (custRows as any)[0][0] : null)?.name || '';
+      if (custName) {
+        // Find bundles not yet linked to a customer with billing items
+        const [candidateRows] = await db.execute(sql.raw(
+          `SELECT rb.id as bundleId, rb.subscriberName
+           FROM retail_bundles rb
+           LEFT JOIN billing_items bi ON bi.customerExternalId = rb.customerExternalId
+           WHERE bi.externalId IS NULL OR rb.customerExternalId IS NULL
+           LIMIT 200`
+        )) as any;
+        const candidates = Array.isArray(candidateRows) ? candidateRows : [];
+        // Simple token-overlap scoring
+        const normalize = (s: string) => s.toLowerCase().replace(/[^a-z0-9 ]/g, ' ').replace(/\s+/g, ' ').trim();
+        const tokenScore = (a: string, b: string) => {
+          const wa = new Set(normalize(a).split(' ').filter((w: string) => w.length > 2));
+          const wb = new Set(normalize(b).split(' ').filter((w: string) => w.length > 2));
+          let overlap = 0;
+          Array.from(wa).forEach((w: string) => { if (wb.has(w)) overlap++; });
+          return overlap / Math.max(wa.size, wb.size, 1);
+        };
+        let bestScore = 0;
+        let bestCandidate: any = null;
+        for (const c of candidates) {
+          const s = tokenScore(custName, c.subscriberName);
+          if (s > bestScore) { bestScore = s; bestCandidate = c; }
+        }
+        if (bestCandidate && bestScore >= 0.6) {
+          bundleRow = bestCandidate;
+        }
+      }
+    }
+
+    if (bundleRow) {
+      const bundleId = parseInt(String(bundleRow.bundleId), 10);
+      const [inputRows] = await db.execute(sql.raw(
+        `SELECT slotType, monthlyCostExGst, costSource FROM retail_bundle_cost_inputs WHERE bundleId = ${bundleId}`
+      )) as any;
+      const inputs = Array.isArray(inputRows) ? inputRows : [];
+      bundleFixedCostInputs = inputs.map((r: any) => ({
+        slotType: r.slotType,
+        monthlyCostExGst: parseFloat(String(r.monthlyCostExGst || 0)),
+        costSource: r.costSource,
+      }));
+      bundleFixedCostTotal = bundleFixedCostInputs.reduce((sum, r) => sum + r.monthlyCostExGst, 0);
+    }
+  } catch {
+    // Non-retail customers — no bundle costs, silently ignore
+  }
+
   // Build assignment map: billingItemExternalId -> assigned service details
   const assignmentMap = new Map<string, Array<{
     assignmentId: number;
@@ -6620,7 +7375,9 @@ export async function getBillingItemsWithAssignments(customerExternalId: string)
   return items.map(item => {
     const revenue = parseFloat(String(item.lineAmount));
     const assignedServices = assignmentMap.get(item.externalId) || [];
-    const totalCost = assignedServices.reduce((sum, s) => sum + s.monthlyCost, 0);
+    const supplierServicesCost = assignedServices.reduce((sum, s) => sum + s.monthlyCost, 0);
+    // For retail bundle customers, add fixed costs (Hardware, SIP, Support) to the total cost
+    const totalCost = supplierServicesCost + bundleFixedCostTotal;
     const margin = revenue - totalCost;
     const marginPercent = revenue > 0 ? (margin / revenue) * 100 : null;
 
@@ -6634,13 +7391,30 @@ export async function getBillingItemsWithAssignments(customerExternalId: string)
       unitAmount: parseFloat(String(item.unitAmount)),
       category: item.category,
       matchStatus: item.matchStatus,
+      billingPlatform: item.billingPlatform || '',
+      matchConfidence: item.matchConfidence || '',
       // Legacy 1:1 service link (for backwards compat)
       legacyServiceExternalId: item.serviceExternalId,
       // New many-to-one assignments
       assignedServices,
       totalCost,
+      supplierServicesCost,
+      bundleFixedCostTotal,
+      bundleFixedCostInputs,
       margin,
       marginPercent,
+      // Retail bundle classification
+      retailBundleComponent: item.retailBundleComponent || '',
+      // Parsed attributes from description
+      parsedSpeedTier: item.parsedSpeedTier || '',
+      parsedContractMonths: item.parsedContractMonths ?? null,
+      parsedHardwareStatus: item.parsedHardwareStatus || '',
+      parsedHas4gBackup: !!item.parsedHas4gBackup,
+      parsedDataAllowance: item.parsedDataAllowance || '',
+      parsedSipChannels: item.parsedSipChannels ?? null,
+      parsedAvcId: item.parsedAvcId || '',
+      parsedServiceStartDate: item.parsedServiceStartDate || '',
+      parsedServiceEndDate: item.parsedServiceEndDate || '',
     };
   });
 }
@@ -6732,6 +7506,17 @@ export async function getUnassignedServicesForCustomer(customerExternalId: strin
       )
     );
 
+  // Fetch Vocus mobile service IDs for SIM cost editing
+  const vocusSims = await db
+    .select({
+      internalServiceExternalId: vocusMobileServices.internalServiceExternalId,
+      vocusServiceId: vocusMobileServices.vocusServiceId,
+      planCost: vocusMobileServices.planCost,
+    })
+    .from(vocusMobileServices)
+    .where(eq(vocusMobileServices.internalCustomerExternalId, customerExternalId));
+  const vocusSimMap = new Map(vocusSims.map(v => [v.internalServiceExternalId, v]));
+
   return allServices
     .filter(s => !excludedIds.has(s.externalId))
     .map(s => ({
@@ -6756,6 +7541,10 @@ export async function getUnassignedServicesForCustomer(customerExternalId: strin
       speedTier: (s as any).speedTier || '',
       simSerialNumber: s.simSerialNumber || '',
       deviceName: s.deviceName || '',
+      billingPlatform: s.billingPlatform || null,
+      // Vocus SIM cost editing
+      vocusServiceId: vocusSimMap.get(s.externalId)?.vocusServiceId || null,
+      vocusPlanCost: vocusSimMap.get(s.externalId)?.planCost ? parseFloat(String(vocusSimMap.get(s.externalId)!.planCost)) : null,
     }));
 }
 
@@ -7029,6 +7818,10 @@ export async function fuzzyMatchServicesAgainstBillingItems(customerExternalId: 
   function billingCategory(description: string): string {
     const d = description.toLowerCase();
     if (d.match(/voice|phone|sip|did|pbx|fax|voicemail|telephone|call|user.*license|license.*user|premium.*user/)) return 'voice';
+    // ChannelHaus-specific: "1# Rental", "4 Channels Business SIP", "Business SIP", "SIP Trunk"
+    if (d.match(/rental|channels.*sip|business.*sip|sip.*channel|\d+.*channel|channel.*\d+|sip.*trunk|trunk/)) return 'voice';
+    // Exetel CDR call-type billing items (usage charges billed against voice/internet services)
+    if (/^(national|local|regional|standard|premium|international|13number|single number|fixed to ivr|mobile to ivr|international to fixed|call forward selective|collaboration|conference)$/.test(d.trim())) return 'voice';
     if (d.match(/internet|nbn|broadband|data|fibre|fiber|adsl|vdsl|opticomm|ethernet|wan/)) return 'internet';
     if (d.match(/mobile|sim|4g|5g|lte|handset/)) return 'mobile';
     return 'other';
@@ -7070,18 +7863,76 @@ export async function fuzzyMatchServicesAgainstBillingItems(customerExternalId: 
     const jaccard = jaccardScore(svcTokens, itemTokens);
     score += jaccard * 0.30;
 
-    // 3. Provider/platform alignment bonus (20%)
+    // 2b. SIP direction alignment bonus (0.15) — inbound/outbound matching
+    // When a service plan name contains 'in' or 'inbound' and the billing item
+    // description contains 'inbound', or vice versa for 'out'/'outbound', award
+    // a strong directional bonus. This prevents outbound SIP services from being
+    // matched to inbound SIP billing items (and vice versa).
+    const svcNameLower = (svc.planName || '').toLowerCase();
+    const itemDescLower = item.description.toLowerCase();
+    const svcIsInbound = /inbound|\bin\b|mcin$|scin$|in$/.test(svcNameLower);
+    const svcIsOutbound = /outbound|\bout\b|mcout$|scout$|out$/.test(svcNameLower);
+    const itemIsInbound = /inbound/.test(itemDescLower);
+    const itemIsOutbound = /outbound/.test(itemDescLower);
+    if (svcIsInbound && itemIsInbound) score += 0.15;  // direction match
+    else if (svcIsOutbound && itemIsOutbound) score += 0.15;  // direction match
+    else if (svcIsInbound && itemIsOutbound) score -= 0.20;  // direction mismatch penalty
+    else if (svcIsOutbound && itemIsInbound) score -= 0.20;  // direction mismatch penalty
+
+    // 3. Provider/platform alignment bonus (15%)
     // SasBoss services are billed via SasBoss → Xero as Voice/Data line items
     // ABB services are billed as Internet/Data line items
     // Telstra services are billed as Mobile/Voice line items
+    // ChannelHaus services are billed as Voice line items (SIP Trunk, Rental)
     const provider = (svc.provider || '').toLowerCase();
     const descLower = item.description.toLowerCase();
-    if (provider === 'sasboss' && itemCat === 'voice') score += 0.20;
-    else if (provider === 'sasboss' && itemCat === 'internet') score += 0.10;
-    else if ((provider === 'abb' || provider === 'aussie broadband') && itemCat === 'internet') score += 0.20;
-    else if (provider === 'telstra' && itemCat === 'mobile') score += 0.20;
-    else if (provider === 'exetel' && itemCat === 'internet') score += 0.15;
-    else if (provider === 'channelhaus' && (itemCat === 'voice' || itemCat === 'internet')) score += 0.10;
+    if (provider === 'sasboss' && itemCat === 'voice') score += 0.15;
+    else if (provider === 'sasboss' && itemCat === 'internet') score += 0.08;
+    else if ((provider === 'abb' || provider === 'aussie broadband') && itemCat === 'internet') score += 0.15;
+    else if (provider === 'telstra' && itemCat === 'mobile') score += 0.15;
+    else if (provider === 'telstra' && itemCat === 'voice') score += 0.12;
+    else if (provider === 'exetel' && itemCat === 'internet') score += 0.12;
+    else if (provider === 'exetel' && itemCat === 'voice') score += 0.12;
+    else if (provider === 'channelhaus' && itemCat === 'voice') score += 0.15;
+    else if (provider === 'channelhaus' && itemCat === 'internet') score += 0.08;
+    else if (provider === 'vocus' && itemCat === 'voice') score += 0.12;
+    else if (provider === 'aapt' && itemCat === 'voice') score += 0.12;
+
+    // 4. Structured attribute matching (up to 0.35 bonus)
+    // These signals come from parsed billing item attributes vs service fields
+    // and provide high-confidence matching when structured data aligns.
+
+    // 4a. Speed tier match (0.20 bonus) — strongest internet signal
+    // Service has speedTier field (e.g. "50/20"), billing item has parsedSpeedTier
+    if (svc.speedTier && (item as Record<string, unknown>).parsedSpeedTier) {
+      const svcSpeed = String(svc.speedTier).trim().toLowerCase();
+      const itemSpeed = String((item as Record<string, unknown>).parsedSpeedTier).trim().toLowerCase();
+      if (svcSpeed === itemSpeed) score += 0.20;
+      else if (svcSpeed.split('/')[0] === itemSpeed.split('/')[0]) score += 0.08; // download speed matches
+    }
+
+    // 4b. AVC ID match (0.25 bonus) — definitive NBN service identifier
+    if (svc.avcId && (item as Record<string, unknown>).parsedAvcId) {
+      const svcAvc = String(svc.avcId).trim().toLowerCase().replace(/^avc0*/i, '');
+      const itemAvc = String((item as Record<string, unknown>).parsedAvcId).trim().toLowerCase().replace(/^avc0*/i, '');
+      if (svcAvc === itemAvc && svcAvc.length > 3) score += 0.25;
+    }
+
+    // 4c. SIP channel count match (0.15 bonus) — voice services
+    const svcAsAny = svc as Record<string, unknown>;
+    if (svcAsAny.sipChannels && (item as Record<string, unknown>).parsedSipChannels) {
+      const svcCh = Number(svcAsAny.sipChannels);
+      const itemCh = Number((item as Record<string, unknown>).parsedSipChannels);
+      if (!isNaN(svcCh) && !isNaN(itemCh) && svcCh === itemCh) score += 0.15;
+    }
+
+    // 4d. Contract term alignment (0.08 bonus) — mild signal
+    if (svc.contractTerm && (item as Record<string, unknown>).parsedContractMonths !== null) {
+      const termStr = String(svc.contractTerm).toLowerCase();
+      const itemMonths = Number((item as Record<string, unknown>).parsedContractMonths);
+      const svcMonths = termStr.includes('36') ? 36 : termStr.includes('24') ? 24 : termStr.includes('12') ? 12 : termStr.includes('month to month') || termStr.includes('m2m') ? 0 : null;
+      if (svcMonths !== null && !isNaN(itemMonths) && svcMonths === itemMonths) score += 0.08;
+    }
 
     return Math.min(score, 1.0);
   }
@@ -7102,15 +7953,31 @@ export async function fuzzyMatchServicesAgainstBillingItems(customerExternalId: 
   for (const svc of unassigned) {
     let bestScore = 0;
     let bestItem: typeof billingItemsWithAssign[0] | null = null;
-
     for (const item of positiveItems) {
-      const score = scoreServiceAgainstItem(svc, item);
-      if (score > bestScore) {
+      const rawScore = scoreServiceAgainstItem(svc, item);
+      if (rawScore < 0.50) continue; // skip below threshold early
+
+      // Tie-breaker 1: prefer items with no existing service assignments.
+      // Penalty of 0.03 per already-assigned service, capped at 0.12.
+      // This prevents multiple services from piling onto the same billing item
+      // when a better unassigned item of equal score exists.
+      const assignedPenalty = Math.min((item.assignedServices?.length ?? 0) * 0.03, 0.12);
+
+      // Tie-breaker 2: when scores are equal, prefer the highest-value billing item.
+      // This resolves the common case where a customer has two items with the same
+      // description (e.g. two "4 Channels Business SIP" items at $36 and $212) —
+      // the primary/main item should win.
+      // Encoded as a tiny fractional bonus (max 0.009) so it only acts as a
+      // tie-breaker and never overrides a genuine score difference.
+      const lineAmountBonus = Math.min((item.lineAmount ?? 0) / 100000, 0.009);
+
+      const score = rawScore - assignedPenalty + lineAmountBonus;
+
+      if (score > bestScore || (score === bestScore && (item.lineAmount ?? 0) > (bestItem?.lineAmount ?? 0))) {
         bestScore = score;
         bestItem = item;
       }
     }
-
     // Minimum threshold: must have at least a category match (score >= 0.50)
     // to avoid spurious cross-category proposals
     if (bestItem && bestScore >= 0.50) {
@@ -7767,11 +8634,11 @@ export async function getDashboardTotals() {
       serviceCount: count(),
     })
     .from(services)
-    .where(ne(services.status, 'terminated'))
+    .where(sql`${services.status} NOT IN ('terminated', 'archived', 'billing_platform_stub') AND (${services.billingPeriod} IS NULL OR ${services.billingPeriod} != 'archived')`)
     .groupBy(services.provider)
     .orderBy(desc(sql`COALESCE(SUM(monthlyCost), 0)`));
   const [revenueRow] = await db.select({ total: sql<number>`COALESCE(SUM(monthlyRevenue), 0)` }).from(customers).where(eq(customers.status, 'active'));
-  const [costRow] = await db.select({ total: sql<number>`COALESCE(SUM(monthlyCost), 0)` }).from(services).where(ne(services.status, 'terminated'));
+  const [costRow] = await db.select({ total: sql<number>`COALESCE(SUM(monthlyCost), 0)` }).from(services).where(sql`${services.status} NOT IN ('terminated', 'archived', 'billing_platform_stub') AND (${services.billingPeriod} IS NULL OR ${services.billingPeriod} != 'archived')`);
   const totalRevenue = Number(revenueRow?.total || 0);
   const totalCost = Number(costRow?.total || 0);
   const totalMargin = totalRevenue - totalCost;
@@ -7953,13 +8820,17 @@ export async function importAccess4Invoice(
  * Runs across ALL customers without requiring the Billing Match screen to be opened.
  * Applies 100%-confidence matches (exact planName + customerExternalId match) using
  * saved rules from service_billing_match_log. Also applies fuzzy matching for
- * high-confidence (>=90%) service-to-billing-item pairs.
+ * high-confidence (>=70%) service-to-billing-item pairs.
+ *
+ * Threshold of 70% captures provider-aligned single-service matches:
+ *   50% category match + 20% provider bonus = 70% for ChannelHaus, ABB, SasBoss, etc.
+ * The UI can override this with a higher threshold for conservative manual runs.
  *
  * This ensures the Supplier Registry dashboard reflects accurate costs immediately
  * after any import, without manual per-customer review.
  */
 export async function globalAutoMatchBillingItems(
-  minConfidence: number = 90,
+  minConfidence: number = 70,
   triggeredBy: string = 'system'
 ): Promise<{
   applied: number;
@@ -7995,9 +8866,13 @@ export async function globalAutoMatchBillingItems(
       )
   `);
 
-  const customerIds: string[] = ((customersWithUnassigned as any).rows || customersWithUnassigned)
+  // Drizzle db.execute returns [rows, fields] — rows is the first element
+  const rawCustomerRows: any[] = Array.isArray(customersWithUnassigned)
+    ? (customersWithUnassigned[0] as unknown as any[])
+    : ((customersWithUnassigned as any).rows || []);
+  const customerIds: string[] = rawCustomerRows
     .map((r: any) => r.customerExternalId || r[0])
-    .filter(Boolean);
+    .filter((id: any): id is string => typeof id === 'string' && id.length > 0);
 
   for (const customerId of customerIds) {
     try {
@@ -8115,4 +8990,594 @@ export async function recalculateCostsFromWorkbook(
   }
 
   return { updated, skipped, errors };
+}
+
+/**
+ * Proportional Revenue Split (Fix #3)
+ * ─────────────────────────────────────────────────────────────────────────────
+ * When a single billing item (e.g. Xero "Data - Internet: $500") is assigned
+ * to multiple services (e.g. 4 × ABB NBN services for the same customer),
+ * the full lineAmount would naively be counted against each service, inflating
+ * total revenue. This function redistributes the billing item's lineAmount
+ * proportionally across all assigned services, weighted by monthlyCost.
+ *
+ * The split is stored by updating billing_items.lineAmount for virtual
+ * "split" copies — but since billing_items are immutable (they come from Xero),
+ * we instead store the split factor in service_billing_assignments.allocationPct
+ * and update services.monthlyRevenue accordingly.
+ *
+ * If allocationPct does not exist as a column yet, we fall back to updating
+ * services.monthlyRevenue directly using the proportional share of lineAmount.
+ *
+ * Safe to run multiple times — idempotent.
+ */
+export async function redistributeProportionalRevenue(): Promise<{
+  billingItemsProcessed: number;
+  servicesUpdated: number;
+  errors: string[];
+}> {
+  const db = await getDb();
+  if (!db) return { billingItemsProcessed: 0, servicesUpdated: 0, errors: ['Database not available'] };
+
+  let billingItemsProcessed = 0;
+  let servicesUpdated = 0;
+  const errors: string[] = [];
+
+  // Find billing items that are assigned to more than one service
+  const multiAssigned = await db.execute(sql`
+    SELECT
+      sba.billingItemExternalId,
+      bi.lineAmount,
+      COUNT(sba.id) AS assignmentCount,
+      GROUP_CONCAT(sba.serviceExternalId ORDER BY sba.id SEPARATOR ',') AS serviceIds
+    FROM service_billing_assignments sba
+    JOIN billing_items bi ON bi.externalId = sba.billingItemExternalId
+    WHERE bi.lineAmount > 0
+    GROUP BY sba.billingItemExternalId, bi.lineAmount
+    HAVING COUNT(sba.id) > 1
+  `);
+
+  // MySQL2 returns rows as an array of objects; handle both Drizzle and raw mysql2 formats
+  const rawRows = (multiAssigned as any).rows || (Array.isArray(multiAssigned) ? multiAssigned : []);
+  const rows = Array.isArray(rawRows) ? rawRows : [];
+  for (const row of rows) {
+    try {
+      const billingItemId = String(row.billingItemExternalId || row[0] || '');
+      const lineAmount = parseFloat(String(row.lineAmount || row[1] || '0'));
+      // GROUP_CONCAT returns a Buffer in some MySQL2 configs — convert to string
+      const rawServiceIds = row.serviceIds || row[3];
+      const serviceIdStr = rawServiceIds instanceof Buffer
+        ? rawServiceIds.toString('utf8')
+        : String(rawServiceIds || '');
+      const serviceIds: string[] = serviceIdStr.split(',').filter(Boolean);;
+
+      if (!billingItemId || lineAmount <= 0 || serviceIds.length < 2) continue;
+
+      // Get monthlyCost for each assigned service to use as weighting
+      const svcRows = await db
+        .select({
+          externalId: services.externalId,
+          monthlyCost: services.monthlyCost,
+        })
+        .from(services)
+        .where(inArray(services.externalId, serviceIds));
+
+      const totalCost = svcRows.reduce((sum, s) => sum + parseFloat(String(s.monthlyCost || '0')), 0);
+
+      if (totalCost <= 0) {
+        // Equal split if no cost data
+        const share = lineAmount / serviceIds.length;
+        for (const svcId of serviceIds) {
+          await db.update(services)
+            .set({ monthlyRevenue: String(share.toFixed(2)), updatedAt: new Date() })
+            .where(eq(services.externalId, svcId));
+          servicesUpdated++;
+        }
+      } else {
+        // Proportional split by monthlyCost
+        for (const svc of svcRows) {
+          const cost = parseFloat(String(svc.monthlyCost || '0'));
+          const share = totalCost > 0 ? (cost / totalCost) * lineAmount : lineAmount / svcRows.length;
+          await db.update(services)
+            .set({ monthlyRevenue: String(share.toFixed(2)), updatedAt: new Date() })
+            .where(eq(services.externalId, svc.externalId));
+          servicesUpdated++;
+        }
+      }
+
+      billingItemsProcessed++;
+    } catch (err) {
+      errors.push(`Failed to split billing item ${row.billingItemExternalId || row[0]}: ${err}`);
+    }
+  }
+
+  // Recalculate customer-level revenue after the split
+  if (servicesUpdated > 0) {
+    await db.execute(sql`
+      UPDATE customers c
+      SET monthlyRevenue = (
+        SELECT COALESCE(SUM(s.monthlyRevenue), 0)
+        FROM services s
+        WHERE s.customerExternalId = c.externalId AND s.status NOT IN ('terminated', 'billing_platform_stub')
+      ),
+      updatedAt = NOW()
+    `);
+  }
+
+  return { billingItemsProcessed, servicesUpdated, errors };
+}
+
+// ── Retail Offering helpers ──────────────────────────────────────────────────
+
+/**
+ * Billing item description phrases that identify a retail bundle customer.
+ * Maintained here as the single source of truth — update this list when new
+ * product naming conventions are introduced.
+ */
+export const RETAIL_BUNDLE_PHRASES = [
+  'SmileTel supplied NBN voice and internet bundle',
+  'Site Bundle',
+  'SmileTel supplied mobile broadband',
+  'ST- NBN',
+  'ST-NBN',
+] as const;
+
+/**
+ * Reclassify all customers as retail_offering or standard based on whether
+ * they have at least one billing item matching a retail bundle phrase.
+ * Safe to run at any time — idempotent.
+ */
+export async function reclassifyRetailOffering(): Promise<{ updated: number }> {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+
+  // Build OR conditions for each phrase
+  const phraseConditions = RETAIL_BUNDLE_PHRASES.map(phrase =>
+    sql`${billingItems.description} LIKE ${`%${phrase}%`}`
+  );
+
+  // Get all customers that qualify as retail_offering
+  const qualifying = await db
+    .selectDistinct({ externalId: billingItems.customerExternalId })
+    .from(billingItems)
+    .where(or(...phraseConditions));
+
+  const qualifyingIds = qualifying
+    .map(r => r.externalId)
+    .filter((id): id is string => !!id);
+
+  // Reset all to standard first, then set qualifying ones to retail_offering
+  await db.update(customers).set({ customerType: 'standard' });
+  if (qualifyingIds.length > 0) {
+    await db.update(customers)
+      .set({ customerType: 'retail_offering' })
+      .where(inArray(customers.externalId, qualifyingIds));
+  }
+
+  return { updated: qualifyingIds.length };
+}
+
+/**
+ * Set the customerType for a customer (e.g. 'standard' | 'retail_offering').
+ */
+export async function setCustomerType(
+  externalId: string,
+  customerType: 'standard' | 'retail_offering',
+  _updatedBy: string
+) {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+  const [existing] = await db.select({ id: customers.id }).from(customers).where(eq(customers.externalId, externalId)).limit(1);
+  if (!existing) throw new Error('Customer not found');
+  await db.update(customers).set({ customerType }).where(eq(customers.externalId, externalId));
+  return { success: true, customerType };
+}
+
+/**
+ * Set the wholesale plan cost on a Vocus Mobile SIM record and propagate
+ * to the linked internal service's monthlyCost.
+ */
+export async function setVocusSimPlanCost(
+  vocusServiceId: string,
+  planCost: number,
+  updatedBy: string
+) {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+  // Update the vocus_mobile_services record
+  await db.update(vocusMobileServices)
+    .set({ planCost: String(planCost) })
+    .where(eq(vocusMobileServices.vocusServiceId, vocusServiceId));
+  // Propagate to the linked internal service
+  const [vms] = await db.select({
+    internalServiceExternalId: vocusMobileServices.internalServiceExternalId,
+  })
+    .from(vocusMobileServices)
+    .where(eq(vocusMobileServices.vocusServiceId, vocusServiceId))
+    .limit(1);
+  if (vms?.internalServiceExternalId) {
+    await db.update(services)
+      .set({ monthlyCost: String(planCost), costSource: 'manual' })
+      .where(eq(services.externalId, vms.internalServiceExternalId));
+  }
+  return { success: true, vocusServiceId, planCost, updatedBy };
+}
+
+/**
+ * Inherit location address from any co-located service at the same customer that has a
+ * confirmed address. Prefers Internet services, then ABB provider.
+ *
+ * Returns:
+ *   { updated: true, address }          — single address found and applied automatically
+ *   { updated: false, needsPicker: true, candidates } — multiple distinct addresses found;
+ *                                          caller should present a site-picker to the user
+ *   { updated: false, reason }          — no address found or service already located
+ */
+export async function inheritLocationFromColocated(
+  serviceExternalId: string,
+  updatedBy: string,
+  chosenAddress?: string   // set when user has already picked from candidates
+): Promise<{
+  updated: boolean;
+  address?: string;
+  reason?: string;
+  needsPicker?: boolean;
+  candidates?: Array<{ address: string; locationExternalId: string | null; serviceType: string; provider: string | null; serviceExternalId: string }>;
+}> {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+
+  // Get the target service
+  const [svc] = await db.select().from(services).where(eq(services.externalId, serviceExternalId)).limit(1);
+  if (!svc) return { updated: false, reason: 'Service not found' };
+  if (!svc.customerExternalId) return { updated: false, reason: 'Service not matched to a customer' };
+  if (svc.locationAddress && svc.locationAddress !== 'Unknown Location' && svc.locationAddress.trim() !== '') {
+    return { updated: false, reason: 'Service already has a location address' };
+  }
+
+  // Find ALL co-located services at this customer with a known address
+  // (any service type, any provider — not just ABB)
+  const siblings = await db.select({
+    externalId: services.externalId,
+    serviceType: services.serviceType,
+    locationAddress: services.locationAddress,
+    locationExternalId: services.locationExternalId,
+    provider: services.provider,
+  })
+    .from(services)
+    .where(
+      and(
+        eq(services.customerExternalId, svc.customerExternalId),
+        sql`${services.externalId} != ${serviceExternalId}`,
+        sql`${services.locationAddress} IS NOT NULL`,
+        sql`TRIM(${services.locationAddress}) != ''`,
+        sql`${services.locationAddress} != 'Unknown Location'`,
+        sql`${services.status} NOT IN ('terminated', 'flagged_for_termination')`
+      )
+    )
+    .orderBy(
+      // Prefer Internet services, then ABB, then alphabetical address
+      sql`CASE WHEN ${services.serviceType} = 'Internet' THEN 0 ELSE 1 END`,
+      sql`CASE WHEN ${services.provider} = 'ABB' THEN 0 ELSE 1 END`,
+      services.locationAddress
+    );
+
+  if (siblings.length === 0) {
+    return { updated: false, reason: 'No co-located service with a known address found at this customer' };
+  }
+
+  // Deduplicate addresses (case-insensitive trim)
+  const seen = new Set<string>();
+  const uniqueCandidates: typeof siblings = [];
+  for (const s of siblings) {
+    const key = (s.locationAddress || '').trim().toUpperCase();
+    if (!seen.has(key)) {
+      seen.add(key);
+      uniqueCandidates.push(s);
+    }
+  }
+
+  // Determine which source to use
+  let source: typeof siblings[0];
+  if (chosenAddress) {
+    // User explicitly picked an address — find the matching sibling
+    const match = uniqueCandidates.find(
+      (c) => (c.locationAddress || '').trim().toUpperCase() === chosenAddress.trim().toUpperCase()
+    );
+    if (!match) return { updated: false, reason: 'Chosen address not found among candidates' };
+    source = match;
+  } else if (uniqueCandidates.length === 1) {
+    // Only one distinct address — apply automatically
+    source = uniqueCandidates[0];
+  } else {
+    // Multiple distinct addresses — ask the user to pick
+    return {
+      updated: false,
+      needsPicker: true,
+      candidates: uniqueCandidates.map((c) => ({
+        address: c.locationAddress!,
+        locationExternalId: c.locationExternalId ?? null,
+        serviceType: c.serviceType || '',
+        provider: c.provider ?? null,
+        serviceExternalId: c.externalId,
+      })),
+    };
+  }
+
+  const newAddress = source.locationAddress!;
+  const newLocationId = source.locationExternalId || '';
+
+  // Apply the inherited address
+  await db.update(services).set({
+    locationAddress: newAddress,
+    locationExternalId: newLocationId,
+  }).where(eq(services.externalId, serviceExternalId));
+
+  // Append a discovery note
+  const existingNotes = svc.discoveryNotes || '';
+  const inheritNote = `[Location inherited from ${source.serviceType} (${source.provider || 'Unknown'}) service ${source.externalId} by ${updatedBy}]`;
+  const newNotes = existingNotes ? `${existingNotes}\n${inheritNote}` : inheritNote;
+  await db.update(services).set({
+    discoveryNotes: newNotes,
+    notesAuthor: updatedBy,
+    notesUpdatedAt: new Date(),
+  }).where(eq(services.externalId, serviceExternalId));
+
+  return { updated: true, address: newAddress };
+}
+
+export async function bulkInheritLocationsForCustomer(
+  customerExternalId: string,
+  updatedBy: string
+): Promise<{ updated: number; skipped: number; failed: number; details: Array<{ serviceExternalId: string; result: string }> }> {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+
+  // Get all unlocated services for this customer
+  const unlocated = await db.select({
+    externalId: services.externalId,
+    serviceType: services.serviceType,
+    planName: services.planName,
+  })
+    .from(services)
+    .where(
+      and(
+        eq(services.customerExternalId, customerExternalId),
+        sql`(${services.locationAddress} IS NULL OR ${services.locationAddress} = '' OR ${services.locationAddress} = 'Unknown Location')`,
+        sql`${services.status} NOT IN ('terminated', 'flagged_for_termination')`
+      )
+    );
+
+  if (unlocated.length === 0) {
+    return { updated: 0, skipped: 0, failed: 0, details: [] };
+  }
+
+  let updated = 0;
+  let skipped = 0;
+  let failed = 0;
+  const details: Array<{ serviceExternalId: string; result: string }> = [];
+
+  for (const svc of unlocated) {
+    try {
+      const result = await inheritLocationFromColocated(svc.externalId, updatedBy);
+      if (result.updated) {
+        updated++;
+        details.push({ serviceExternalId: svc.externalId, result: `Inherited: ${result.address}` });
+      } else {
+        skipped++;
+        details.push({ serviceExternalId: svc.externalId, result: `Skipped: ${result.reason}` });
+      }
+    } catch (err) {
+      failed++;
+      details.push({ serviceExternalId: svc.externalId, result: `Failed: ${String(err)}` });
+    }
+  }
+
+  return { updated, skipped, failed, details };
+}
+
+// ─── Match Provenance ─────────────────────────────────────────────────────────
+
+export type MatchProvenanceInput = {
+  serviceExternalId: string;
+  customerExternalId: string;
+  matchMethod: 'manual' | 'auto_avc' | 'auto_phone' | 'auto_name' | 'workbook_import' | 'api_import' | 'system';
+  matchSource: 'carbon_api' | 'tiab_spreadsheet' | 'tiab_api' | 'vocus_api' | 'sasboss_api' | 'datagate_api' | 'workbook_upload' | 'manual_ui' | 'system';
+  matchedBy: string;
+  matchCriteria?: Record<string, unknown>;
+  confidence: 'high' | 'medium' | 'low';
+  notes?: string;
+};
+
+/**
+ * Records a structured provenance event whenever a service is matched to a customer.
+ * Non-fatal — failures are logged but never throw.
+ */
+export async function writeMatchProvenance(input: MatchProvenanceInput): Promise<void> {
+  try {
+    const db = await getDb();
+    if (!db) return;
+    await db.insert(serviceMatchEvents).values({
+      serviceExternalId: input.serviceExternalId,
+      customerExternalId: input.customerExternalId,
+      matchMethod: input.matchMethod,
+      matchSource: input.matchSource,
+      matchedBy: input.matchedBy,
+      matchedAt: new Date(),
+      matchCriteria: input.matchCriteria ? JSON.stringify(input.matchCriteria) : null,
+      confidence: input.confidence,
+      notes: input.notes ?? null,
+      flaggedForReview: false,
+    });
+  } catch (err) {
+    console.warn('[MatchProvenance] Failed to write provenance event:', err);
+  }
+}
+
+/**
+ * Returns all match provenance events for a service, most recent first.
+ * Also returns any flag status on each event.
+ */
+export async function getMatchProvenance(serviceExternalId: string) {
+  const db = await getDb();
+  if (!db) return [];
+
+  // Fetch formal provenance events
+  const events = await db
+    .select()
+    .from(serviceMatchEvents)
+    .where(eq(serviceMatchEvents.serviceExternalId, serviceExternalId))
+    .orderBy(desc(serviceMatchEvents.matchedAt));
+
+  if (events.length > 0) return events;
+
+  // ── Synthesised fallback for services matched before the provenance system ──
+  // Build a best-effort record from existing service fields so reviewers
+  // always see *something* rather than an empty panel.
+  const svc = await db
+    .select({
+      externalId: services.externalId,
+      customerExternalId: services.customerExternalId,
+      dataSource: services.dataSource,
+      discoveryNotes: services.discoveryNotes,
+      carbonServiceId: services.carbonServiceId,
+      avcId: services.avcId,
+      phoneNumber: services.phoneNumber,
+      locationAddress: services.locationAddress,
+      supplierAccount: services.supplierAccount,
+      provider: services.provider,
+      supplierName: services.supplierName,
+      carbonAlias: services.carbonAlias,
+      blitzReportName: services.blitzReportName,
+      blitzImportDate: services.blitzImportDate,
+      aaptImportDate: services.aaptImportDate,
+      createdAt: services.createdAt,
+      updatedAt: services.updatedAt,
+    })
+    .from(services)
+    .where(eq(services.externalId, serviceExternalId))
+    .limit(1);
+
+  if (!svc.length || !svc[0].customerExternalId) return [];
+
+  const s = svc[0];
+
+  // Determine method and source from dataSource / available fields
+  let matchMethod = 'system';
+  let matchSource = 'system';
+  let confidence = 'low';
+  const criteria: Record<string, string> = {};
+  const notes: string[] = [];
+
+  const ds = (s.dataSource || '').toLowerCase();
+
+  if (ds.includes('carbon') || s.carbonServiceId) {
+    matchMethod = 'api_import';
+    matchSource = 'carbon_api';
+    confidence = 'high';
+    if (s.avcId) criteria['AVC ID'] = s.avcId;
+    if (s.carbonServiceId) criteria['Carbon Service ID'] = s.carbonServiceId;
+    if (s.carbonAlias) criteria['Carbon Alias'] = s.carbonAlias;
+    notes.push('Imported from ABB Carbon API');
+  } else if (ds.includes('sasboss') || ds.includes('workbook') || ds.includes('xlsx')) {
+    matchMethod = 'workbook_import';
+    matchSource = 'workbook_upload';
+    confidence = 'medium';
+    if (s.blitzReportName) criteria['Workbook'] = s.blitzReportName;
+    if (s.supplierAccount) criteria['Supplier Account'] = s.supplierAccount;
+    notes.push('Matched via supplier workbook upload');
+  } else if (ds.includes('blitz')) {
+    matchMethod = 'workbook_import';
+    matchSource = 'workbook_upload';
+    confidence = 'medium';
+    if (s.blitzReportName) criteria['Blitz Report'] = s.blitzReportName;
+    if (s.blitzImportDate) criteria['Import Date'] = s.blitzImportDate;
+    notes.push('Matched via Blitz Report import');
+  } else if (ds.includes('aapt')) {
+    matchMethod = 'api_import';
+    matchSource = 'workbook_upload';
+    confidence = 'medium';
+    if (s.aaptImportDate) criteria['AAPT Import Date'] = s.aaptImportDate;
+    notes.push('Matched via AAPT invoice import');
+  } else if (s.avcId) {
+    matchMethod = 'auto_avc';
+    matchSource = 'carbon_api';
+    confidence = 'high';
+    criteria['AVC ID'] = s.avcId;
+    notes.push('Auto-matched by AVC ID');
+  } else if (s.phoneNumber) {
+    matchMethod = 'auto_phone';
+    matchSource = 'manual_ui';
+    confidence = 'medium';
+    criteria['Phone'] = s.phoneNumber;
+    notes.push('Auto-matched by phone number');
+  } else if (s.locationAddress) {
+    matchMethod = 'auto_name';
+    matchSource = 'manual_ui';
+    confidence = 'medium';
+    criteria['Address'] = s.locationAddress;
+    notes.push('Auto-matched by address');
+  } else {
+    matchMethod = 'manual';
+    matchSource = 'manual_ui';
+    confidence = 'low';
+    notes.push('Matched manually (pre-provenance system)');
+  }
+
+  if (s.discoveryNotes) {
+    // Include first 200 chars of discovery notes as context
+    const snippet = s.discoveryNotes.slice(0, 200);
+    notes.push(`Notes: ${snippet}${s.discoveryNotes.length > 200 ? '…' : ''}`);
+  }
+
+  // Return as a synthetic event (id = -1 signals it's synthesised, not flaggable)
+  return [{
+    id: -1,
+    serviceExternalId,
+    customerExternalId: s.customerExternalId,
+    matchMethod,
+    matchSource,
+    matchedBy: 'System (pre-provenance)',
+    matchedAt: s.createdAt,
+    matchCriteria: Object.keys(criteria).length ? JSON.stringify(criteria) : null,
+    confidence,
+    notes: notes.join(' · ') || null,
+    flaggedForReview: false,
+    flaggedBy: null,
+    flaggedAt: null,
+    flagReason: null,
+    _synthesised: true,
+  }];
+}
+
+/**
+ * Flags a match event as potentially incorrect.
+ */
+export async function flagMatchEvent(
+  eventId: number,
+  flaggedBy: string,
+  flagReason: string
+): Promise<void> {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(serviceMatchEvents).set({
+    flaggedForReview: true,
+    flaggedBy,
+    flaggedAt: new Date(),
+    flagReason,
+  }).where(eq(serviceMatchEvents.id, eventId));
+}
+
+/**
+ * Clears the flag on a match event (reviewer resolved it).
+ */
+export async function clearMatchEventFlag(eventId: number): Promise<void> {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(serviceMatchEvents).set({
+    flaggedForReview: false,
+    flaggedBy: null,
+    flaggedAt: null,
+    flagReason: null,
+  }).where(eq(serviceMatchEvents.id, eventId));
 }

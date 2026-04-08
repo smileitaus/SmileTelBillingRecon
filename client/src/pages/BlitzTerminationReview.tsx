@@ -442,7 +442,7 @@ export default function BlitzTerminationReview() {
           </Card>
           <Card className="border-emerald-200 bg-emerald-50">
             <CardContent className="pt-4 pb-3">
-              <p className="text-xs text-emerald-600 uppercase tracking-wide font-medium">Monthly Savings (Paid)</p>
+              <p className="text-xs text-emerald-600 uppercase tracking-wide font-medium">Monthly Savings ex GST (Paid)</p>
               <p className="text-3xl font-bold text-emerald-700 mt-1">
                 ${(stats?.totalMonthlySavings ?? 0).toFixed(0)}
               </p>

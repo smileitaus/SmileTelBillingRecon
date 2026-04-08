@@ -212,7 +212,7 @@ export default function UnmatchedBillingQueue() {
                       <TableHead>Customer</TableHead>
                       <TableHead className="text-center">Unmatched</TableHead>
                       <TableHead className="text-center">Total Services</TableHead>
-                      <TableHead className="text-right">Monthly Cost</TableHead>
+                      <TableHead className="text-right">Monthly Cost (ex GST)</TableHead>
                       <TableHead className="text-right">Action</TableHead>
                     </TableRow>
                   </TableHeader>
@@ -341,7 +341,7 @@ export default function UnmatchedBillingQueue() {
                                 <TableHead>Service</TableHead>
                                 <TableHead>Provider</TableHead>
                                 <TableHead>Location</TableHead>
-                                <TableHead className="text-right">Cost</TableHead>
+                                <TableHead className="text-right">Cost (ex GST)</TableHead>
                                 <TableHead>Reason</TableHead>
                                 <TableHead>Escalated By</TableHead>
                               </TableRow>

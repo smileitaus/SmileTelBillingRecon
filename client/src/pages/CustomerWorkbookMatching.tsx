@@ -216,6 +216,8 @@ export default function CustomerWorkbookMatching() {
       refetchItems();
       refetchProposals();
       utils.billing.customers.unmatchedBillingServices.invalidate({ customerExternalId: customerId! });
+      utils.billing.summary.invalidate();
+      utils.billing.dashboardTotals.invalidate();
     },
     onError: (err) => toast.error(`Link failed: ${err.message}`),
   });

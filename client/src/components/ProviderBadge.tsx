@@ -1,8 +1,13 @@
 /**
  * Provider Badge Component
- * Displays a color-coded badge with supplier logos for upstream network providers
- * (Telstra, ABB, Vocus, Exetel, AAPT, Optus, Unknown)
+ * Displays a color-coded badge with supplier logos for upstream network providers.
+ *
+ * To add a new supplier:
+ *   1. Add the key to shared/suppliers.ts (KNOWN_SUPPLIERS + SUPPLIER_COLORS)
+ *   2. Add a providerConfig entry below for badge styling (and logo if available)
+ *   Everything else (dropdowns, filters) updates automatically.
  */
+import { SUPPLIER_COLORS } from "@shared/suppliers";
 
 const TELSTRA_LOGO = "https://d2xsxph8kpxj0f.cloudfront.net/310519663389833130/4LVfr96qhVoYSkLinpTZkt/telstra-logo_b494a2f4.png";
 const ABB_LOGO = "https://d2xsxph8kpxj0f.cloudfront.net/310519663389833130/4LVfr96qhVoYSkLinpTZkt/abb-logo_9ac49ae1.png";
@@ -112,6 +117,36 @@ const providerConfig: Record<string, {
     border: "border-indigo-200",
     label: "SasBoss",
   },
+  Starlink: {
+    bg: "bg-blue-50",
+    text: "text-blue-800",
+    border: "border-blue-300",
+    label: "Starlink",
+  },
+  Access4: {
+    bg: "bg-violet-50",
+    text: "text-violet-800",
+    border: "border-violet-200",
+    label: "Access4",
+  },
+  CommsCode: {
+    bg: "bg-sky-50",
+    text: "text-sky-800",
+    border: "border-sky-200",
+    label: "CommsCode",
+  },
+  DataGate: {
+    bg: "bg-blue-50",
+    text: "text-blue-800",
+    border: "border-blue-300",
+    label: "DataGate",
+  },
+  TPG: {
+    bg: "bg-red-50",
+    text: "text-red-700",
+    border: "border-red-200",
+    label: "TPG",
+  },
   Unknown: {
     bg: "bg-gray-50",
     text: "text-gray-500",
@@ -220,6 +255,7 @@ export function ProviderDot({
     TIAB: "bg-slate-500",
     SmileTel: "bg-pink-500",
     SasBoss: "bg-indigo-500",
+    Starlink: "bg-blue-700",
     Unknown: "bg-gray-400",
   };
   const color = dotColors[name] || dotColors.Unknown;
@@ -232,24 +268,7 @@ export function ProviderDot({
   );
 }
 
-export const PROVIDER_COLORS: Record<string, string> = {
-  Telstra: "oklch(0.55 0.15 250)",
-  ABB: "oklch(0.5 0.15 150)",
-  Vocus: "oklch(0.55 0.15 300)",
-  Exetel: "oklch(0.55 0.15 200)",
-  AAPT: "oklch(0.55 0.15 170)",
-  Optus: "oklch(0.55 0.15 150)",
-  OptiComm: "oklch(0.55 0.15 130)",
-  ChannelHaus: "oklch(0.55 0.15 310)",
-  Legion: "oklch(0.55 0.15 20)",
-  "Tech-e": "oklch(0.55 0.15 60)",
-  VineDirect: "oklch(0.5 0.15 145)",
-  Infinet: "oklch(0.55 0.15 225)",
-  Blitznet: "oklch(0.6 0.15 90)",
-  TIAB: "oklch(0.55 0.05 240)",
-  SmileTel: "oklch(0.55 0.15 350)",
-  SasBoss: "oklch(0.5 0.18 275)",
-  Unknown: "oklch(0.6 0.01 56)",
-};
+// PROVIDER_COLORS is now driven by shared/suppliers.ts — add new entries there.
+export const PROVIDER_COLORS: Record<string, string> = SUPPLIER_COLORS;
 
 export { providerConfig };
