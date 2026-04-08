@@ -1,9 +1,0 @@
-{
-  "query": "\nDELETE FROM billing_items\nWHERE id NOT IN (\n  SELECT min_id FROM (\n    SELECT MIN(id) AS min_id\n    FROM billing_items\n    GROUP BY invoiceNumber, description, lineAmount, contactName\n  ) AS keepers\n);\n",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \nDELETE FROM billing_items\nWHERE id NOT IN (\n  SELECT min_id FROM (\n    SELECT MIN(id) AS min_id\n    FROM billing_items\n    GROUP BY invoiceNumber, description, lineAmount, contactName\n  ) AS keepers\n);\n",
-  "rows": [],
-  "messages": [],
-  "stdout": "",
-  "stderr": "",
-  "execution_time_ms": 1521
-}

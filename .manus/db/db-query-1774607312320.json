@@ -1,9 +1,0 @@
-{
-  "query": "\n-- Check unmatched Xero billing items - group by contactName\nSELECT bi.contactName, COUNT(*) as item_count, SUM(bi.lineAmount) as total_amount\nFROM billing_items bi\nWHERE bi.billingPlatform = 'Xero'\n  AND (bi.customerExternalId IS NULL OR bi.customerExternalId = '')\n  AND bi.lineAmount > 0\nGROUP BY bi.contactName\nORDER BY total_amount DESC;\n",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Check unmatched Xero billing items - group by contactName\nSELECT bi.contactName, COUNT(*) as item_count, SUM(bi.lineAmount) as total_amount\nFROM billing_items bi\nWHERE bi.billingPlatform = 'Xero'\n  AND (bi.customerExternalId IS NULL OR bi.customerExternalId = '')\n  AND bi.lineAmount > 0\nGROUP BY bi.contactName\nORDER BY total_amount DESC;\n",
-  "rows": [],
-  "messages": [],
-  "stdout": "",
-  "stderr": "",
-  "execution_time_ms": 1559
-}

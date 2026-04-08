@@ -116,3 +116,4 @@ temp/
 INV-*.csv
 scripts/*.json
 *.bak.json
+.manus/

@@ -1,9 +1,0 @@
-{
-  "query": "CREATE TABLE `supplier_sync_log` (\n\t`id` int AUTO_INCREMENT NOT NULL,\n\t`integration` varchar(64) NOT NULL,\n\t`status` varchar(32) NOT NULL DEFAULT 'running',\n\t`summary` text,\n\t`servicesFound` int NOT NULL DEFAULT 0,\n\t`servicesCreated` int NOT NULL DEFAULT 0,\n\t`servicesUpdated` int NOT NULL DEFAULT 0,\n\t`recordsProcessed` int NOT NULL DEFAULT 0,\n\t`errorMessage` text,\n\t`durationMs` int,\n\t`triggeredBy` varchar(64) NOT NULL DEFAULT 'scheduled',\n\t`startedAt` timestamp NOT NULL DEFAULT (now()),\n\t`completedAt` timestamp,\n\t`createdAt` timestamp NOT NULL DEFAULT (now()),\n\tCONSTRAINT `supplier_sync_log_id` PRIMARY KEY(`id`)\n);",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute CREATE TABLE `supplier_sync_log` (\n\t`id` int AUTO_INCREMENT NOT NULL,\n\t`integration` varchar(64) NOT NULL,\n\t`status` varchar(32) NOT NULL DEFAULT 'running',\n\t`summary` text,\n\t`servicesFound` int NOT NULL DEFAULT 0,\n\t`servicesCreated` int NOT NULL DEFAULT 0,\n\t`servicesUpdated` int NOT NULL DEFAULT 0,\n\t`recordsProcessed` int NOT NULL DEFAULT 0,\n\t`errorMessage` text,\n\t`durationMs` int,\n\t`triggeredBy` varchar(64) NOT NULL DEFAULT 'scheduled',\n\t`startedAt` timestamp NOT NULL DEFAULT (now()),\n\t`completedAt` timestamp,\n\t`createdAt` timestamp NOT NULL DEFAULT (now()),\n\tCONSTRAINT `supplier_sync_log_id` PRIMARY KEY(`id`)\n);",
-  "rows": [],
-  "messages": [],
-  "stdout": "",
-  "stderr": "",
-  "execution_time_ms": 1743
-}

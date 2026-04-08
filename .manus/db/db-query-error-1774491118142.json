@@ -1,8 +1,0 @@
-{
-  "query": "\n-- Show the 5 unlinked bundle items\nSELECT externalId, description, lineAmount, customerExternalId, xeroContactName\nFROM billing_items \nWHERE description LIKE '%SmileTel supplied%' AND customerExternalId IS NULL\nORDER BY lineAmount DESC;\n",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Show the 5 unlinked bundle items\nSELECT externalId, description, lineAmount, customerExternalId, xeroContactName\nFROM billing_items \nWHERE description LIKE '%SmileTel supplied%' AND customerExternalId IS NULL\nORDER BY lineAmount DESC;\n",
-  "returncode": 1,
-  "logs": [
-    "ERROR 1054 (42S22) at line 3: Unknown column 'xerocontactname' in 'field list'"
-  ]
-}

@@ -1,8 +1,0 @@
-{
-  "query": "\nSELECT \n  s.externalId,\n  s.phoneNumber,\n  s.planName,\n  s.status,\n  s.monthlyCost,\n  s.retailPrice,\n  s.customerName,\n  s.supplierAccount,\n  s.blitzAccountNumber,\n  s.serviceType,\n  s.archivedAt,\n  s.terminationBatchId,\n  s.terminationListSource,\n  c.name AS linkedCustomerName,\n  c.externalId AS customerExternalId\nFROM services s\nLEFT JOIN customers c ON s.customerId = c.id\nWHERE s.supplierName = 'Telstra'\n  AND s.status IN ('archived', 'flagged_for_termination')\nORDER BY s.monthlyCost DESC;\n",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \nSELECT \n  s.externalId,\n  s.phoneNumber,\n  s.planName,\n  s.status,\n  s.monthlyCost,\n  s.retailPrice,\n  s.customerName,\n  s.supplierAccount,\n  s.blitzAccountNumber,\n  s.serviceType,\n  s.archivedAt,\n  s.terminationBatchId,\n  s.terminationListSource,\n  c.name AS linkedCustomerName,\n  c.externalId AS customerExternalId\nFROM services s\nLEFT JOIN customers c ON s.customerId = c.id\nWHERE s.supplierName = 'Telstra'\n  AND s.status IN ('archived', 'flagged_for_termination')\nORDER BY s.monthlyCost DESC;\n",
-  "returncode": 1,
-  "logs": [
-    "ERROR 1054 (42S22) at line 2: Unknown column 's.customerid' in 'on clause'"
-  ]
-}

@@ -1,8 +1,0 @@
-{
-  "query": "\n-- Check internet service addresses from CSV against DB\nSELECT id, connectionId, serviceAddress, serviceType, status\nFROM services\nWHERE serviceAddress LIKE '%Maryborough%'\n   OR serviceAddress LIKE '%Cleveland%'\n   OR serviceAddress LIKE '%Kippa-Ring%'\n   OR serviceAddress LIKE '%Brendale%'\n   OR serviceAddress LIKE '%Coolum%'\n   OR serviceAddress LIKE '%Sippy Downs%'\n   OR serviceAddress LIKE '%Milton%'\n   OR serviceAddress LIKE '%Torquay%'\n   OR serviceAddress LIKE '%Tewantin%'\n   OR serviceAddress LIKE '%Rockhampton%'\nLIMIT 30;\n",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Check internet service addresses from CSV against DB\nSELECT id, connectionId, serviceAddress, serviceType, status\nFROM services\nWHERE serviceAddress LIKE '%Maryborough%'\n   OR serviceAddress LIKE '%Cleveland%'\n   OR serviceAddress LIKE '%Kippa-Ring%'\n   OR serviceAddress LIKE '%Brendale%'\n   OR serviceAddress LIKE '%Coolum%'\n   OR serviceAddress LIKE '%Sippy Downs%'\n   OR serviceAddress LIKE '%Milton%'\n   OR serviceAddress LIKE '%Torquay%'\n   OR serviceAddress LIKE '%Tewantin%'\n   OR serviceAddress LIKE '%Rockhampton%'\nLIMIT 30;\n",
-  "returncode": 1,
-  "logs": [
-    "ERROR 1054 (42S22) at line 3: Unknown column 'serviceaddress' in 'where clause'"
-  ]
-}

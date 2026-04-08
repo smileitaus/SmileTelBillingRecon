@@ -1,9 +1,0 @@
-{
-  "query": "\n-- Show remaining unmatched services with non-trivial customerNames and their best customer match\nSELECT \n  u.externalId,\n  u.customerName AS svc_name,\n  u.serviceType,\n  u.supplierName,\n  c.externalId AS cust_id,\n  c.name AS cust_name\nFROM services u\nJOIN customers c ON (\n  LOWER(c.name) LIKE CONCAT('%', LOWER(TRIM(u.customerName)), '%')\n  OR LOWER(TRIM(u.customerName)) LIKE CONCAT('%', LOWER(c.name), '%')\n)\nWHERE (u.customerExternalId IS NULL OR u.customerExternalId = '')\n  AND u.customerName IS NOT NULL AND u.customerName != ''\n  AND u.customerName NOT IN ('Unassigned', '(blank)', 'Unknown', 'Enterprise SIM', 'NBN EE')\nORDER BY u.customerName, c.name\nLIMIT 20;\n",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Show remaining unmatched services with non-trivial customerNames and their best customer match\nSELECT \n  u.externalId,\n  u.customerName AS svc_name,\n  u.serviceType,\n  u.supplierName,\n  c.externalId AS cust_id,\n  c.name AS cust_name\nFROM services u\nJOIN customers c ON (\n  LOWER(c.name) LIKE CONCAT('%', LOWER(TRIM(u.customerName)), '%')\n  OR LOWER(TRIM(u.customerName)) LIKE CONCAT('%', LOWER(c.name), '%')\n)\nWHERE (u.customerExternalId IS NULL OR u.customerExternalId = '')\n  AND u.customerName IS NOT NULL AND u.customerName != ''\n  AND u.customerName NOT IN ('Unassigned', '(blank)', 'Unknown', 'Enterprise SIM', 'NBN EE')\nORDER BY u.customerName, c.name\nLIMIT 20;\n",
-  "rows": [],
-  "messages": [],
-  "stdout": "",
-  "stderr": "",
-  "execution_time_ms": 1693
-}

@@ -1,9 +1,0 @@
-{
-  "query": "CREATE TABLE IF NOT EXISTS `customers` (\n\t`id` int AUTO_INCREMENT NOT NULL,\n\t`externalId` varchar(32) NOT NULL,\n\t`name` varchar(512) NOT NULL,\n\t`billingPlatforms` text,\n\t`serviceCount` int NOT NULL DEFAULT 0,\n\t`monthlyCost` decimal(10,2) NOT NULL DEFAULT '0.00',\n\t`unmatchedCount` int NOT NULL DEFAULT 0,\n\t`matchedCount` int NOT NULL DEFAULT 0,\n\t`status` varchar(32) NOT NULL DEFAULT 'active',\n\t`createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,\n\t`updatedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,\n\tCONSTRAINT `customers_id` PRIMARY KEY(`id`),\n\tCONSTRAINT `customers_externalId_unique` UNIQUE(`externalId`)\n);",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3M17pEiktKAmnzx.5240b4750712 --database 4LVfr96qhVoYSkLinpTZkt --execute CREATE TABLE IF NOT EXISTS `customers` (\n\t`id` int AUTO_INCREMENT NOT NULL,\n\t`externalId` varchar(32) NOT NULL,\n\t`name` varchar(512) NOT NULL,\n\t`billingPlatforms` text,\n\t`serviceCount` int NOT NULL DEFAULT 0,\n\t`monthlyCost` decimal(10,2) NOT NULL DEFAULT '0.00',\n\t`unmatchedCount` int NOT NULL DEFAULT 0,\n\t`matchedCount` int NOT NULL DEFAULT 0,\n\t`status` varchar(32) NOT NULL DEFAULT 'active',\n\t`createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,\n\t`updatedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,\n\tCONSTRAINT `customers_id` PRIMARY KEY(`id`),\n\tCONSTRAINT `customers_externalId_unique` UNIQUE(`externalId`)\n);",
-  "rows": [],
-  "messages": [],
-  "stdout": "",
-  "stderr": "",
-  "execution_time_ms": 1596
-}

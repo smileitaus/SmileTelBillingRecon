@@ -1,8 +1,0 @@
-{
-  "query": "\nSELECT c.id, c.externalId, c.name, c.siteAddress, c.status, c.serviceCount,\n       s.id as svcId, s.externalId as svcExtId, s.serviceType, s.status as svcStatus, s.customerExternalId, s.isTerminated\nFROM customers c\nLEFT JOIN services s ON s.customerExternalId = c.externalId\nWHERE c.siteAddress LIKE '%BLACKBEAUTY%' OR c.siteAddress LIKE '%BLACK BEAUTY%' OR c.siteAddress LIKE '%KENSINGTON%'\n   OR c.name LIKE '%BLACKBEAUTY%' OR c.name LIKE '%BLACK BEAUTY%' OR c.name LIKE '%KENSINGTON%';\n",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3M17pEiktKAmnzx.5240b4750712 --database 4LVfr96qhVoYSkLinpTZkt --execute \nSELECT c.id, c.externalId, c.name, c.siteAddress, c.status, c.serviceCount,\n       s.id as svcId, s.externalId as svcExtId, s.serviceType, s.status as svcStatus, s.customerExternalId, s.isTerminated\nFROM customers c\nLEFT JOIN services s ON s.customerExternalId = c.externalId\nWHERE c.siteAddress LIKE '%BLACKBEAUTY%' OR c.siteAddress LIKE '%BLACK BEAUTY%' OR c.siteAddress LIKE '%KENSINGTON%'\n   OR c.name LIKE '%BLACKBEAUTY%' OR c.name LIKE '%BLACK BEAUTY%' OR c.name LIKE '%KENSINGTON%';\n",
-  "returncode": 1,
-  "logs": [
-    "ERROR 1054 (42S22) at line 2: Unknown column 's.isterminated' in 'field list'"
-  ]
-}

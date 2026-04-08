@@ -1,8 +1,0 @@
-{
-  "query": "SELECT c.externalId, c.name, c.address, s.id as serviceId, s.serviceType, s.planName, s.connectionId, s.phoneNumber, s.locationAddress, s.monthlyCost, s.supplierName\nFROM customers c\nLEFT JOIN services s ON s.customerExternalId = c.externalId\nWHERE c.name LIKE '%Yiros%' OR c.name LIKE '%Albion%' \n   OR c.address LIKE '%Albion%' OR c.address LIKE '%Crosby%'\n   OR c.name LIKE '%Maitland%' OR c.address LIKE '%Maitland%' OR c.address LIKE '%High St%Maitland%'\n   OR s.locationAddress LIKE '%Albion%' OR s.locationAddress LIKE '%Crosby%'\n   OR s.locationAddress LIKE '%Maitland%'\nORDER BY c.name;",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute SELECT c.externalId, c.name, c.address, s.id as serviceId, s.serviceType, s.planName, s.connectionId, s.phoneNumber, s.locationAddress, s.monthlyCost, s.supplierName\nFROM customers c\nLEFT JOIN services s ON s.customerExternalId = c.externalId\nWHERE c.name LIKE '%Yiros%' OR c.name LIKE '%Albion%' \n   OR c.address LIKE '%Albion%' OR c.address LIKE '%Crosby%'\n   OR c.name LIKE '%Maitland%' OR c.address LIKE '%Maitland%' OR c.address LIKE '%High St%Maitland%'\n   OR s.locationAddress LIKE '%Albion%' OR s.locationAddress LIKE '%Crosby%'\n   OR s.locationAddress LIKE '%Maitland%'\nORDER BY c.name;",
-  "returncode": 1,
-  "logs": [
-    "ERROR 1054 (42S22) at line 1: Unknown column 'c.address' in 'where clause'"
-  ]
-}

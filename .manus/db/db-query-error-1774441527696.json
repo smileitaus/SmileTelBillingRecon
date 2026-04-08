@@ -1,8 +1,0 @@
-{
-  "query": "\n-- Check sasboss_invoices for UCXcel items\nSELECT \n  si.enterprise_id, si.enterprise_name, si.product_name, si.service_ref_id,\n  si.monthly_recurring, si.invoice_date\nFROM sasboss_invoices si\nWHERE si.product_name IN ('UCXcel Essential', 'UCXcel Webex Basic')\nORDER BY si.enterprise_name, si.product_name\nLIMIT 20;\n",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Check sasboss_invoices for UCXcel items\nSELECT \n  si.enterprise_id, si.enterprise_name, si.product_name, si.service_ref_id,\n  si.monthly_recurring, si.invoice_date\nFROM sasboss_invoices si\nWHERE si.product_name IN ('UCXcel Essential', 'UCXcel Webex Basic')\nORDER BY si.enterprise_name, si.product_name\nLIMIT 20;\n",
-  "returncode": 1,
-  "logs": [
-    "ERROR 1054 (42S22) at line 3: Unknown column 'si.product_name' in 'order clause'"
-  ]
-}
