@@ -1,0 +1,65 @@
+{
+  "query": "\nSELECT \n  phoneNumber,\n  planName,\n  serviceType,\n  customerName,\n  monthlyCost,\n  monthlyRevenue,\n  ROUND(monthlyRevenue - monthlyCost, 2) AS monthly_margin,\n  marginPercent,\n  status\nFROM services\nWHERE supplierName = 'Telstra'\n  AND status IN ('archived', 'flagged_for_termination')\n  AND monthlyRevenue > 0\nORDER BY monthlyRevenue DESC;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \nSELECT \n  phoneNumber,\n  planName,\n  serviceType,\n  customerName,\n  monthlyCost,\n  monthlyRevenue,\n  ROUND(monthlyRevenue - monthlyCost, 2) AS monthly_margin,\n  marginPercent,\n  status\nFROM services\nWHERE supplierName = 'Telstra'\n  AND status IN ('archived', 'flagged_for_termination')\n  AND monthlyRevenue > 0\nORDER BY monthlyRevenue DESC;\n",
+  "rows": [
+    {
+      "phoneNumber": "0448 015 690",
+      "planName": "Dot Voice And Broadband Backup",
+      "serviceType": "Mobile",
+      "customerName": "Zambrero Geraldton",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "136.36",
+      "monthly_margin": "136.36",
+      "marginPercent": "NULL",
+      "status": "flagged_for_termination"
+    },
+    {
+      "phoneNumber": "07 4632 4658",
+      "planName": "Internet Service",
+      "serviceType": "Internet",
+      "customerName": "Zambrero Northpoint",
+      "monthlyCost": "93.00",
+      "monthlyRevenue": "136.36",
+      "monthly_margin": "43.36",
+      "marginPercent": "NULL",
+      "status": "flagged_for_termination"
+    },
+    {
+      "phoneNumber": "0428 912 962",
+      "planName": "Business Data Plan S",
+      "serviceType": "Data",
+      "customerName": "Two Yolks Burleigh",
+      "monthlyCost": "65.00",
+      "monthlyRevenue": "131.36",
+      "monthly_margin": "66.36",
+      "marginPercent": "50.52",
+      "status": "flagged_for_termination"
+    },
+    {
+      "phoneNumber": "0477 320 601",
+      "planName": "Business Data Plan M",
+      "serviceType": "Data",
+      "customerName": "Kawana Family Clinic",
+      "monthlyCost": "10.00",
+      "monthlyRevenue": "74.00",
+      "monthly_margin": "64.00",
+      "marginPercent": "NULL",
+      "status": "flagged_for_termination"
+    },
+    {
+      "phoneNumber": "0498 103 659",
+      "planName": "Business Bundle Data Plan",
+      "serviceType": "Data",
+      "customerName": "Woodlands Enterprises Pty Ltd",
+      "monthlyCost": "90.00",
+      "monthlyRevenue": "57.22",
+      "monthly_margin": "-32.78",
+      "marginPercent": "NULL",
+      "status": "flagged_for_termination"
+    }
+  ],
+  "messages": [],
+  "stdout": "phoneNumber\tplanName\tserviceType\tcustomerName\tmonthlyCost\tmonthlyRevenue\tmonthly_margin\tmarginPercent\tstatus\n0448 015 690\tDot Voice And Broadband Backup\tMobile\tZambrero Geraldton\t0.00\t136.36\t136.36\tNULL\tflagged_for_termination\n07 4632 4658\tInternet Service\tInternet\tZambrero Northpoint\t93.00\t136.36\t43.36\tNULL\tflagged_for_termination\n0428 912 962\tBusiness Data Plan S\tData\tTwo Yolks Burleigh\t65.00\t131.36\t66.36\t50.52\tflagged_for_termination\n0477 320 601\tBusiness Data Plan M\tData\tKawana Family Clinic\t10.00\t74.00\t64.00\tNULL\tflagged_for_termination\n0498 103 659\tBusiness Bundle Data Plan\tData\tWoodlands Enterprises Pty Ltd\t90.00\t57.22\t-32.78\tNULL\tflagged_for_termination\n",
+  "stderr": "",
+  "execution_time_ms": 67
+}

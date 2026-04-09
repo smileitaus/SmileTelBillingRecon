@@ -1,0 +1,16 @@
+{
+  "query": "-- The Mobile items 32830, 32831, 32833, 32834, 32835, 32837, 32840 are exact duplicates \n-- of original items 988, 989, 991, 992, 993, 995, 998 (same amounts, same service S1125)\nDELETE FROM billing_items WHERE id IN (32830, 32831, 32833, 32834, 32835, 32837, 32840);\n\n-- Recalculate S1125 revenue\nUPDATE services s\nSET monthlyRevenue = (\n  SELECT COALESCE(SUM(bi.lineAmount), 0)\n  FROM billing_items bi\n  WHERE bi.serviceExternalId = s.externalId\n)\nWHERE s.externalId = 'S1125';\n\n-- Verify S1125 revenue\nSELECT externalId, planName, monthlyCost, monthlyRevenue FROM services WHERE externalId = 'S1125';\n\n-- Check remaining high-id billing items for Middlemount Coal to see if any more duplicates exist\nSELECT id, description, lineAmount, serviceExternalId FROM billing_items\nWHERE customerExternalId = 'C0161' AND id >= 32000\nORDER BY id;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute -- The Mobile items 32830, 32831, 32833, 32834, 32835, 32837, 32840 are exact duplicates \n-- of original items 988, 989, 991, 992, 993, 995, 998 (same amounts, same service S1125)\nDELETE FROM billing_items WHERE id IN (32830, 32831, 32833, 32834, 32835, 32837, 32840);\n\n-- Recalculate S1125 revenue\nUPDATE services s\nSET monthlyRevenue = (\n  SELECT COALESCE(SUM(bi.lineAmount), 0)\n  FROM billing_items bi\n  WHERE bi.serviceExternalId = s.externalId\n)\nWHERE s.externalId = 'S1125';\n\n-- Verify S1125 revenue\nSELECT externalId, planName, monthlyCost, monthlyRevenue FROM services WHERE externalId = 'S1125';\n\n-- Check remaining high-id billing items for Middlemount Coal to see if any more duplicates exist\nSELECT id, description, lineAmount, serviceExternalId FROM billing_items\nWHERE customerExternalId = 'C0161' AND id >= 32000\nORDER BY id;",
+  "rows": [
+    {
+      "externalId": "S1125",
+      "planName": "Mobile",
+      "monthlyCost": "0.07",
+      "monthlyRevenue": "51.94"
+    }
+  ],
+  "messages": [],
+  "stdout": "externalId\tplanName\tmonthlyCost\tmonthlyRevenue\nS1125\tMobile\t0.07\t51.94\n",
+  "stderr": "",
+  "execution_time_ms": 2330
+}

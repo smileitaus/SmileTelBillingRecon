@@ -1,0 +1,8 @@
+{
+  "query": "-- Check S7381 service details\nSELECT externalId, planName, serviceType, provider, monthlyCost, monthlyRevenue, phoneNumber, notes, avcId, customerExternalId\nFROM services WHERE externalId = 'S7381';\n\n-- Check SSZ2TRXE service details  \nSELECT externalId, planName, serviceType, provider, monthlyCost, monthlyRevenue, phoneNumber, notes, avcId\nFROM services WHERE externalId = 'SSZ2TRXE';\n\n-- Check if there are any other billing items for S7381 (not just Emergency Medicine Foundation)\nSELECT id, description, lineAmount, contactName, invoiceNumber FROM billing_items WHERE serviceExternalId = 'S7381';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute -- Check S7381 service details\nSELECT externalId, planName, serviceType, provider, monthlyCost, monthlyRevenue, phoneNumber, notes, avcId, customerExternalId\nFROM services WHERE externalId = 'S7381';\n\n-- Check SSZ2TRXE service details  \nSELECT externalId, planName, serviceType, provider, monthlyCost, monthlyRevenue, phoneNumber, notes, avcId\nFROM services WHERE externalId = 'SSZ2TRXE';\n\n-- Check if there are any other billing items for S7381 (not just Emergency Medicine Foundation)\nSELECT id, description, lineAmount, contactName, invoiceNumber FROM billing_items WHERE serviceExternalId = 'S7381';",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1054 (42S22) at line 2: Unknown column 'notes' in 'field list'"
+  ]
+}

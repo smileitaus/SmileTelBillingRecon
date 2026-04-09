@@ -1,0 +1,210 @@
+{
+  "query": "\nSELECT \n  s.externalId,\n  s.planName,\n  s.monthlyCost AS current_db_cost,\n  s.monthlyRevenue,\n  s.customerName,\n  s.supplierName,\n  sba.billingItemExternalId AS current_match,\n  sba.assignmentMethod\nFROM services s\nLEFT JOIN service_billing_assignments sba ON sba.serviceExternalId = s.externalId\nWHERE s.supplierName LIKE '%Channel%' OR s.supplierName LIKE '%ECN%'\nORDER BY s.monthlyCost DESC\nLIMIT 20;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \nSELECT \n  s.externalId,\n  s.planName,\n  s.monthlyCost AS current_db_cost,\n  s.monthlyRevenue,\n  s.customerName,\n  s.supplierName,\n  sba.billingItemExternalId AS current_match,\n  sba.assignmentMethod\nFROM services s\nLEFT JOIN service_billing_assignments sba ON sba.serviceExternalId = s.externalId\nWHERE s.supplierName LIKE '%Channel%' OR s.supplierName LIKE '%ECN%'\nORDER BY s.monthlyCost DESC\nLIMIT 20;\n",
+  "rows": [
+    {
+      "externalId": "S8F26A7",
+      "planName": "GBA",
+      "current_db_cost": "451.01",
+      "monthlyRevenue": "576.00",
+      "customerName": "GBA Consulting Engineers",
+      "supplierName": "ChannelHaus",
+      "current_match": "BI00173",
+      "assignmentMethod": "drag-drop"
+    },
+    {
+      "externalId": "SH3FCFY",
+      "planName": "StaffordCityDoctors",
+      "current_db_cost": "224.93",
+      "monthlyRevenue": "365.00",
+      "customerName": "Stafford City Doctors",
+      "supplierName": "ChannelHaus",
+      "current_match": "BI00782",
+      "assignmentMethod": "auto"
+    },
+    {
+      "externalId": "SOYS2EB",
+      "planName": "ShailerPkMed",
+      "current_db_cost": "215.06",
+      "monthlyRevenue": "288.00",
+      "customerName": "Shailer Park Medical Centre",
+      "supplierName": "ChannelHaus",
+      "current_match": "BI00799",
+      "assignmentMethod": "auto"
+    },
+    {
+      "externalId": "S72C54J",
+      "planName": "GumdaleMed",
+      "current_db_cost": "214.30",
+      "monthlyRevenue": "35.00",
+      "customerName": "Gumdale Medical Center",
+      "supplierName": "ChannelHaus",
+      "current_match": "BI00745",
+      "assignmentMethod": "auto"
+    },
+    {
+      "externalId": "S5AMS14",
+      "planName": "jemaClinic_Outbound",
+      "current_db_cost": "192.07",
+      "monthlyRevenue": "265.00",
+      "customerName": "Jema Clinic",
+      "supplierName": "ChannelHaus",
+      "current_match": "BI00662",
+      "assignmentMethod": "auto"
+    },
+    {
+      "externalId": "SRKEVXX",
+      "planName": "GGPSCout",
+      "current_db_cost": "187.58",
+      "monthlyRevenue": "265.00",
+      "customerName": "Gladstone GP Super Clinic",
+      "supplierName": "ChannelHaus",
+      "current_match": "BI00612",
+      "assignmentMethod": "auto"
+    },
+    {
+      "externalId": "SIJ2IZ3",
+      "planName": "PLPharmCabN",
+      "current_db_cost": "183.28",
+      "monthlyRevenue": "240.00",
+      "customerName": "TerryWhite Chemmart Caboolture North",
+      "supplierName": "ChannelHaus",
+      "current_match": "BI00696",
+      "assignmentMethod": "auto"
+    },
+    {
+      "externalId": "SAL6SG2",
+      "planName": "EcolifeSol",
+      "current_db_cost": "177.91",
+      "monthlyRevenue": "240.00",
+      "customerName": "EcoLife Solutions",
+      "supplierName": "ChannelHaus",
+      "current_match": "BI00623",
+      "assignmentMethod": "auto"
+    },
+    {
+      "externalId": "SQQ2PE0",
+      "planName": "Rode Medical Clinic",
+      "current_db_cost": "175.00",
+      "monthlyRevenue": "240.00",
+      "customerName": "Rode Medical Clinic",
+      "supplierName": "ChannelHaus",
+      "current_match": "BI00750",
+      "assignmentMethod": "auto"
+    },
+    {
+      "externalId": "SNQ0YHG",
+      "planName": "Business Internet",
+      "current_db_cost": "175.00",
+      "monthlyRevenue": "0.00",
+      "customerName": "NULL",
+      "supplierName": "ChannelHaus",
+      "current_match": "NULL",
+      "assignmentMethod": "NULL"
+    },
+    {
+      "externalId": "SHU42OX",
+      "planName": "Staff Heights Medical Practice",
+      "current_db_cost": "148.79",
+      "monthlyRevenue": "35.00",
+      "customerName": "Stafford Heights Medical Practice",
+      "supplierName": "ChannelHaus",
+      "current_match": "BI00735",
+      "assignmentMethod": "auto"
+    },
+    {
+      "externalId": "SG1VC60",
+      "planName": "EatonsQuality",
+      "current_db_cost": "146.83",
+      "monthlyRevenue": "192.00",
+      "customerName": "Eatons Quality Medical & Skin Cancer",
+      "supplierName": "ChannelHaus",
+      "current_match": "BI00755",
+      "assignmentMethod": "auto"
+    },
+    {
+      "externalId": "S00OJNU",
+      "planName": "BeenleighMC",
+      "current_db_cost": "146.58",
+      "monthlyRevenue": "192.00",
+      "customerName": "Beenleigh Road Medical Practice",
+      "supplierName": "ChannelHaus",
+      "current_match": "BI00740",
+      "assignmentMethod": "auto"
+    },
+    {
+      "externalId": "SGVQT30",
+      "planName": "AlbyFDocsOut",
+      "current_db_cost": "146.51",
+      "monthlyRevenue": "36.00",
+      "customerName": "Albany Family Doctors",
+      "supplierName": "ChannelHaus",
+      "current_match": "BI00598",
+      "assignmentMethod": "auto"
+    },
+    {
+      "externalId": "SQP06Q1",
+      "planName": "OceanMed Enterprises",
+      "current_db_cost": "145.75",
+      "monthlyRevenue": "208.00",
+      "customerName": "OceanMed Enterprises Pty Ltd",
+      "supplierName": "ChannelHaus",
+      "current_match": "BI00708",
+      "assignmentMethod": "auto"
+    },
+    {
+      "externalId": "S7J8IC1",
+      "planName": "MchyDocsPlaza",
+      "current_db_cost": "145.00",
+      "monthlyRevenue": "192.00",
+      "customerName": "Maroochydore Doctors at Sunshine Plaza",
+      "supplierName": "ChannelHaus",
+      "current_match": "BI00686",
+      "assignmentMethod": "auto"
+    },
+    {
+      "externalId": "SEJX1FL",
+      "planName": "sthsidemed",
+      "current_db_cost": "144.93",
+      "monthlyRevenue": "0.00",
+      "customerName": "Creek St Pharmacy",
+      "supplierName": "ChannelHaus",
+      "current_match": "NULL",
+      "assignmentMethod": "NULL"
+    },
+    {
+      "externalId": "SSVTYFJ",
+      "planName": "WaterfordWestMedical",
+      "current_db_cost": "144.55",
+      "monthlyRevenue": "192.00",
+      "customerName": "Waterford Medical Surgery",
+      "supplierName": "ChannelHaus",
+      "current_match": "BI00786",
+      "assignmentMethod": "auto"
+    },
+    {
+      "externalId": "SV8ADUD",
+      "planName": "banyovillage",
+      "current_db_cost": "144.30",
+      "monthlyRevenue": "192.00",
+      "customerName": "Banyo Village Medical Centre",
+      "supplierName": "ChannelHaus",
+      "current_match": "BI00794",
+      "assignmentMethod": "auto"
+    },
+    {
+      "externalId": "SEEV150",
+      "planName": "AusdCarindOut",
+      "current_db_cost": "143.98",
+      "monthlyRevenue": "36.00",
+      "customerName": "Ausdocs Carindale Pty Ltd",
+      "supplierName": "ChannelHaus",
+      "current_match": "BI00618",
+      "assignmentMethod": "auto"
+    }
+  ],
+  "messages": [],
+  "stdout": "externalId\tplanName\tcurrent_db_cost\tmonthlyRevenue\tcustomerName\tsupplierName\tcurrent_match\tassignmentMethod\nS8F26A7\tGBA\t451.01\t576.00\tGBA Consulting Engineers\tChannelHaus\tBI00173\tdrag-drop\nSH3FCFY\tStaffordCityDoctors\t224.93\t365.00\tStafford City Doctors\tChannelHaus\tBI00782\tauto\nSOYS2EB\tShailerPkMed\t215.06\t288.00\tShailer Park Medical Centre\tChannelHaus\tBI00799\tauto\nS72C54J\tGumdaleMed\t214.30\t35.00\tGumdale Medical Center\tChannelHaus\tBI00745\tauto\nS5AMS14\tjemaClinic_Outbound\t192.07\t265.00\tJema Clinic\tChannelHaus\tBI00662\tauto\nSRKEVXX\tGGPSCout\t187.58\t265.00\tGladstone GP Super Clinic\tChannelHaus\tBI00612\tauto\nSIJ2IZ3\tPLPharmCabN\t183.28\t240.00\tTerryWhite Chemmart Caboolture North\tChannelHaus\tBI00696\tauto\nSAL6SG2\tEcolifeSol\t177.91\t240.00\tEcoLife Solutions\tChannelHaus\tBI00623\tauto\nSQQ2PE0\tRode Medical Clinic\t175.00\t240.00\tRode Medical Clinic\tChannelHaus\tBI00750\tauto\nSNQ0YHG\tBusiness Internet\t175.00\t0.00\tNULL\tChannelHaus\tNULL\tNULL\nSHU42OX\tStaff Heights Medical Practice\t148.79\t35.00\tStafford Heights Medical Practice\tChannelHaus\tBI00735\tauto\nSG1VC60\tEatonsQuality\t146.83\t192.00\tEatons Quality Medical & Skin Cancer\tChannelHaus\tBI00755\tauto\nS00OJNU\tBeenleighMC\t146.58\t192.00\tBeenleigh Road Medical Practice\tChannelHaus\tBI00740\tauto\nSGVQT30\tAlbyFDocsOut\t146.51\t36.00\tAlbany Family Doctors\tChannelHaus\tBI00598\tauto\nSQP06Q1\tOceanMed Enterprises\t145.75\t208.00\tOceanMed Enterprises Pty Ltd\tChannelHaus\tBI00708\tauto\nS7J8IC1\tMchyDocsPlaza\t145.00\t192.00\tMaroochydore Doctors at Sunshine Plaza\tChannelHaus\tBI00686\tauto\nSEJX1FL\tsthsidemed\t144.93\t0.00\tCreek St Pharmacy\tChannelHaus\tNULL\tNULL\nSSVTYFJ\tWaterfordWestMedical\t144.55\t192.00\tWaterford Medical Surgery\tChannelHaus\tBI00786\tauto\nSV8ADUD\tbanyovillage\t144.30\t192.00\tBanyo Village Medical Centre\tChannelHaus\tBI00794\tauto\nSEEV150\tAusdCarindOut\t143.98\t36.00\tAusdocs Carindale Pty Ltd\tChannelHaus\tBI00618\tauto\n",
+  "stderr": "",
+  "execution_time_ms": 1728
+}

@@ -1,0 +1,13 @@
+{
+  "query": "\n-- Get max customer ID\nSELECT MAX(CAST(SUBSTRING(externalId, 2) AS UNSIGNED)) as maxId FROM customers WHERE externalId LIKE 'C%';\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Get max customer ID\nSELECT MAX(CAST(SUBSTRING(externalId, 2) AS UNSIGNED)) as maxId FROM customers WHERE externalId LIKE 'C%';\n",
+  "rows": [
+    {
+      "maxId": "9033"
+    }
+  ],
+  "messages": [],
+  "stdout": "maxId\n9033\n",
+  "stderr": "",
+  "execution_time_ms": 1521
+}

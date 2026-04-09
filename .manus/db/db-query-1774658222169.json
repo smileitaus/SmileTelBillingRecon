@@ -1,0 +1,95 @@
+{
+  "query": "\n-- Check distinct costSource values to understand which ones indicate confirmed zero cost\nSELECT costSource, COUNT(*) as count, \n       SUM(CASE WHEN monthlyCost = 0 THEN 1 ELSE 0 END) as zero_cost_count\nFROM services\nWHERE status != 'terminated'\nGROUP BY costSource\nORDER BY count DESC\nLIMIT 20;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Check distinct costSource values to understand which ones indicate confirmed zero cost\nSELECT costSource, COUNT(*) as count, \n       SUM(CASE WHEN monthlyCost = 0 THEN 1 ELSE 0 END) as zero_cost_count\nFROM services\nWHERE status != 'terminated'\nGROUP BY costSource\nORDER BY count DESC\nLIMIT 20;\n",
+  "rows": [
+    {
+      "costSource": "unknown",
+      "count": "916",
+      "zero_cost_count": "697"
+    },
+    {
+      "costSource": "supplier_invoice",
+      "count": "537",
+      "zero_cost_count": "12"
+    },
+    {
+      "costSource": "access4_diamond_pricebook_excel",
+      "count": "287",
+      "zero_cost_count": "124"
+    },
+    {
+      "costSource": "carbon_api",
+      "count": "240",
+      "zero_cost_count": "0"
+    },
+    {
+      "costSource": "blitz_report",
+      "count": "221",
+      "zero_cost_count": "60"
+    },
+    {
+      "costSource": "sasboss_pricebook",
+      "count": "208",
+      "zero_cost_count": "101"
+    },
+    {
+      "costSource": "manual",
+      "count": "114",
+      "zero_cost_count": "0"
+    },
+    {
+      "costSource": "Vocus IPTel",
+      "count": "111",
+      "zero_cost_count": "0"
+    },
+    {
+      "costSource": "carbon_nbn_estimate",
+      "count": "88",
+      "zero_cost_count": "53"
+    },
+    {
+      "costSource": "pricebook-derived",
+      "count": "76",
+      "zero_cost_count": "0"
+    },
+    {
+      "costSource": "product_map",
+      "count": "67",
+      "zero_cost_count": "0"
+    },
+    {
+      "costSource": "retail_only_no_wholesale",
+      "count": "32",
+      "zero_cost_count": "32"
+    },
+    {
+      "costSource": "access4_invoice_corrected",
+      "count": "29",
+      "zero_cost_count": "25"
+    },
+    {
+      "costSource": "invoice_derived",
+      "count": "13",
+      "zero_cost_count": "0"
+    },
+    {
+      "costSource": "Vocus SIT ExDa",
+      "count": "8",
+      "zero_cost_count": "0"
+    },
+    {
+      "costSource": "abb_opticomm_kent_pricing",
+      "count": "8",
+      "zero_cost_count": "0"
+    },
+    {
+      "costSource": "access4_diamond_pricebook",
+      "count": "1",
+      "zero_cost_count": "0"
+    }
+  ],
+  "messages": [],
+  "stdout": "costSource\tcount\tzero_cost_count\nunknown\t916\t697\nsupplier_invoice\t537\t12\naccess4_diamond_pricebook_excel\t287\t124\ncarbon_api\t240\t0\nblitz_report\t221\t60\nsasboss_pricebook\t208\t101\nmanual\t114\t0\nVocus IPTel\t111\t0\ncarbon_nbn_estimate\t88\t53\npricebook-derived\t76\t0\nproduct_map\t67\t0\nretail_only_no_wholesale\t32\t32\naccess4_invoice_corrected\t29\t25\ninvoice_derived\t13\t0\nVocus SIT ExDa\t8\t0\nabb_opticomm_kent_pricing\t8\t0\naccess4_diamond_pricebook\t1\t0\n",
+  "stderr": "",
+  "execution_time_ms": 1578
+}

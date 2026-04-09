@@ -1,0 +1,339 @@
+{
+  "query": "-- Smile IT services with cost but no revenue\nSELECT externalId, planName, serviceType, provider, monthlyCost\nFROM services\nWHERE customerExternalId = 'C2441' AND monthlyCost > 0 AND monthlyRevenue = 0\nORDER BY monthlyCost DESC;\n\n-- Check if any Xero billing items exist for Smile IT contact names\nSELECT DISTINCT contactName, COUNT(*) as cnt, SUM(lineAmount) as total\nFROM billing_items\nWHERE contactName LIKE '%Smile IT%' OR contactName LIKE '%SmileIT%' OR contactName LIKE '%Smile-IT%'\nGROUP BY contactName;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute -- Smile IT services with cost but no revenue\nSELECT externalId, planName, serviceType, provider, monthlyCost\nFROM services\nWHERE customerExternalId = 'C2441' AND monthlyCost > 0 AND monthlyRevenue = 0\nORDER BY monthlyCost DESC;\n\n-- Check if any Xero billing items exist for Smile IT contact names\nSELECT DISTINCT contactName, COUNT(*) as cnt, SUM(lineAmount) as total\nFROM billing_items\nWHERE contactName LIKE '%Smile IT%' OR contactName LIKE '%SmileIT%' OR contactName LIKE '%Smile-IT%'\nGROUP BY contactName;",
+  "rows": [
+    {
+      "externalId": "S7293",
+      "planName": "IP Tel Auto Attendant Basic",
+      "serviceType": "VoIP",
+      "provider": "Vocus",
+      "monthlyCost": "1153.98"
+    },
+    {
+      "externalId": "SVC0002",
+      "planName": "Umbrella IP 15Tb",
+      "serviceType": "Internet",
+      "provider": "AAPT",
+      "monthlyCost": "1050.00"
+    },
+    {
+      "externalId": "S3B8C",
+      "planName": "0755045020 - Anniversary billing for hosting - /30 Block Of 4 IP Addresses(01/03/2026 - 28/02/2027)",
+      "serviceType": "Other",
+      "provider": "Exetel",
+      "monthlyCost": "940.91"
+    },
+    {
+      "externalId": "S7287",
+      "planName": "IP Tel Basic",
+      "serviceType": "VoIP",
+      "provider": "Vocus",
+      "monthlyCost": "860.35"
+    },
+    {
+      "externalId": "S7392",
+      "planName": "IP Tel Dubber Call Recording (Licence) - Wholesale",
+      "serviceType": "VoIP",
+      "provider": "Vocus",
+      "monthlyCost": "310.50"
+    },
+    {
+      "externalId": "S7285",
+      "planName": "IP Tel Auto Attendant Basic",
+      "serviceType": "VoIP",
+      "provider": "Vocus",
+      "monthlyCost": "258.75"
+    },
+    {
+      "externalId": "S7273",
+      "planName": "IP Tel 10 Number Block",
+      "serviceType": "Voice",
+      "provider": "Vocus",
+      "monthlyCost": "237.82"
+    },
+    {
+      "externalId": "S7303",
+      "planName": "IP Tel Premium",
+      "serviceType": "VoIP",
+      "provider": "Vocus",
+      "monthlyCost": "189.75"
+    },
+    {
+      "externalId": "S7299",
+      "planName": "IP Tel Premium (Reseller)",
+      "serviceType": "VoIP",
+      "provider": "Vocus",
+      "monthlyCost": "184.00"
+    },
+    {
+      "externalId": "SD5S22R",
+      "planName": "RVC PBX USER",
+      "serviceType": "Voice",
+      "provider": "ChannelHaus",
+      "monthlyCost": "135.11"
+    },
+    {
+      "externalId": "S0350",
+      "planName": "NBN 250/25",
+      "serviceType": "Internet",
+      "provider": "ABB",
+      "monthlyCost": "88.00"
+    },
+    {
+      "externalId": "S7300",
+      "planName": "IP Tel Premium (Reseller)",
+      "serviceType": "VoIP",
+      "provider": "Vocus",
+      "monthlyCost": "80.50"
+    },
+    {
+      "externalId": "S0196",
+      "planName": "Business Mobile Plan Essential",
+      "serviceType": "Mobile",
+      "provider": "Telstra",
+      "monthlyCost": "80.00"
+    },
+    {
+      "externalId": "S7297",
+      "planName": "IP Tel Call Centre Standard Agent",
+      "serviceType": "VoIP",
+      "provider": "Vocus",
+      "monthlyCost": "75.90"
+    },
+    {
+      "externalId": "S0233",
+      "planName": "Business Data Plan S",
+      "serviceType": "Data",
+      "provider": "Telstra",
+      "monthlyCost": "65.00"
+    },
+    {
+      "externalId": "SVC0035",
+      "planName": "AAPT IP-Line Link 5723353",
+      "serviceType": "Internet",
+      "provider": "AAPT",
+      "monthlyCost": "62.23"
+    },
+    {
+      "externalId": "SVC0006",
+      "planName": "AAPT IP-Line Link 5510491",
+      "serviceType": "Internet",
+      "provider": "AAPT",
+      "monthlyCost": "55.68"
+    },
+    {
+      "externalId": "S7286",
+      "planName": "IP Tel Standard (Reseller)",
+      "serviceType": "VoIP",
+      "provider": "Vocus",
+      "monthlyCost": "54.00"
+    },
+    {
+      "externalId": "S7356",
+      "planName": "IP Tel Premium (Reseller)",
+      "serviceType": "VoIP",
+      "provider": "Vocus",
+      "monthlyCost": "40.25"
+    },
+    {
+      "externalId": "S7355",
+      "planName": "IP Tel Auto Attendant Basic",
+      "serviceType": "VoIP",
+      "provider": "Vocus",
+      "monthlyCost": "32.79"
+    },
+    {
+      "externalId": "S7351",
+      "planName": "IP Tel Standard (Reseller)",
+      "serviceType": "VoIP",
+      "provider": "Vocus",
+      "monthlyCost": "31.05"
+    },
+    {
+      "externalId": "S7350",
+      "planName": "IP Tel 100 Number Range",
+      "serviceType": "Voice",
+      "provider": "Vocus",
+      "monthlyCost": "30.00"
+    },
+    {
+      "externalId": "S7349",
+      "planName": "IP Tel Auto Attendant Basic",
+      "serviceType": "VoIP",
+      "provider": "Vocus",
+      "monthlyCost": "28.98"
+    },
+    {
+      "externalId": "S7348",
+      "planName": "IP Tel Premium",
+      "serviceType": "VoIP",
+      "provider": "Vocus",
+      "monthlyCost": "28.75"
+    },
+    {
+      "externalId": "S0253",
+      "planName": "Business Data Plan S",
+      "serviceType": "Data",
+      "provider": "Telstra",
+      "monthlyCost": "25.00"
+    },
+    {
+      "externalId": "S7344",
+      "planName": "IP Tel with Webex Basic (Reseller)",
+      "serviceType": "VoIP",
+      "provider": "Vocus",
+      "monthlyCost": "22.77"
+    },
+    {
+      "externalId": "S7341",
+      "planName": "IP Tel Auto Attendant Basic",
+      "serviceType": "VoIP",
+      "provider": "Vocus",
+      "monthlyCost": "20.70"
+    },
+    {
+      "externalId": "S7333",
+      "planName": "IP Tel Standard (Reseller)",
+      "serviceType": "VoIP",
+      "provider": "Vocus",
+      "monthlyCost": "15.53"
+    },
+    {
+      "externalId": "S7334",
+      "planName": "IP Tel Standard (Reseller)",
+      "serviceType": "VoIP",
+      "provider": "Vocus",
+      "monthlyCost": "15.53"
+    },
+    {
+      "externalId": "S7332",
+      "planName": "IP Tel Auto Attendant Basic",
+      "serviceType": "VoIP",
+      "provider": "Vocus",
+      "monthlyCost": "14.49"
+    },
+    {
+      "externalId": "S7331",
+      "planName": "IP Tel Premium (Reseller)",
+      "serviceType": "VoIP",
+      "provider": "Vocus",
+      "monthlyCost": "14.00"
+    },
+    {
+      "externalId": "S7329",
+      "planName": "IP Tel Standard (Reseller)",
+      "serviceType": "VoIP",
+      "provider": "Vocus",
+      "monthlyCost": "10.35"
+    },
+    {
+      "externalId": "S7323",
+      "planName": "IP Tel Auto Attendant Basic",
+      "serviceType": "VoIP",
+      "provider": "Vocus",
+      "monthlyCost": "9.00"
+    },
+    {
+      "externalId": "S7322",
+      "planName": "IP Tel Auto Attendant Basic",
+      "serviceType": "VoIP",
+      "provider": "Vocus",
+      "monthlyCost": "9.00"
+    },
+    {
+      "externalId": "S7321",
+      "planName": "IP Tel Premium (Reseller)",
+      "serviceType": "VoIP",
+      "provider": "Vocus",
+      "monthlyCost": "8.86"
+    },
+    {
+      "externalId": "S7318",
+      "planName": "IP Tel Premium (Reseller)",
+      "serviceType": "VoIP",
+      "provider": "Vocus",
+      "monthlyCost": "8.05"
+    },
+    {
+      "externalId": "S7310",
+      "planName": "SIP Reseller 1",
+      "serviceType": "VoIP",
+      "provider": "Vocus",
+      "monthlyCost": "6.16"
+    },
+    {
+      "externalId": "S7309",
+      "planName": "IP Tel Standard (Reseller)",
+      "serviceType": "VoIP",
+      "provider": "Vocus",
+      "monthlyCost": "5.18"
+    },
+    {
+      "externalId": "S7308",
+      "planName": "IP Tel Standard (Reseller)",
+      "serviceType": "VoIP",
+      "provider": "Vocus",
+      "monthlyCost": "5.18"
+    },
+    {
+      "externalId": "S7305",
+      "planName": "IP Tel Voicemail",
+      "serviceType": "VoIP",
+      "provider": "Vocus",
+      "monthlyCost": "4.00"
+    },
+    {
+      "externalId": "S7376",
+      "planName": "IP Tel Single Number",
+      "serviceType": "Voice",
+      "provider": "Vocus",
+      "monthlyCost": "3.00"
+    },
+    {
+      "externalId": "S7280",
+      "planName": "IP Tel Single Number",
+      "serviceType": "Voice",
+      "provider": "Vocus",
+      "monthlyCost": "2.62"
+    },
+    {
+      "externalId": "S7369",
+      "planName": "IP Tel Single Number",
+      "serviceType": "Voice",
+      "provider": "Vocus",
+      "monthlyCost": "2.00"
+    },
+    {
+      "externalId": "S7359",
+      "planName": "IP Tel Single Number",
+      "serviceType": "Voice",
+      "provider": "Vocus",
+      "monthlyCost": "1.00"
+    },
+    {
+      "externalId": "S7364",
+      "planName": "IP Tel Single Number",
+      "serviceType": "Voice",
+      "provider": "Vocus",
+      "monthlyCost": "1.00"
+    },
+    {
+      "externalId": "S7378",
+      "planName": "IP Tel Single Number",
+      "serviceType": "Voice",
+      "provider": "Vocus",
+      "monthlyCost": "1.00"
+    },
+    {
+      "externalId": "S7379",
+      "planName": "IP Tel Single Number",
+      "serviceType": "Voice",
+      "provider": "Vocus",
+      "monthlyCost": "1.00"
+    }
+  ],
+  "messages": [],
+  "stdout": "externalId\tplanName\tserviceType\tprovider\tmonthlyCost\nS7293\tIP Tel Auto Attendant Basic\tVoIP\tVocus\t1153.98\nSVC0002\tUmbrella IP 15Tb\tInternet\tAAPT\t1050.00\nS3B8C\t0755045020 - Anniversary billing for hosting - /30 Block Of 4 IP Addresses(01/03/2026 - 28/02/2027)\tOther\tExetel\t940.91\nS7287\tIP Tel Basic\tVoIP\tVocus\t860.35\nS7392\tIP Tel Dubber Call Recording (Licence) - Wholesale\tVoIP\tVocus\t310.50\nS7285\tIP Tel Auto Attendant Basic\tVoIP\tVocus\t258.75\nS7273\tIP Tel 10 Number Block\tVoice\tVocus\t237.82\nS7303\tIP Tel Premium\tVoIP\tVocus\t189.75\nS7299\tIP Tel Premium (Reseller)\tVoIP\tVocus\t184.00\nSD5S22R\tRVC PBX USER\tVoice\tChannelHaus\t135.11\nS0350\tNBN 250/25\tInternet\tABB\t88.00\nS7300\tIP Tel Premium (Reseller)\tVoIP\tVocus\t80.50\nS0196\tBusiness Mobile Plan Essential\tMobile\tTelstra\t80.00\nS7297\tIP Tel Call Centre Standard Agent\tVoIP\tVocus\t75.90\nS0233\tBusiness Data Plan S\tData\tTelstra\t65.00\nSVC0035\tAAPT IP-Line Link 5723353\tInternet\tAAPT\t62.23\nSVC0006\tAAPT IP-Line Link 5510491\tInternet\tAAPT\t55.68\nS7286\tIP Tel Standard (Reseller)\tVoIP\tVocus\t54.00\nS7356\tIP Tel Premium (Reseller)\tVoIP\tVocus\t40.25\nS7355\tIP Tel Auto Attendant Basic\tVoIP\tVocus\t32.79\nS7351\tIP Tel Standard (Reseller)\tVoIP\tVocus\t31.05\nS7350\tIP Tel 100 Number Range\tVoice\tVocus\t30.00\nS7349\tIP Tel Auto Attendant Basic\tVoIP\tVocus\t28.98\nS7348\tIP Tel Premium\tVoIP\tVocus\t28.75\nS0253\tBusiness Data Plan S\tData\tTelstra\t25.00\nS7344\tIP Tel with Webex Basic (Reseller)\tVoIP\tVocus\t22.77\nS7341\tIP Tel Auto Attendant Basic\tVoIP\tVocus\t20.70\nS7333\tIP Tel Standard (Reseller)\tVoIP\tVocus\t15.53\nS7334\tIP Tel Standard (Reseller)\tVoIP\tVocus\t15.53\nS7332\tIP Tel Auto Attendant Basic\tVoIP\tVocus\t14.49\nS7331\tIP Tel Premium (Reseller)\tVoIP\tVocus\t14.00\nS7329\tIP Tel Standard (Reseller)\tVoIP\tVocus\t10.35\nS7323\tIP Tel Auto Attendant Basic\tVoIP\tVocus\t9.00\nS7322\tIP Tel Auto Attendant Basic\tVoIP\tVocus\t9.00\nS7321\tIP Tel Premium (Reseller)\tVoIP\tVocus\t8.86\nS7318\tIP Tel Premium (Reseller)\tVoIP\tVocus\t8.05\nS7310\tSIP Reseller 1\tVoIP\tVocus\t6.16\nS7309\tIP Tel Standard (Reseller)\tVoIP\tVocus\t5.18\nS7308\tIP Tel Standard (Reseller)\tVoIP\tVocus\t5.18\nS7305\tIP Tel Voicemail\tVoIP\tVocus\t4.00\nS7376\tIP Tel Single Number\tVoice\tVocus\t3.00\nS7280\tIP Tel Single Number\tVoice\tVocus\t2.62\nS7369\tIP Tel Single Number\tVoice\tVocus\t2.00\nS7359\tIP Tel Single Number\tVoice\tVocus\t1.00\nS7364\tIP Tel Single Number\tVoice\tVocus\t1.00\nS7378\tIP Tel Single Number\tVoice\tVocus\t1.00\nS7379\tIP Tel Single Number\tVoice\tVocus\t1.00\n",
+  "stderr": "",
+  "execution_time_ms": 1792
+}

@@ -1,0 +1,18 @@
+{
+  "query": "\n-- What fields do unmatched services have populated?\nSELECT \n  SUM(CASE WHEN phoneNumber IS NOT NULL AND phoneNumber != '' THEN 1 ELSE 0 END) AS has_phone,\n  SUM(CASE WHEN simSerialNumber IS NOT NULL AND simSerialNumber != '' THEN 1 ELSE 0 END) AS has_sim,\n  SUM(CASE WHEN locationAddress IS NOT NULL AND locationAddress != '' THEN 1 ELSE 0 END) AS has_address,\n  SUM(CASE WHEN customerName IS NOT NULL AND customerName != '' THEN 1 ELSE 0 END) AS has_custname,\n  SUM(CASE WHEN supplierAccount IS NOT NULL AND supplierAccount != '' THEN 1 ELSE 0 END) AS has_supplier_acct,\n  COUNT(*) AS total\nFROM services\nWHERE (customerExternalId IS NULL OR customerExternalId = '');\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- What fields do unmatched services have populated?\nSELECT \n  SUM(CASE WHEN phoneNumber IS NOT NULL AND phoneNumber != '' THEN 1 ELSE 0 END) AS has_phone,\n  SUM(CASE WHEN simSerialNumber IS NOT NULL AND simSerialNumber != '' THEN 1 ELSE 0 END) AS has_sim,\n  SUM(CASE WHEN locationAddress IS NOT NULL AND locationAddress != '' THEN 1 ELSE 0 END) AS has_address,\n  SUM(CASE WHEN customerName IS NOT NULL AND customerName != '' THEN 1 ELSE 0 END) AS has_custname,\n  SUM(CASE WHEN supplierAccount IS NOT NULL AND supplierAccount != '' THEN 1 ELSE 0 END) AS has_supplier_acct,\n  COUNT(*) AS total\nFROM services\nWHERE (customerExternalId IS NULL OR customerExternalId = '');\n",
+  "rows": [
+    {
+      "has_phone": "364",
+      "has_sim": "518",
+      "has_address": "174",
+      "has_custname": "254",
+      "has_supplier_acct": "494",
+      "total": "557"
+    }
+  ],
+  "messages": [],
+  "stdout": "has_phone\thas_sim\thas_address\thas_custname\thas_supplier_acct\ttotal\n364\t518\t174\t254\t494\t557\n",
+  "stderr": "",
+  "execution_time_ms": 1580
+}

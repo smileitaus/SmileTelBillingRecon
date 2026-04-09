@@ -1,0 +1,16 @@
+{
+  "query": "SELECT \n  COUNT(*) as total_vocus_services,\n  COUNT(CASE WHEN contractEndDate IS NOT NULL AND contractEndDate != '' THEN 1 END) as with_contract_end,\n  COUNT(CASE WHEN discoveryNotes LIKE '%Vocus Services Import%' THEN 1 END) as with_vocus_notes,\n  COUNT(CASE WHEN connectionId LIKE 'VBU%' THEN 1 END) as internet_services\nFROM services \nWHERE supplierName = 'Vocus';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute SELECT \n  COUNT(*) as total_vocus_services,\n  COUNT(CASE WHEN contractEndDate IS NOT NULL AND contractEndDate != '' THEN 1 END) as with_contract_end,\n  COUNT(CASE WHEN discoveryNotes LIKE '%Vocus Services Import%' THEN 1 END) as with_vocus_notes,\n  COUNT(CASE WHEN connectionId LIKE 'VBU%' THEN 1 END) as internet_services\nFROM services \nWHERE supplierName = 'Vocus';",
+  "rows": [
+    {
+      "total_vocus_services": "325",
+      "with_contract_end": "82",
+      "with_vocus_notes": "89",
+      "internet_services": "5"
+    }
+  ],
+  "messages": [],
+  "stdout": "total_vocus_services\twith_contract_end\twith_vocus_notes\tinternet_services\n325\t82\t89\t5\n",
+  "stderr": "",
+  "execution_time_ms": 1584
+}

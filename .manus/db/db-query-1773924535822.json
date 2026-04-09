@@ -1,0 +1,108 @@
+{
+  "query": "-- Compass Assurance (C0065) - NBN EE Fibre 500mb - find matching service\nSELECT externalId, planName, provider, monthlyCost, monthlyRevenue FROM services\nWHERE customerExternalId = 'C0065' ORDER BY monthlyCost DESC;\n\n-- Auriga Group (C0020) - AAPT Fibre 400 - find matching service\nSELECT externalId, planName, provider, monthlyCost, monthlyRevenue FROM services\nWHERE customerExternalId IN ('C0020', 'C2416') ORDER BY monthlyCost DESC;\n\n-- Lead Education (C0135) - FIBRE400/36 - find matching service\nSELECT externalId, planName, provider, monthlyCost, monthlyRevenue FROM services\nWHERE customerExternalId IN ('C0135', 'C2431') ORDER BY monthlyCost DESC;\n\n-- Nu-Dev (C0176) - TPG Fibre 400 - find matching service\nSELECT externalId, planName, provider, monthlyCost, monthlyRevenue FROM services\nWHERE customerExternalId = 'C0176' ORDER BY monthlyCost DESC;\n\n-- Strata Dynamics (C0231) - 400/400 Fibre + Teams Voice SIP - find matching services\nSELECT externalId, planName, provider, monthlyCost, monthlyRevenue FROM services\nWHERE customerExternalId IN ('C0231', 'C2447') ORDER BY monthlyCost DESC;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute -- Compass Assurance (C0065) - NBN EE Fibre 500mb - find matching service\nSELECT externalId, planName, provider, monthlyCost, monthlyRevenue FROM services\nWHERE customerExternalId = 'C0065' ORDER BY monthlyCost DESC;\n\n-- Auriga Group (C0020) - AAPT Fibre 400 - find matching service\nSELECT externalId, planName, provider, monthlyCost, monthlyRevenue FROM services\nWHERE customerExternalId IN ('C0020', 'C2416') ORDER BY monthlyCost DESC;\n\n-- Lead Education (C0135) - FIBRE400/36 - find matching service\nSELECT externalId, planName, provider, monthlyCost, monthlyRevenue FROM services\nWHERE customerExternalId IN ('C0135', 'C2431') ORDER BY monthlyCost DESC;\n\n-- Nu-Dev (C0176) - TPG Fibre 400 - find matching service\nSELECT externalId, planName, provider, monthlyCost, monthlyRevenue FROM services\nWHERE customerExternalId = 'C0176' ORDER BY monthlyCost DESC;\n\n-- Strata Dynamics (C0231) - 400/400 Fibre + Teams Voice SIP - find matching services\nSELECT externalId, planName, provider, monthlyCost, monthlyRevenue FROM services\nWHERE customerExternalId IN ('C0231', 'C2447') ORDER BY monthlyCost DESC;",
+  "rows": [
+    {
+      "externalId": "SVC0052",
+      "planName": "FAST Fibre400 14 Argyle Street Albion",
+      "provider": "AAPT",
+      "monthlyCost": "200.00",
+      "monthlyRevenue": "0.00"
+    },
+    {
+      "externalId": "SVC0062",
+      "planName": "NBN EE Queenscliff",
+      "provider": "AAPT",
+      "monthlyCost": "170.00",
+      "monthlyRevenue": "0.00"
+    },
+    {
+      "externalId": "SVC0025",
+      "planName": "FAST Fibre400 14 Argyle Street Albion",
+      "provider": "AAPT",
+      "monthlyCost": "99.00",
+      "monthlyRevenue": "0.00"
+    },
+    {
+      "externalId": "SVC0030",
+      "planName": "NBN EE Queenscliff",
+      "provider": "AAPT",
+      "monthlyCost": "99.00",
+      "monthlyRevenue": "0.00"
+    },
+    {
+      "externalId": "S0783",
+      "planName": "Fibre 400 Internet Service with AAPT\\, 36 mth commit\\, Effective 01/04/2022- Address  400 - Suite 2\\, 14 Argyle Street\\, Albion\\",
+      "provider": "Unknown",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "399.00"
+    },
+    {
+      "externalId": "externalId",
+      "planName": "planName",
+      "provider": "provider",
+      "monthlyCost": "monthlyCost",
+      "monthlyRevenue": "monthlyRevenue"
+    },
+    {
+      "externalId": "SVC0060",
+      "planName": "521248-STDYN",
+      "provider": "AAPT",
+      "monthlyCost": "200.00",
+      "monthlyRevenue": "0.00"
+    },
+    {
+      "externalId": "SVC0029",
+      "planName": "521248-STDYN",
+      "provider": "AAPT",
+      "monthlyCost": "99.00",
+      "monthlyRevenue": "0.00"
+    },
+    {
+      "externalId": "S1405",
+      "planName": "Teams Voice SIP DID - 100 Range",
+      "provider": "SasBoss",
+      "monthlyCost": "20.00",
+      "monthlyRevenue": "40.00"
+    },
+    {
+      "externalId": "S1404",
+      "planName": "400/400 Fibre Internet Service (Renewal 05/03/2027)",
+      "provider": "Unknown",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "374.00"
+    },
+    {
+      "externalId": "S1406",
+      "planName": "Teams Voice SIP Trunk - Unlimited Local/National/Mobile",
+      "provider": "SasBoss",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "180.00"
+    },
+    {
+      "externalId": "S1407",
+      "planName": "Telstra Data SIM$30 per month for 100Gb + $1 per GB for additional usageTrimbles to pay all excess fees (Email 18/04/2024)",
+      "provider": "Unknown",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "30.00"
+    },
+    {
+      "externalId": "S6942",
+      "planName": "Standard Mobile Service",
+      "provider": "Vocus",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00"
+    },
+    {
+      "externalId": "VOCUS-MOB-13631263",
+      "planName": "Vocus Mobile Service",
+      "provider": "Vocus",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00"
+    }
+  ],
+  "messages": [],
+  "stdout": "externalId\tplanName\tprovider\tmonthlyCost\tmonthlyRevenue\nSVC0052\tFAST Fibre400 14 Argyle Street Albion\tAAPT\t200.00\t0.00\nSVC0062\tNBN EE Queenscliff\tAAPT\t170.00\t0.00\nSVC0025\tFAST Fibre400 14 Argyle Street Albion\tAAPT\t99.00\t0.00\nSVC0030\tNBN EE Queenscliff\tAAPT\t99.00\t0.00\nS0783\tFibre 400 Internet Service with AAPT\\, 36 mth commit\\, Effective 01/04/2022- Address  400 - Suite 2\\, 14 Argyle Street\\, Albion\\\tUnknown\t0.00\t399.00\nexternalId\tplanName\tprovider\tmonthlyCost\tmonthlyRevenue\nSVC0060\t521248-STDYN\tAAPT\t200.00\t0.00\nSVC0029\t521248-STDYN\tAAPT\t99.00\t0.00\nS1405\tTeams Voice SIP DID - 100 Range\tSasBoss\t20.00\t40.00\nS1404\t400/400 Fibre Internet Service (Renewal 05/03/2027)\tUnknown\t0.00\t374.00\nS1406\tTeams Voice SIP Trunk - Unlimited Local/National/Mobile\tSasBoss\t0.00\t180.00\nS1407\tTelstra Data SIM$30 per month for 100Gb + $1 per GB for additional usageTrimbles to pay all excess fees (Email 18/04/2024)\tUnknown\t0.00\t30.00\nS6942\tStandard Mobile Service\tVocus\t0.00\t0.00\nVOCUS-MOB-13631263\tVocus Mobile Service\tVocus\t0.00\t0.00\n",
+  "stderr": "",
+  "execution_time_ms": 2360
+}

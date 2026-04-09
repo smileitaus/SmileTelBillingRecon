@@ -1,0 +1,9 @@
+{
+  "query": "\n-- TIAB SIM services - unlinked to customers\nSELECT \n  s.externalId,\n  s.serviceType,\n  s.planName,\n  s.customerName,\n  s.customerExternalId,\n  s.supplierName,\n  s.monthlyRevenue,\n  s.monthlyCost\nFROM services s\nWHERE (s.supplierName = 'TIAB' OR s.planName LIKE '%4G%' OR s.planName LIKE '%SIM%')\n  AND s.status = 'active'\n  AND (s.customerExternalId IS NULL OR s.customerExternalId = '')\nORDER BY s.customerName\nLIMIT 60;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- TIAB SIM services - unlinked to customers\nSELECT \n  s.externalId,\n  s.serviceType,\n  s.planName,\n  s.customerName,\n  s.customerExternalId,\n  s.supplierName,\n  s.monthlyRevenue,\n  s.monthlyCost\nFROM services s\nWHERE (s.supplierName = 'TIAB' OR s.planName LIKE '%4G%' OR s.planName LIKE '%SIM%')\n  AND s.status = 'active'\n  AND (s.customerExternalId IS NULL OR s.customerExternalId = '')\nORDER BY s.customerName\nLIMIT 60;\n",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 1523
+}

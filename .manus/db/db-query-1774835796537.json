@@ -1,0 +1,98 @@
+{
+  "query": "\nSELECT s.externalId, s.serviceType, s.planName, s.monthlyCost, s.monthlyRevenue, c.name AS customerName\nFROM services s\nJOIN customers c ON c.externalId = s.customerExternalId\nWHERE c.name LIKE '%Emergency Medicine%'\nORDER BY s.externalId;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \nSELECT s.externalId, s.serviceType, s.planName, s.monthlyCost, s.monthlyRevenue, c.name AS customerName\nFROM services s\nJOIN customers c ON c.externalId = s.customerExternalId\nWHERE c.name LIKE '%Emergency Medicine%'\nORDER BY s.externalId;\n",
+  "rows": [
+    {
+      "externalId": "IPTEL-AB058642",
+      "serviceType": "Voice",
+      "planName": "1/02/2026 to 1/03/2026 -- IP Tel Single Number",
+      "monthlyCost": "1.00",
+      "monthlyRevenue": "0.00",
+      "customerName": "Emergency Medicine Foundation"
+    },
+    {
+      "externalId": "S0332",
+      "serviceType": "Internet",
+      "planName": "NBN 100/40",
+      "monthlyCost": "73.68",
+      "monthlyRevenue": "120.00",
+      "customerName": "Emergency Medicine Foundation"
+    },
+    {
+      "externalId": "S7381",
+      "serviceType": "Voice",
+      "planName": "IP Tel Single Number",
+      "monthlyCost": "1.00",
+      "monthlyRevenue": "25.00",
+      "customerName": "Emergency Medicine Foundation"
+    },
+    {
+      "externalId": "SS9GZ5US",
+      "serviceType": "Voice",
+      "planName": "UCXcel Webex Basic",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "25.00",
+      "customerName": "Emergency Medicine Foundation"
+    },
+    {
+      "externalId": "SSBZW5VU",
+      "serviceType": "Voice",
+      "planName": "Call Centre Queue with Time of Day Routing",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "25.00",
+      "customerName": "Emergency Medicine Foundation"
+    },
+    {
+      "externalId": "SSJH6KS4",
+      "serviceType": "Voice",
+      "planName": "Premium-1",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "25.00",
+      "customerName": "Emergency Medicine Foundation"
+    },
+    {
+      "externalId": "SSJMFUF3",
+      "serviceType": "Voice",
+      "planName": "UCXcel Essential",
+      "monthlyCost": "9.00",
+      "monthlyRevenue": "25.00",
+      "customerName": "Emergency Medicine Foundation"
+    },
+    {
+      "externalId": "SSOAKWOE",
+      "serviceType": "Voice",
+      "planName": "Voicemail",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "25.00",
+      "customerName": "Emergency Medicine Foundation"
+    },
+    {
+      "externalId": "SSWS5JSC",
+      "serviceType": "Voice",
+      "planName": "DID Australia (1)",
+      "monthlyCost": "0.20",
+      "monthlyRevenue": "5.79",
+      "customerName": "Emergency Medicine Foundation"
+    },
+    {
+      "externalId": "SSZ2TRXE",
+      "serviceType": "Voice",
+      "planName": "(blank)",
+      "monthlyCost": "50.43",
+      "monthlyRevenue": "25.00",
+      "customerName": "Emergency Medicine Foundation"
+    },
+    {
+      "externalId": "SSZFPCUO",
+      "serviceType": "Voice",
+      "planName": "UCXcel Basic Queue Agent",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "25.00",
+      "customerName": "Emergency Medicine Foundation"
+    }
+  ],
+  "messages": [],
+  "stdout": "externalId\tserviceType\tplanName\tmonthlyCost\tmonthlyRevenue\tcustomerName\nIPTEL-AB058642\tVoice\t1/02/2026 to 1/03/2026 -- IP Tel Single Number\t1.00\t0.00\tEmergency Medicine Foundation\nS0332\tInternet\tNBN 100/40\t73.68\t120.00\tEmergency Medicine Foundation\nS7381\tVoice\tIP Tel Single Number\t1.00\t25.00\tEmergency Medicine Foundation\nSS9GZ5US\tVoice\tUCXcel Webex Basic\t0.00\t25.00\tEmergency Medicine Foundation\nSSBZW5VU\tVoice\tCall Centre Queue with Time of Day Routing\t0.00\t25.00\tEmergency Medicine Foundation\nSSJH6KS4\tVoice\tPremium-1\t0.00\t25.00\tEmergency Medicine Foundation\nSSJMFUF3\tVoice\tUCXcel Essential\t9.00\t25.00\tEmergency Medicine Foundation\nSSOAKWOE\tVoice\tVoicemail\t0.00\t25.00\tEmergency Medicine Foundation\nSSWS5JSC\tVoice\tDID Australia (1)\t0.20\t5.79\tEmergency Medicine Foundation\nSSZ2TRXE\tVoice\t(blank)\t50.43\t25.00\tEmergency Medicine Foundation\nSSZFPCUO\tVoice\tUCXcel Basic Queue Agent\t0.00\t25.00\tEmergency Medicine Foundation\n",
+  "stderr": "",
+  "execution_time_ms": 1594
+}

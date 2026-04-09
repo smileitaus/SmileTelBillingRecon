@@ -1,0 +1,27 @@
+{
+  "query": "\nSELECT id, version_label, effective_date, imported_at, is_active, source_filename \nFROM sasboss_pricebook_versions ORDER BY id;\n\nSELECT sheet_name, COUNT(*) as item_count \nFROM sasboss_pricebook_items \nGROUP BY sheet_name;\n\nSELECT product_name, partner_buy_price, partner_sell_price, partner_margin\nFROM sasboss_pricebook_items \nWHERE product_name LIKE '%UCXcel Webex Basic%' OR product_name LIKE '%Webex Basic%';\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \nSELECT id, version_label, effective_date, imported_at, is_active, source_filename \nFROM sasboss_pricebook_versions ORDER BY id;\n\nSELECT sheet_name, COUNT(*) as item_count \nFROM sasboss_pricebook_items \nGROUP BY sheet_name;\n\nSELECT product_name, partner_buy_price, partner_sell_price, partner_margin\nFROM sasboss_pricebook_items \nWHERE product_name LIKE '%UCXcel Webex Basic%' OR product_name LIKE '%Webex Basic%';\n",
+  "rows": [
+    {
+      "id": "2",
+      "version_label": "v2026-03-27",
+      "effective_date": "2026-03-27 19:53:34",
+      "imported_at": "2026-03-27 23:58:23",
+      "is_active": "1",
+      "source_filename": "SasbosssProductpricing.xlsx"
+    }
+  ],
+  "messages": [
+    "sheet_name\titem_count",
+    "Phone Hardware\t414",
+    "Managed Voice - DID Hosting\t17",
+    "UCaaS\t87",
+    "Managed Voice\t12",
+    "Managed Voice - Porting\t17",
+    "product_name\tpartner_buy_price\tpartner_sell_price\tpartner_margin",
+    "UCXcel Webex Basic\t0.000000\t0.000000\tNULL"
+  ],
+  "stdout": "id\tversion_label\teffective_date\timported_at\tis_active\tsource_filename\n2\tv2026-03-27\t2026-03-27 19:53:34\t2026-03-27 23:58:23\t1\tSasbosssProductpricing.xlsx\nsheet_name\titem_count\nPhone Hardware\t414\nManaged Voice - DID Hosting\t17\nUCaaS\t87\nManaged Voice\t12\nManaged Voice - Porting\t17\nproduct_name\tpartner_buy_price\tpartner_sell_price\tpartner_margin\nUCXcel Webex Basic\t0.000000\t0.000000\tNULL\n",
+  "stderr": "",
+  "execution_time_ms": 2078
+}

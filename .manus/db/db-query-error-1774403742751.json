@@ -1,0 +1,8 @@
+{
+  "query": "\nSELECT \n  s.id,\n  s.service_name,\n  s.service_ref,\n  s.monthly_cost,\n  s.monthly_revenue,\n  s.supplier_name,\n  s.customer_name,\n  sba.billing_item_id,\n  bi.description AS billing_item_description,\n  bi.line_amount AS billing_item_amount,\n  bi.unit_amount,\n  bi.quantity,\n  bi.account_code,\n  bi.contact_name\nFROM services s\nLEFT JOIN service_billing_assignments sba ON sba.service_id = s.id\nLEFT JOIN billing_items bi ON bi.id = sba.billing_item_id\nWHERE s.supplier_name LIKE '%Channel%' OR s.supplier_name LIKE '%ECN%'\nORDER BY (s.monthly_revenue - s.monthly_cost) ASC\nLIMIT 15;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \nSELECT \n  s.id,\n  s.service_name,\n  s.service_ref,\n  s.monthly_cost,\n  s.monthly_revenue,\n  s.supplier_name,\n  s.customer_name,\n  sba.billing_item_id,\n  bi.description AS billing_item_description,\n  bi.line_amount AS billing_item_amount,\n  bi.unit_amount,\n  bi.quantity,\n  bi.account_code,\n  bi.contact_name\nFROM services s\nLEFT JOIN service_billing_assignments sba ON sba.service_id = s.id\nLEFT JOIN billing_items bi ON bi.id = sba.billing_item_id\nWHERE s.supplier_name LIKE '%Channel%' OR s.supplier_name LIKE '%ECN%'\nORDER BY (s.monthly_revenue - s.monthly_cost) ASC\nLIMIT 15;\n",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1054 (42S22) at line 2: Unknown column 'sba.service_id' in 'on clause'"
+  ]
+}

@@ -1,0 +1,94 @@
+{
+  "query": "\nSELECT \n  bi.externalId,\n  bi.description,\n  bi.lineAmount,\n  bi.unitAmount,\n  bi.quantity,\n  bi.matchStatus,\n  bi.serviceExternalId,\n  bi.customerExternalId,\n  bi.invoiceDate,\n  bi.billingPlatform\nFROM billing_items bi\nWHERE bi.serviceExternalId IN ('S1242','S1260','S1235','S1323','S1081','S1069','S1059')\nORDER BY bi.serviceExternalId, bi.invoiceDate DESC\nLIMIT 20;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \nSELECT \n  bi.externalId,\n  bi.description,\n  bi.lineAmount,\n  bi.unitAmount,\n  bi.quantity,\n  bi.matchStatus,\n  bi.serviceExternalId,\n  bi.customerExternalId,\n  bi.invoiceDate,\n  bi.billingPlatform\nFROM billing_items bi\nWHERE bi.serviceExternalId IN ('S1242','S1260','S1235','S1323','S1081','S1069','S1059')\nORDER BY bi.serviceExternalId, bi.invoiceDate DESC\nLIMIT 20;\n",
+  "rows": [
+    {
+      "externalId": "BI01226",
+      "description": "Managed Voice Support 11- 25 Users",
+      "lineAmount": "100.00",
+      "unitAmount": "100.00",
+      "quantity": "1.00",
+      "matchStatus": "service-matched",
+      "serviceExternalId": "S1059",
+      "customerExternalId": "C0134",
+      "invoiceDate": "2026-02-27",
+      "billingPlatform": ""
+    },
+    {
+      "externalId": "BI00852",
+      "description": "Managed Voice Support 11- 25 Users",
+      "lineAmount": "100.00",
+      "unitAmount": "100.00",
+      "quantity": "1.00",
+      "matchStatus": "service-matched",
+      "serviceExternalId": "S1069",
+      "customerExternalId": "C0136",
+      "invoiceDate": "2026-02-27",
+      "billingPlatform": ""
+    },
+    {
+      "externalId": "BI01194",
+      "description": "Managed Voice Support 1 - 10 Users",
+      "lineAmount": "75.00",
+      "unitAmount": "75.00",
+      "quantity": "1.00",
+      "matchStatus": "service-matched",
+      "serviceExternalId": "S1081",
+      "customerExternalId": "C0137",
+      "invoiceDate": "2026-02-27",
+      "billingPlatform": ""
+    },
+    {
+      "externalId": "BI01271",
+      "description": "Managed Voice Support - 1 - 10 Users",
+      "lineAmount": "75.00",
+      "unitAmount": "75.00",
+      "quantity": "1.00",
+      "matchStatus": "service-matched",
+      "serviceExternalId": "S1235",
+      "customerExternalId": "C0208",
+      "invoiceDate": "2026-02-27",
+      "billingPlatform": ""
+    },
+    {
+      "externalId": "BI01026",
+      "description": "Managed Voice Support - 1 - 10 Users",
+      "lineAmount": "75.00",
+      "unitAmount": "75.00",
+      "quantity": "1.00",
+      "matchStatus": "service-matched",
+      "serviceExternalId": "S1242",
+      "customerExternalId": "C0210",
+      "invoiceDate": "2026-02-27",
+      "billingPlatform": ""
+    },
+    {
+      "externalId": "BI01058",
+      "description": "Managed Voice Support - 1 - 10 Users",
+      "lineAmount": "75.00",
+      "unitAmount": "75.00",
+      "quantity": "1.00",
+      "matchStatus": "service-matched",
+      "serviceExternalId": "S1260",
+      "customerExternalId": "C0211",
+      "invoiceDate": "2026-02-27",
+      "billingPlatform": ""
+    },
+    {
+      "externalId": "BI00870",
+      "description": "Managed Voice Support 1 - 10 Users",
+      "lineAmount": "75.00",
+      "unitAmount": "75.00",
+      "quantity": "1.00",
+      "matchStatus": "service-matched",
+      "serviceExternalId": "S1323",
+      "customerExternalId": "C0214",
+      "invoiceDate": "2026-02-27",
+      "billingPlatform": ""
+    }
+  ],
+  "messages": [],
+  "stdout": "externalId\tdescription\tlineAmount\tunitAmount\tquantity\tmatchStatus\tserviceExternalId\tcustomerExternalId\tinvoiceDate\tbillingPlatform\nBI01226\tManaged Voice Support 11- 25 Users\t100.00\t100.00\t1.00\tservice-matched\tS1059\tC0134\t2026-02-27\t\nBI00852\tManaged Voice Support 11- 25 Users\t100.00\t100.00\t1.00\tservice-matched\tS1069\tC0136\t2026-02-27\t\nBI01194\tManaged Voice Support 1 - 10 Users\t75.00\t75.00\t1.00\tservice-matched\tS1081\tC0137\t2026-02-27\t\nBI01271\tManaged Voice Support - 1 - 10 Users\t75.00\t75.00\t1.00\tservice-matched\tS1235\tC0208\t2026-02-27\t\nBI01026\tManaged Voice Support - 1 - 10 Users\t75.00\t75.00\t1.00\tservice-matched\tS1242\tC0210\t2026-02-27\t\nBI01058\tManaged Voice Support - 1 - 10 Users\t75.00\t75.00\t1.00\tservice-matched\tS1260\tC0211\t2026-02-27\t\nBI00870\tManaged Voice Support 1 - 10 Users\t75.00\t75.00\t1.00\tservice-matched\tS1323\tC0214\t2026-02-27\t\n",
+  "stderr": "",
+  "execution_time_ms": 1547
+}

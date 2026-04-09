@@ -1,0 +1,160 @@
+{
+  "query": "\n-- Find TIAB SIM services in the main services table\nSELECT externalId, serviceType, serviceTypeDetail, planName, supplierName, customerExternalId, customerName, monthlyCost\nFROM services\nWHERE supplierName LIKE '%TIAB%' OR supplierName LIKE '%Octane%' OR supplierName LIKE '%Inabox%'\n   OR serviceType = '4G' OR serviceTypeDetail LIKE '%SIM%' OR serviceTypeDetail LIKE '%4G%'\nORDER BY externalId\nLIMIT 15;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Find TIAB SIM services in the main services table\nSELECT externalId, serviceType, serviceTypeDetail, planName, supplierName, customerExternalId, customerName, monthlyCost\nFROM services\nWHERE supplierName LIKE '%TIAB%' OR supplierName LIKE '%Octane%' OR supplierName LIKE '%Inabox%'\n   OR serviceType = '4G' OR serviceTypeDetail LIKE '%SIM%' OR serviceTypeDetail LIKE '%4G%'\nORDER BY externalId\nLIMIT 15;\n",
+  "rows": [
+    {
+      "externalId": "S0032",
+      "serviceType": "Mobile",
+      "serviceTypeDetail": "SIM 8250039832277",
+      "planName": "Dot Voice And Broadband Backup",
+      "supplierName": "Telstra",
+      "customerExternalId": "NULL",
+      "customerName": "Unassigned",
+      "monthlyCost": "93.00"
+    },
+    {
+      "externalId": "S0033",
+      "serviceType": "Mobile",
+      "serviceTypeDetail": "SIM 8000332314196",
+      "planName": "Dot Voice And Broadband Backup",
+      "supplierName": "Telstra",
+      "customerExternalId": "NULL",
+      "customerName": "Unassigned",
+      "monthlyCost": "0.00"
+    },
+    {
+      "externalId": "S0034",
+      "serviceType": "Mobile",
+      "serviceTypeDetail": "SIM 8000298305683",
+      "planName": "Dot Voice And Broadband Backup",
+      "supplierName": "Telstra",
+      "customerExternalId": "NULL",
+      "customerName": "Unassigned",
+      "monthlyCost": "0.00"
+    },
+    {
+      "externalId": "S0035",
+      "serviceType": "Mobile",
+      "serviceTypeDetail": "SIM 8500253187000",
+      "planName": "Dot Voice And Broadband Backup",
+      "supplierName": "Telstra",
+      "customerExternalId": "NULL",
+      "customerName": "Unassigned",
+      "monthlyCost": "0.00"
+    },
+    {
+      "externalId": "S0036",
+      "serviceType": "Mobile",
+      "serviceTypeDetail": "SIM 8000270556865",
+      "planName": "Dot Voice And Broadband Backup",
+      "supplierName": "Telstra",
+      "customerExternalId": "NULL",
+      "customerName": "Unassigned",
+      "monthlyCost": "0.00"
+    },
+    {
+      "externalId": "S0037",
+      "serviceType": "Mobile",
+      "serviceTypeDetail": "SIM 8200042644730",
+      "planName": "Dot Voice And Broadband Backup",
+      "supplierName": "Telstra",
+      "customerExternalId": "NULL",
+      "customerName": "Unassigned",
+      "monthlyCost": "0.00"
+    },
+    {
+      "externalId": "S0038",
+      "serviceType": "Mobile",
+      "serviceTypeDetail": "SIM 8500253129259",
+      "planName": "Dot Voice And Broadband Backup",
+      "supplierName": "Telstra",
+      "customerExternalId": "NULL",
+      "customerName": "Unassigned",
+      "monthlyCost": "0.00"
+    },
+    {
+      "externalId": "S0039",
+      "serviceType": "Mobile",
+      "serviceTypeDetail": "SIM 8000330688773",
+      "planName": "Dot Voice And Broadband Backup",
+      "supplierName": "Telstra",
+      "customerExternalId": "NULL",
+      "customerName": "Unassigned",
+      "monthlyCost": "93.00"
+    },
+    {
+      "externalId": "S0040",
+      "serviceType": "Mobile",
+      "serviceTypeDetail": "SIM 8500265414731",
+      "planName": "Dot Voice And Broadband Backup",
+      "supplierName": "Telstra",
+      "customerExternalId": "NULL",
+      "customerName": "Unassigned",
+      "monthlyCost": "0.00"
+    },
+    {
+      "externalId": "S0041",
+      "serviceType": "Mobile",
+      "serviceTypeDetail": "SIM 8500238917893",
+      "planName": "Dot Voice And Broadband Backup",
+      "supplierName": "Telstra",
+      "customerExternalId": "NULL",
+      "customerName": "Unassigned",
+      "monthlyCost": "0.00"
+    },
+    {
+      "externalId": "S0042",
+      "serviceType": "Mobile",
+      "serviceTypeDetail": "SIM 8500280782146",
+      "planName": "Dot Voice And Broadband Backup",
+      "supplierName": "Telstra",
+      "customerExternalId": "NULL",
+      "customerName": "Unassigned",
+      "monthlyCost": "0.00"
+    },
+    {
+      "externalId": "S0043",
+      "serviceType": "Mobile",
+      "serviceTypeDetail": "SIM 8000355202591",
+      "planName": "Dot Voice And Broadband Backup",
+      "supplierName": "Telstra",
+      "customerExternalId": "NULL",
+      "customerName": "Unassigned",
+      "monthlyCost": "0.00"
+    },
+    {
+      "externalId": "S0044",
+      "serviceType": "Mobile",
+      "serviceTypeDetail": "SIM 8000355202583",
+      "planName": "Dot Voice And Broadband Backup",
+      "supplierName": "Telstra",
+      "customerExternalId": "NULL",
+      "customerName": "Unassigned",
+      "monthlyCost": "0.00"
+    },
+    {
+      "externalId": "S0045",
+      "serviceType": "Mobile",
+      "serviceTypeDetail": "SIM 8000355202625",
+      "planName": "Dot Voice And Broadband Backup",
+      "supplierName": "Telstra",
+      "customerExternalId": "NULL",
+      "customerName": "Unassigned",
+      "monthlyCost": "0.00"
+    },
+    {
+      "externalId": "S0046",
+      "serviceType": "Mobile",
+      "serviceTypeDetail": "SIM 8200024142190",
+      "planName": "Dot Voice And Broadband Backup",
+      "supplierName": "Telstra",
+      "customerExternalId": "NULL",
+      "customerName": "Unassigned",
+      "monthlyCost": "0.00"
+    }
+  ],
+  "messages": [],
+  "stdout": "externalId\tserviceType\tserviceTypeDetail\tplanName\tsupplierName\tcustomerExternalId\tcustomerName\tmonthlyCost\nS0032\tMobile\tSIM 8250039832277\tDot Voice And Broadband Backup\tTelstra\tNULL\tUnassigned\t93.00\nS0033\tMobile\tSIM 8000332314196\tDot Voice And Broadband Backup\tTelstra\tNULL\tUnassigned\t0.00\nS0034\tMobile\tSIM 8000298305683\tDot Voice And Broadband Backup\tTelstra\tNULL\tUnassigned\t0.00\nS0035\tMobile\tSIM 8500253187000\tDot Voice And Broadband Backup\tTelstra\tNULL\tUnassigned\t0.00\nS0036\tMobile\tSIM 8000270556865\tDot Voice And Broadband Backup\tTelstra\tNULL\tUnassigned\t0.00\nS0037\tMobile\tSIM 8200042644730\tDot Voice And Broadband Backup\tTelstra\tNULL\tUnassigned\t0.00\nS0038\tMobile\tSIM 8500253129259\tDot Voice And Broadband Backup\tTelstra\tNULL\tUnassigned\t0.00\nS0039\tMobile\tSIM 8000330688773\tDot Voice And Broadband Backup\tTelstra\tNULL\tUnassigned\t93.00\nS0040\tMobile\tSIM 8500265414731\tDot Voice And Broadband Backup\tTelstra\tNULL\tUnassigned\t0.00\nS0041\tMobile\tSIM 8500238917893\tDot Voice And Broadband Backup\tTelstra\tNULL\tUnassigned\t0.00\nS0042\tMobile\tSIM 8500280782146\tDot Voice And Broadband Backup\tTelstra\tNULL\tUnassigned\t0.00\nS0043\tMobile\tSIM 8000355202591\tDot Voice And Broadband Backup\tTelstra\tNULL\tUnassigned\t0.00\nS0044\tMobile\tSIM 8000355202583\tDot Voice And Broadband Backup\tTelstra\tNULL\tUnassigned\t0.00\nS0045\tMobile\tSIM 8000355202625\tDot Voice And Broadband Backup\tTelstra\tNULL\tUnassigned\t0.00\nS0046\tMobile\tSIM 8200024142190\tDot Voice And Broadband Backup\tTelstra\tNULL\tUnassigned\t0.00\n",
+  "stderr": "",
+  "execution_time_ms": 1587
+}

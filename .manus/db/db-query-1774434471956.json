@@ -1,0 +1,42 @@
+{
+  "query": "\n-- Sample phone_numbers.number values\nSELECT number, numberDisplay, customerExternalId FROM phone_numbers WHERE customerExternalId IS NOT NULL AND customerExternalId != '' LIMIT 5;\n\n-- Sample unmatched services phoneNumber values\nSELECT externalId, phoneNumber FROM services WHERE (customerExternalId IS NULL OR customerExternalId = '') AND phoneNumber IS NOT NULL AND phoneNumber != '' AND phoneNumber NOT LIKE '%Unknown%' LIMIT 5;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Sample phone_numbers.number values\nSELECT number, numberDisplay, customerExternalId FROM phone_numbers WHERE customerExternalId IS NOT NULL AND customerExternalId != '' LIMIT 5;\n\n-- Sample unmatched services phoneNumber values\nSELECT externalId, phoneNumber FROM services WHERE (customerExternalId IS NULL OR customerExternalId = '') AND phoneNumber IS NOT NULL AND phoneNumber != '' AND phoneNumber NOT LIKE '%Unknown%' LIMIT 5;\n",
+  "rows": [
+    {
+      "number": "0738813335",
+      "numberDisplay": "07 3881 3335",
+      "customerExternalId": "C0009"
+    },
+    {
+      "number": "0738632226",
+      "numberDisplay": "07 3863 2226",
+      "customerExternalId": "C0016"
+    },
+    {
+      "number": "0733985225",
+      "numberDisplay": "07 3398 5225",
+      "customerExternalId": "C0022"
+    },
+    {
+      "number": "0754062081",
+      "numberDisplay": "07 5406 2081",
+      "customerExternalId": "C0079"
+    },
+    {
+      "number": "0732892366",
+      "numberDisplay": "07 3289 2366",
+      "customerExternalId": "C0080"
+    }
+  ],
+  "messages": [
+    "externalId\tphoneNumber",
+    "S0024\t07 3891 2724",
+    "S0025\t07 3846 7857",
+    "S0026\t07 3863 0705",
+    "S0032\t0408 280 923",
+    "S0033\t0417 986 051"
+  ],
+  "stdout": "number\tnumberDisplay\tcustomerExternalId\n0738813335\t07 3881 3335\tC0009\n0738632226\t07 3863 2226\tC0016\n0733985225\t07 3398 5225\tC0022\n0754062081\t07 5406 2081\tC0079\n0732892366\t07 3289 2366\tC0080\nexternalId\tphoneNumber\nS0024\t07 3891 2724\nS0025\t07 3846 7857\nS0026\t07 3863 0705\nS0032\t0408 280 923\nS0033\t0417 986 051\n",
+  "stderr": "",
+  "execution_time_ms": 1789
+}

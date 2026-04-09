@@ -1,0 +1,1642 @@
+{
+  "query": "SELECT id, productName, wholesaleCost, defaultRetailPrice, rrp, notes\nFROM supplier_product_cost_map\nWHERE supplier = 'SasBoss'\nORDER BY productName;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute SELECT id, productName, wholesaleCost, defaultRetailPrice, rrp, notes\nFROM supplier_product_cost_map\nWHERE supplier = 'SasBoss'\nORDER BY productName;",
+  "rows": [
+    {
+      "id": "30061",
+      "productName": "0800 Mobile Inbound Calls",
+      "wholesaleCost": "0.15000",
+      "defaultRetailPrice": "0.22430",
+      "rrp": "0.22430",
+      "notes": "Diamond=0.15 | Gold=0.15 | Platinum=0.15"
+    },
+    {
+      "id": "30060",
+      "productName": "0800 National Inbound Calls",
+      "wholesaleCost": "0.05000",
+      "defaultRetailPrice": "0.09190",
+      "rrp": "0.09190",
+      "notes": "Diamond=0.05 | Gold=0.05 | Platinum=0.05"
+    },
+    {
+      "id": "93",
+      "productName": "1300 Inbound Calls",
+      "wholesaleCost": "0.03860",
+      "defaultRetailPrice": "0.05510",
+      "rrp": "0.05510",
+      "notes": "Diamond=0.04 | Gold=0.04 | Platinum=0.04"
+    },
+    {
+      "id": "90",
+      "productName": "13Number",
+      "wholesaleCost": "0.21000",
+      "defaultRetailPrice": "0.30000",
+      "rrp": "1100.00000",
+      "notes": "Usage charge per minute for outbound 13-number calls. Retail $0.30/min per invoice ST-6796. Wholesale approx $0.21/min (Vocus). NOT a monthly recurring fee."
+    },
+    {
+      "id": "94",
+      "productName": "1800 Inbound Calls",
+      "wholesaleCost": "0.04170",
+      "defaultRetailPrice": "0.05950",
+      "rrp": "0.05950",
+      "notes": "Diamond=0.04 | Gold=0.04 | Platinum=0.04"
+    },
+    {
+      "id": "74",
+      "productName": "3 Channels Business SIP",
+      "wholesaleCost": "14.40000",
+      "defaultRetailPrice": "25.80000",
+      "rrp": "25.80000",
+      "notes": "3x SIP Channel PAYG"
+    },
+    {
+      "id": "73",
+      "productName": "4 Channels Business SIP",
+      "wholesaleCost": "19.20000",
+      "defaultRetailPrice": "34.40000",
+      "rrp": "34.40000",
+      "notes": "4x SIP Channel PAYG"
+    },
+    {
+      "id": "30026",
+      "productName": "Advanced User License",
+      "wholesaleCost": "59.25000",
+      "defaultRetailPrice": "79.00000",
+      "rrp": "79.00000",
+      "notes": "Diamond=59.25 | Gold=59.25 | Platinum=59.25"
+    },
+    {
+      "id": "92",
+      "productName": "AU Mobile Outbound Calls",
+      "wholesaleCost": "0.09167",
+      "defaultRetailPrice": "0.13100",
+      "rrp": "0.13100",
+      "notes": "Diamond=0.09 | Gold=0.09 | Platinum=0.09"
+    },
+    {
+      "id": "91",
+      "productName": "AU National Outbound Calls",
+      "wholesaleCost": "0.03857",
+      "defaultRetailPrice": "0.05510",
+      "rrp": "0.05510",
+      "notes": "Diamond=0.04 | Gold=0.04 | Platinum=0.04"
+    },
+    {
+      "id": "19",
+      "productName": "Auto Attendant (IVR) with TOD routing",
+      "wholesaleCost": "9.00000",
+      "defaultRetailPrice": "15.00000",
+      "rrp": "15.00000",
+      "notes": "Diamond=9.00 | Gold=10.50 | Platinum=9.75"
+    },
+    {
+      "id": "37",
+      "productName": "Auto Attendant with Time of Day Routing",
+      "wholesaleCost": "9.00000",
+      "defaultRetailPrice": "15.00000",
+      "rrp": "15.00000",
+      "notes": "NULL"
+    },
+    {
+      "id": "30037",
+      "productName": "Basic",
+      "wholesaleCost": "5.80000",
+      "defaultRetailPrice": "87.00000",
+      "rrp": "87.00000",
+      "notes": "Diamond=69.60 | Gold=69.60 | Platinum=69.60"
+    },
+    {
+      "id": "103",
+      "productName": "Basic Call Queue",
+      "wholesaleCost": "6.30000",
+      "defaultRetailPrice": "10.50000",
+      "rrp": "10.50000",
+      "notes": "NULL"
+    },
+    {
+      "id": "14",
+      "productName": "Basic Call Queue Agent",
+      "wholesaleCost": "6.30000",
+      "defaultRetailPrice": "10.50000",
+      "rrp": "10.50000",
+      "notes": "Diamond=6.30 | Gold=7.35 | Platinum=6.83"
+    },
+    {
+      "id": "30002",
+      "productName": "Basic User - Included Calls",
+      "wholesaleCost": "10.80000",
+      "defaultRetailPrice": "18.00000",
+      "rrp": "18.00000",
+      "notes": "Diamond=10.80 | Gold=12.60 | Platinum=11.70"
+    },
+    {
+      "id": "30005",
+      "productName": "Basic User - PAYG",
+      "wholesaleCost": "7.20000",
+      "defaultRetailPrice": "12.00000",
+      "rrp": "12.00000",
+      "notes": "Diamond=7.20 | Gold=8.40 | Platinum=7.80"
+    },
+    {
+      "id": "13",
+      "productName": "Business Fax Service",
+      "wholesaleCost": "7.20000",
+      "defaultRetailPrice": "12.00000",
+      "rrp": "12.00000",
+      "notes": "Diamond=7.20 | Gold=8.40 | Platinum=7.80"
+    },
+    {
+      "id": "72",
+      "productName": "Business Trunk (PAYG)",
+      "wholesaleCost": "4.80000",
+      "defaultRetailPrice": "8.60000",
+      "rrp": "8.60000",
+      "notes": "SasBoss name for SIP Channel - PAYG"
+    },
+    {
+      "id": "11",
+      "productName": "Call Centre Agent Web App",
+      "wholesaleCost": "14.40000",
+      "defaultRetailPrice": "24.00000",
+      "rrp": "24.00000",
+      "notes": "Diamond=14.40 | Gold=16.80 | Platinum=15.60"
+    },
+    {
+      "id": "102",
+      "productName": "Call Centre Queue with Time of Day Routing",
+      "wholesaleCost": "9.00000",
+      "defaultRetailPrice": "15.00000",
+      "rrp": "15.00000",
+      "notes": "Auto Attendant / Queue"
+    },
+    {
+      "id": "10",
+      "productName": "Call Centre Supervisor Web App",
+      "wholesaleCost": "29.97000",
+      "defaultRetailPrice": "49.95000",
+      "rrp": "49.95000",
+      "notes": "Diamond=29.97 | Gold=34.97 | Platinum=32.47"
+    },
+    {
+      "id": "12",
+      "productName": "Call Centre Wall Board",
+      "wholesaleCost": "68.00000",
+      "defaultRetailPrice": "85.00000",
+      "rrp": "85.00000",
+      "notes": "Diamond=68.00 | Gold=68.00 | Platinum=68.00"
+    },
+    {
+      "id": "58",
+      "productName": "Call Recording - AI",
+      "wholesaleCost": "19.00000",
+      "defaultRetailPrice": "25.00000",
+      "rrp": "25.00000",
+      "notes": "Diamond=19.00 | Gold=19.00 | Platinum=19.00"
+    },
+    {
+      "id": "56",
+      "productName": "Call Recording - Lite",
+      "wholesaleCost": "2.00000",
+      "defaultRetailPrice": "3.00000",
+      "rrp": "3.00000",
+      "notes": "Diamond=2.00 | Gold=2.00 | Platinum=2.00"
+    },
+    {
+      "id": "57",
+      "productName": "Call Recording - Unlimited",
+      "wholesaleCost": "9.50000",
+      "defaultRetailPrice": "13.00000",
+      "rrp": "13.00000",
+      "notes": "Diamond=9.50 | Gold=9.50 | Platinum=9.50"
+    },
+    {
+      "id": "30018",
+      "productName": "Call Recording Storage - Additional - Per 10 GB",
+      "wholesaleCost": "6.50000",
+      "defaultRetailPrice": "10.00000",
+      "rrp": "10.00000",
+      "notes": "Diamond=6.50 | Gold=6.50 | Platinum=6.50"
+    },
+    {
+      "id": "30017",
+      "productName": "Call Recording Storage - Starter - 20 GB",
+      "wholesaleCost": "13.00000",
+      "defaultRetailPrice": "20.00000",
+      "rrp": "20.00000",
+      "notes": "Diamond=13.00 | Gold=13.00 | Platinum=13.00"
+    },
+    {
+      "id": "30004",
+      "productName": "Channel - Included Calls (5 Channel Minimum)",
+      "wholesaleCost": "27.00000",
+      "defaultRetailPrice": "45.00000",
+      "rrp": "45.00000",
+      "notes": "Diamond=27.00 | Gold=31.50 | Platinum=29.25"
+    },
+    {
+      "id": "30007",
+      "productName": "Channel - PAYG (5 Channel Minimum)",
+      "wholesaleCost": "10.80000",
+      "defaultRetailPrice": "18.00000",
+      "rrp": "18.00000",
+      "notes": "Diamond=10.80 | Gold=12.60 | Platinum=11.70"
+    },
+    {
+      "id": "30041",
+      "productName": "Chat",
+      "wholesaleCost": "10.40000",
+      "defaultRetailPrice": "13.00000",
+      "rrp": "13.00000",
+      "notes": "Diamond=10.40 | Gold=10.40 | Platinum=10.40"
+    },
+    {
+      "id": "30048",
+      "productName": "Cobrowse (Web)",
+      "wholesaleCost": "21.60000",
+      "defaultRetailPrice": "27.00000",
+      "rrp": "27.00000",
+      "notes": "Diamond=21.60 | Gold=21.60 | Platinum=21.60"
+    },
+    {
+      "id": "106",
+      "productName": "Collaborate Basic User with Cisco Webex",
+      "wholesaleCost": "13.80000",
+      "defaultRetailPrice": "23.00000",
+      "rrp": "23.00000",
+      "notes": "Diamond=13.80 | Gold=16.10 | Platinum=14.95"
+    },
+    {
+      "id": "30019",
+      "productName": "Collaborate Basic User with Cisco Webex - Bundled",
+      "wholesaleCost": "24.00000",
+      "defaultRetailPrice": "40.00000",
+      "rrp": "40.00000",
+      "notes": "Diamond=24.00 | Gold=28.00 | Platinum=26.00"
+    },
+    {
+      "id": "30022",
+      "productName": "Collaborate Basic User with Cisco Webex - Included Calls",
+      "wholesaleCost": "21.00000",
+      "defaultRetailPrice": "35.00000",
+      "rrp": "35.00000",
+      "notes": "Diamond=21.00 | Gold=24.50 | Platinum=22.75"
+    },
+    {
+      "id": "108",
+      "productName": "Collaborate Premium User with Cisco Webex",
+      "wholesaleCost": "30.00000",
+      "defaultRetailPrice": "50.00000",
+      "rrp": "50.00000",
+      "notes": "Diamond=30.00 | Gold=35.00 | Platinum=32.50"
+    },
+    {
+      "id": "30021",
+      "productName": "Collaborate Premium User with Cisco Webex - Bundled",
+      "wholesaleCost": "39.00000",
+      "defaultRetailPrice": "65.00000",
+      "rrp": "65.00000",
+      "notes": "Diamond=39.00 | Gold=45.50 | Platinum=42.25"
+    },
+    {
+      "id": "30024",
+      "productName": "Collaborate Premium User with Cisco Webex - Included Calls",
+      "wholesaleCost": "36.00000",
+      "defaultRetailPrice": "60.00000",
+      "rrp": "60.00000",
+      "notes": "Diamond=36.00 | Gold=42.00 | Platinum=39.00"
+    },
+    {
+      "id": "107",
+      "productName": "Collaborate Standard User with Cisco Webex",
+      "wholesaleCost": "18.00000",
+      "defaultRetailPrice": "30.00000",
+      "rrp": "30.00000",
+      "notes": "Diamond=18.00 | Gold=21.00 | Platinum=19.50"
+    },
+    {
+      "id": "30020",
+      "productName": "Collaborate Standard User with Cisco Webex - Bundled",
+      "wholesaleCost": "27.00000",
+      "defaultRetailPrice": "45.00000",
+      "rrp": "45.00000",
+      "notes": "Diamond=27.00 | Gold=31.50 | Platinum=29.25"
+    },
+    {
+      "id": "30023",
+      "productName": "Collaborate Standard User with Cisco Webex - Included Calls",
+      "wholesaleCost": "24.00000",
+      "defaultRetailPrice": "40.00000",
+      "rrp": "40.00000",
+      "notes": "Diamond=24.00 | Gold=28.00 | Platinum=26.00"
+    },
+    {
+      "id": "8",
+      "productName": "Common Phone License",
+      "wholesaleCost": "3.90000",
+      "defaultRetailPrice": "6.50000",
+      "rrp": "6.50000",
+      "notes": "Diamond=3.90 | Gold=4.55 | Platinum=4.23"
+    },
+    {
+      "id": "30072",
+      "productName": "Complex (CAT C) Port Per Batch",
+      "wholesaleCost": "102.86000",
+      "defaultRetailPrice": "160.00000",
+      "rrp": "160.00000",
+      "notes": "Diamond=102.86 | Gold=120.00 | Platinum=111.43"
+    },
+    {
+      "id": "30080",
+      "productName": "Complex Retarget Fee (Per Batch) - Second Instance",
+      "wholesaleCost": "499.00000",
+      "defaultRetailPrice": "599.00000",
+      "rrp": "599.00000",
+      "notes": "Diamond=499.00 | Gold=499.00 | Platinum=499.00"
+    },
+    {
+      "id": "59",
+      "productName": "CRM Integration",
+      "wholesaleCost": "10.47000",
+      "defaultRetailPrice": "13.00000",
+      "rrp": "13.00000",
+      "notes": "Diamond=10.47 | Gold=10.47 | Platinum=10.47"
+    },
+    {
+      "id": "30047",
+      "productName": "Custom Metrics",
+      "wholesaleCost": "4.00000",
+      "defaultRetailPrice": "5.00000",
+      "rrp": "5.00000",
+      "notes": "Diamond=4.00 | Gold=4.00 | Platinum=4.00"
+    },
+    {
+      "id": "30050",
+      "productName": "CX Intercloud (Basic)",
+      "wholesaleCost": "56.00000",
+      "defaultRetailPrice": "70.00000",
+      "rrp": "70.00000",
+      "notes": "Diamond=56.00 | Gold=56.00 | Platinum=56.00"
+    },
+    {
+      "id": "30053",
+      "productName": "CX Intercloud (Digital)",
+      "wholesaleCost": "59.20000",
+      "defaultRetailPrice": "74.00000",
+      "rrp": "74.00000",
+      "notes": "Diamond=59.20 | Gold=59.20 | Platinum=59.20"
+    },
+    {
+      "id": "30052",
+      "productName": "CX Intercloud (Enterprise)",
+      "wholesaleCost": "103.20000",
+      "defaultRetailPrice": "129.00000",
+      "rrp": "129.00000",
+      "notes": "Diamond=103.20 | Gold=103.20 | Platinum=103.20"
+    },
+    {
+      "id": "30051",
+      "productName": "CX Intercloud (Pro)",
+      "wholesaleCost": "84.80000",
+      "defaultRetailPrice": "106.00000",
+      "rrp": "106.00000",
+      "notes": "Diamond=84.80 | Gold=84.80 | Platinum=84.80"
+    },
+    {
+      "id": "30049",
+      "productName": "Data Sharing (Snowflake)",
+      "wholesaleCost": "536.00000",
+      "defaultRetailPrice": "670.00000",
+      "rrp": "670.00000",
+      "notes": "Diamond=536.00 | Gold=536.00 | Platinum=536.00"
+    },
+    {
+      "id": "30064",
+      "productName": "DDI (NZ)",
+      "wholesaleCost": "0.45000",
+      "defaultRetailPrice": "0.50000",
+      "rrp": "0.50000",
+      "notes": "Diamond=0.45 | Gold=0.45 | Platinum=0.45"
+    },
+    {
+      "id": "30035",
+      "productName": "Dedicated Virtual Number",
+      "wholesaleCost": "15.00000",
+      "defaultRetailPrice": "25.00000",
+      "rrp": "25.00000",
+      "notes": "Diamond=15.00 | Gold=17.50 | Platinum=16.25"
+    },
+    {
+      "id": "30063",
+      "productName": "DID (AUD)",
+      "wholesaleCost": "0.33000",
+      "defaultRetailPrice": "0.35000",
+      "rrp": "0.35000",
+      "notes": "Diamond=0.33 | Gold=0.33 | Platinum=0.33"
+    },
+    {
+      "id": "84",
+      "productName": "DID Australia (1)",
+      "wholesaleCost": "0.33000",
+      "defaultRetailPrice": "2.00000",
+      "rrp": "2.00000",
+      "notes": "DID (AUD) $0.33/month Diamond. SasBoss charges $2 retail."
+    },
+    {
+      "id": "85",
+      "productName": "DID Australia (10)",
+      "wholesaleCost": "3.30000",
+      "defaultRetailPrice": "20.00000",
+      "rrp": "20.00000",
+      "notes": "10x DID"
+    },
+    {
+      "id": "86",
+      "productName": "DID Australia (100)",
+      "wholesaleCost": "33.00000",
+      "defaultRetailPrice": "55.00000",
+      "rrp": "55.00000",
+      "notes": "100x DID"
+    },
+    {
+      "id": "30040",
+      "productName": "Digital",
+      "wholesaleCost": "73.60000",
+      "defaultRetailPrice": "92.00000",
+      "rrp": "92.00000",
+      "notes": "Diamond=73.60 | Gold=73.60 | Platinum=73.60"
+    },
+    {
+      "id": "87",
+      "productName": "Direct In Dial AU Mobile Number (1)",
+      "wholesaleCost": "20.00000",
+      "defaultRetailPrice": "22.50000",
+      "rrp": "22.50000",
+      "notes": "Mobile DID"
+    },
+    {
+      "id": "100",
+      "productName": "eFax",
+      "wholesaleCost": "3.00000",
+      "defaultRetailPrice": "5.00000",
+      "rrp": "5.00000",
+      "notes": "Fax to Email Add-On"
+    },
+    {
+      "id": "101",
+      "productName": "eFax Service",
+      "wholesaleCost": "3.00000",
+      "defaultRetailPrice": "5.00000",
+      "rrp": "5.00000",
+      "notes": "NULL"
+    },
+    {
+      "id": "30082",
+      "productName": "Emergency Returns Complex (1-5 Numbers) Per Batch",
+      "wholesaleCost": "600.00000",
+      "defaultRetailPrice": "700.00000",
+      "rrp": "700.00000",
+      "notes": "Diamond=600.00 | Gold=600.00 | Platinum=600.00"
+    },
+    {
+      "id": "30085",
+      "productName": "Emergency Returns Complex (100+ Numbers) Per Batch",
+      "wholesaleCost": "3500.00000",
+      "defaultRetailPrice": "3800.00000",
+      "rrp": "3800.00000",
+      "notes": "Diamond=3500.00 | Gold=3500.00 | Platinum=3500.00"
+    },
+    {
+      "id": "30084",
+      "productName": "Emergency Returns Complex (21-100 Numbers) Per Batch",
+      "wholesaleCost": "2300.00000",
+      "defaultRetailPrice": "2500.00000",
+      "rrp": "2500.00000",
+      "notes": "Diamond=2300.00 | Gold=2300.00 | Platinum=2300.00"
+    },
+    {
+      "id": "30083",
+      "productName": "Emergency Returns Complex (6-20 Numbers) Per Batch",
+      "wholesaleCost": "800.00000",
+      "defaultRetailPrice": "900.00000",
+      "rrp": "900.00000",
+      "notes": "Diamond=800.00 | Gold=800.00 | Platinum=800.00"
+    },
+    {
+      "id": "30081",
+      "productName": "Emergency Returns Simple",
+      "wholesaleCost": "500.00000",
+      "defaultRetailPrice": "600.00000",
+      "rrp": "600.00000",
+      "notes": "Diamond=500.00 | Gold=500.00 | Platinum=500.00"
+    },
+    {
+      "id": "15",
+      "productName": "Enhanced Call Centre Agent",
+      "wholesaleCost": "9.30000",
+      "defaultRetailPrice": "15.50000",
+      "rrp": "15.50000",
+      "notes": "Diamond=9.30 | Gold=10.85 | Platinum=10.08"
+    },
+    {
+      "id": "30001",
+      "productName": "Enhanced User - Bundled",
+      "wholesaleCost": "21.00000",
+      "defaultRetailPrice": "35.00000",
+      "rrp": "35.00000",
+      "notes": "Diamond=21.00 | Gold=24.50 | Platinum=22.75"
+    },
+    {
+      "id": "30003",
+      "productName": "Enhanced User - Included Calls",
+      "wholesaleCost": "18.00000",
+      "defaultRetailPrice": "30.00000",
+      "rrp": "30.00000",
+      "notes": "Diamond=18.00 | Gold=21.00 | Platinum=19.50"
+    },
+    {
+      "id": "30006",
+      "productName": "Enhanced User - PAYG",
+      "wholesaleCost": "9.00000",
+      "defaultRetailPrice": "15.00000",
+      "rrp": "15.00000",
+      "notes": "Diamond=9.00 | Gold=10.50 | Platinum=9.75"
+    },
+    {
+      "id": "30039",
+      "productName": "Enterprise",
+      "wholesaleCost": "128.80000",
+      "defaultRetailPrice": "161.00000",
+      "rrp": "161.00000",
+      "notes": "Diamond=128.80 | Gold=128.80 | Platinum=128.80"
+    },
+    {
+      "id": "76",
+      "productName": "Essentials",
+      "wholesaleCost": "6.75000",
+      "defaultRetailPrice": "11.25000",
+      "rrp": "11.25000",
+      "notes": "UC Xpress Essentials per simultaneous call"
+    },
+    {
+      "id": "30014",
+      "productName": "Essentials (Per Simultaneous Call)",
+      "wholesaleCost": "9.00000",
+      "defaultRetailPrice": "15.00000",
+      "rrp": "15.00000",
+      "notes": "Diamond=9.00 | Gold=10.50 | Platinum=9.75"
+    },
+    {
+      "id": "30025",
+      "productName": "Essentials User License",
+      "wholesaleCost": "14.25000",
+      "defaultRetailPrice": "19.00000",
+      "rrp": "19.00000",
+      "notes": "Diamond=14.25 | Gold=14.25 | Platinum=14.25"
+    },
+    {
+      "id": "6",
+      "productName": "Executive User",
+      "wholesaleCost": "9.00000",
+      "defaultRetailPrice": "15.00000",
+      "rrp": "15.00000",
+      "notes": "Diamond=9.00 | Gold=10.50 | Platinum=9.75"
+    },
+    {
+      "id": "2",
+      "productName": "Executive User - Bundled",
+      "wholesaleCost": "21.00000",
+      "defaultRetailPrice": "35.00000",
+      "rrp": "35.00000",
+      "notes": "Diamond=21.00 | Gold=24.50 | Platinum=22.75"
+    },
+    {
+      "id": "4",
+      "productName": "Executive user - Included Calls",
+      "wholesaleCost": "18.00000",
+      "defaultRetailPrice": "30.00000",
+      "rrp": "30.00000",
+      "notes": "Diamond=18.00 | Gold=21.00 | Platinum=19.50"
+    },
+    {
+      "id": "30016",
+      "productName": "External Channel - Included",
+      "wholesaleCost": "24.00000",
+      "defaultRetailPrice": "50.00000",
+      "rrp": "50.00000",
+      "notes": "Diamond=24.00 | Gold=30.00 | Platinum=27.00"
+    },
+    {
+      "id": "78",
+      "productName": "External Channel - PAYG",
+      "wholesaleCost": "4.80000",
+      "defaultRetailPrice": "8.60000",
+      "rrp": "8.60000",
+      "notes": "Diamond=4.80 | Gold=6.00 | Platinum=5.40"
+    },
+    {
+      "id": "77",
+      "productName": "External Channels",
+      "wholesaleCost": "4.80000",
+      "defaultRetailPrice": "8.60000",
+      "rrp": "8.60000",
+      "notes": "UC Xpress External Channel PAYG"
+    },
+    {
+      "id": "21",
+      "productName": "Fax to Email Add-On",
+      "wholesaleCost": "3.00000",
+      "defaultRetailPrice": "5.00000",
+      "rrp": "5.00000",
+      "notes": "Diamond=3.00 | Gold=3.50 | Platinum=3.25"
+    },
+    {
+      "id": "30012",
+      "productName": "Flex Channel - Included Calls (5 Channel Minimum)",
+      "wholesaleCost": "36.00000",
+      "defaultRetailPrice": "60.00000",
+      "rrp": "60.00000",
+      "notes": "Diamond=36.00 | Gold=42.00 | Platinum=39.00"
+    },
+    {
+      "id": "30011",
+      "productName": "Flex Channel - PAYG (5 Channel Minimum)",
+      "wholesaleCost": "10.80000",
+      "defaultRetailPrice": "18.00000",
+      "rrp": "18.00000",
+      "notes": "Diamond=10.80 | Gold=12.60 | Platinum=11.70"
+    },
+    {
+      "id": "30010",
+      "productName": "Flex Enhanced User - Bundled",
+      "wholesaleCost": "21.00000",
+      "defaultRetailPrice": "35.00000",
+      "rrp": "35.00000",
+      "notes": "Diamond=21.00 | Gold=24.50 | Platinum=22.75"
+    },
+    {
+      "id": "30009",
+      "productName": "Flex Enhanced User - Included Calls",
+      "wholesaleCost": "18.00000",
+      "defaultRetailPrice": "30.00000",
+      "rrp": "30.00000",
+      "notes": "Diamond=18.00 | Gold=21.00 | Platinum=19.50"
+    },
+    {
+      "id": "30008",
+      "productName": "Flex Enhanced User - PAYG",
+      "wholesaleCost": "9.00000",
+      "defaultRetailPrice": "15.00000",
+      "rrp": "15.00000",
+      "notes": "Diamond=9.00 | Gold=10.50 | Platinum=9.75"
+    },
+    {
+      "id": "30034",
+      "productName": "Gateway Instance",
+      "wholesaleCost": "3.00000",
+      "defaultRetailPrice": "5.00000",
+      "rrp": "5.00000",
+      "notes": "Diamond=3.00 | Gold=3.50 | Platinum=3.25"
+    },
+    {
+      "id": "60",
+      "productName": "Go Integrator Cara - Solo",
+      "wholesaleCost": "1.60000",
+      "defaultRetailPrice": "2.00000",
+      "rrp": "2.00000",
+      "notes": "Diamond=1.60 | Gold=1.60 | Platinum=1.60"
+    },
+    {
+      "id": "61",
+      "productName": "Go Integrator Cara - Team",
+      "wholesaleCost": "3.60000",
+      "defaultRetailPrice": "4.50000",
+      "rrp": "4.50000",
+      "notes": "Diamond=3.60 | Gold=3.60 | Platinum=3.60"
+    },
+    {
+      "id": "62",
+      "productName": "Go Integrator Cara - Unite",
+      "wholesaleCost": "9.80000",
+      "defaultRetailPrice": "11.00000",
+      "rrp": "11.00000",
+      "notes": "Diamond=9.80 | Gold=9.80 | Platinum=9.80"
+    },
+    {
+      "id": "63",
+      "productName": "Go Integrator Nava - Solo",
+      "wholesaleCost": "1.60000",
+      "defaultRetailPrice": "2.00000",
+      "rrp": "2.00000",
+      "notes": "Diamond=1.60 | Gold=1.60 | Platinum=1.60"
+    },
+    {
+      "id": "64",
+      "productName": "Go Integrator Nava - Unite",
+      "wholesaleCost": "9.80000",
+      "defaultRetailPrice": "11.00000",
+      "rrp": "11.00000",
+      "notes": "Diamond=9.80 | Gold=9.80 | Platinum=9.80"
+    },
+    {
+      "id": "65",
+      "productName": "Go Operator Console",
+      "wholesaleCost": "52.33000",
+      "defaultRetailPrice": "65.00000",
+      "rrp": "65.00000",
+      "notes": "Diamond=52.33 | Gold=52.33 | Platinum=52.33"
+    },
+    {
+      "id": "36",
+      "productName": "Hunt Group Premium",
+      "wholesaleCost": "9.00000",
+      "defaultRetailPrice": "15.00000",
+      "rrp": "15.00000",
+      "notes": "NULL"
+    },
+    {
+      "id": "35",
+      "productName": "Huntgroup with Time of Day Routing",
+      "wholesaleCost": "9.00000",
+      "defaultRetailPrice": "15.00000",
+      "rrp": "15.00000",
+      "notes": "Auto Attendant / Hunt Group variant"
+    },
+    {
+      "id": "81",
+      "productName": "iCall Suite - Advanced User License",
+      "wholesaleCost": "59.25000",
+      "defaultRetailPrice": "79.00000",
+      "rrp": "79.00000",
+      "notes": "NULL"
+    },
+    {
+      "id": "80",
+      "productName": "iCall Suite - Essentials User License",
+      "wholesaleCost": "14.25000",
+      "defaultRetailPrice": "19.00000",
+      "rrp": "19.00000",
+      "notes": "NULL"
+    },
+    {
+      "id": "79",
+      "productName": "iCall Suite - Ultimate User Licence",
+      "wholesaleCost": "96.75000",
+      "defaultRetailPrice": "129.00000",
+      "rrp": "129.00000",
+      "notes": "NULL"
+    },
+    {
+      "id": "30028",
+      "productName": "iCS Agent Console User License",
+      "wholesaleCost": "21.75000",
+      "defaultRetailPrice": "29.00000",
+      "rrp": "29.00000",
+      "notes": "Diamond=21.75 | Gold=21.75 | Platinum=21.75"
+    },
+    {
+      "id": "30031",
+      "productName": "iCS CRM Connect",
+      "wholesaleCost": "74.25000",
+      "defaultRetailPrice": "99.00000",
+      "rrp": "99.00000",
+      "notes": "Diamond=74.25 | Gold=74.25 | Platinum=74.25"
+    },
+    {
+      "id": "30032",
+      "productName": "iCS Report Connect: Business Plus",
+      "wholesaleCost": "299.25000",
+      "defaultRetailPrice": "399.00000",
+      "rrp": "399.00000",
+      "notes": "Diamond=299.25 | Gold=299.25 | Platinum=299.25"
+    },
+    {
+      "id": "30033",
+      "productName": "iCS Report Connect: Enterprise",
+      "wholesaleCost": "749.25000",
+      "defaultRetailPrice": "999.00000",
+      "rrp": "999.00000",
+      "notes": "Diamond=749.25 | Gold=749.25 | Platinum=749.25"
+    },
+    {
+      "id": "30029",
+      "productName": "iCS Supervisor Console User License",
+      "wholesaleCost": "36.75000",
+      "defaultRetailPrice": "49.00000",
+      "rrp": "49.00000",
+      "notes": "Diamond=36.75 | Gold=36.75 | Platinum=36.75"
+    },
+    {
+      "id": "30030",
+      "productName": "iCS Wallboard Projection License",
+      "wholesaleCost": "11.25000",
+      "defaultRetailPrice": "15.00000",
+      "rrp": "15.00000",
+      "notes": "Diamond=11.25 | Gold=11.25 | Platinum=11.25"
+    },
+    {
+      "id": "88",
+      "productName": "Inbound 1300 Number Hosting",
+      "wholesaleCost": "6.00000",
+      "defaultRetailPrice": "8.00000",
+      "rrp": "8.00000",
+      "notes": "NULL"
+    },
+    {
+      "id": "89",
+      "productName": "Inbound 1800 Number Hosting",
+      "wholesaleCost": "6.00000",
+      "defaultRetailPrice": "8.00000",
+      "rrp": "8.00000",
+      "notes": "NULL"
+    },
+    {
+      "id": "30092",
+      "productName": "Inbound New Number Allocation (0508/0800)",
+      "wholesaleCost": "15.00000",
+      "defaultRetailPrice": "25.00000",
+      "rrp": "25.00000",
+      "notes": "Diamond=15.00 | Gold=17.50 | Platinum=16.25"
+    },
+    {
+      "id": "30073",
+      "productName": "Inbound New Number Allocation (1300/1800)",
+      "wholesaleCost": "41.74000",
+      "defaultRetailPrice": "70.00000",
+      "rrp": "70.00000",
+      "notes": "Diamond=41.74 | Gold=48.70 | Platinum=45.22"
+    },
+    {
+      "id": "30069",
+      "productName": "Inbound Number Hosting (0508)",
+      "wholesaleCost": "7.00000",
+      "defaultRetailPrice": "10.00000",
+      "rrp": "10.00000",
+      "notes": "Diamond=7.00 | Gold=7.00 | Platinum=7.00"
+    },
+    {
+      "id": "30068",
+      "productName": "Inbound Number Hosting (0800)",
+      "wholesaleCost": "7.00000",
+      "defaultRetailPrice": "10.00000",
+      "rrp": "10.00000",
+      "notes": "Diamond=7.00 | Gold=7.00 | Platinum=7.00"
+    },
+    {
+      "id": "30067",
+      "productName": "Inbound Number Hosting (13) - Minimum 12 month rental",
+      "wholesaleCost": "0.21000",
+      "defaultRetailPrice": "0.30000",
+      "rrp": "1100.00000",
+      "notes": "Usage charge per minute for outbound 13-number calls. Retail $0.30/min per invoice ST-6796. NOT a monthly recurring fee. Previously incorrectly listed as $900/month annual rental."
+    },
+    {
+      "id": "30066",
+      "productName": "Inbound Number Hosting (1300/1800)",
+      "wholesaleCost": "6.00000",
+      "defaultRetailPrice": "8.00000",
+      "rrp": "8.00000",
+      "notes": "Diamond=6.00 | Gold=6.00 | Platinum=6.00"
+    },
+    {
+      "id": "30091",
+      "productName": "Inbound Number Porting (0800/0508)",
+      "wholesaleCost": "15.00000",
+      "defaultRetailPrice": "25.00000",
+      "rrp": "25.00000",
+      "notes": "Diamond=15.00 | Gold=17.50 | Platinum=16.25"
+    },
+    {
+      "id": "30075",
+      "productName": "Inbound Number Porting (13)",
+      "wholesaleCost": "59.63000",
+      "defaultRetailPrice": "100.00000",
+      "rrp": "100.00000",
+      "notes": "Diamond=59.63 | Gold=69.57 | Platinum=64.60"
+    },
+    {
+      "id": "30074",
+      "productName": "Inbound Number Porting (1300/1800)",
+      "wholesaleCost": "41.74000",
+      "defaultRetailPrice": "70.00000",
+      "rrp": "70.00000",
+      "notes": "Diamond=41.74 | Gold=48.70 | Platinum=45.22"
+    },
+    {
+      "id": "44",
+      "productName": "Lite",
+      "wholesaleCost": "6.00000",
+      "defaultRetailPrice": "10.00000",
+      "rrp": "10.00000",
+      "notes": "Office User tier"
+    },
+    {
+      "id": "30013",
+      "productName": "Lite (Per Simultaneous Call)",
+      "wholesaleCost": "6.00000",
+      "defaultRetailPrice": "10.00000",
+      "rrp": "10.00000",
+      "notes": "Diamond=6.00 | Gold=7.00 | Platinum=6.50"
+    },
+    {
+      "id": "96",
+      "productName": "Local",
+      "wholesaleCost": "0.07023",
+      "defaultRetailPrice": "0.10000",
+      "rrp": "0.10000",
+      "notes": "NULL"
+    },
+    {
+      "id": "95",
+      "productName": "Local Calls (Not on SIP)",
+      "wholesaleCost": "0.07023",
+      "defaultRetailPrice": "0.10000",
+      "rrp": "0.10000",
+      "notes": "Diamond=0.07 | Gold=0.07 | Platinum=0.07"
+    },
+    {
+      "id": "29",
+      "productName": "MC - SmileTel Basic User License",
+      "wholesaleCost": "6.00000",
+      "defaultRetailPrice": "10.00000",
+      "rrp": "10.00000",
+      "notes": "Multi-channel variant"
+    },
+    {
+      "id": "30",
+      "productName": "MC - SmileTel Executive User License",
+      "wholesaleCost": "9.00000",
+      "defaultRetailPrice": "15.00000",
+      "rrp": "15.00000",
+      "notes": "Migration product: Buy $9.00, Sell $15.00 (Access4 migration) - MC variant"
+    },
+    {
+      "id": "31",
+      "productName": "MC - SmileTel Lite User License",
+      "wholesaleCost": "6.00000",
+      "defaultRetailPrice": "12.00000",
+      "rrp": "12.00000",
+      "notes": "Multi-channel variant"
+    },
+    {
+      "id": "32",
+      "productName": "MC - SmileTel Premium User License",
+      "wholesaleCost": "15.00000",
+      "defaultRetailPrice": "27.00000",
+      "rrp": "27.00000",
+      "notes": "Multi-channel variant"
+    },
+    {
+      "id": "33",
+      "productName": "MC (Special - Inc) - Executive User License",
+      "wholesaleCost": "18.00000",
+      "defaultRetailPrice": "30.00000",
+      "rrp": "30.00000",
+      "notes": "Special included calls variant"
+    },
+    {
+      "id": "34",
+      "productName": "MC (Special) - Executive User License",
+      "wholesaleCost": "7.20000",
+      "defaultRetailPrice": "12.00000",
+      "rrp": "12.00000",
+      "notes": "Special variant"
+    },
+    {
+      "id": "105",
+      "productName": "ME - 3 Included Local National Mobile Call Pack",
+      "wholesaleCost": "0.00000",
+      "defaultRetailPrice": "0.00000",
+      "rrp": "0.00000",
+      "notes": "Included in Executive User - Included Calls bundle"
+    },
+    {
+      "id": "98",
+      "productName": "Mobile",
+      "wholesaleCost": "0.07000",
+      "defaultRetailPrice": "0.10000",
+      "rrp": "0.10000",
+      "notes": "Diamond=0.07 | Gold=0.07 | Platinum=0.07"
+    },
+    {
+      "id": "30065",
+      "productName": "Mobile DID - Minimum 12 month rental",
+      "wholesaleCost": "20.00000",
+      "defaultRetailPrice": "30.00000",
+      "rrp": "30.00000",
+      "notes": "Diamond=20.00 | Gold=20.00 | Platinum=20.00"
+    },
+    {
+      "id": "30076",
+      "productName": "Mobile New Number Allocation",
+      "wholesaleCost": "41.74000",
+      "defaultRetailPrice": "70.00000",
+      "rrp": "70.00000",
+      "notes": "Diamond=41.74 | Gold=48.70 | Platinum=45.22"
+    },
+    {
+      "id": "30077",
+      "productName": "Mobile Number Porting",
+      "wholesaleCost": "41.74000",
+      "defaultRetailPrice": "70.00000",
+      "rrp": "70.00000",
+      "notes": "Diamond=41.74 | Gold=48.70 | Platinum=45.22"
+    },
+    {
+      "id": "97",
+      "productName": "National",
+      "wholesaleCost": "0.03500",
+      "defaultRetailPrice": "0.05000",
+      "rrp": "0.05000",
+      "notes": "Diamond=0.04 | Gold=0.04 | Platinum=0.04"
+    },
+    {
+      "id": "30090",
+      "productName": "New Number Allocation Price Per Number",
+      "wholesaleCost": "15.00000",
+      "defaultRetailPrice": "25.00000",
+      "rrp": "25.00000",
+      "notes": "Diamond=15.00 | Gold=17.50 | Platinum=16.25"
+    },
+    {
+      "id": "30059",
+      "productName": "NZ Mobile Outbound Calls",
+      "wholesaleCost": "0.09167",
+      "defaultRetailPrice": "0.13100",
+      "rrp": "0.13100",
+      "notes": "Diamond=0.09 | Gold=0.09 | Platinum=0.09"
+    },
+    {
+      "id": "30058",
+      "productName": "NZ National Outbound Calls",
+      "wholesaleCost": "0.03857",
+      "defaultRetailPrice": "0.05510",
+      "rrp": "0.05510",
+      "notes": "Diamond=0.04 | Gold=0.04 | Platinum=0.04"
+    },
+    {
+      "id": "5",
+      "productName": "Office User",
+      "wholesaleCost": "6.00000",
+      "defaultRetailPrice": "10.00000",
+      "rrp": "10.00000",
+      "notes": "Diamond=6.00 | Gold=7.00 | Platinum=6.50"
+    },
+    {
+      "id": "1",
+      "productName": "Office User - Bundled",
+      "wholesaleCost": "18.00000",
+      "defaultRetailPrice": "30.00000",
+      "rrp": "30.00000",
+      "notes": "Diamond=18.00 | Gold=21.00 | Platinum=19.50"
+    },
+    {
+      "id": "3",
+      "productName": "Office User - Included Calls",
+      "wholesaleCost": "15.00000",
+      "defaultRetailPrice": "25.00000",
+      "rrp": "25.00000",
+      "notes": "Diamond=15.00 | Gold=17.50 | Platinum=16.25"
+    },
+    {
+      "id": "75",
+      "productName": "Operator Connect SIP Trunk",
+      "wholesaleCost": "9.00000",
+      "defaultRetailPrice": "18.00000",
+      "rrp": "18.00000",
+      "notes": "Microsoft Teams operator connect"
+    },
+    {
+      "id": "30070",
+      "productName": "Other",
+      "wholesaleCost": "49.00000",
+      "defaultRetailPrice": "78.40000",
+      "rrp": "78.40000",
+      "notes": "Diamond=49.00 | Gold=49.00 | Platinum=49.00"
+    },
+    {
+      "id": "30096",
+      "productName": "Other Counties Toll Free New Number",
+      "wholesaleCost": "199.00000",
+      "defaultRetailPrice": "265.00000",
+      "rrp": "265.00000",
+      "notes": "Diamond=199.00 | Gold=199.00 | Platinum=199.00"
+    },
+    {
+      "id": "30095",
+      "productName": "Other Counties Toll Free Number Port",
+      "wholesaleCost": "99.00000",
+      "defaultRetailPrice": "132.00000",
+      "rrp": "132.00000",
+      "notes": "Diamond=99.00 | Gold=99.00 | Platinum=99.00"
+    },
+    {
+      "id": "30046",
+      "productName": "Outbound Dialer",
+      "wholesaleCost": "16.00000",
+      "defaultRetailPrice": "20.00000",
+      "rrp": "20.00000",
+      "notes": "Diamond=16.00 | Gold=16.00 | Platinum=16.00"
+    },
+    {
+      "id": "30087",
+      "productName": "PNV Reject Complex - Per Number",
+      "wholesaleCost": "20.00000",
+      "defaultRetailPrice": "25.00000",
+      "rrp": "25.00000",
+      "notes": "Diamond=20.00 | Gold=20.00 | Platinum=20.00"
+    },
+    {
+      "id": "30086",
+      "productName": "PNV Reject Simple - Per Number",
+      "wholesaleCost": "25.00000",
+      "defaultRetailPrice": "30.00000",
+      "rrp": "30.00000",
+      "notes": "Diamond=25.00 | Gold=25.00 | Platinum=25.00"
+    },
+    {
+      "id": "30089",
+      "productName": "Porting - Price Per Number (21+)",
+      "wholesaleCost": "12.00000",
+      "defaultRetailPrice": "20.00000",
+      "rrp": "20.00000",
+      "notes": "Diamond=12.00 | Gold=14.00 | Platinum=13.00"
+    },
+    {
+      "id": "30088",
+      "productName": "Porting - Price Per Number (up to 20)",
+      "wholesaleCost": "15.00000",
+      "defaultRetailPrice": "25.00000",
+      "rrp": "25.00000",
+      "notes": "Diamond=15.00 | Gold=17.50 | Platinum=16.25"
+    },
+    {
+      "id": "30078",
+      "productName": "Porting Withdrawal Fee",
+      "wholesaleCost": "70.00000",
+      "defaultRetailPrice": "99.00000",
+      "rrp": "99.00000",
+      "notes": "Diamond=70.00 | Gold=70.00 | Platinum=70.00"
+    },
+    {
+      "id": "41",
+      "productName": "Premium",
+      "wholesaleCost": "9.00000",
+      "defaultRetailPrice": "15.00000",
+      "rrp": "15.00000",
+      "notes": "Executive User tier"
+    },
+    {
+      "id": "30062",
+      "productName": "Premium (13/1300)",
+      "wholesaleCost": "0.28000",
+      "defaultRetailPrice": "0.40000",
+      "rrp": "0.40000",
+      "notes": "Diamond=0.28 | Gold=0.28 | Platinum=0.28"
+    },
+    {
+      "id": "16",
+      "productName": "Premium Call Centre Agent",
+      "wholesaleCost": "15.30000",
+      "defaultRetailPrice": "25.50000",
+      "rrp": "25.50000",
+      "notes": "Diamond=15.30 | Gold=17.85 | Platinum=16.58"
+    },
+    {
+      "id": "104",
+      "productName": "Premium Call Queue",
+      "wholesaleCost": "15.30000",
+      "defaultRetailPrice": "25.50000",
+      "rrp": "25.50000",
+      "notes": "NULL"
+    },
+    {
+      "id": "39",
+      "productName": "Premium-1",
+      "wholesaleCost": "9.00000",
+      "defaultRetailPrice": "15.00000",
+      "rrp": "15.00000",
+      "notes": "Executive User tier"
+    },
+    {
+      "id": "40",
+      "productName": "Premium-2",
+      "wholesaleCost": "9.00000",
+      "defaultRetailPrice": "15.00000",
+      "rrp": "15.00000",
+      "notes": "Executive User tier"
+    },
+    {
+      "id": "42",
+      "productName": "Premium-3",
+      "wholesaleCost": "9.00000",
+      "defaultRetailPrice": "15.00000",
+      "rrp": "15.00000",
+      "notes": "Executive User tier"
+    },
+    {
+      "id": "30038",
+      "productName": "Pro",
+      "wholesaleCost": "106.40000",
+      "defaultRetailPrice": "133.00000",
+      "rrp": "133.00000",
+      "notes": "Diamond=106.40 | Gold=106.40 | Platinum=106.40"
+    },
+    {
+      "id": "30015",
+      "productName": "Professional (Per Simultaneous Call)",
+      "wholesaleCost": "12.00000",
+      "defaultRetailPrice": "20.00000",
+      "rrp": "20.00000",
+      "notes": "Diamond=12.00 | Gold=14.00 | Platinum=13.00"
+    },
+    {
+      "id": "30045",
+      "productName": "PSTN Calling",
+      "wholesaleCost": "53.60000",
+      "defaultRetailPrice": "67.00000",
+      "rrp": "67.00000",
+      "notes": "Diamond=53.60 | Gold=53.60 | Platinum=53.60"
+    },
+    {
+      "id": "9",
+      "productName": "Reception Console Web App",
+      "wholesaleCost": "47.97000",
+      "defaultRetailPrice": "79.95000",
+      "rrp": "79.95000",
+      "notes": "Diamond=47.97 | Gold=55.97 | Platinum=51.97"
+    },
+    {
+      "id": "99",
+      "productName": "Regional",
+      "wholesaleCost": "0.03857",
+      "defaultRetailPrice": "0.05510",
+      "rrp": "0.05510",
+      "notes": "NULL"
+    },
+    {
+      "id": "7",
+      "productName": "Residential License",
+      "wholesaleCost": "3.90000",
+      "defaultRetailPrice": "6.50000",
+      "rrp": "6.50000",
+      "notes": "Diamond=3.90 | Gold=4.55 | Platinum=4.23"
+    },
+    {
+      "id": "30044",
+      "productName": "Secure Payment Channel",
+      "wholesaleCost": "16.00000",
+      "defaultRetailPrice": "20.00000",
+      "rrp": "20.00000",
+      "notes": "Diamond=16.00 | Gold=16.00 | Platinum=16.00"
+    },
+    {
+      "id": "30071",
+      "productName": "Simple (CAT A) Port Per Number",
+      "wholesaleCost": "17.14000",
+      "defaultRetailPrice": "25.00000",
+      "rrp": "25.00000",
+      "notes": "Diamond=17.14 | Gold=20.00 | Platinum=18.57"
+    },
+    {
+      "id": "30079",
+      "productName": "Simple Retarget Fee (Per Number) - Second Instance",
+      "wholesaleCost": "20.00000",
+      "defaultRetailPrice": "25.00000",
+      "rrp": "25.00000",
+      "notes": "Diamond=20.00 | Gold=20.00 | Platinum=20.00"
+    },
+    {
+      "id": "45",
+      "productName": "Single Number",
+      "wholesaleCost": "6.00000",
+      "defaultRetailPrice": "10.00000",
+      "rrp": "10.00000",
+      "notes": "NULL"
+    },
+    {
+      "id": "30054",
+      "productName": "SIP Channel",
+      "wholesaleCost": "2.00000",
+      "defaultRetailPrice": "2.50000",
+      "rrp": "2.50000",
+      "notes": "Diamond=2.00 | Gold=2.00 | Platinum=2.00"
+    },
+    {
+      "id": "70",
+      "productName": "SIP Channel - CCXP Connector - PAYG",
+      "wholesaleCost": "5.97000",
+      "defaultRetailPrice": "9.95000",
+      "rrp": "9.95000",
+      "notes": "Diamond=5.97 | Gold=6.97 | Platinum=6.47"
+    },
+    {
+      "id": "71",
+      "productName": "SIP Channel - CX One Connector - PAYG",
+      "wholesaleCost": "5.97000",
+      "defaultRetailPrice": "9.95000",
+      "rrp": "9.95000",
+      "notes": "Diamond=5.97 | Gold=6.97 | Platinum=6.47"
+    },
+    {
+      "id": "68",
+      "productName": "SIP Channel - Included Calls",
+      "wholesaleCost": "24.00000",
+      "defaultRetailPrice": "50.00000",
+      "rrp": "50.00000",
+      "notes": "Diamond=24.00 | Gold=30.00 | Platinum=27.00"
+    },
+    {
+      "id": "67",
+      "productName": "SIP Channel - PAYG",
+      "wholesaleCost": "4.80000",
+      "defaultRetailPrice": "8.60000",
+      "rrp": "8.60000",
+      "notes": "Diamond=4.80 | Gold=6.00 | Platinum=5.40"
+    },
+    {
+      "id": "69",
+      "productName": "SIP Channel - Purecloud Connector - PAYG",
+      "wholesaleCost": "5.97000",
+      "defaultRetailPrice": "9.95000",
+      "rrp": "9.95000",
+      "notes": "Diamond=5.97 | Gold=6.97 | Platinum=6.47"
+    },
+    {
+      "id": "30055",
+      "productName": "SIP in Usage",
+      "wholesaleCost": "0.00900",
+      "defaultRetailPrice": "0.01100",
+      "rrp": "0.01100",
+      "notes": "Diamond=0.01 | Gold=0.01 | Platinum=0.01"
+    },
+    {
+      "id": "27",
+      "productName": "SmileTel Basic User License",
+      "wholesaleCost": "6.00000",
+      "defaultRetailPrice": "10.00000",
+      "rrp": "10.00000",
+      "notes": "SasBoss product name for Office User"
+    },
+    {
+      "id": "23",
+      "productName": "SmileTel Essential user",
+      "wholesaleCost": "9.00000",
+      "defaultRetailPrice": "17.00000",
+      "rrp": "17.00000",
+      "notes": "SasBoss product name. Diamond cost = $9. RRP is SmileIT default retail."
+    },
+    {
+      "id": "24",
+      "productName": "SmileTel Essential User Special",
+      "wholesaleCost": "9.00000",
+      "defaultRetailPrice": "22.50000",
+      "rrp": "22.50000",
+      "notes": "Special pricing variant"
+    },
+    {
+      "id": "25",
+      "productName": "SmileTel Executive User License",
+      "wholesaleCost": "9.00000",
+      "defaultRetailPrice": "15.00000",
+      "rrp": "15.00000",
+      "notes": "Migration product: Buy $9.00, Sell $15.00 (Access4 migration)"
+    },
+    {
+      "id": "26",
+      "productName": "SmileTel Lite user",
+      "wholesaleCost": "6.00000",
+      "defaultRetailPrice": "12.00000",
+      "rrp": "12.00000",
+      "notes": "SasBoss product name for Office User"
+    },
+    {
+      "id": "28",
+      "productName": "SmileTel Professional User License",
+      "wholesaleCost": "15.00000",
+      "defaultRetailPrice": "27.00000",
+      "rrp": "27.00000",
+      "notes": "SasBoss product name for Executive User - Included Calls"
+    },
+    {
+      "id": "30036",
+      "productName": "SMS",
+      "wholesaleCost": "10.40000",
+      "defaultRetailPrice": "13.00000",
+      "rrp": "13.00000",
+      "notes": "Diamond=10.40 | Gold=10.40 | Platinum=10.40"
+    },
+    {
+      "id": "83",
+      "productName": "SMS Gateway - Dedicated Virtual Number",
+      "wholesaleCost": "15.00000",
+      "defaultRetailPrice": "25.00000",
+      "rrp": "25.00000",
+      "notes": "NULL"
+    },
+    {
+      "id": "82",
+      "productName": "SMS Gateway Instance",
+      "wholesaleCost": "3.00000",
+      "defaultRetailPrice": "5.00000",
+      "rrp": "5.00000",
+      "notes": "NULL"
+    },
+    {
+      "id": "30056",
+      "productName": "SMS In",
+      "wholesaleCost": "0.03500",
+      "defaultRetailPrice": "0.06500",
+      "rrp": "0.06500",
+      "notes": "Diamond=0.04 | Gold=0.04 | Platinum=0.04"
+    },
+    {
+      "id": "30057",
+      "productName": "SMS Out",
+      "wholesaleCost": "0.03500",
+      "defaultRetailPrice": "0.06500",
+      "rrp": "0.06500",
+      "notes": "Diamond=0.04 | Gold=0.04 | Platinum=0.04"
+    },
+    {
+      "id": "22",
+      "productName": "Soft Phone Desktop - EOS",
+      "wholesaleCost": "0.60000",
+      "defaultRetailPrice": "1.00000",
+      "rrp": "1.00000",
+      "notes": "Diamond=0.60 | Gold=0.70 | Platinum=0.65"
+    },
+    {
+      "id": "66",
+      "productName": "Softphone add-on with Cisco Webex",
+      "wholesaleCost": "0.00000",
+      "defaultRetailPrice": "0.00000",
+      "rrp": "0.00000",
+      "notes": "Free when attached to Executive User"
+    },
+    {
+      "id": "43",
+      "productName": "Standard",
+      "wholesaleCost": "6.00000",
+      "defaultRetailPrice": "10.00000",
+      "rrp": "10.00000",
+      "notes": "Office User tier"
+    },
+    {
+      "id": "52",
+      "productName": "UCXcel Auto-Attendant",
+      "wholesaleCost": "9.00000",
+      "defaultRetailPrice": "15.00000",
+      "rrp": "15.00000",
+      "notes": "NULL"
+    },
+    {
+      "id": "54",
+      "productName": "UCXcel Basic Queue Agent",
+      "wholesaleCost": "6.30000",
+      "defaultRetailPrice": "10.50000",
+      "rrp": "10.50000",
+      "notes": "NULL"
+    },
+    {
+      "id": "53",
+      "productName": "UCXcel Call Centre Queue",
+      "wholesaleCost": "6.30000",
+      "defaultRetailPrice": "10.50000",
+      "rrp": "10.50000",
+      "notes": "NULL"
+    },
+    {
+      "id": "46",
+      "productName": "UCXcel Essential",
+      "wholesaleCost": "9.00000",
+      "defaultRetailPrice": "17.00000",
+      "rrp": "17.00000",
+      "notes": "UCXcel = UCaaS Licensing. Diamond cost $9."
+    },
+    {
+      "id": "51",
+      "productName": "UCXcel Hunt Group",
+      "wholesaleCost": "9.00000",
+      "defaultRetailPrice": "15.00000",
+      "rrp": "15.00000",
+      "notes": "NULL"
+    },
+    {
+      "id": "47",
+      "productName": "UCXcel Lite",
+      "wholesaleCost": "6.00000",
+      "defaultRetailPrice": "12.00000",
+      "rrp": "12.00000",
+      "notes": "UCXcel Lite = Office User tier"
+    },
+    {
+      "id": "49",
+      "productName": "UCXcel Premium",
+      "wholesaleCost": "21.00000",
+      "defaultRetailPrice": "37.50000",
+      "rrp": "37.50000",
+      "notes": "UCXcel Premium = Executive User - Bundled"
+    },
+    {
+      "id": "48",
+      "productName": "UCXcel Professional",
+      "wholesaleCost": "15.00000",
+      "defaultRetailPrice": "27.00000",
+      "rrp": "27.00000",
+      "notes": "UCXcel Professional = Executive User - Included Calls"
+    },
+    {
+      "id": "55",
+      "productName": "UCXcel Voicemail User",
+      "wholesaleCost": "3.00000",
+      "defaultRetailPrice": "5.00000",
+      "rrp": "5.00000",
+      "notes": "NULL"
+    },
+    {
+      "id": "50",
+      "productName": "UCXcel Webex Basic",
+      "wholesaleCost": "13.80000",
+      "defaultRetailPrice": "23.00000",
+      "rrp": "23.00000",
+      "notes": "Collaborate Basic User with Cisco Webex"
+    },
+    {
+      "id": "30027",
+      "productName": "Ultimate User License",
+      "wholesaleCost": "96.75000",
+      "defaultRetailPrice": "129.00000",
+      "rrp": "129.00000",
+      "notes": "Diamond=96.75 | Gold=96.75 | Platinum=96.75"
+    },
+    {
+      "id": "30094",
+      "productName": "United Kingdom Toll Free Number Port",
+      "wholesaleCost": "128.00000",
+      "defaultRetailPrice": "183.00000",
+      "rrp": "183.00000",
+      "notes": "Diamond=128.00 | Gold=128.00 | Platinum=128.00"
+    },
+    {
+      "id": "30093",
+      "productName": "United States Toll Free Number Port",
+      "wholesaleCost": "12.00000",
+      "defaultRetailPrice": "17.00000",
+      "rrp": "17.00000",
+      "notes": "Diamond=12.00 | Gold=12.00 | Platinum=12.00"
+    },
+    {
+      "id": "30042",
+      "productName": "Virtual Agents Chat",
+      "wholesaleCost": "24.00000",
+      "defaultRetailPrice": "30.00000",
+      "rrp": "30.00000",
+      "notes": "Diamond=24.00 | Gold=24.00 | Platinum=24.00"
+    },
+    {
+      "id": "30043",
+      "productName": "Virtual Agents SMS",
+      "wholesaleCost": "24.00000",
+      "defaultRetailPrice": "30.00000",
+      "rrp": "30.00000",
+      "notes": "Diamond=24.00 | Gold=24.00 | Platinum=24.00"
+    },
+    {
+      "id": "17",
+      "productName": "Virtual Park User",
+      "wholesaleCost": "3.00000",
+      "defaultRetailPrice": "5.00000",
+      "rrp": "5.00000",
+      "notes": "Diamond=3.00 | Gold=3.50 | Platinum=3.25"
+    },
+    {
+      "id": "38",
+      "productName": "Voicemail",
+      "wholesaleCost": "3.00000",
+      "defaultRetailPrice": "5.00000",
+      "rrp": "5.00000",
+      "notes": "Voicemail User"
+    },
+    {
+      "id": "20",
+      "productName": "Voicemail Add-On for Residential Services",
+      "wholesaleCost": "2.00000",
+      "defaultRetailPrice": "2.50000",
+      "rrp": "2.50000",
+      "notes": "Diamond=2.00 | Gold=2.00 | Platinum=2.00"
+    },
+    {
+      "id": "18",
+      "productName": "Voicemail User",
+      "wholesaleCost": "3.00000",
+      "defaultRetailPrice": "5.00000",
+      "rrp": "5.00000",
+      "notes": "Diamond=3.00 | Gold=3.50 | Platinum=3.25"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tproductName\twholesaleCost\tdefaultRetailPrice\trrp\tnotes\n30061\t0800 Mobile Inbound Calls\t0.15000\t0.22430\t0.22430\tDiamond=0.15 | Gold=0.15 | Platinum=0.15\n30060\t0800 National Inbound Calls\t0.05000\t0.09190\t0.09190\tDiamond=0.05 | Gold=0.05 | Platinum=0.05\n93\t1300 Inbound Calls\t0.03860\t0.05510\t0.05510\tDiamond=0.04 | Gold=0.04 | Platinum=0.04\n90\t13Number\t0.21000\t0.30000\t1100.00000\tUsage charge per minute for outbound 13-number calls. Retail $0.30/min per invoice ST-6796. Wholesale approx $0.21/min (Vocus). NOT a monthly recurring fee.\n94\t1800 Inbound Calls\t0.04170\t0.05950\t0.05950\tDiamond=0.04 | Gold=0.04 | Platinum=0.04\n74\t3 Channels Business SIP\t14.40000\t25.80000\t25.80000\t3x SIP Channel PAYG\n73\t4 Channels Business SIP\t19.20000\t34.40000\t34.40000\t4x SIP Channel PAYG\n30026\tAdvanced User License\t59.25000\t79.00000\t79.00000\tDiamond=59.25 | Gold=59.25 | Platinum=59.25\n92\tAU Mobile Outbound Calls\t0.09167\t0.13100\t0.13100\tDiamond=0.09 | Gold=0.09 | Platinum=0.09\n91\tAU National Outbound Calls\t0.03857\t0.05510\t0.05510\tDiamond=0.04 | Gold=0.04 | Platinum=0.04\n19\tAuto Attendant (IVR) with TOD routing\t9.00000\t15.00000\t15.00000\tDiamond=9.00 | Gold=10.50 | Platinum=9.75\n37\tAuto Attendant with Time of Day Routing\t9.00000\t15.00000\t15.00000\tNULL\n30037\tBasic\t5.80000\t87.00000\t87.00000\tDiamond=69.60 | Gold=69.60 | Platinum=69.60\n103\tBasic Call Queue\t6.30000\t10.50000\t10.50000\tNULL\n14\tBasic Call Queue Agent\t6.30000\t10.50000\t10.50000\tDiamond=6.30 | Gold=7.35 | Platinum=6.83\n30002\tBasic User - Included Calls\t10.80000\t18.00000\t18.00000\tDiamond=10.80 | Gold=12.60 | Platinum=11.70\n30005\tBasic User - PAYG\t7.20000\t12.00000\t12.00000\tDiamond=7.20 | Gold=8.40 | Platinum=7.80\n13\tBusiness Fax Service\t7.20000\t12.00000\t12.00000\tDiamond=7.20 | Gold=8.40 | Platinum=7.80\n72\tBusiness Trunk (PAYG)\t4.80000\t8.60000\t8.60000\tSasBoss name for SIP Channel - PAYG\n11\tCall Centre Agent Web App\t14.40000\t24.00000\t24.00000\tDiamond=14.40 | Gold=16.80 | Platinum=15.60\n102\tCall Centre Queue with Time of Day Routing\t9.00000\t15.00000\t15.00000\tAuto Attendant / Queue\n10\tCall Centre Supervisor Web App\t29.97000\t49.95000\t49.95000\tDiamond=29.97 | Gold=34.97 | Platinum=32.47\n12\tCall Centre Wall Board\t68.00000\t85.00000\t85.00000\tDiamond=68.00 | Gold=68.00 | Platinum=68.00\n58\tCall Recording - AI\t19.00000\t25.00000\t25.00000\tDiamond=19.00 | Gold=19.00 | Platinum=19.00\n56\tCall Recording - Lite\t2.00000\t3.00000\t3.00000\tDiamond=2.00 | Gold=2.00 | Platinum=2.00\n57\tCall Recording - Unlimited\t9.50000\t13.00000\t13.00000\tDiamond=9.50 | Gold=9.50 | Platinum=9.50\n30018\tCall Recording Storage - Additional - Per 10 GB\t6.50000\t10.00000\t10.00000\tDiamond=6.50 | Gold=6.50 | Platinum=6.50\n30017\tCall Recording Storage - Starter - 20 GB\t13.00000\t20.00000\t20.00000\tDiamond=13.00 | Gold=13.00 | Platinum=13.00\n30004\tChannel - Included Calls (5 Channel Minimum)\t27.00000\t45.00000\t45.00000\tDiamond=27.00 | Gold=31.50 | Platinum=29.25\n30007\tChannel - PAYG (5 Channel Minimum)\t10.80000\t18.00000\t18.00000\tDiamond=10.80 | Gold=12.60 | Platinum=11.70\n30041\tChat\t10.40000\t13.00000\t13.00000\tDiamond=10.40 | Gold=10.40 | Platinum=10.40\n30048\tCobrowse (Web)\t21.60000\t27.00000\t27.00000\tDiamond=21.60 | Gold=21.60 | Platinum=21.60\n106\tCollaborate Basic User with Cisco Webex\t13.80000\t23.00000\t23.00000\tDiamond=13.80 | Gold=16.10 | Platinum=14.95\n30019\tCollaborate Basic User with Cisco Webex - Bundled\t24.00000\t40.00000\t40.00000\tDiamond=24.00 | Gold=28.00 | Platinum=26.00\n30022\tCollaborate Basic User with Cisco Webex - Included Calls\t21.00000\t35.00000\t35.00000\tDiamond=21.00 | Gold=24.50 | Platinum=22.75\n108\tCollaborate Premium User with Cisco Webex\t30.00000\t50.00000\t50.00000\tDiamond=30.00 | Gold=35.00 | Platinum=32.50\n30021\tCollaborate Premium User with Cisco Webex - Bundled\t39.00000\t65.00000\t65.00000\tDiamond=39.00 | Gold=45.50 | Platinum=42.25\n30024\tCollaborate Premium User with Cisco Webex - Included Calls\t36.00000\t60.00000\t60.00000\tDiamond=36.00 | Gold=42.00 | Platinum=39.00\n107\tCollaborate Standard User with Cisco Webex\t18.00000\t30.00000\t30.00000\tDiamond=18.00 | Gold=21.00 | Platinum=19.50\n30020\tCollaborate Standard User with Cisco Webex - Bundled\t27.00000\t45.00000\t45.00000\tDiamond=27.00 | Gold=31.50 | Platinum=29.25\n30023\tCollaborate Standard User with Cisco Webex - Included Calls\t24.00000\t40.00000\t40.00000\tDiamond=24.00 | Gold=28.00 | Platinum=26.00\n8\tCommon Phone License\t3.90000\t6.50000\t6.50000\tDiamond=3.90 | Gold=4.55 | Platinum=4.23\n30072\tComplex (CAT C) Port Per Batch\t102.86000\t160.00000\t160.00000\tDiamond=102.86 | Gold=120.00 | Platinum=111.43\n30080\tComplex Retarget Fee (Per Batch) - Second Instance\t499.00000\t599.00000\t599.00000\tDiamond=499.00 | Gold=499.00 | Platinum=499.00\n59\tCRM Integration\t10.47000\t13.00000\t13.00000\tDiamond=10.47 | Gold=10.47 | Platinum=10.47\n30047\tCustom Metrics\t4.00000\t5.00000\t5.00000\tDiamond=4.00 | Gold=4.00 | Platinum=4.00\n30050\tCX Intercloud (Basic)\t56.00000\t70.00000\t70.00000\tDiamond=56.00 | Gold=56.00 | Platinum=56.00\n30053\tCX Intercloud (Digital)\t59.20000\t74.00000\t74.00000\tDiamond=59.20 | Gold=59.20 | Platinum=59.20\n30052\tCX Intercloud (Enterprise)\t103.20000\t129.00000\t129.00000\tDiamond=103.20 | Gold=103.20 | Platinum=103.20\n30051\tCX Intercloud (Pro)\t84.80000\t106.00000\t106.00000\tDiamond=84.80 | Gold=84.80 | Platinum=84.80\n30049\tData Sharing (Snowflake)\t536.00000\t670.00000\t670.00000\tDiamond=536.00 | Gold=536.00 | Platinum=536.00\n30064\tDDI (NZ)\t0.45000\t0.50000\t0.50000\tDiamond=0.45 | Gold=0.45 | Platinum=0.45\n30035\tDedicated Virtual Number\t15.00000\t25.00000\t25.00000\tDiamond=15.00 | Gold=17.50 | Platinum=16.25\n30063\tDID (AUD)\t0.33000\t0.35000\t0.35000\tDiamond=0.33 | Gold=0.33 | Platinum=0.33\n84\tDID Australia (1)\t0.33000\t2.00000\t2.00000\tDID (AUD) $0.33/month Diamond. SasBoss charges $2 retail.\n85\tDID Australia (10)\t3.30000\t20.00000\t20.00000\t10x DID\n86\tDID Australia (100)\t33.00000\t55.00000\t55.00000\t100x DID\n30040\tDigital\t73.60000\t92.00000\t92.00000\tDiamond=73.60 | Gold=73.60 | Platinum=73.60\n87\tDirect In Dial AU Mobile Number (1)\t20.00000\t22.50000\t22.50000\tMobile DID\n100\teFax\t3.00000\t5.00000\t5.00000\tFax to Email Add-On\n101\teFax Service\t3.00000\t5.00000\t5.00000\tNULL\n30082\tEmergency Returns Complex (1-5 Numbers) Per Batch\t600.00000\t700.00000\t700.00000\tDiamond=600.00 | Gold=600.00 | Platinum=600.00\n30085\tEmergency Returns Complex (100+ Numbers) Per Batch\t3500.00000\t3800.00000\t3800.00000\tDiamond=3500.00 | Gold=3500.00 | Platinum=3500.00\n30084\tEmergency Returns Complex (21-100 Numbers) Per Batch\t2300.00000\t2500.00000\t2500.00000\tDiamond=2300.00 | Gold=2300.00 | Platinum=2300.00\n30083\tEmergency Returns Complex (6-20 Numbers) Per Batch\t800.00000\t900.00000\t900.00000\tDiamond=800.00 | Gold=800.00 | Platinum=800.00\n30081\tEmergency Returns Simple\t500.00000\t600.00000\t600.00000\tDiamond=500.00 | Gold=500.00 | Platinum=500.00\n15\tEnhanced Call Centre Agent\t9.30000\t15.50000\t15.50000\tDiamond=9.30 | Gold=10.85 | Platinum=10.08\n30001\tEnhanced User - Bundled\t21.00000\t35.00000\t35.00000\tDiamond=21.00 | Gold=24.50 | Platinum=22.75\n30003\tEnhanced User - Included Calls\t18.00000\t30.00000\t30.00000\tDiamond=18.00 | Gold=21.00 | Platinum=19.50\n30006\tEnhanced User - PAYG\t9.00000\t15.00000\t15.00000\tDiamond=9.00 | Gold=10.50 | Platinum=9.75\n30039\tEnterprise\t128.80000\t161.00000\t161.00000\tDiamond=128.80 | Gold=128.80 | Platinum=128.80\n76\tEssentials\t6.75000\t11.25000\t11.25000\tUC Xpress Essentials per simultaneous call\n30014\tEssentials (Per Simultaneous Call)\t9.00000\t15.00000\t15.00000\tDiamond=9.00 | Gold=10.50 | Platinum=9.75\n30025\tEssentials User License\t14.25000\t19.00000\t19.00000\tDiamond=14.25 | Gold=14.25 | Platinum=14.25\n6\tExecutive User\t9.00000\t15.00000\t15.00000\tDiamond=9.00 | Gold=10.50 | Platinum=9.75\n2\tExecutive User - Bundled\t21.00000\t35.00000\t35.00000\tDiamond=21.00 | Gold=24.50 | Platinum=22.75\n4\tExecutive user - Included Calls\t18.00000\t30.00000\t30.00000\tDiamond=18.00 | Gold=21.00 | Platinum=19.50\n30016\tExternal Channel - Included\t24.00000\t50.00000\t50.00000\tDiamond=24.00 | Gold=30.00 | Platinum=27.00\n78\tExternal Channel - PAYG\t4.80000\t8.60000\t8.60000\tDiamond=4.80 | Gold=6.00 | Platinum=5.40\n77\tExternal Channels\t4.80000\t8.60000\t8.60000\tUC Xpress External Channel PAYG\n21\tFax to Email Add-On\t3.00000\t5.00000\t5.00000\tDiamond=3.00 | Gold=3.50 | Platinum=3.25\n30012\tFlex Channel - Included Calls (5 Channel Minimum)\t36.00000\t60.00000\t60.00000\tDiamond=36.00 | Gold=42.00 | Platinum=39.00\n30011\tFlex Channel - PAYG (5 Channel Minimum)\t10.80000\t18.00000\t18.00000\tDiamond=10.80 | Gold=12.60 | Platinum=11.70\n30010\tFlex Enhanced User - Bundled\t21.00000\t35.00000\t35.00000\tDiamond=21.00 | Gold=24.50 | Platinum=22.75\n30009\tFlex Enhanced User - Included Calls\t18.00000\t30.00000\t30.00000\tDiamond=18.00 | Gold=21.00 | Platinum=19.50\n30008\tFlex Enhanced User - PAYG\t9.00000\t15.00000\t15.00000\tDiamond=9.00 | Gold=10.50 | Platinum=9.75\n30034\tGateway Instance\t3.00000\t5.00000\t5.00000\tDiamond=3.00 | Gold=3.50 | Platinum=3.25\n60\tGo Integrator Cara - Solo\t1.60000\t2.00000\t2.00000\tDiamond=1.60 | Gold=1.60 | Platinum=1.60\n61\tGo Integrator Cara - Team\t3.60000\t4.50000\t4.50000\tDiamond=3.60 | Gold=3.60 | Platinum=3.60\n62\tGo Integrator Cara - Unite\t9.80000\t11.00000\t11.00000\tDiamond=9.80 | Gold=9.80 | Platinum=9.80\n63\tGo Integrator Nava - Solo\t1.60000\t2.00000\t2.00000\tDiamond=1.60 | Gold=1.60 | Platinum=1.60\n64\tGo Integrator Nava - Unite\t9.80000\t11.00000\t11.00000\tDiamond=9.80 | Gold=9.80 | Platinum=9.80\n65\tGo Operator Console\t52.33000\t65.00000\t65.00000\tDiamond=52.33 | Gold=52.33 | Platinum=52.33\n36\tHunt Group Premium\t9.00000\t15.00000\t15.00000\tNULL\n35\tHuntgroup with Time of Day Routing\t9.00000\t15.00000\t15.00000\tAuto Attendant / Hunt Group variant\n81\tiCall Suite - Advanced User License\t59.25000\t79.00000\t79.00000\tNULL\n80\tiCall Suite - Essentials User License\t14.25000\t19.00000\t19.00000\tNULL\n79\tiCall Suite - Ultimate User Licence\t96.75000\t129.00000\t129.00000\tNULL\n30028\tiCS Agent Console User License\t21.75000\t29.00000\t29.00000\tDiamond=21.75 | Gold=21.75 | Platinum=21.75\n30031\tiCS CRM Connect\t74.25000\t99.00000\t99.00000\tDiamond=74.25 | Gold=74.25 | Platinum=74.25\n30032\tiCS Report Connect: Business Plus\t299.25000\t399.00000\t399.00000\tDiamond=299.25 | Gold=299.25 | Platinum=299.25\n30033\tiCS Report Connect: Enterprise\t749.25000\t999.00000\t999.00000\tDiamond=749.25 | Gold=749.25 | Platinum=749.25\n30029\tiCS Supervisor Console User License\t36.75000\t49.00000\t49.00000\tDiamond=36.75 | Gold=36.75 | Platinum=36.75\n30030\tiCS Wallboard Projection License\t11.25000\t15.00000\t15.00000\tDiamond=11.25 | Gold=11.25 | Platinum=11.25\n88\tInbound 1300 Number Hosting\t6.00000\t8.00000\t8.00000\tNULL\n89\tInbound 1800 Number Hosting\t6.00000\t8.00000\t8.00000\tNULL\n30092\tInbound New Number Allocation (0508/0800)\t15.00000\t25.00000\t25.00000\tDiamond=15.00 | Gold=17.50 | Platinum=16.25\n30073\tInbound New Number Allocation (1300/1800)\t41.74000\t70.00000\t70.00000\tDiamond=41.74 | Gold=48.70 | Platinum=45.22\n30069\tInbound Number Hosting (0508)\t7.00000\t10.00000\t10.00000\tDiamond=7.00 | Gold=7.00 | Platinum=7.00\n30068\tInbound Number Hosting (0800)\t7.00000\t10.00000\t10.00000\tDiamond=7.00 | Gold=7.00 | Platinum=7.00\n30067\tInbound Number Hosting (13) - Minimum 12 month rental\t0.21000\t0.30000\t1100.00000\tUsage charge per minute for outbound 13-number calls. Retail $0.30/min per invoice ST-6796. NOT a monthly recurring fee. Previously incorrectly listed as $900/month annual rental.\n30066\tInbound Number Hosting (1300/1800)\t6.00000\t8.00000\t8.00000\tDiamond=6.00 | Gold=6.00 | Platinum=6.00\n30091\tInbound Number Porting (0800/0508)\t15.00000\t25.00000\t25.00000\tDiamond=15.00 | Gold=17.50 | Platinum=16.25\n30075\tInbound Number Porting (13)\t59.63000\t100.00000\t100.00000\tDiamond=59.63 | Gold=69.57 | Platinum=64.60\n30074\tInbound Number Porting (1300/1800)\t41.74000\t70.00000\t70.00000\tDiamond=41.74 | Gold=48.70 | Platinum=45.22\n44\tLite\t6.00000\t10.00000\t10.00000\tOffice User tier\n30013\tLite (Per Simultaneous Call)\t6.00000\t10.00000\t10.00000\tDiamond=6.00 | Gold=7.00 | Platinum=6.50\n96\tLocal\t0.07023\t0.10000\t0.10000\tNULL\n95\tLocal Calls (Not on SIP)\t0.07023\t0.10000\t0.10000\tDiamond=0.07 | Gold=0.07 | Platinum=0.07\n29\tMC - SmileTel Basic User License\t6.00000\t10.00000\t10.00000\tMulti-channel variant\n30\tMC - SmileTel Executive User License\t9.00000\t15.00000\t15.00000\tMigration product: Buy $9.00, Sell $15.00 (Access4 migration) - MC variant\n31\tMC - SmileTel Lite User License\t6.00000\t12.00000\t12.00000\tMulti-channel variant\n32\tMC - SmileTel Premium User License\t15.00000\t27.00000\t27.00000\tMulti-channel variant\n33\tMC (Special - Inc) - Executive User License\t18.00000\t30.00000\t30.00000\tSpecial included calls variant\n34\tMC (Special) - Executive User License\t7.20000\t12.00000\t12.00000\tSpecial variant\n105\tME - 3 Included Local National Mobile Call Pack\t0.00000\t0.00000\t0.00000\tIncluded in Executive User - Included Calls bundle\n98\tMobile\t0.07000\t0.10000\t0.10000\tDiamond=0.07 | Gold=0.07 | Platinum=0.07\n30065\tMobile DID - Minimum 12 month rental\t20.00000\t30.00000\t30.00000\tDiamond=20.00 | Gold=20.00 | Platinum=20.00\n30076\tMobile New Number Allocation\t41.74000\t70.00000\t70.00000\tDiamond=41.74 | Gold=48.70 | Platinum=45.22\n30077\tMobile Number Porting\t41.74000\t70.00000\t70.00000\tDiamond=41.74 | Gold=48.70 | Platinum=45.22\n97\tNational\t0.03500\t0.05000\t0.05000\tDiamond=0.04 | Gold=0.04 | Platinum=0.04\n30090\tNew Number Allocation Price Per Number\t15.00000\t25.00000\t25.00000\tDiamond=15.00 | Gold=17.50 | Platinum=16.25\n30059\tNZ Mobile Outbound Calls\t0.09167\t0.13100\t0.13100\tDiamond=0.09 | Gold=0.09 | Platinum=0.09\n30058\tNZ National Outbound Calls\t0.03857\t0.05510\t0.05510\tDiamond=0.04 | Gold=0.04 | Platinum=0.04\n5\tOffice User\t6.00000\t10.00000\t10.00000\tDiamond=6.00 | Gold=7.00 | Platinum=6.50\n1\tOffice User - Bundled\t18.00000\t30.00000\t30.00000\tDiamond=18.00 | Gold=21.00 | Platinum=19.50\n3\tOffice User - Included Calls\t15.00000\t25.00000\t25.00000\tDiamond=15.00 | Gold=17.50 | Platinum=16.25\n75\tOperator Connect SIP Trunk\t9.00000\t18.00000\t18.00000\tMicrosoft Teams operator connect\n30070\tOther\t49.00000\t78.40000\t78.40000\tDiamond=49.00 | Gold=49.00 | Platinum=49.00\n30096\tOther Counties Toll Free New Number\t199.00000\t265.00000\t265.00000\tDiamond=199.00 | Gold=199.00 | Platinum=199.00\n30095\tOther Counties Toll Free Number Port\t99.00000\t132.00000\t132.00000\tDiamond=99.00 | Gold=99.00 | Platinum=99.00\n30046\tOutbound Dialer\t16.00000\t20.00000\t20.00000\tDiamond=16.00 | Gold=16.00 | Platinum=16.00\n30087\tPNV Reject Complex - Per Number\t20.00000\t25.00000\t25.00000\tDiamond=20.00 | Gold=20.00 | Platinum=20.00\n30086\tPNV Reject Simple - Per Number\t25.00000\t30.00000\t30.00000\tDiamond=25.00 | Gold=25.00 | Platinum=25.00\n30089\tPorting - Price Per Number (21+)\t12.00000\t20.00000\t20.00000\tDiamond=12.00 | Gold=14.00 | Platinum=13.00\n30088\tPorting - Price Per Number (up to 20)\t15.00000\t25.00000\t25.00000\tDiamond=15.00 | Gold=17.50 | Platinum=16.25\n30078\tPorting Withdrawal Fee\t70.00000\t99.00000\t99.00000\tDiamond=70.00 | Gold=70.00 | Platinum=70.00\n41\tPremium\t9.00000\t15.00000\t15.00000\tExecutive User tier\n30062\tPremium (13/1300)\t0.28000\t0.40000\t0.40000\tDiamond=0.28 | Gold=0.28 | Platinum=0.28\n16\tPremium Call Centre Agent\t15.30000\t25.50000\t25.50000\tDiamond=15.30 | Gold=17.85 | Platinum=16.58\n104\tPremium Call Queue\t15.30000\t25.50000\t25.50000\tNULL\n39\tPremium-1\t9.00000\t15.00000\t15.00000\tExecutive User tier\n40\tPremium-2\t9.00000\t15.00000\t15.00000\tExecutive User tier\n42\tPremium-3\t9.00000\t15.00000\t15.00000\tExecutive User tier\n30038\tPro\t106.40000\t133.00000\t133.00000\tDiamond=106.40 | Gold=106.40 | Platinum=106.40\n30015\tProfessional (Per Simultaneous Call)\t12.00000\t20.00000\t20.00000\tDiamond=12.00 | Gold=14.00 | Platinum=13.00\n30045\tPSTN Calling\t53.60000\t67.00000\t67.00000\tDiamond=53.60 | Gold=53.60 | Platinum=53.60\n9\tReception Console Web App\t47.97000\t79.95000\t79.95000\tDiamond=47.97 | Gold=55.97 | Platinum=51.97\n99\tRegional\t0.03857\t0.05510\t0.05510\tNULL\n7\tResidential License\t3.90000\t6.50000\t6.50000\tDiamond=3.90 | Gold=4.55 | Platinum=4.23\n30044\tSecure Payment Channel\t16.00000\t20.00000\t20.00000\tDiamond=16.00 | Gold=16.00 | Platinum=16.00\n30071\tSimple (CAT A) Port Per Number\t17.14000\t25.00000\t25.00000\tDiamond=17.14 | Gold=20.00 | Platinum=18.57\n30079\tSimple Retarget Fee (Per Number) - Second Instance\t20.00000\t25.00000\t25.00000\tDiamond=20.00 | Gold=20.00 | Platinum=20.00\n45\tSingle Number\t6.00000\t10.00000\t10.00000\tNULL\n30054\tSIP Channel\t2.00000\t2.50000\t2.50000\tDiamond=2.00 | Gold=2.00 | Platinum=2.00\n70\tSIP Channel - CCXP Connector - PAYG\t5.97000\t9.95000\t9.95000\tDiamond=5.97 | Gold=6.97 | Platinum=6.47\n71\tSIP Channel - CX One Connector - PAYG\t5.97000\t9.95000\t9.95000\tDiamond=5.97 | Gold=6.97 | Platinum=6.47\n68\tSIP Channel - Included Calls\t24.00000\t50.00000\t50.00000\tDiamond=24.00 | Gold=30.00 | Platinum=27.00\n67\tSIP Channel - PAYG\t4.80000\t8.60000\t8.60000\tDiamond=4.80 | Gold=6.00 | Platinum=5.40\n69\tSIP Channel - Purecloud Connector - PAYG\t5.97000\t9.95000\t9.95000\tDiamond=5.97 | Gold=6.97 | Platinum=6.47\n30055\tSIP in Usage\t0.00900\t0.01100\t0.01100\tDiamond=0.01 | Gold=0.01 | Platinum=0.01\n27\tSmileTel Basic User License\t6.00000\t10.00000\t10.00000\tSasBoss product name for Office User\n23\tSmileTel Essential user\t9.00000\t17.00000\t17.00000\tSasBoss product name. Diamond cost = $9. RRP is SmileIT default retail.\n24\tSmileTel Essential User Special\t9.00000\t22.50000\t22.50000\tSpecial pricing variant\n25\tSmileTel Executive User License\t9.00000\t15.00000\t15.00000\tMigration product: Buy $9.00, Sell $15.00 (Access4 migration)\n26\tSmileTel Lite user\t6.00000\t12.00000\t12.00000\tSasBoss product name for Office User\n28\tSmileTel Professional User License\t15.00000\t27.00000\t27.00000\tSasBoss product name for Executive User - Included Calls\n30036\tSMS\t10.40000\t13.00000\t13.00000\tDiamond=10.40 | Gold=10.40 | Platinum=10.40\n83\tSMS Gateway - Dedicated Virtual Number\t15.00000\t25.00000\t25.00000\tNULL\n82\tSMS Gateway Instance\t3.00000\t5.00000\t5.00000\tNULL\n30056\tSMS In\t0.03500\t0.06500\t0.06500\tDiamond=0.04 | Gold=0.04 | Platinum=0.04\n30057\tSMS Out\t0.03500\t0.06500\t0.06500\tDiamond=0.04 | Gold=0.04 | Platinum=0.04\n22\tSoft Phone Desktop - EOS\t0.60000\t1.00000\t1.00000\tDiamond=0.60 | Gold=0.70 | Platinum=0.65\n66\tSoftphone add-on with Cisco Webex\t0.00000\t0.00000\t0.00000\tFree when attached to Executive User\n43\tStandard\t6.00000\t10.00000\t10.00000\tOffice User tier\n52\tUCXcel Auto-Attendant\t9.00000\t15.00000\t15.00000\tNULL\n54\tUCXcel Basic Queue Agent\t6.30000\t10.50000\t10.50000\tNULL\n53\tUCXcel Call Centre Queue\t6.30000\t10.50000\t10.50000\tNULL\n46\tUCXcel Essential\t9.00000\t17.00000\t17.00000\tUCXcel = UCaaS Licensing. Diamond cost $9.\n51\tUCXcel Hunt Group\t9.00000\t15.00000\t15.00000\tNULL\n47\tUCXcel Lite\t6.00000\t12.00000\t12.00000\tUCXcel Lite = Office User tier\n49\tUCXcel Premium\t21.00000\t37.50000\t37.50000\tUCXcel Premium = Executive User - Bundled\n48\tUCXcel Professional\t15.00000\t27.00000\t27.00000\tUCXcel Professional = Executive User - Included Calls\n55\tUCXcel Voicemail User\t3.00000\t5.00000\t5.00000\tNULL\n50\tUCXcel Webex Basic\t13.80000\t23.00000\t23.00000\tCollaborate Basic User with Cisco Webex\n30027\tUltimate User License\t96.75000\t129.00000\t129.00000\tDiamond=96.75 | Gold=96.75 | Platinum=96.75\n30094\tUnited Kingdom Toll Free Number Port\t128.00000\t183.00000\t183.00000\tDiamond=128.00 | Gold=128.00 | Platinum=128.00\n30093\tUnited States Toll Free Number Port\t12.00000\t17.00000\t17.00000\tDiamond=12.00 | Gold=12.00 | Platinum=12.00\n30042\tVirtual Agents Chat\t24.00000\t30.00000\t30.00000\tDiamond=24.00 | Gold=24.00 | Platinum=24.00\n30043\tVirtual Agents SMS\t24.00000\t30.00000\t30.00000\tDiamond=24.00 | Gold=24.00 | Platinum=24.00\n17\tVirtual Park User\t3.00000\t5.00000\t5.00000\tDiamond=3.00 | Gold=3.50 | Platinum=3.25\n38\tVoicemail\t3.00000\t5.00000\t5.00000\tVoicemail User\n20\tVoicemail Add-On for Residential Services\t2.00000\t2.50000\t2.50000\tDiamond=2.00 | Gold=2.00 | Platinum=2.00\n18\tVoicemail User\t3.00000\t5.00000\t5.00000\tDiamond=3.00 | Gold=3.50 | Platinum=3.25\n",
+  "stderr": "",
+  "execution_time_ms": 1669
+}

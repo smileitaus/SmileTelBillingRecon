@@ -1,0 +1,131 @@
+{
+  "query": "\n-- The screenshot shows services like S8JR3KM (pbx Coastal Dental -4432%), SHB64AC (docsamfdvout -523%), etc.\n-- These are NOT in our negative margin query above - they must be showing in the UI differently\n-- Let's check those specific services\nSELECT \n  s.externalId, s.planName, s.serviceType, s.supplierName, s.monthlyCost,\n  c.name as customerName,\n  ROUND(SUM(bi.lineAmount), 2) as totalRevenue,\n  COUNT(sba.id) as assignmentCount,\n  ROUND(SUM(bi.lineAmount) - s.monthlyCost, 2) as margin\nFROM service_billing_assignments sba\nJOIN billing_items bi ON bi.externalId = sba.billingItemExternalId\nJOIN services s ON s.externalId = sba.serviceExternalId\nJOIN customers c ON c.externalId = s.customerExternalId\nWHERE s.externalId IN ('S8JR3KM', 'SHB64AC', 'S72C54J', 'S1UMCO4', 'SKY3MLC', 'SGVQT30', 'SHU42OX', 'SEEV150', 'SZR96SE', 'SSE3JV7', 'S66U54A')\nGROUP BY s.externalId, s.planName, s.serviceType, s.supplierName, s.monthlyCost, c.name;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- The screenshot shows services like S8JR3KM (pbx Coastal Dental -4432%), SHB64AC (docsamfdvout -523%), etc.\n-- These are NOT in our negative margin query above - they must be showing in the UI differently\n-- Let's check those specific services\nSELECT \n  s.externalId, s.planName, s.serviceType, s.supplierName, s.monthlyCost,\n  c.name as customerName,\n  ROUND(SUM(bi.lineAmount), 2) as totalRevenue,\n  COUNT(sba.id) as assignmentCount,\n  ROUND(SUM(bi.lineAmount) - s.monthlyCost, 2) as margin\nFROM service_billing_assignments sba\nJOIN billing_items bi ON bi.externalId = sba.billingItemExternalId\nJOIN services s ON s.externalId = sba.serviceExternalId\nJOIN customers c ON c.externalId = s.customerExternalId\nWHERE s.externalId IN ('S8JR3KM', 'SHB64AC', 'S72C54J', 'S1UMCO4', 'SKY3MLC', 'SGVQT30', 'SHU42OX', 'SEEV150', 'SZR96SE', 'SSE3JV7', 'S66U54A')\nGROUP BY s.externalId, s.planName, s.serviceType, s.supplierName, s.monthlyCost, c.name;\n",
+  "rows": [
+    {
+      "externalId": "SGVQT30",
+      "planName": "AlbyFDocsOut",
+      "serviceType": "Voice",
+      "supplierName": "ChannelHaus",
+      "monthlyCost": "212.00",
+      "customerName": "Albany Family Doctors",
+      "totalRevenue": "212.00",
+      "assignmentCount": "1",
+      "margin": "0.00"
+    },
+    {
+      "externalId": "SZR96SE",
+      "planName": "MtCottnMCOUT",
+      "serviceType": "Voice",
+      "supplierName": "ChannelHaus",
+      "monthlyCost": "106.00",
+      "customerName": "Mount Cotton Medical Centre",
+      "totalRevenue": "106.00",
+      "assignmentCount": "1",
+      "margin": "0.00"
+    },
+    {
+      "externalId": "SEEV150",
+      "planName": "AusdCarindOut",
+      "serviceType": "Voice",
+      "supplierName": "ChannelHaus",
+      "monthlyCost": "192.00",
+      "customerName": "Ausdocs Carindale Pty Ltd",
+      "totalRevenue": "192.00",
+      "assignmentCount": "1",
+      "margin": "0.00"
+    },
+    {
+      "externalId": "SHB64AC",
+      "planName": "docsamfdvout",
+      "serviceType": "Voice",
+      "supplierName": "ChannelHaus",
+      "monthlyCost": "112.27",
+      "customerName": "Doctors at Samford Valley",
+      "totalRevenue": "159.00",
+      "assignmentCount": "1",
+      "margin": "46.73"
+    },
+    {
+      "externalId": "SHU42OX",
+      "planName": "Staff Heights Medical Practice",
+      "serviceType": "Voice",
+      "supplierName": "ChannelHaus",
+      "monthlyCost": "192.00",
+      "customerName": "Stafford Heights Medical Practice",
+      "totalRevenue": "192.00",
+      "assignmentCount": "1",
+      "margin": "0.00"
+    },
+    {
+      "externalId": "SSE3JV7",
+      "planName": "WarwkMCOut",
+      "serviceType": "Voice",
+      "supplierName": "ChannelHaus",
+      "monthlyCost": "81.07",
+      "customerName": "Warwick Medical Centre",
+      "totalRevenue": "106.00",
+      "assignmentCount": "1",
+      "margin": "24.93"
+    },
+    {
+      "externalId": "SKY3MLC",
+      "planName": "KawanaFClout",
+      "serviceType": "Voice",
+      "supplierName": "ChannelHaus",
+      "monthlyCost": "212.00",
+      "customerName": "Kawana Family Clinic",
+      "totalRevenue": "212.00",
+      "assignmentCount": "1",
+      "margin": "0.00"
+    },
+    {
+      "externalId": "S1UMCO4",
+      "planName": "AspleySCout",
+      "serviceType": "Voice",
+      "supplierName": "ChannelHaus",
+      "monthlyCost": "159.00",
+      "customerName": "Aspley Firstcare Doctors",
+      "totalRevenue": "159.00",
+      "assignmentCount": "1",
+      "margin": "0.00"
+    },
+    {
+      "externalId": "S72C54J",
+      "planName": "GumdaleMed",
+      "serviceType": "Voice",
+      "supplierName": "ChannelHaus",
+      "monthlyCost": "214.30",
+      "customerName": "Gumdale Medical Center",
+      "totalRevenue": "288.00",
+      "assignmentCount": "1",
+      "margin": "73.70"
+    },
+    {
+      "externalId": "S66U54A",
+      "planName": "MedPodsDoOut",
+      "serviceType": "Voice",
+      "supplierName": "ChannelHaus",
+      "monthlyCost": "71.20",
+      "customerName": "Havilah Medical Centre Doreen",
+      "totalRevenue": "106.00",
+      "assignmentCount": "1",
+      "margin": "34.80"
+    },
+    {
+      "externalId": "S8JR3KM",
+      "planName": "pbx Coastal Dental Specialists",
+      "serviceType": "Voice",
+      "supplierName": "ChannelHaus",
+      "monthlyCost": "90.65",
+      "customerName": "Coastal Dental Specialists",
+      "totalRevenue": "150.00",
+      "assignmentCount": "1",
+      "margin": "59.35"
+    }
+  ],
+  "messages": [],
+  "stdout": "externalId\tplanName\tserviceType\tsupplierName\tmonthlyCost\tcustomerName\ttotalRevenue\tassignmentCount\tmargin\nSGVQT30\tAlbyFDocsOut\tVoice\tChannelHaus\t212.00\tAlbany Family Doctors\t212.00\t1\t0.00\nSZR96SE\tMtCottnMCOUT\tVoice\tChannelHaus\t106.00\tMount Cotton Medical Centre\t106.00\t1\t0.00\nSEEV150\tAusdCarindOut\tVoice\tChannelHaus\t192.00\tAusdocs Carindale Pty Ltd\t192.00\t1\t0.00\nSHB64AC\tdocsamfdvout\tVoice\tChannelHaus\t112.27\tDoctors at Samford Valley\t159.00\t1\t46.73\nSHU42OX\tStaff Heights Medical Practice\tVoice\tChannelHaus\t192.00\tStafford Heights Medical Practice\t192.00\t1\t0.00\nSSE3JV7\tWarwkMCOut\tVoice\tChannelHaus\t81.07\tWarwick Medical Centre\t106.00\t1\t24.93\nSKY3MLC\tKawanaFClout\tVoice\tChannelHaus\t212.00\tKawana Family Clinic\t212.00\t1\t0.00\nS1UMCO4\tAspleySCout\tVoice\tChannelHaus\t159.00\tAspley Firstcare Doctors\t159.00\t1\t0.00\nS72C54J\tGumdaleMed\tVoice\tChannelHaus\t214.30\tGumdale Medical Center\t288.00\t1\t73.70\nS66U54A\tMedPodsDoOut\tVoice\tChannelHaus\t71.20\tHavilah Medical Centre Doreen\t106.00\t1\t34.80\nS8JR3KM\tpbx Coastal Dental Specialists\tVoice\tChannelHaus\t90.65\tCoastal Dental Specialists\t150.00\t1\t59.35\n",
+  "stderr": "",
+  "execution_time_ms": 1575
+}

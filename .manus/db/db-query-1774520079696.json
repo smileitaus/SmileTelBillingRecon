@@ -1,0 +1,61 @@
+{
+  "query": "\n-- Verify updates applied\nSELECT c.name, s.serviceId, s.planName, s.monthlyCost, s.monthlyRevenue, \n       LEFT(s.discoveryNotes, 100) as notes_preview\nFROM customers c\nJOIN services s ON s.customerExternalId = c.externalId\nWHERE c.name IN ('Active Living - Allen Developments Pty Ltd', 'Bracken Ridge Family Practice', \n                  'Fast Cut Qld Pty Ltd', 'Swara', 'True Metal Solutions', \n                  'NICKI\\'S PROFESSIONAL SECURITY SCREENS AND BLINDS')\n  AND s.monthlyCost = 49.00;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Verify updates applied\nSELECT c.name, s.serviceId, s.planName, s.monthlyCost, s.monthlyRevenue, \n       LEFT(s.discoveryNotes, 100) as notes_preview\nFROM customers c\nJOIN services s ON s.customerExternalId = c.externalId\nWHERE c.name IN ('Active Living - Allen Developments Pty Ltd', 'Bracken Ridge Family Practice', \n                  'Fast Cut Qld Pty Ltd', 'Swara', 'True Metal Solutions', \n                  'NICKI\\'S PROFESSIONAL SECURITY SCREENS AND BLINDS')\n  AND s.monthlyCost = 49.00;\n",
+  "rows": [
+    {
+      "name": "Active Living - Allen Developments Pty Ltd",
+      "serviceId": "",
+      "planName": "4G Data Backup Service",
+      "monthlyCost": "49.00",
+      "monthlyRevenue": "20.00",
+      "notes_preview": "COST REVIEW NEEDED: $49 placeholder cost from Access4 pricebook — verify actual wholesale cost | COS"
+    },
+    {
+      "name": "Bracken Ridge Family Practice",
+      "serviceId": "",
+      "planName": "4G Failover SIM",
+      "monthlyCost": "49.00",
+      "monthlyRevenue": "35.00",
+      "notes_preview": "COST REVIEW NEEDED: $49 placeholder cost from Access4 pricebook — verify actual wholesale cost | COS"
+    },
+    {
+      "name": "Fast Cut Qld Pty Ltd",
+      "serviceId": "",
+      "planName": "4G Data Backup Service",
+      "monthlyCost": "49.00",
+      "monthlyRevenue": "30.00",
+      "notes_preview": "COST REVIEW NEEDED: $49 placeholder cost from Access4 pricebook — verify actual wholesale cost | COS"
+    },
+    {
+      "name": "Swara",
+      "serviceId": "",
+      "planName": "Managed Voice Support",
+      "monthlyCost": "49.00",
+      "monthlyRevenue": "25.00",
+      "notes_preview": "COST REVIEW NEEDED: $49 placeholder cost from Access4 pricebook — verify actual wholesale cost | COS"
+    },
+    {
+      "name": "True Metal Solutions",
+      "serviceId": "",
+      "planName": "4G SIM Backup Internet Service",
+      "monthlyCost": "49.00",
+      "monthlyRevenue": "35.00",
+      "notes_preview": "[RVC Import] Source: NL"
+    },
+    {
+      "name": "NICKI'S PROFESSIONAL SECURITY SCREENS AND BLINDS",
+      "serviceId": "",
+      "planName": "4G Data Backup Service",
+      "monthlyCost": "49.00",
+      "monthlyRevenue": "39.00",
+      "notes_preview": "[Auto-matched by alias by Angus Burnett-Smith on 12/03/2026: \"Unassigned\" → \"NICKI'S PROFESSIONAL SE"
+    }
+  ],
+  "messages": [
+    "[SmileTel Import] Account: 586992900, Plan: Business Data Plan S",
+    "[SM Import]"
+  ],
+  "stdout": "name\tserviceId\tplanName\tmonthlyCost\tmonthlyRevenue\tnotes_preview\nActive Living - Allen Developments Pty Ltd\t\t4G Data Backup Service\t49.00\t20.00\tCOST REVIEW NEEDED: $49 placeholder cost from Access4 pricebook — verify actual wholesale cost | COS\nBracken Ridge Family Practice\t\t4G Failover SIM\t49.00\t35.00\tCOST REVIEW NEEDED: $49 placeholder cost from Access4 pricebook — verify actual wholesale cost | COS\nFast Cut Qld Pty Ltd\t\t4G Data Backup Service\t49.00\t30.00\tCOST REVIEW NEEDED: $49 placeholder cost from Access4 pricebook — verify actual wholesale cost | COS\nSwara\t\tManaged Voice Support\t49.00\t25.00\tCOST REVIEW NEEDED: $49 placeholder cost from Access4 pricebook — verify actual wholesale cost | COS\nTrue Metal Solutions\t\t4G SIM Backup Internet Service\t49.00\t35.00\t[RVC Import] Source: NL\n[SmileTel Import] Account: 586992900, Plan: Business Data Plan S\n[SM Import]\nNICKI'S PROFESSIONAL SECURITY SCREENS AND BLINDS\t\t4G Data Backup Service\t49.00\t39.00\t[Auto-matched by alias by Angus Burnett-Smith on 12/03/2026: \"Unassigned\" → \"NICKI'S PROFESSIONAL SE\n",
+  "stderr": "",
+  "execution_time_ms": 1580
+}

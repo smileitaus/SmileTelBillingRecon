@@ -1,0 +1,14 @@
+{
+  "query": "\n-- Total billing items service-matched\nSELECT COUNT(*) as service_matched_items, SUM(lineAmount) as total_revenue\nFROM billing_items \nWHERE matchStatus = 'service-matched';\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Total billing items service-matched\nSELECT COUNT(*) as service_matched_items, SUM(lineAmount) as total_revenue\nFROM billing_items \nWHERE matchStatus = 'service-matched';\n",
+  "rows": [
+    {
+      "service_matched_items": "2653",
+      "total_revenue": "289894.29"
+    }
+  ],
+  "messages": [],
+  "stdout": "service_matched_items\ttotal_revenue\n2653\t289894.29\n",
+  "stderr": "",
+  "execution_time_ms": 1634
+}

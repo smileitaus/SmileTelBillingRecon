@@ -1,0 +1,8 @@
+{
+  "query": "\nSELECT s.id, s.externalId, s.serviceName, s.serviceType, s.monthlyCost, s.monthlyRevenue, s.customerExternalId,\n       c.name AS customerName\nFROM services s\nLEFT JOIN customers c ON c.externalId = s.customerExternalId\nWHERE s.externalId IN ('SG3D608','SSHKYHN','SSCLR2F4','S1220','S1301','IPTEL-AB0','S0467','S1315',\n                       'S0256','SSY3IJW','SSZ2TRXE','SS5ZNGFT','S0944','SSS03Z6Q','SB3PFMC','SAP1G3A','STBVXCV')\nORDER BY s.externalId;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \nSELECT s.id, s.externalId, s.serviceName, s.serviceType, s.monthlyCost, s.monthlyRevenue, s.customerExternalId,\n       c.name AS customerName\nFROM services s\nLEFT JOIN customers c ON c.externalId = s.customerExternalId\nWHERE s.externalId IN ('SG3D608','SSHKYHN','SSCLR2F4','S1220','S1301','IPTEL-AB0','S0467','S1315',\n                       'S0256','SSY3IJW','SSZ2TRXE','SS5ZNGFT','S0944','SSS03Z6Q','SB3PFMC','SAP1G3A','STBVXCV')\nORDER BY s.externalId;\n",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1054 (42S22) at line 2: Unknown column 's.servicename' in 'field list'"
+  ]
+}

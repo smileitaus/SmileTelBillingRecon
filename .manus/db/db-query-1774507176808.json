@@ -1,0 +1,76 @@
+{
+  "query": "\nSELECT s.externalId, s.planName, s.monthlyCost, c.name as customerName\nFROM services s\nLEFT JOIN customers c ON s.customerExternalId = c.externalId\nWHERE s.externalId IN ('S81LV9S', 'SGVQT30', 'SXQLTTS', 'S1UMCO4', 'SJFKCR0', 'SEEV150', 'S75CTIT', 'SKY3MLC', 'SGBHVJV', 'SZR96SE', 'SHU42OX')\nORDER BY c.name, s.planName;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \nSELECT s.externalId, s.planName, s.monthlyCost, c.name as customerName\nFROM services s\nLEFT JOIN customers c ON s.customerExternalId = c.externalId\nWHERE s.externalId IN ('S81LV9S', 'SGVQT30', 'SXQLTTS', 'S1UMCO4', 'SJFKCR0', 'SEEV150', 'S75CTIT', 'SKY3MLC', 'SGBHVJV', 'SZR96SE', 'SHU42OX')\nORDER BY c.name, s.planName;\n",
+  "rows": [
+    {
+      "externalId": "S81LV9S",
+      "planName": "AlbnyFmDocIN",
+      "monthlyCost": "36.00",
+      "customerName": "Albany Family Doctors"
+    },
+    {
+      "externalId": "SGVQT30",
+      "planName": "AlbyFDocsOut",
+      "monthlyCost": "212.00",
+      "customerName": "Albany Family Doctors"
+    },
+    {
+      "externalId": "SXQLTTS",
+      "planName": "AspleySCin",
+      "monthlyCost": "27.00",
+      "customerName": "Aspley Firstcare Doctors"
+    },
+    {
+      "externalId": "S1UMCO4",
+      "planName": "AspleySCout",
+      "monthlyCost": "159.00",
+      "customerName": "Aspley Firstcare Doctors"
+    },
+    {
+      "externalId": "SEEV150",
+      "planName": "AusdCarindOut",
+      "monthlyCost": "192.00",
+      "customerName": "Ausdocs Carindale Pty Ltd"
+    },
+    {
+      "externalId": "SJFKCR0",
+      "planName": "AusdocCarindIn",
+      "monthlyCost": "36.00",
+      "customerName": "Ausdocs Carindale Pty Ltd"
+    },
+    {
+      "externalId": "S75CTIT",
+      "planName": "kawanaFClIn",
+      "monthlyCost": "36.00",
+      "customerName": "Kawana Family Clinic"
+    },
+    {
+      "externalId": "SKY3MLC",
+      "planName": "KawanaFClout",
+      "monthlyCost": "212.00",
+      "customerName": "Kawana Family Clinic"
+    },
+    {
+      "externalId": "SGBHVJV",
+      "planName": "MtCottnMCIN",
+      "monthlyCost": "27.00",
+      "customerName": "Mount Cotton Medical Centre"
+    },
+    {
+      "externalId": "SZR96SE",
+      "planName": "MtCottnMCOUT",
+      "monthlyCost": "106.00",
+      "customerName": "Mount Cotton Medical Centre"
+    },
+    {
+      "externalId": "SHU42OX",
+      "planName": "Staff Heights Medical Practice",
+      "monthlyCost": "192.00",
+      "customerName": "Stafford Heights Medical Practice"
+    }
+  ],
+  "messages": [],
+  "stdout": "externalId\tplanName\tmonthlyCost\tcustomerName\nS81LV9S\tAlbnyFmDocIN\t36.00\tAlbany Family Doctors\nSGVQT30\tAlbyFDocsOut\t212.00\tAlbany Family Doctors\nSXQLTTS\tAspleySCin\t27.00\tAspley Firstcare Doctors\nS1UMCO4\tAspleySCout\t159.00\tAspley Firstcare Doctors\nSEEV150\tAusdCarindOut\t192.00\tAusdocs Carindale Pty Ltd\nSJFKCR0\tAusdocCarindIn\t36.00\tAusdocs Carindale Pty Ltd\nS75CTIT\tkawanaFClIn\t36.00\tKawana Family Clinic\nSKY3MLC\tKawanaFClout\t212.00\tKawana Family Clinic\nSGBHVJV\tMtCottnMCIN\t27.00\tMount Cotton Medical Centre\nSZR96SE\tMtCottnMCOUT\t106.00\tMount Cotton Medical Centre\nSHU42OX\tStaff Heights Medical Practice\t192.00\tStafford Heights Medical Practice\n",
+  "stderr": "",
+  "execution_time_ms": 1611
+}

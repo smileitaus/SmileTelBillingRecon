@@ -1,0 +1,213 @@
+{
+  "query": "SELECT id, productName, wholesaleCost, defaultRetailPrice, notes\nFROM supplier_product_cost_map\nWHERE supplier = 'SasBoss'\nAND (\n  productName LIKE '%DID%' OR productName LIKE '%Direct In Dial%' OR\n  productName LIKE '%Inbound%' OR productName LIKE '%SMS%' OR\n  productName LIKE '%ITFS%' OR productName LIKE '%Single Number%' OR\n  productName LIKE '%Geographic%' OR productName LIKE '%Mobile Number%'\n)\nORDER BY productName;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute SELECT id, productName, wholesaleCost, defaultRetailPrice, notes\nFROM supplier_product_cost_map\nWHERE supplier = 'SasBoss'\nAND (\n  productName LIKE '%DID%' OR productName LIKE '%Direct In Dial%' OR\n  productName LIKE '%Inbound%' OR productName LIKE '%SMS%' OR\n  productName LIKE '%ITFS%' OR productName LIKE '%Single Number%' OR\n  productName LIKE '%Geographic%' OR productName LIKE '%Mobile Number%'\n)\nORDER BY productName;",
+  "rows": [
+    {
+      "id": "30061",
+      "productName": "0800 Mobile Inbound Calls",
+      "wholesaleCost": "0.15000",
+      "defaultRetailPrice": "0.22430",
+      "notes": "Diamond=0.15 | Gold=0.15 | Platinum=0.15"
+    },
+    {
+      "id": "30060",
+      "productName": "0800 National Inbound Calls",
+      "wholesaleCost": "0.05000",
+      "defaultRetailPrice": "0.09190",
+      "notes": "Diamond=0.05 | Gold=0.05 | Platinum=0.05"
+    },
+    {
+      "id": "93",
+      "productName": "1300 Inbound Calls",
+      "wholesaleCost": "0.03860",
+      "defaultRetailPrice": "0.05510",
+      "notes": "Diamond=0.04 | Gold=0.04 | Platinum=0.04"
+    },
+    {
+      "id": "94",
+      "productName": "1800 Inbound Calls",
+      "wholesaleCost": "0.04170",
+      "defaultRetailPrice": "0.05950",
+      "notes": "Diamond=0.04 | Gold=0.04 | Platinum=0.04"
+    },
+    {
+      "id": "30063",
+      "productName": "DID (AUD)",
+      "wholesaleCost": "0.33000",
+      "defaultRetailPrice": "0.35000",
+      "notes": "Diamond=0.33 | Gold=0.33 | Platinum=0.33"
+    },
+    {
+      "id": "84",
+      "productName": "DID Australia (1)",
+      "wholesaleCost": "0.33000",
+      "defaultRetailPrice": "2.00000",
+      "notes": "DID (AUD) $0.33/month Diamond. SasBoss charges $2 retail."
+    },
+    {
+      "id": "85",
+      "productName": "DID Australia (10)",
+      "wholesaleCost": "3.30000",
+      "defaultRetailPrice": "20.00000",
+      "notes": "10x DID"
+    },
+    {
+      "id": "86",
+      "productName": "DID Australia (100)",
+      "wholesaleCost": "33.00000",
+      "defaultRetailPrice": "55.00000",
+      "notes": "100x DID"
+    },
+    {
+      "id": "87",
+      "productName": "Direct In Dial AU Mobile Number (1)",
+      "wholesaleCost": "20.00000",
+      "defaultRetailPrice": "22.50000",
+      "notes": "Mobile DID"
+    },
+    {
+      "id": "88",
+      "productName": "Inbound 1300 Number Hosting",
+      "wholesaleCost": "6.00000",
+      "defaultRetailPrice": "8.00000",
+      "notes": "NULL"
+    },
+    {
+      "id": "89",
+      "productName": "Inbound 1800 Number Hosting",
+      "wholesaleCost": "6.00000",
+      "defaultRetailPrice": "8.00000",
+      "notes": "NULL"
+    },
+    {
+      "id": "30092",
+      "productName": "Inbound New Number Allocation (0508/0800)",
+      "wholesaleCost": "15.00000",
+      "defaultRetailPrice": "25.00000",
+      "notes": "Diamond=15.00 | Gold=17.50 | Platinum=16.25"
+    },
+    {
+      "id": "30073",
+      "productName": "Inbound New Number Allocation (1300/1800)",
+      "wholesaleCost": "41.74000",
+      "defaultRetailPrice": "70.00000",
+      "notes": "Diamond=41.74 | Gold=48.70 | Platinum=45.22"
+    },
+    {
+      "id": "30069",
+      "productName": "Inbound Number Hosting (0508)",
+      "wholesaleCost": "7.00000",
+      "defaultRetailPrice": "10.00000",
+      "notes": "Diamond=7.00 | Gold=7.00 | Platinum=7.00"
+    },
+    {
+      "id": "30068",
+      "productName": "Inbound Number Hosting (0800)",
+      "wholesaleCost": "7.00000",
+      "defaultRetailPrice": "10.00000",
+      "notes": "Diamond=7.00 | Gold=7.00 | Platinum=7.00"
+    },
+    {
+      "id": "30067",
+      "productName": "Inbound Number Hosting (13) - Minimum 12 month rental",
+      "wholesaleCost": "0.21000",
+      "defaultRetailPrice": "0.30000",
+      "notes": "Usage charge per minute for outbound 13-number calls. Retail $0.30/min per invoice ST-6796. NOT a monthly recurring fee. Previously incorrectly listed as $900/month annual rental."
+    },
+    {
+      "id": "30066",
+      "productName": "Inbound Number Hosting (1300/1800)",
+      "wholesaleCost": "6.00000",
+      "defaultRetailPrice": "8.00000",
+      "notes": "Diamond=6.00 | Gold=6.00 | Platinum=6.00"
+    },
+    {
+      "id": "30091",
+      "productName": "Inbound Number Porting (0800/0508)",
+      "wholesaleCost": "15.00000",
+      "defaultRetailPrice": "25.00000",
+      "notes": "Diamond=15.00 | Gold=17.50 | Platinum=16.25"
+    },
+    {
+      "id": "30075",
+      "productName": "Inbound Number Porting (13)",
+      "wholesaleCost": "59.63000",
+      "defaultRetailPrice": "100.00000",
+      "notes": "Diamond=59.63 | Gold=69.57 | Platinum=64.60"
+    },
+    {
+      "id": "30074",
+      "productName": "Inbound Number Porting (1300/1800)",
+      "wholesaleCost": "41.74000",
+      "defaultRetailPrice": "70.00000",
+      "notes": "Diamond=41.74 | Gold=48.70 | Platinum=45.22"
+    },
+    {
+      "id": "30065",
+      "productName": "Mobile DID - Minimum 12 month rental",
+      "wholesaleCost": "20.00000",
+      "defaultRetailPrice": "30.00000",
+      "notes": "Diamond=20.00 | Gold=20.00 | Platinum=20.00"
+    },
+    {
+      "id": "30077",
+      "productName": "Mobile Number Porting",
+      "wholesaleCost": "41.74000",
+      "defaultRetailPrice": "70.00000",
+      "notes": "Diamond=41.74 | Gold=48.70 | Platinum=45.22"
+    },
+    {
+      "id": "45",
+      "productName": "Single Number",
+      "wholesaleCost": "6.00000",
+      "defaultRetailPrice": "10.00000",
+      "notes": "NULL"
+    },
+    {
+      "id": "30036",
+      "productName": "SMS",
+      "wholesaleCost": "10.40000",
+      "defaultRetailPrice": "13.00000",
+      "notes": "Diamond=10.40 | Gold=10.40 | Platinum=10.40"
+    },
+    {
+      "id": "83",
+      "productName": "SMS Gateway - Dedicated Virtual Number",
+      "wholesaleCost": "15.00000",
+      "defaultRetailPrice": "25.00000",
+      "notes": "NULL"
+    },
+    {
+      "id": "82",
+      "productName": "SMS Gateway Instance",
+      "wholesaleCost": "3.00000",
+      "defaultRetailPrice": "5.00000",
+      "notes": "NULL"
+    },
+    {
+      "id": "30056",
+      "productName": "SMS In",
+      "wholesaleCost": "0.03500",
+      "defaultRetailPrice": "0.06500",
+      "notes": "Diamond=0.04 | Gold=0.04 | Platinum=0.04"
+    },
+    {
+      "id": "30057",
+      "productName": "SMS Out",
+      "wholesaleCost": "0.03500",
+      "defaultRetailPrice": "0.06500",
+      "notes": "Diamond=0.04 | Gold=0.04 | Platinum=0.04"
+    },
+    {
+      "id": "30043",
+      "productName": "Virtual Agents SMS",
+      "wholesaleCost": "24.00000",
+      "defaultRetailPrice": "30.00000",
+      "notes": "Diamond=24.00 | Gold=24.00 | Platinum=24.00"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tproductName\twholesaleCost\tdefaultRetailPrice\tnotes\n30061\t0800 Mobile Inbound Calls\t0.15000\t0.22430\tDiamond=0.15 | Gold=0.15 | Platinum=0.15\n30060\t0800 National Inbound Calls\t0.05000\t0.09190\tDiamond=0.05 | Gold=0.05 | Platinum=0.05\n93\t1300 Inbound Calls\t0.03860\t0.05510\tDiamond=0.04 | Gold=0.04 | Platinum=0.04\n94\t1800 Inbound Calls\t0.04170\t0.05950\tDiamond=0.04 | Gold=0.04 | Platinum=0.04\n30063\tDID (AUD)\t0.33000\t0.35000\tDiamond=0.33 | Gold=0.33 | Platinum=0.33\n84\tDID Australia (1)\t0.33000\t2.00000\tDID (AUD) $0.33/month Diamond. SasBoss charges $2 retail.\n85\tDID Australia (10)\t3.30000\t20.00000\t10x DID\n86\tDID Australia (100)\t33.00000\t55.00000\t100x DID\n87\tDirect In Dial AU Mobile Number (1)\t20.00000\t22.50000\tMobile DID\n88\tInbound 1300 Number Hosting\t6.00000\t8.00000\tNULL\n89\tInbound 1800 Number Hosting\t6.00000\t8.00000\tNULL\n30092\tInbound New Number Allocation (0508/0800)\t15.00000\t25.00000\tDiamond=15.00 | Gold=17.50 | Platinum=16.25\n30073\tInbound New Number Allocation (1300/1800)\t41.74000\t70.00000\tDiamond=41.74 | Gold=48.70 | Platinum=45.22\n30069\tInbound Number Hosting (0508)\t7.00000\t10.00000\tDiamond=7.00 | Gold=7.00 | Platinum=7.00\n30068\tInbound Number Hosting (0800)\t7.00000\t10.00000\tDiamond=7.00 | Gold=7.00 | Platinum=7.00\n30067\tInbound Number Hosting (13) - Minimum 12 month rental\t0.21000\t0.30000\tUsage charge per minute for outbound 13-number calls. Retail $0.30/min per invoice ST-6796. NOT a monthly recurring fee. Previously incorrectly listed as $900/month annual rental.\n30066\tInbound Number Hosting (1300/1800)\t6.00000\t8.00000\tDiamond=6.00 | Gold=6.00 | Platinum=6.00\n30091\tInbound Number Porting (0800/0508)\t15.00000\t25.00000\tDiamond=15.00 | Gold=17.50 | Platinum=16.25\n30075\tInbound Number Porting (13)\t59.63000\t100.00000\tDiamond=59.63 | Gold=69.57 | Platinum=64.60\n30074\tInbound Number Porting (1300/1800)\t41.74000\t70.00000\tDiamond=41.74 | Gold=48.70 | Platinum=45.22\n30065\tMobile DID - Minimum 12 month rental\t20.00000\t30.00000\tDiamond=20.00 | Gold=20.00 | Platinum=20.00\n30077\tMobile Number Porting\t41.74000\t70.00000\tDiamond=41.74 | Gold=48.70 | Platinum=45.22\n45\tSingle Number\t6.00000\t10.00000\tNULL\n30036\tSMS\t10.40000\t13.00000\tDiamond=10.40 | Gold=10.40 | Platinum=10.40\n83\tSMS Gateway - Dedicated Virtual Number\t15.00000\t25.00000\tNULL\n82\tSMS Gateway Instance\t3.00000\t5.00000\tNULL\n30056\tSMS In\t0.03500\t0.06500\tDiamond=0.04 | Gold=0.04 | Platinum=0.04\n30057\tSMS Out\t0.03500\t0.06500\tDiamond=0.04 | Gold=0.04 | Platinum=0.04\n30043\tVirtual Agents SMS\t24.00000\t30.00000\tDiamond=24.00 | Gold=24.00 | Platinum=24.00\n",
+  "stderr": "",
+  "execution_time_ms": 1658
+}

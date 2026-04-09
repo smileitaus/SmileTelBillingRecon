@@ -1,0 +1,150 @@
+{
+  "query": "\n-- For the 505 services with billing items but no assignment, what billing item descriptions exist for their customers?\n-- This tells us what the fuzzy match is failing on\nSELECT \n  bi.description,\n  s.serviceType,\n  s.provider,\n  COUNT(*) as service_count,\n  SUM(s.monthlyCost) as total_cost\nFROM services s\nJOIN billing_items bi ON bi.customerExternalId = s.customerExternalId\nWHERE s.customerExternalId IS NOT NULL\n  AND s.status = 'active'\n  AND (s.monthlyRevenue IS NULL OR s.monthlyRevenue = 0)\n  AND s.monthlyCost > 0\n  AND NOT EXISTS (\n    SELECT 1 FROM service_billing_assignments sba WHERE sba.serviceExternalId = s.externalId\n  )\nGROUP BY bi.description, s.serviceType, s.provider\nORDER BY total_cost DESC\nLIMIT 20;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- For the 505 services with billing items but no assignment, what billing item descriptions exist for their customers?\n-- This tells us what the fuzzy match is failing on\nSELECT \n  bi.description,\n  s.serviceType,\n  s.provider,\n  COUNT(*) as service_count,\n  SUM(s.monthlyCost) as total_cost\nFROM services s\nJOIN billing_items bi ON bi.customerExternalId = s.customerExternalId\nWHERE s.customerExternalId IS NOT NULL\n  AND s.status = 'active'\n  AND (s.monthlyRevenue IS NULL OR s.monthlyRevenue = 0)\n  AND s.monthlyCost > 0\n  AND NOT EXISTS (\n    SELECT 1 FROM service_billing_assignments sba WHERE sba.serviceExternalId = s.externalId\n  )\nGROUP BY bi.description, s.serviceType, s.provider\nORDER BY total_cost DESC\nLIMIT 20;\n",
+  "rows": [
+    {
+      "description": "Mobile",
+      "serviceType": "Internet",
+      "provider": "Exetel",
+      "service_count": "61",
+      "total_cost": "44136.46"
+    },
+    {
+      "description": "National",
+      "serviceType": "Internet",
+      "provider": "Exetel",
+      "service_count": "46",
+      "total_cost": "29772.84"
+    },
+    {
+      "description": "Local",
+      "serviceType": "Internet",
+      "provider": "Exetel",
+      "service_count": "31",
+      "total_cost": "20272.80"
+    },
+    {
+      "description": "Regional",
+      "serviceType": "Internet",
+      "provider": "Exetel",
+      "service_count": "19",
+      "total_cost": "13545.48"
+    },
+    {
+      "description": "1# Rental. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "serviceType": "Voice",
+      "provider": "ChannelHaus",
+      "service_count": "136",
+      "total_cost": "12756.98"
+    },
+    {
+      "description": "13Number",
+      "serviceType": "Internet",
+      "provider": "Exetel",
+      "service_count": "16",
+      "total_cost": "11954.56"
+    },
+    {
+      "description": "Mobile to IVR",
+      "serviceType": "Internet",
+      "provider": "Exetel",
+      "service_count": "18",
+      "total_cost": "11045.52"
+    },
+    {
+      "description": "Fixed to IVR",
+      "serviceType": "Internet",
+      "provider": "Exetel",
+      "service_count": "18",
+      "total_cost": "11045.52"
+    },
+    {
+      "description": "International to Fixed",
+      "serviceType": "Internet",
+      "provider": "Exetel",
+      "service_count": "16",
+      "total_cost": "9818.24"
+    },
+    {
+      "description": "Single Number",
+      "serviceType": "Internet",
+      "provider": "Exetel",
+      "service_count": "11",
+      "total_cost": "7818.20"
+    },
+    {
+      "description": "4 Channels Business SIP. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "serviceType": "Voice",
+      "provider": "ChannelHaus",
+      "service_count": "48",
+      "total_cost": "5614.22"
+    },
+    {
+      "description": "Standard",
+      "serviceType": "Internet",
+      "provider": "Exetel",
+      "service_count": "7",
+      "total_cost": "5363.64"
+    },
+    {
+      "description": "Premium",
+      "serviceType": "Internet",
+      "provider": "Exetel",
+      "service_count": "7",
+      "total_cost": "5363.64"
+    },
+    {
+      "description": "Voicemail",
+      "serviceType": "Internet",
+      "provider": "Exetel",
+      "service_count": "7",
+      "total_cost": "5363.64"
+    },
+    {
+      "description": "Mobile",
+      "serviceType": "Voice",
+      "provider": "Vocus",
+      "service_count": "124",
+      "total_cost": "5281.12"
+    },
+    {
+      "description": "SmileTel supplied NBN voice and internet bundle. Month to month plan. Includes:- 1xVoice phone line,1xInternet service,1x4G Back-up, Static IP.  Unlimited calls to standard Australian numbers, Unlimited data allowance, Account management support.",
+      "serviceType": "VoIP",
+      "provider": "SmileTel",
+      "service_count": "53",
+      "total_cost": "4489.10"
+    },
+    {
+      "description": "Voice - Direct In Dial Numbers",
+      "serviceType": "Voice",
+      "provider": "SasBoss",
+      "service_count": "416",
+      "total_cost": "4299.55"
+    },
+    {
+      "description": "Voice - Services",
+      "serviceType": "Voice",
+      "provider": "SasBoss",
+      "service_count": "410",
+      "total_cost": "4279.55"
+    },
+    {
+      "description": "Call Forward Selective",
+      "serviceType": "Internet",
+      "provider": "Exetel",
+      "service_count": "6",
+      "total_cost": "4181.82"
+    },
+    {
+      "description": "Collaboration",
+      "serviceType": "Internet",
+      "provider": "Exetel",
+      "service_count": "5",
+      "total_cost": "3863.64"
+    }
+  ],
+  "messages": [],
+  "stdout": "description\tserviceType\tprovider\tservice_count\ttotal_cost\nMobile\tInternet\tExetel\t61\t44136.46\nNational\tInternet\tExetel\t46\t29772.84\nLocal\tInternet\tExetel\t31\t20272.80\nRegional\tInternet\tExetel\t19\t13545.48\n1# Rental. Starting: 01-Feb-2026. Ending: 28-Feb-2026\tVoice\tChannelHaus\t136\t12756.98\n13Number\tInternet\tExetel\t16\t11954.56\nMobile to IVR\tInternet\tExetel\t18\t11045.52\nFixed to IVR\tInternet\tExetel\t18\t11045.52\nInternational to Fixed\tInternet\tExetel\t16\t9818.24\nSingle Number\tInternet\tExetel\t11\t7818.20\n4 Channels Business SIP. Starting: 01-Feb-2026. Ending: 28-Feb-2026\tVoice\tChannelHaus\t48\t5614.22\nStandard\tInternet\tExetel\t7\t5363.64\nPremium\tInternet\tExetel\t7\t5363.64\nVoicemail\tInternet\tExetel\t7\t5363.64\nMobile\tVoice\tVocus\t124\t5281.12\nSmileTel supplied NBN voice and internet bundle. Month to month plan. Includes:- 1xVoice phone line,1xInternet service,1x4G Back-up, Static IP.  Unlimited calls to standard Australian numbers, Unlimited data allowance, Account management support.\tVoIP\tSmileTel\t53\t4489.10\nVoice - Direct In Dial Numbers\tVoice\tSasBoss\t416\t4299.55\nVoice - Services\tVoice\tSasBoss\t410\t4279.55\nCall Forward Selective\tInternet\tExetel\t6\t4181.82\nCollaboration\tInternet\tExetel\t5\t3863.64\n",
+  "stderr": "",
+  "execution_time_ms": 1583
+}

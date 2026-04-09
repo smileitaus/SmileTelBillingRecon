@@ -1,0 +1,19 @@
+{
+  "query": "\n-- Final revenue summary\nSELECT \n  COUNT(*) as total_services,\n  SUM(CASE WHEN status = 'Active' THEN 1 ELSE 0 END) as active_services,\n  SUM(CASE WHEN monthlyRevenue > 0 THEN 1 ELSE 0 END) as services_with_revenue,\n  SUM(monthlyRevenue) as total_monthly_revenue,\n  SUM(monthlyCost) as total_monthly_cost,\n  SUM(monthlyRevenue) - SUM(monthlyCost) as gross_margin,\n  ROUND((SUM(monthlyRevenue) - SUM(monthlyCost)) / NULLIF(SUM(monthlyRevenue), 0) * 100, 1) as margin_pct\nFROM services\nWHERE status = 'Active';\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Final revenue summary\nSELECT \n  COUNT(*) as total_services,\n  SUM(CASE WHEN status = 'Active' THEN 1 ELSE 0 END) as active_services,\n  SUM(CASE WHEN monthlyRevenue > 0 THEN 1 ELSE 0 END) as services_with_revenue,\n  SUM(monthlyRevenue) as total_monthly_revenue,\n  SUM(monthlyCost) as total_monthly_cost,\n  SUM(monthlyRevenue) - SUM(monthlyCost) as gross_margin,\n  ROUND((SUM(monthlyRevenue) - SUM(monthlyCost)) / NULLIF(SUM(monthlyRevenue), 0) * 100, 1) as margin_pct\nFROM services\nWHERE status = 'Active';\n",
+  "rows": [
+    {
+      "total_services": "2452",
+      "active_services": "2452",
+      "services_with_revenue": "1522",
+      "total_monthly_revenue": "357937.07",
+      "total_monthly_cost": "81711.51",
+      "gross_margin": "276225.56",
+      "margin_pct": "77.2"
+    }
+  ],
+  "messages": [],
+  "stdout": "total_services\tactive_services\tservices_with_revenue\ttotal_monthly_revenue\ttotal_monthly_cost\tgross_margin\tmargin_pct\n2452\t2452\t1522\t357937.07\t81711.51\t276225.56\t77.2\n",
+  "stderr": "",
+  "execution_time_ms": 1579
+}

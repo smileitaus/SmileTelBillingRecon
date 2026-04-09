@@ -1,0 +1,30 @@
+{
+  "query": "\nSELECT COUNT(*) as cnt, 'sasboss_enterprises' as tbl FROM sasboss_enterprises\nUNION ALL SELECT COUNT(*), 'sasboss_services' FROM sasboss_services\nUNION ALL SELECT COUNT(*), 'sasboss_did_inventory' FROM sasboss_did_inventory\nUNION ALL SELECT COUNT(*), 'sasboss_pricebook' FROM sasboss_pricebook\nUNION ALL SELECT COUNT(*), 'sasboss_invoices' FROM sasboss_invoices;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \nSELECT COUNT(*) as cnt, 'sasboss_enterprises' as tbl FROM sasboss_enterprises\nUNION ALL SELECT COUNT(*), 'sasboss_services' FROM sasboss_services\nUNION ALL SELECT COUNT(*), 'sasboss_did_inventory' FROM sasboss_did_inventory\nUNION ALL SELECT COUNT(*), 'sasboss_pricebook' FROM sasboss_pricebook\nUNION ALL SELECT COUNT(*), 'sasboss_invoices' FROM sasboss_invoices;\n",
+  "rows": [
+    {
+      "cnt": "10",
+      "tbl": "sasboss_enterprises"
+    },
+    {
+      "cnt": "133",
+      "tbl": "sasboss_pricebook"
+    },
+    {
+      "cnt": "852",
+      "tbl": "sasboss_invoices"
+    },
+    {
+      "cnt": "1295",
+      "tbl": "sasboss_services"
+    },
+    {
+      "cnt": "1490",
+      "tbl": "sasboss_did_inventory"
+    }
+  ],
+  "messages": [],
+  "stdout": "cnt\ttbl\n10\tsasboss_enterprises\n133\tsasboss_pricebook\n852\tsasboss_invoices\n1295\tsasboss_services\n1490\tsasboss_did_inventory\n",
+  "stderr": "",
+  "execution_time_ms": 1636
+}

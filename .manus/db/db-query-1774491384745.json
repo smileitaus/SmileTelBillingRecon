@@ -1,0 +1,21 @@
+{
+  "query": "\n-- Update BI00018 speed tier from S0412 plan name (NBN 25/10 -> 25/10)\nUPDATE billing_items SET parsedSpeedTier = '25/10' WHERE externalId = 'BI00018';\n\n-- Bulk update: for all bundle billing items, derive speed tier from assigned ABB Internet service plan name\n-- Pattern: \"NBN 25/10\" -> \"25/10\", \"NBN 50/20\" -> \"50/20\", \"NBN 100/40\" -> \"100/40\", \"NBN 250/25\" -> \"250/25\"\nUPDATE billing_items bi\nJOIN service_billing_assignments sba ON sba.billingItemExternalId = bi.externalId\nJOIN services s ON s.externalId = sba.serviceExternalId AND s.serviceType = 'Internet' AND s.provider = 'ABB'\nSET bi.parsedSpeedTier = CASE\n  WHEN s.planName LIKE '%250%' THEN '250/25'\n  WHEN s.planName LIKE '%100/40%' THEN '100/40'\n  WHEN s.planName LIKE '%100%' THEN '100/20'\n  WHEN s.planName LIKE '%50/20%' THEN '50/20'\n  WHEN s.planName LIKE '%50%' THEN '50/20'\n  WHEN s.planName LIKE '%25/10%' THEN '25/10'\n  WHEN s.planName LIKE '%25%' THEN '25/10'\n  WHEN s.planName LIKE '%12/1%' THEN '12/1'\n  ELSE bi.parsedSpeedTier\nEND\nWHERE bi.description LIKE '%SmileTel supplied%' AND (bi.parsedSpeedTier IS NULL OR bi.parsedSpeedTier = '');\n\n-- Verify BI00018 now has speed tier\nSELECT externalId, parsedSpeedTier, parsedContractMonths, parsedHas4gBackup, parsedDataAllowance, retailBundleComponent\nFROM billing_items WHERE externalId = 'BI00018';\n\n-- Count how many bundle items now have speed tier populated\nSELECT \n  SUM(CASE WHEN parsedSpeedTier != '' AND parsedSpeedTier IS NOT NULL THEN 1 ELSE 0 END) as hasSpeed,\n  COUNT(*) as total\nFROM billing_items WHERE description LIKE '%SmileTel supplied%';\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Update BI00018 speed tier from S0412 plan name (NBN 25/10 -> 25/10)\nUPDATE billing_items SET parsedSpeedTier = '25/10' WHERE externalId = 'BI00018';\n\n-- Bulk update: for all bundle billing items, derive speed tier from assigned ABB Internet service plan name\n-- Pattern: \"NBN 25/10\" -> \"25/10\", \"NBN 50/20\" -> \"50/20\", \"NBN 100/40\" -> \"100/40\", \"NBN 250/25\" -> \"250/25\"\nUPDATE billing_items bi\nJOIN service_billing_assignments sba ON sba.billingItemExternalId = bi.externalId\nJOIN services s ON s.externalId = sba.serviceExternalId AND s.serviceType = 'Internet' AND s.provider = 'ABB'\nSET bi.parsedSpeedTier = CASE\n  WHEN s.planName LIKE '%250%' THEN '250/25'\n  WHEN s.planName LIKE '%100/40%' THEN '100/40'\n  WHEN s.planName LIKE '%100%' THEN '100/20'\n  WHEN s.planName LIKE '%50/20%' THEN '50/20'\n  WHEN s.planName LIKE '%50%' THEN '50/20'\n  WHEN s.planName LIKE '%25/10%' THEN '25/10'\n  WHEN s.planName LIKE '%25%' THEN '25/10'\n  WHEN s.planName LIKE '%12/1%' THEN '12/1'\n  ELSE bi.parsedSpeedTier\nEND\nWHERE bi.description LIKE '%SmileTel supplied%' AND (bi.parsedSpeedTier IS NULL OR bi.parsedSpeedTier = '');\n\n-- Verify BI00018 now has speed tier\nSELECT externalId, parsedSpeedTier, parsedContractMonths, parsedHas4gBackup, parsedDataAllowance, retailBundleComponent\nFROM billing_items WHERE externalId = 'BI00018';\n\n-- Count how many bundle items now have speed tier populated\nSELECT \n  SUM(CASE WHEN parsedSpeedTier != '' AND parsedSpeedTier IS NOT NULL THEN 1 ELSE 0 END) as hasSpeed,\n  COUNT(*) as total\nFROM billing_items WHERE description LIKE '%SmileTel supplied%';\n",
+  "rows": [
+    {
+      "externalId": "BI00018",
+      "parsedSpeedTier": "25/10",
+      "parsedContractMonths": "24",
+      "parsedHas4gBackup": "1",
+      "parsedDataAllowance": "unlimited",
+      "retailBundleComponent": "bundle"
+    }
+  ],
+  "messages": [
+    "hasSpeed\ttotal",
+    "83\t146"
+  ],
+  "stdout": "externalId\tparsedSpeedTier\tparsedContractMonths\tparsedHas4gBackup\tparsedDataAllowance\tretailBundleComponent\nBI00018\t25/10\t24\t1\tunlimited\tbundle\nhasSpeed\ttotal\n83\t146\n",
+  "stderr": "",
+  "execution_time_ms": 2232
+}

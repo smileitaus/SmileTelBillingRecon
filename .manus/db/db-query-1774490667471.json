@@ -1,0 +1,24 @@
+{
+  "query": "\nSELECT externalId, planName, monthlyCost, serviceType, customerExternalId \nFROM services \nWHERE planName LIKE '%Aspley%' OR planName LIKE '%aspley%' OR planName LIKE '%S1UMC%'\nLIMIT 5;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \nSELECT externalId, planName, monthlyCost, serviceType, customerExternalId \nFROM services \nWHERE planName LIKE '%Aspley%' OR planName LIKE '%aspley%' OR planName LIKE '%S1UMC%'\nLIMIT 5;\n",
+  "rows": [
+    {
+      "externalId": "SXQLTTS",
+      "planName": "AspleySCin",
+      "monthlyCost": "18.90",
+      "serviceType": "Voice",
+      "customerExternalId": "C0016"
+    },
+    {
+      "externalId": "S1UMCO4",
+      "planName": "AspleySCout",
+      "monthlyCost": "108.48",
+      "serviceType": "Voice",
+      "customerExternalId": "C0016"
+    }
+  ],
+  "messages": [],
+  "stdout": "externalId\tplanName\tmonthlyCost\tserviceType\tcustomerExternalId\nSXQLTTS\tAspleySCin\t18.90\tVoice\tC0016\nS1UMCO4\tAspleySCout\t108.48\tVoice\tC0016\n",
+  "stderr": "",
+  "execution_time_ms": 1508
+}

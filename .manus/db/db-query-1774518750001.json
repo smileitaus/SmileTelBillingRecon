@@ -1,0 +1,1082 @@
+{
+  "query": "\n-- Get all billing items for these customers to understand the revenue context\nSELECT \n  bi.externalId,\n  bi.description,\n  bi.lineAmount,\n  bi.matchStatus,\n  bi.customerExternalId,\n  MAX(c.name) as customerName\nFROM billing_items bi\nJOIN customers c ON bi.customerExternalId = c.externalId\nWHERE bi.customerExternalId IN ('C0214','C0003','C0235','C0091','C0044','C0271','C2893')\nGROUP BY bi.externalId, bi.description, bi.lineAmount, bi.matchStatus, bi.customerExternalId\nORDER BY bi.customerExternalId, ABS(bi.lineAmount) DESC;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Get all billing items for these customers to understand the revenue context\nSELECT \n  bi.externalId,\n  bi.description,\n  bi.lineAmount,\n  bi.matchStatus,\n  bi.customerExternalId,\n  MAX(c.name) as customerName\nFROM billing_items bi\nJOIN customers c ON bi.customerExternalId = c.externalId\nWHERE bi.customerExternalId IN ('C0214','C0003','C0235','C0091','C0044','C0271','C2893')\nGROUP BY bi.externalId, bi.description, bi.lineAmount, bi.matchStatus, bi.customerExternalId\nORDER BY bi.customerExternalId, ABS(bi.lineAmount) DESC;\n",
+  "rows": [
+    {
+      "externalId": "BI00397",
+      "description": "Data - Internet",
+      "lineAmount": "88.00",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0003",
+      "customerName": "Active Living - Allen Developments Pty Ltd"
+    },
+    {
+      "externalId": "BI00402",
+      "description": "Data - Internet",
+      "lineAmount": "88.00",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0003",
+      "customerName": "Active Living - Allen Developments Pty Ltd"
+    },
+    {
+      "externalId": "BI00399",
+      "description": "Voice - Services",
+      "lineAmount": "30.00",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0003",
+      "customerName": "Active Living - Allen Developments Pty Ltd"
+    },
+    {
+      "externalId": "BI00404",
+      "description": "Voice - Services",
+      "lineAmount": "30.00",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0003",
+      "customerName": "Active Living - Allen Developments Pty Ltd"
+    },
+    {
+      "externalId": "BI00403",
+      "description": "Other",
+      "lineAmount": "10.00",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0003",
+      "customerName": "Active Living - Allen Developments Pty Ltd"
+    },
+    {
+      "externalId": "BI00398",
+      "description": "Other",
+      "lineAmount": "10.00",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0003",
+      "customerName": "Active Living - Allen Developments Pty Ltd"
+    },
+    {
+      "externalId": "BI00401",
+      "description": "Voice - Direct In Dial Numbers",
+      "lineAmount": "2.00",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0003",
+      "customerName": "Active Living - Allen Developments Pty Ltd"
+    },
+    {
+      "externalId": "BI00396",
+      "description": "Voice - Direct In Dial Numbers",
+      "lineAmount": "2.00",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0003",
+      "customerName": "Active Living - Allen Developments Pty Ltd"
+    },
+    {
+      "externalId": "BI00395",
+      "description": "Voice - Telephone Usage",
+      "lineAmount": "0.60",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0003",
+      "customerName": "Active Living - Allen Developments Pty Ltd"
+    },
+    {
+      "externalId": "BI00400",
+      "description": "Voice - Telephone Usage",
+      "lineAmount": "0.30",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0003",
+      "customerName": "Active Living - Allen Developments Pty Ltd"
+    },
+    {
+      "externalId": "BI00188",
+      "description": "Other",
+      "lineAmount": "35.00",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0044",
+      "customerName": "Bracken Ridge Family Practice"
+    },
+    {
+      "externalId": "BI00394",
+      "description": "Voice - Services",
+      "lineAmount": "150.00",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0091",
+      "customerName": "Fast Cut Qld Pty Ltd"
+    },
+    {
+      "externalId": "BI00392",
+      "description": "Data - Internet",
+      "lineAmount": "95.45",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0091",
+      "customerName": "Fast Cut Qld Pty Ltd"
+    },
+    {
+      "externalId": "BI00393",
+      "description": "Other",
+      "lineAmount": "30.00",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0091",
+      "customerName": "Fast Cut Qld Pty Ltd"
+    },
+    {
+      "externalId": "BI00391",
+      "description": "Voice - Direct In Dial Numbers",
+      "lineAmount": "2.00",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0091",
+      "customerName": "Fast Cut Qld Pty Ltd"
+    },
+    {
+      "externalId": "BI00573",
+      "description": "100mb Business Grade Fibre Up and Down - 36 Month ContractEach",
+      "lineAmount": "877.50",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00854",
+      "description": "13 Number ACMA High Volume",
+      "lineAmount": "565.00",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00945",
+      "description": "Mobile",
+      "lineAmount": "246.32",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00960",
+      "description": "Premium",
+      "lineAmount": "182.00",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00963",
+      "description": "Webex Basic",
+      "lineAmount": "138.00",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00958",
+      "description": "Standard",
+      "lineAmount": "112.00",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00873",
+      "description": "Mobile",
+      "lineAmount": "103.05",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00897",
+      "description": "Mobile",
+      "lineAmount": "97.04",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00870",
+      "description": "Managed Voice Support 1 - 10 Users",
+      "lineAmount": "75.00",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00906",
+      "description": "Mobile",
+      "lineAmount": "70.28",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00956",
+      "description": "100 Number block",
+      "lineAmount": "70.00",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00929",
+      "description": "Mobile",
+      "lineAmount": "63.30",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00952",
+      "description": "National",
+      "lineAmount": "54.94",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00886",
+      "description": "Mobile",
+      "lineAmount": "52.67",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00884",
+      "description": "Mobile",
+      "lineAmount": "40.73",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00932",
+      "description": "Mobile",
+      "lineAmount": "33.35",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00874",
+      "description": "Mobile",
+      "lineAmount": "32.05",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00911",
+      "description": "Mobile",
+      "lineAmount": "29.20",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00943",
+      "description": "Mobile",
+      "lineAmount": "23.17",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00959",
+      "description": "Collaboration",
+      "lineAmount": "23.00",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00950",
+      "description": "Mobile",
+      "lineAmount": "22.02",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00895",
+      "description": "Mobile",
+      "lineAmount": "17.68",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00954",
+      "description": "Auto Attendant Basic",
+      "lineAmount": "16.00",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00918",
+      "description": "Mobile",
+      "lineAmount": "15.92",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00939",
+      "description": "National",
+      "lineAmount": "13.18",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00917",
+      "description": "Mobile",
+      "lineAmount": "11.72",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00961",
+      "description": "Voicemail",
+      "lineAmount": "10.00",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00962",
+      "description": "IP Tel User VAS - Mobility",
+      "lineAmount": "8.00",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00942",
+      "description": "Local",
+      "lineAmount": "6.64",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00875",
+      "description": "International to Fixed",
+      "lineAmount": "6.60",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00957",
+      "description": "Basic",
+      "lineAmount": "6.00",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00880",
+      "description": "National",
+      "lineAmount": "5.65",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00856",
+      "description": "1300192868",
+      "lineAmount": "5.00",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00863",
+      "description": "1300525442",
+      "lineAmount": "5.00",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00857",
+      "description": "1300194086",
+      "lineAmount": "5.00",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00855",
+      "description": "1300179340",
+      "lineAmount": "5.00",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00864",
+      "description": "1300584780",
+      "lineAmount": "5.00",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00865",
+      "description": "1300590075",
+      "lineAmount": "5.00",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00867",
+      "description": "1300687643",
+      "lineAmount": "5.00",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00866",
+      "description": "1300597540",
+      "lineAmount": "5.00",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00862",
+      "description": "1300352190",
+      "lineAmount": "5.00",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00871",
+      "description": "Single Number",
+      "lineAmount": "5.00",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00868",
+      "description": "1300493702",
+      "lineAmount": "5.00",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00860",
+      "description": "1300275213",
+      "lineAmount": "5.00",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00861",
+      "description": "1300311429",
+      "lineAmount": "5.00",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00859",
+      "description": "1300253103",
+      "lineAmount": "5.00",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00858",
+      "description": "1300252380",
+      "lineAmount": "5.00",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00902",
+      "description": "International to Fixed",
+      "lineAmount": "4.79",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00892",
+      "description": "National",
+      "lineAmount": "4.49",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00912",
+      "description": "Mobile to IVR",
+      "lineAmount": "4.36",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00947",
+      "description": "National",
+      "lineAmount": "4.24",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00927",
+      "description": "National",
+      "lineAmount": "4.22",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00955",
+      "description": "Single Number",
+      "lineAmount": "4.00",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00869",
+      "description": "Call Forward Selective",
+      "lineAmount": "4.00",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00878",
+      "description": "National",
+      "lineAmount": "3.60",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00905",
+      "description": "National",
+      "lineAmount": "3.37",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00887",
+      "description": "National",
+      "lineAmount": "3.34",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00919",
+      "description": "International to Fixed",
+      "lineAmount": "3.05",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00899",
+      "description": "Landline-Mobile",
+      "lineAmount": "2.51",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00896",
+      "description": "Mobile to IVR",
+      "lineAmount": "2.50",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00924",
+      "description": "Mobile to IVR",
+      "lineAmount": "2.44",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00889",
+      "description": "Mobile to IVR",
+      "lineAmount": "2.00",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00948",
+      "description": "International",
+      "lineAmount": "1.98",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00921",
+      "description": "Mobile to IVR",
+      "lineAmount": "1.95",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00885",
+      "description": "International to Fixed",
+      "lineAmount": "1.81",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00883",
+      "description": "National",
+      "lineAmount": "1.80",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00882",
+      "description": "Fixed to IVR",
+      "lineAmount": "1.79",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00913",
+      "description": "National",
+      "lineAmount": "1.75",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00907",
+      "description": "National",
+      "lineAmount": "1.67",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00894",
+      "description": "National",
+      "lineAmount": "1.58",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00926",
+      "description": "Local",
+      "lineAmount": "1.57",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00916",
+      "description": "Mobile to IVR",
+      "lineAmount": "1.53",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00925",
+      "description": "Mobile to IVR",
+      "lineAmount": "1.30",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00928",
+      "description": "International to Fixed",
+      "lineAmount": "1.23",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00940",
+      "description": "13Number",
+      "lineAmount": "1.20",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00914",
+      "description": "Local",
+      "lineAmount": "1.16",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00903",
+      "description": "Mobile to IVR",
+      "lineAmount": "1.05",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00891",
+      "description": "Mobile to IVR",
+      "lineAmount": "0.97",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00938",
+      "description": "Other",
+      "lineAmount": "0.80",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00893",
+      "description": "International to Fixed",
+      "lineAmount": "0.70",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00953",
+      "description": "National",
+      "lineAmount": "0.64",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00890",
+      "description": "Local",
+      "lineAmount": "0.58",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00877",
+      "description": "Local",
+      "lineAmount": "0.57",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00881",
+      "description": "Local",
+      "lineAmount": "0.55",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00941",
+      "description": "Regional",
+      "lineAmount": "0.51",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00901",
+      "description": "Fixed to IVR",
+      "lineAmount": "0.48",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00909",
+      "description": "International to Fixed",
+      "lineAmount": "0.43",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00888",
+      "description": "Local",
+      "lineAmount": "0.43",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00900",
+      "description": "International to Fixed",
+      "lineAmount": "0.42",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00949",
+      "description": "Local",
+      "lineAmount": "0.40",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00908",
+      "description": "Local",
+      "lineAmount": "0.33",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00876",
+      "description": "Fixed to IVR",
+      "lineAmount": "0.32",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00931",
+      "description": "National",
+      "lineAmount": "0.32",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00936",
+      "description": "Local",
+      "lineAmount": "0.32",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00933",
+      "description": "13Number",
+      "lineAmount": "0.30",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00904",
+      "description": "Fixed to IVR",
+      "lineAmount": "0.28",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00915",
+      "description": "Fixed to IVR",
+      "lineAmount": "0.24",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00930",
+      "description": "National",
+      "lineAmount": "0.24",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00951",
+      "description": "Regional",
+      "lineAmount": "0.22",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00934",
+      "description": "Regional",
+      "lineAmount": "0.16",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00946",
+      "description": "Mobile",
+      "lineAmount": "0.13",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00937",
+      "description": "National",
+      "lineAmount": "0.12",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00898",
+      "description": "Fixed to IVR",
+      "lineAmount": "0.08",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00879",
+      "description": "Local",
+      "lineAmount": "0.08",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00935",
+      "description": "Regional",
+      "lineAmount": "0.05",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0214",
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD"
+    },
+    {
+      "externalId": "BI00326",
+      "description": "Other",
+      "lineAmount": "25.00",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0235",
+      "customerName": "Swara"
+    },
+    {
+      "externalId": "BI00327",
+      "description": "Voice - Services",
+      "lineAmount": "15.00",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0235",
+      "customerName": "Swara"
+    },
+    {
+      "externalId": "BI00324",
+      "description": "Voice - Telephone Usage",
+      "lineAmount": "6.90",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0235",
+      "customerName": "Swara"
+    },
+    {
+      "externalId": "BI00325",
+      "description": "Voice - Direct In Dial Numbers",
+      "lineAmount": "6.00",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0235",
+      "customerName": "Swara"
+    },
+    {
+      "externalId": "BI00366",
+      "description": "Voice - Services",
+      "lineAmount": "180.00",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0271",
+      "customerName": "True Metal Solutions"
+    },
+    {
+      "externalId": "BI00364",
+      "description": "Data - Internet",
+      "lineAmount": "116.66",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0271",
+      "customerName": "True Metal Solutions"
+    },
+    {
+      "externalId": "BI00365",
+      "description": "Other",
+      "lineAmount": "35.00",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0271",
+      "customerName": "True Metal Solutions"
+    },
+    {
+      "externalId": "BI00362",
+      "description": "Voice - Telephone Usage",
+      "lineAmount": "5.10",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0271",
+      "customerName": "True Metal Solutions"
+    },
+    {
+      "externalId": "BI00363",
+      "description": "Voice - Direct In Dial Numbers",
+      "lineAmount": "2.00",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C0271",
+      "customerName": "True Metal Solutions"
+    },
+    {
+      "externalId": "BI00299",
+      "description": "Data - Internet",
+      "lineAmount": "123.50",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C2893",
+      "customerName": "NICKI'S PROFESSIONAL SECURITY SCREENS AND BLINDS"
+    },
+    {
+      "externalId": "BI00298",
+      "description": "Voice - Services",
+      "lineAmount": "40.00",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C2893",
+      "customerName": "NICKI'S PROFESSIONAL SECURITY SCREENS AND BLINDS"
+    },
+    {
+      "externalId": "BI00300",
+      "description": "Other",
+      "lineAmount": "39.00",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C2893",
+      "customerName": "NICKI'S PROFESSIONAL SECURITY SCREENS AND BLINDS"
+    },
+    {
+      "externalId": "BI00297",
+      "description": "Voice - Direct In Dial Numbers",
+      "lineAmount": "4.00",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C2893",
+      "customerName": "NICKI'S PROFESSIONAL SECURITY SCREENS AND BLINDS"
+    },
+    {
+      "externalId": "BI00296",
+      "description": "Voice - Telephone Usage",
+      "lineAmount": "2.10",
+      "matchStatus": "service-matched",
+      "customerExternalId": "C2893",
+      "customerName": "NICKI'S PROFESSIONAL SECURITY SCREENS AND BLINDS"
+    }
+  ],
+  "messages": [],
+  "stdout": "externalId\tdescription\tlineAmount\tmatchStatus\tcustomerExternalId\tcustomerName\nBI00397\tData - Internet\t88.00\tservice-matched\tC0003\tActive Living - Allen Developments Pty Ltd\nBI00402\tData - Internet\t88.00\tservice-matched\tC0003\tActive Living - Allen Developments Pty Ltd\nBI00399\tVoice - Services\t30.00\tservice-matched\tC0003\tActive Living - Allen Developments Pty Ltd\nBI00404\tVoice - Services\t30.00\tservice-matched\tC0003\tActive Living - Allen Developments Pty Ltd\nBI00403\tOther\t10.00\tservice-matched\tC0003\tActive Living - Allen Developments Pty Ltd\nBI00398\tOther\t10.00\tservice-matched\tC0003\tActive Living - Allen Developments Pty Ltd\nBI00401\tVoice - Direct In Dial Numbers\t2.00\tservice-matched\tC0003\tActive Living - Allen Developments Pty Ltd\nBI00396\tVoice - Direct In Dial Numbers\t2.00\tservice-matched\tC0003\tActive Living - Allen Developments Pty Ltd\nBI00395\tVoice - Telephone Usage\t0.60\tservice-matched\tC0003\tActive Living - Allen Developments Pty Ltd\nBI00400\tVoice - Telephone Usage\t0.30\tservice-matched\tC0003\tActive Living - Allen Developments Pty Ltd\nBI00188\tOther\t35.00\tservice-matched\tC0044\tBracken Ridge Family Practice\nBI00394\tVoice - Services\t150.00\tservice-matched\tC0091\tFast Cut Qld Pty Ltd\nBI00392\tData - Internet\t95.45\tservice-matched\tC0091\tFast Cut Qld Pty Ltd\nBI00393\tOther\t30.00\tservice-matched\tC0091\tFast Cut Qld Pty Ltd\nBI00391\tVoice - Direct In Dial Numbers\t2.00\tservice-matched\tC0091\tFast Cut Qld Pty Ltd\nBI00573\t100mb Business Grade Fibre Up and Down - 36 Month ContractEach\t877.50\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00854\t13 Number ACMA High Volume\t565.00\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00945\tMobile\t246.32\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00960\tPremium\t182.00\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00963\tWebex Basic\t138.00\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00958\tStandard\t112.00\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00873\tMobile\t103.05\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00897\tMobile\t97.04\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00870\tManaged Voice Support 1 - 10 Users\t75.00\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00906\tMobile\t70.28\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00956\t100 Number block\t70.00\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00929\tMobile\t63.30\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00952\tNational\t54.94\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00886\tMobile\t52.67\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00884\tMobile\t40.73\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00932\tMobile\t33.35\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00874\tMobile\t32.05\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00911\tMobile\t29.20\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00943\tMobile\t23.17\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00959\tCollaboration\t23.00\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00950\tMobile\t22.02\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00895\tMobile\t17.68\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00954\tAuto Attendant Basic\t16.00\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00918\tMobile\t15.92\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00939\tNational\t13.18\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00917\tMobile\t11.72\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00961\tVoicemail\t10.00\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00962\tIP Tel User VAS - Mobility\t8.00\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00942\tLocal\t6.64\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00875\tInternational to Fixed\t6.60\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00957\tBasic\t6.00\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00880\tNational\t5.65\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00856\t1300192868\t5.00\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00863\t1300525442\t5.00\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00857\t1300194086\t5.00\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00855\t1300179340\t5.00\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00864\t1300584780\t5.00\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00865\t1300590075\t5.00\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00867\t1300687643\t5.00\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00866\t1300597540\t5.00\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00862\t1300352190\t5.00\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00871\tSingle Number\t5.00\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00868\t1300493702\t5.00\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00860\t1300275213\t5.00\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00861\t1300311429\t5.00\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00859\t1300253103\t5.00\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00858\t1300252380\t5.00\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00902\tInternational to Fixed\t4.79\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00892\tNational\t4.49\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00912\tMobile to IVR\t4.36\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00947\tNational\t4.24\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00927\tNational\t4.22\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00955\tSingle Number\t4.00\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00869\tCall Forward Selective\t4.00\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00878\tNational\t3.60\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00905\tNational\t3.37\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00887\tNational\t3.34\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00919\tInternational to Fixed\t3.05\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00899\tLandline-Mobile\t2.51\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00896\tMobile to IVR\t2.50\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00924\tMobile to IVR\t2.44\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00889\tMobile to IVR\t2.00\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00948\tInternational\t1.98\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00921\tMobile to IVR\t1.95\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00885\tInternational to Fixed\t1.81\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00883\tNational\t1.80\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00882\tFixed to IVR\t1.79\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00913\tNational\t1.75\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00907\tNational\t1.67\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00894\tNational\t1.58\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00926\tLocal\t1.57\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00916\tMobile to IVR\t1.53\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00925\tMobile to IVR\t1.30\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00928\tInternational to Fixed\t1.23\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00940\t13Number\t1.20\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00914\tLocal\t1.16\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00903\tMobile to IVR\t1.05\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00891\tMobile to IVR\t0.97\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00938\tOther\t0.80\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00893\tInternational to Fixed\t0.70\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00953\tNational\t0.64\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00890\tLocal\t0.58\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00877\tLocal\t0.57\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00881\tLocal\t0.55\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00941\tRegional\t0.51\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00901\tFixed to IVR\t0.48\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00909\tInternational to Fixed\t0.43\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00888\tLocal\t0.43\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00900\tInternational to Fixed\t0.42\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00949\tLocal\t0.40\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00908\tLocal\t0.33\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00876\tFixed to IVR\t0.32\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00931\tNational\t0.32\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00936\tLocal\t0.32\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00933\t13Number\t0.30\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00904\tFixed to IVR\t0.28\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00915\tFixed to IVR\t0.24\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00930\tNational\t0.24\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00951\tRegional\t0.22\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00934\tRegional\t0.16\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00946\tMobile\t0.13\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00937\tNational\t0.12\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00898\tFixed to IVR\t0.08\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00879\tLocal\t0.08\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00935\tRegional\t0.05\tservice-matched\tC0214\tSalter Brothers Luxury Collection Operations Pty LTD\nBI00326\tOther\t25.00\tservice-matched\tC0235\tSwara\nBI00327\tVoice - Services\t15.00\tservice-matched\tC0235\tSwara\nBI00324\tVoice - Telephone Usage\t6.90\tservice-matched\tC0235\tSwara\nBI00325\tVoice - Direct In Dial Numbers\t6.00\tservice-matched\tC0235\tSwara\nBI00366\tVoice - Services\t180.00\tservice-matched\tC0271\tTrue Metal Solutions\nBI00364\tData - Internet\t116.66\tservice-matched\tC0271\tTrue Metal Solutions\nBI00365\tOther\t35.00\tservice-matched\tC0271\tTrue Metal Solutions\nBI00362\tVoice - Telephone Usage\t5.10\tservice-matched\tC0271\tTrue Metal Solutions\nBI00363\tVoice - Direct In Dial Numbers\t2.00\tservice-matched\tC0271\tTrue Metal Solutions\nBI00299\tData - Internet\t123.50\tservice-matched\tC2893\tNICKI'S PROFESSIONAL SECURITY SCREENS AND BLINDS\nBI00298\tVoice - Services\t40.00\tservice-matched\tC2893\tNICKI'S PROFESSIONAL SECURITY SCREENS AND BLINDS\nBI00300\tOther\t39.00\tservice-matched\tC2893\tNICKI'S PROFESSIONAL SECURITY SCREENS AND BLINDS\nBI00297\tVoice - Direct In Dial Numbers\t4.00\tservice-matched\tC2893\tNICKI'S PROFESSIONAL SECURITY SCREENS AND BLINDS\nBI00296\tVoice - Telephone Usage\t2.10\tservice-matched\tC2893\tNICKI'S PROFESSIONAL SECURITY SCREENS AND BLINDS\n",
+  "stderr": "",
+  "execution_time_ms": 1529
+}

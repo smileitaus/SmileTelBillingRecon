@@ -1,0 +1,8 @@
+{
+  "query": "\n-- Aus Ships services\nSELECT externalId, name, serviceType, monthlyRevenue, monthlyCost, status\nFROM services\nWHERE customerExternalId = 'C7513'\nORDER BY serviceType;\n\n-- Aus Ships billing items (all platforms)\nSELECT bi.externalId, bi.description, bi.lineAmount, bi.matchStatus, bi.billingPlatform, bi.invoiceNumber, bi.invoiceDate, bi.contactName\nFROM billing_items bi\nWHERE bi.customerExternalId = 'C7513'\nORDER BY bi.invoiceDate DESC\nLIMIT 20;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Aus Ships services\nSELECT externalId, name, serviceType, monthlyRevenue, monthlyCost, status\nFROM services\nWHERE customerExternalId = 'C7513'\nORDER BY serviceType;\n\n-- Aus Ships billing items (all platforms)\nSELECT bi.externalId, bi.description, bi.lineAmount, bi.matchStatus, bi.billingPlatform, bi.invoiceNumber, bi.invoiceDate, bi.contactName\nFROM billing_items bi\nWHERE bi.customerExternalId = 'C7513'\nORDER BY bi.invoiceDate DESC\nLIMIT 20;\n",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1054 (42S22) at line 3: Unknown column 'name' in 'field list'"
+  ]
+}

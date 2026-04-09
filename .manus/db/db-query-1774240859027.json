@@ -1,0 +1,9 @@
+{
+  "query": "SELECT omadaSiteId, omadaDeviceId, serviceExternalId, deviceName, deviceType, status, lastSyncedAt FROM omada_device_cache ORDER BY lastSyncedAt DESC LIMIT 10;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute SELECT omadaSiteId, omadaDeviceId, serviceExternalId, deviceName, deviceType, status, lastSyncedAt FROM omada_device_cache ORDER BY lastSyncedAt DESC LIMIT 10;",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 1701
+}

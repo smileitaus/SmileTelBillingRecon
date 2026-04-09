@@ -1,0 +1,36 @@
+{
+  "query": "\n-- Count all Telstra mobile services and their status\nSELECT status, COUNT(*) as count, SUM(monthlyCost) as totalCost\nFROM services\nWHERE provider = 'Telstra' AND serviceType = 'Mobile'\nGROUP BY status;\n\n-- Check how many have BLITZ prefix (from previous Blitz termination review)\nSELECT COUNT(*) as blitzCount FROM services WHERE externalId LIKE 'BLITZ-%' AND provider = 'Telstra';\n\n-- Check how many are already linked to Smile IT (C2441)\nSELECT COUNT(*) as smileItLinked FROM services WHERE customerExternalId = 'C2441' AND provider = 'Telstra';\n\n-- Check the supplierAccount for existing Telstra mobile services\nSELECT DISTINCT supplierAccount FROM services WHERE provider = 'Telstra' AND serviceType = 'Mobile' LIMIT 10;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Count all Telstra mobile services and their status\nSELECT status, COUNT(*) as count, SUM(monthlyCost) as totalCost\nFROM services\nWHERE provider = 'Telstra' AND serviceType = 'Mobile'\nGROUP BY status;\n\n-- Check how many have BLITZ prefix (from previous Blitz termination review)\nSELECT COUNT(*) as blitzCount FROM services WHERE externalId LIKE 'BLITZ-%' AND provider = 'Telstra';\n\n-- Check how many are already linked to Smile IT (C2441)\nSELECT COUNT(*) as smileItLinked FROM services WHERE customerExternalId = 'C2441' AND provider = 'Telstra';\n\n-- Check the supplierAccount for existing Telstra mobile services\nSELECT DISTINCT supplierAccount FROM services WHERE provider = 'Telstra' AND serviceType = 'Mobile' LIMIT 10;\n",
+  "rows": [
+    {
+      "status": "unmatched",
+      "count": "172",
+      "totalCost": "482.00"
+    },
+    {
+      "status": "flagged_for_termination",
+      "count": "155",
+      "totalCost": "3162.97"
+    },
+    {
+      "status": "active",
+      "count": "76",
+      "totalCost": "2784.32"
+    }
+  ],
+  "messages": [
+    "blitzCount",
+    "157",
+    "smileItLinked",
+    "3",
+    "supplierAccount",
+    "586992900",
+    "2272763653",
+    "4741403689",
+    "192549800",
+    "2351190083"
+  ],
+  "stdout": "status\tcount\ttotalCost\nunmatched\t172\t482.00\nflagged_for_termination\t155\t3162.97\nactive\t76\t2784.32\nblitzCount\n157\nsmileItLinked\n3\nsupplierAccount\n586992900\n2272763653\n4741403689\n192549800\n2351190083\n\n",
+  "stderr": "",
+  "execution_time_ms": 2227
+}

@@ -1,0 +1,110 @@
+{
+  "query": "\n-- Sample the services that would be matched via octane_customer_links\nSELECT s.externalId, s.phoneNumber, s.serviceType, s.planName, s.customerExternalId as currentCustomer,\n       ocl.internalCustomerExternalId as newCustomer, ocl.internalCustomerName as newCustomerName,\n       ocl.octaneServiceName\nFROM services s\nJOIN octane_customer_links ocl ON s.phoneNumber = ocl.msisdn\nWHERE ocl.internalCustomerExternalId IS NOT NULL\n  AND (s.customerExternalId IS NULL OR s.customerExternalId = '' OR s.customerExternalId = 'NULL')\nORDER BY s.externalId\nLIMIT 10;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Sample the services that would be matched via octane_customer_links\nSELECT s.externalId, s.phoneNumber, s.serviceType, s.planName, s.customerExternalId as currentCustomer,\n       ocl.internalCustomerExternalId as newCustomer, ocl.internalCustomerName as newCustomerName,\n       ocl.octaneServiceName\nFROM services s\nJOIN octane_customer_links ocl ON s.phoneNumber = ocl.msisdn\nWHERE ocl.internalCustomerExternalId IS NOT NULL\n  AND (s.customerExternalId IS NULL OR s.customerExternalId = '' OR s.customerExternalId = 'NULL')\nORDER BY s.externalId\nLIMIT 10;\n",
+  "rows": [
+    {
+      "externalId": "S0020",
+      "phoneNumber": "",
+      "serviceType": "Internet",
+      "planName": "Core Internet",
+      "currentCustomer": "NULL",
+      "newCustomer": "C9024",
+      "newCustomerName": "Infinitea Trading",
+      "octaneServiceName": ""
+    },
+    {
+      "externalId": "S0020",
+      "phoneNumber": "",
+      "serviceType": "Internet",
+      "planName": "Core Internet",
+      "currentCustomer": "NULL",
+      "newCustomer": "C2887",
+      "newCustomerName": "Accountant Ready Services",
+      "octaneServiceName": ""
+    },
+    {
+      "externalId": "S0020",
+      "phoneNumber": "",
+      "serviceType": "Internet",
+      "planName": "Core Internet",
+      "currentCustomer": "NULL",
+      "newCustomer": "C2441",
+      "newCustomerName": "Smile IT",
+      "octaneServiceName": ""
+    },
+    {
+      "externalId": "S0020",
+      "phoneNumber": "",
+      "serviceType": "Internet",
+      "planName": "Core Internet",
+      "currentCustomer": "NULL",
+      "newCustomer": "C0171",
+      "newCustomerName": "Nodo Pty Ltd",
+      "octaneServiceName": ""
+    },
+    {
+      "externalId": "S0020",
+      "phoneNumber": "",
+      "serviceType": "Internet",
+      "planName": "Core Internet",
+      "currentCustomer": "NULL",
+      "newCustomer": "C0171",
+      "newCustomerName": "Nodo Pty Ltd",
+      "octaneServiceName": ""
+    },
+    {
+      "externalId": "S0020",
+      "phoneNumber": "",
+      "serviceType": "Internet",
+      "planName": "Core Internet",
+      "currentCustomer": "NULL",
+      "newCustomer": "C0044",
+      "newCustomerName": "Bracken Ridge Family Practice",
+      "octaneServiceName": ""
+    },
+    {
+      "externalId": "S0020",
+      "phoneNumber": "",
+      "serviceType": "Internet",
+      "planName": "Core Internet",
+      "currentCustomer": "NULL",
+      "newCustomer": "C0326",
+      "newCustomerName": "Zambrero Coopers Plains",
+      "octaneServiceName": ""
+    },
+    {
+      "externalId": "S0020",
+      "phoneNumber": "",
+      "serviceType": "Internet",
+      "planName": "Core Internet",
+      "currentCustomer": "NULL",
+      "newCustomer": "C0248",
+      "newCustomerName": "The Trustee for Ferguson Family Trust",
+      "octaneServiceName": ""
+    },
+    {
+      "externalId": "S0020",
+      "phoneNumber": "",
+      "serviceType": "Internet",
+      "planName": "Core Internet",
+      "currentCustomer": "NULL",
+      "newCustomer": "C0077",
+      "newCustomerName": "DJ Steel - Lyndarr Constructions Pty Ltd",
+      "octaneServiceName": ""
+    },
+    {
+      "externalId": "S0020",
+      "phoneNumber": "",
+      "serviceType": "Internet",
+      "planName": "Core Internet",
+      "currentCustomer": "NULL",
+      "newCustomer": "C9026",
+      "newCustomerName": "Bel's Resto",
+      "octaneServiceName": ""
+    }
+  ],
+  "messages": [],
+  "stdout": "externalId\tphoneNumber\tserviceType\tplanName\tcurrentCustomer\tnewCustomer\tnewCustomerName\toctaneServiceName\nS0020\t\tInternet\tCore Internet\tNULL\tC9024\tInfinitea Trading\t\nS0020\t\tInternet\tCore Internet\tNULL\tC2887\tAccountant Ready Services\t\nS0020\t\tInternet\tCore Internet\tNULL\tC2441\tSmile IT\t\nS0020\t\tInternet\tCore Internet\tNULL\tC0171\tNodo Pty Ltd\t\nS0020\t\tInternet\tCore Internet\tNULL\tC0171\tNodo Pty Ltd\t\nS0020\t\tInternet\tCore Internet\tNULL\tC0044\tBracken Ridge Family Practice\t\nS0020\t\tInternet\tCore Internet\tNULL\tC0326\tZambrero Coopers Plains\t\nS0020\t\tInternet\tCore Internet\tNULL\tC0248\tThe Trustee for Ferguson Family Trust\t\nS0020\t\tInternet\tCore Internet\tNULL\tC0077\tDJ Steel - Lyndarr Constructions Pty Ltd\t\nS0020\t\tInternet\tCore Internet\tNULL\tC9026\tBel's Resto\t\n",
+  "stderr": "",
+  "execution_time_ms": 1581
+}

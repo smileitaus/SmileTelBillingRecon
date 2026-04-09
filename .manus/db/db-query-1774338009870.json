@@ -1,0 +1,30 @@
+{
+  "query": "\nSELECT planName, status, COUNT(*) as cnt \nFROM tiab_services \nGROUP BY planName, status \nORDER BY cnt DESC;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \nSELECT planName, status, COUNT(*) as cnt \nFROM tiab_services \nGROUP BY planName, status \nORDER BY cnt DESC;\n",
+  "rows": [
+    {
+      "planName": "Retail Data Plan",
+      "status": "Active",
+      "cnt": "71"
+    },
+    {
+      "planName": "Retail Data Plan",
+      "status": "Ceased",
+      "cnt": "7"
+    },
+    {
+      "planName": "ST Data Pool 60GB",
+      "status": "Active",
+      "cnt": "4"
+    },
+    {
+      "planName": "Retail Data Plan",
+      "status": "Suspended",
+      "cnt": "2"
+    }
+  ],
+  "messages": [],
+  "stdout": "planName\tstatus\tcnt\nRetail Data Plan\tActive\t71\nRetail Data Plan\tCeased\t7\nST Data Pool 60GB\tActive\t4\nRetail Data Plan\tSuspended\t2\n",
+  "stderr": "",
+  "execution_time_ms": 1560
+}

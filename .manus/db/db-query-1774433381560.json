@@ -1,0 +1,35 @@
+{
+  "query": "\n-- Check if \"Spicers Retreats and Hotels\" exists as a customer\nSELECT externalId, name FROM customers WHERE name LIKE '%Spicers Retreats%';\n\n-- Check services for Spicers (any variant)\nSELECT DISTINCT customerName, customerExternalId, externalId FROM services\nWHERE customerName LIKE '%Spicers%' LIMIT 5;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Check if \"Spicers Retreats and Hotels\" exists as a customer\nSELECT externalId, name FROM customers WHERE name LIKE '%Spicers Retreats%';\n\n-- Check services for Spicers (any variant)\nSELECT DISTINCT customerName, customerExternalId, externalId FROM services\nWHERE customerName LIKE '%Spicers%' LIMIT 5;\n",
+  "rows": [
+    {
+      "customerName": "Spicers Guest House",
+      "customerExternalId": "C0209",
+      "externalId": "S0365"
+    },
+    {
+      "customerName": "Spicers Hiddenvale",
+      "customerExternalId": "C0224",
+      "externalId": "S0366"
+    },
+    {
+      "customerName": "Spicers Peak Lodge",
+      "customerExternalId": "C0210",
+      "externalId": "S0367"
+    },
+    {
+      "customerName": "Salter Brothers Management Company Pty Ltd t/a Spicers Potts Point",
+      "customerExternalId": "C0216",
+      "externalId": "S1324"
+    },
+    {
+      "customerName": "Salter Brothers Management Company Pty Ltd t/a Spicers Potts Point",
+      "customerExternalId": "C0216",
+      "externalId": "S1325"
+    }
+  ],
+  "messages": [],
+  "stdout": "customerName\tcustomerExternalId\texternalId\nSpicers Guest House\tC0209\tS0365\nSpicers Hiddenvale\tC0224\tS0366\nSpicers Peak Lodge\tC0210\tS0367\nSalter Brothers Management Company Pty Ltd t/a Spicers Potts Point\tC0216\tS1324\nSalter Brothers Management Company Pty Ltd t/a Spicers Potts Point\tC0216\tS1325\n",
+  "stderr": "",
+  "execution_time_ms": 1881
+}

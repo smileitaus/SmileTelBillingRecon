@@ -1,0 +1,109 @@
+{
+  "query": "\nSELECT \n  s.externalId as serviceId,\n  s.planName,\n  s.monthlyCost,\n  s.monthlyRevenue,\n  s.customerExternalId,\n  MAX(c.name) as customerName,\n  GROUP_CONCAT(bi.externalId ORDER BY bi.externalId SEPARATOR '|') as assignedBillingItemIds,\n  GROUP_CONCAT(bi.description ORDER BY bi.externalId SEPARATOR '|') as assignedBillingItemDescs,\n  GROUP_CONCAT(bi.lineAmount ORDER BY bi.externalId SEPARATOR '|') as assignedBillingItemAmounts\nFROM services s\nJOIN customers c ON s.customerExternalId = c.externalId\nLEFT JOIN service_billing_assignments sba ON sba.serviceExternalId = s.externalId\nLEFT JOIN billing_items bi ON bi.externalId = sba.billingItemExternalId\nWHERE s.supplierName = 'ChannelHaus'\n  AND (s.planName LIKE '%out%' OR s.planName LIKE '%Out%' OR s.planName LIKE '%SIP%')\n  AND s.monthlyCost > s.monthlyRevenue\nGROUP BY s.externalId, s.planName, s.monthlyCost, s.monthlyRevenue, s.customerExternalId\nORDER BY (s.monthlyCost - s.monthlyRevenue) DESC;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \nSELECT \n  s.externalId as serviceId,\n  s.planName,\n  s.monthlyCost,\n  s.monthlyRevenue,\n  s.customerExternalId,\n  MAX(c.name) as customerName,\n  GROUP_CONCAT(bi.externalId ORDER BY bi.externalId SEPARATOR '|') as assignedBillingItemIds,\n  GROUP_CONCAT(bi.description ORDER BY bi.externalId SEPARATOR '|') as assignedBillingItemDescs,\n  GROUP_CONCAT(bi.lineAmount ORDER BY bi.externalId SEPARATOR '|') as assignedBillingItemAmounts\nFROM services s\nJOIN customers c ON s.customerExternalId = c.externalId\nLEFT JOIN service_billing_assignments sba ON sba.serviceExternalId = s.externalId\nLEFT JOIN billing_items bi ON bi.externalId = sba.billingItemExternalId\nWHERE s.supplierName = 'ChannelHaus'\n  AND (s.planName LIKE '%out%' OR s.planName LIKE '%Out%' OR s.planName LIKE '%SIP%')\n  AND s.monthlyCost > s.monthlyRevenue\nGROUP BY s.externalId, s.planName, s.monthlyCost, s.monthlyRevenue, s.customerExternalId\nORDER BY (s.monthlyCost - s.monthlyRevenue) DESC;\n",
+  "rows": [
+    {
+      "serviceId": "SKY3MLC",
+      "planName": "KawanaFClout",
+      "monthlyCost": "212.00",
+      "monthlyRevenue": "36.00",
+      "customerExternalId": "C0132",
+      "customerName": "Kawana Family Clinic",
+      "assignedBillingItemIds": "BI00653",
+      "assignedBillingItemDescs": "4 Channels Business SIP. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "assignedBillingItemAmounts": "212.00"
+    },
+    {
+      "serviceId": "SGVQT30",
+      "planName": "AlbyFDocsOut",
+      "monthlyCost": "212.00",
+      "monthlyRevenue": "36.00",
+      "customerExternalId": "C0009",
+      "customerName": "Albany Family Doctors",
+      "assignedBillingItemIds": "BI00601",
+      "assignedBillingItemDescs": "4 Channels Business SIP. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "assignedBillingItemAmounts": "212.00"
+    },
+    {
+      "serviceId": "SEEV150",
+      "planName": "AusdCarindOut",
+      "monthlyCost": "192.00",
+      "monthlyRevenue": "36.00",
+      "customerExternalId": "C0022",
+      "customerName": "Ausdocs Carindale Pty Ltd",
+      "assignedBillingItemIds": "BI00621",
+      "assignedBillingItemDescs": "4 Channels Business SIP. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "assignedBillingItemAmounts": "192.00"
+    },
+    {
+      "serviceId": "S1UMCO4",
+      "planName": "AspleySCout",
+      "monthlyCost": "159.00",
+      "monthlyRevenue": "27.00",
+      "customerExternalId": "C0016",
+      "customerName": "Aspley Firstcare Doctors",
+      "assignedBillingItemIds": "BI00633",
+      "assignedBillingItemDescs": "3 Channels Business SIP Outbound. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "assignedBillingItemAmounts": "159.00"
+    },
+    {
+      "serviceId": "SHB64AC",
+      "planName": "docsamfdvout",
+      "monthlyCost": "112.27",
+      "monthlyRevenue": "18.00",
+      "customerExternalId": "C0080",
+      "customerName": "Doctors at Samford Valley",
+      "assignedBillingItemIds": "BI00608",
+      "assignedBillingItemDescs": "3 Channels Business SIP. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "assignedBillingItemAmounts": "159.00"
+    },
+    {
+      "serviceId": "SZR96SE",
+      "planName": "MtCottnMCOUT",
+      "monthlyCost": "106.00",
+      "monthlyRevenue": "27.00",
+      "customerExternalId": "C0166",
+      "customerName": "Mount Cotton Medical Centre",
+      "assignedBillingItemIds": "BI00660",
+      "assignedBillingItemDescs": "2 Channels Business SIP Outbound. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "assignedBillingItemAmounts": "106.00"
+    },
+    {
+      "serviceId": "SSE3JV7",
+      "planName": "WarwkMCOut",
+      "monthlyCost": "81.07",
+      "monthlyRevenue": "27.00",
+      "customerExternalId": "C0284",
+      "customerName": "Warwick Medical Centre",
+      "assignedBillingItemIds": "BI00629",
+      "assignedBillingItemDescs": "2 Channels Business SIP Outbound. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "assignedBillingItemAmounts": "106.00"
+    },
+    {
+      "serviceId": "S66U54A",
+      "planName": "MedPodsDoOut",
+      "monthlyCost": "71.20",
+      "monthlyRevenue": "27.00",
+      "customerExternalId": "C0118",
+      "customerName": "Havilah Medical Centre Doreen",
+      "assignedBillingItemIds": "BI00648",
+      "assignedBillingItemDescs": "2 Channels Business SIP Outbound. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "assignedBillingItemAmounts": "106.00"
+    },
+    {
+      "serviceId": "SYY3IJW",
+      "planName": "DocAtKawaOut",
+      "monthlyCost": "73.22",
+      "monthlyRevenue": "36.00",
+      "customerExternalId": "C0079",
+      "customerName": "Doctors At Kawana Shopping World",
+      "assignedBillingItemIds": "BI00637",
+      "assignedBillingItemDescs": "4 Channels Business SIP. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "assignedBillingItemAmounts": "36.00"
+    }
+  ],
+  "messages": [],
+  "stdout": "serviceId\tplanName\tmonthlyCost\tmonthlyRevenue\tcustomerExternalId\tcustomerName\tassignedBillingItemIds\tassignedBillingItemDescs\tassignedBillingItemAmounts\nSKY3MLC\tKawanaFClout\t212.00\t36.00\tC0132\tKawana Family Clinic\tBI00653\t4 Channels Business SIP. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t212.00\nSGVQT30\tAlbyFDocsOut\t212.00\t36.00\tC0009\tAlbany Family Doctors\tBI00601\t4 Channels Business SIP. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t212.00\nSEEV150\tAusdCarindOut\t192.00\t36.00\tC0022\tAusdocs Carindale Pty Ltd\tBI00621\t4 Channels Business SIP. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t192.00\nS1UMCO4\tAspleySCout\t159.00\t27.00\tC0016\tAspley Firstcare Doctors\tBI00633\t3 Channels Business SIP Outbound. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t159.00\nSHB64AC\tdocsamfdvout\t112.27\t18.00\tC0080\tDoctors at Samford Valley\tBI00608\t3 Channels Business SIP. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t159.00\nSZR96SE\tMtCottnMCOUT\t106.00\t27.00\tC0166\tMount Cotton Medical Centre\tBI00660\t2 Channels Business SIP Outbound. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t106.00\nSSE3JV7\tWarwkMCOut\t81.07\t27.00\tC0284\tWarwick Medical Centre\tBI00629\t2 Channels Business SIP Outbound. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t106.00\nS66U54A\tMedPodsDoOut\t71.20\t27.00\tC0118\tHavilah Medical Centre Doreen\tBI00648\t2 Channels Business SIP Outbound. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t106.00\nSYY3IJW\tDocAtKawaOut\t73.22\t36.00\tC0079\tDoctors At Kawana Shopping World\tBI00637\t4 Channels Business SIP. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t36.00\n",
+  "stderr": "",
+  "execution_time_ms": 1619
+}

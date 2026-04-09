@@ -1,0 +1,130 @@
+{
+  "query": "SELECT DISTINCT sheet_name, product_type, COUNT(*) as cnt FROM sasboss_pricebook_items GROUP BY sheet_name, product_type ORDER BY sheet_name, product_type LIMIT 30;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute SELECT DISTINCT sheet_name, product_type, COUNT(*) as cnt FROM sasboss_pricebook_items GROUP BY sheet_name, product_type ORDER BY sheet_name, product_type LIMIT 30;",
+  "rows": [
+    {
+      "sheet_name": "Managed Voice",
+      "product_type": "NULL",
+      "cnt": "12"
+    },
+    {
+      "sheet_name": "Managed Voice - DID Hosting",
+      "product_type": "DID hosting",
+      "cnt": "17"
+    },
+    {
+      "sheet_name": "Managed Voice - Porting",
+      "product_type": "porting",
+      "cnt": "17"
+    },
+    {
+      "sheet_name": "Phone Hardware",
+      "product_type": "ATA",
+      "cnt": "10"
+    },
+    {
+      "sheet_name": "Phone Hardware",
+      "product_type": "handset",
+      "cnt": "163"
+    },
+    {
+      "sheet_name": "Phone Hardware",
+      "product_type": "handset-accessories",
+      "cnt": "39"
+    },
+    {
+      "sheet_name": "Phone Hardware",
+      "product_type": "handset-additional",
+      "cnt": "26"
+    },
+    {
+      "sheet_name": "Phone Hardware",
+      "product_type": "handset-base",
+      "cnt": "38"
+    },
+    {
+      "sheet_name": "Phone Hardware",
+      "product_type": "handset-bluetooth-dongle",
+      "cnt": "1"
+    },
+    {
+      "sheet_name": "Phone Hardware",
+      "product_type": "handset-cable",
+      "cnt": "1"
+    },
+    {
+      "sheet_name": "Phone Hardware",
+      "product_type": "handset-camera",
+      "cnt": "1"
+    },
+    {
+      "sheet_name": "Phone Hardware",
+      "product_type": "handset-expansion",
+      "cnt": "7"
+    },
+    {
+      "sheet_name": "Phone Hardware",
+      "product_type": "handset-msteams",
+      "cnt": "15"
+    },
+    {
+      "sheet_name": "Phone Hardware",
+      "product_type": "handset-power",
+      "cnt": "16"
+    },
+    {
+      "sheet_name": "Phone Hardware",
+      "product_type": "handset-wifi-dongle",
+      "cnt": "2"
+    },
+    {
+      "sheet_name": "Phone Hardware",
+      "product_type": "headset",
+      "cnt": "69"
+    },
+    {
+      "sheet_name": "Phone Hardware",
+      "product_type": "headset-adaptor",
+      "cnt": "2"
+    },
+    {
+      "sheet_name": "Phone Hardware",
+      "product_type": "headset-cable",
+      "cnt": "1"
+    },
+    {
+      "sheet_name": "Phone Hardware",
+      "product_type": "headset-charger",
+      "cnt": "2"
+    },
+    {
+      "sheet_name": "Phone Hardware",
+      "product_type": "poe-adapter",
+      "cnt": "1"
+    },
+    {
+      "sheet_name": "Phone Hardware",
+      "product_type": "software-licence",
+      "cnt": "1"
+    },
+    {
+      "sheet_name": "Phone Hardware",
+      "product_type": "vcroom-msteams",
+      "cnt": "18"
+    },
+    {
+      "sheet_name": "Phone Hardware",
+      "product_type": "voip-gateway",
+      "cnt": "1"
+    },
+    {
+      "sheet_name": "UCaaS",
+      "product_type": "NULL",
+      "cnt": "87"
+    }
+  ],
+  "messages": [],
+  "stdout": "sheet_name\tproduct_type\tcnt\nManaged Voice\tNULL\t12\nManaged Voice - DID Hosting\tDID hosting\t17\nManaged Voice - Porting\tporting\t17\nPhone Hardware\tATA\t10\nPhone Hardware\thandset\t163\nPhone Hardware\thandset-accessories\t39\nPhone Hardware\thandset-additional\t26\nPhone Hardware\thandset-base\t38\nPhone Hardware\thandset-bluetooth-dongle\t1\nPhone Hardware\thandset-cable\t1\nPhone Hardware\thandset-camera\t1\nPhone Hardware\thandset-expansion\t7\nPhone Hardware\thandset-msteams\t15\nPhone Hardware\thandset-power\t16\nPhone Hardware\thandset-wifi-dongle\t2\nPhone Hardware\theadset\t69\nPhone Hardware\theadset-adaptor\t2\nPhone Hardware\theadset-cable\t1\nPhone Hardware\theadset-charger\t2\nPhone Hardware\tpoe-adapter\t1\nPhone Hardware\tsoftware-licence\t1\nPhone Hardware\tvcroom-msteams\t18\nPhone Hardware\tvoip-gateway\t1\nUCaaS\tNULL\t87\n",
+  "stderr": "",
+  "execution_time_ms": 1921
+}

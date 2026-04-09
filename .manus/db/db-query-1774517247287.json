@@ -1,0 +1,190 @@
+{
+  "query": "\n-- Summary of all ChannelHaus services after fixes\nSELECT \n  s.externalId,\n  s.planName,\n  s.monthlyCost,\n  s.monthlyRevenue,\n  ROUND((s.monthlyRevenue - s.monthlyCost) / NULLIF(s.monthlyCost, 0) * 100, 1) as marginPct,\n  MAX(c.name) as customerName,\n  CASE \n    WHEN s.monthlyRevenue > s.monthlyCost THEN 'positive'\n    WHEN s.monthlyRevenue = s.monthlyCost THEN 'breakeven'\n    WHEN s.monthlyRevenue < s.monthlyCost AND s.monthlyRevenue > 0 THEN 'negative_partial'\n    ELSE 'no_revenue'\n  END as marginStatus\nFROM services s\nJOIN customers c ON s.customerExternalId = c.externalId\nWHERE s.supplierName = 'ChannelHaus'\n  AND s.monthlyCost > 0\nGROUP BY s.externalId, s.planName, s.monthlyCost, s.monthlyRevenue, s.customerExternalId\nORDER BY marginPct ASC\nLIMIT 20;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Summary of all ChannelHaus services after fixes\nSELECT \n  s.externalId,\n  s.planName,\n  s.monthlyCost,\n  s.monthlyRevenue,\n  ROUND((s.monthlyRevenue - s.monthlyCost) / NULLIF(s.monthlyCost, 0) * 100, 1) as marginPct,\n  MAX(c.name) as customerName,\n  CASE \n    WHEN s.monthlyRevenue > s.monthlyCost THEN 'positive'\n    WHEN s.monthlyRevenue = s.monthlyCost THEN 'breakeven'\n    WHEN s.monthlyRevenue < s.monthlyCost AND s.monthlyRevenue > 0 THEN 'negative_partial'\n    ELSE 'no_revenue'\n  END as marginStatus\nFROM services s\nJOIN customers c ON s.customerExternalId = c.externalId\nWHERE s.supplierName = 'ChannelHaus'\n  AND s.monthlyCost > 0\nGROUP BY s.externalId, s.planName, s.monthlyCost, s.monthlyRevenue, s.customerExternalId\nORDER BY marginPct ASC\nLIMIT 20;\n",
+  "rows": [
+    {
+      "externalId": "SKSZDDG",
+      "planName": "AllegraApHB",
+      "monthlyCost": "135.25",
+      "monthlyRevenue": "0.00",
+      "marginPct": "-100.0",
+      "customerName": "Allegra Property Management Pty Ltd",
+      "marginStatus": "no_revenue"
+    },
+    {
+      "externalId": "SEJX1FL",
+      "planName": "sthsidemed",
+      "monthlyCost": "144.93",
+      "monthlyRevenue": "0.00",
+      "marginPct": "-100.0",
+      "customerName": "Creek St Pharmacy",
+      "marginStatus": "no_revenue"
+    },
+    {
+      "externalId": "SD5S22R",
+      "planName": "RVC PBX USER",
+      "monthlyCost": "135.11",
+      "monthlyRevenue": "0.00",
+      "marginPct": "-100.0",
+      "customerName": "Smile IT",
+      "marginStatus": "no_revenue"
+    },
+    {
+      "externalId": "SNCXJ3U",
+      "planName": "ComplCDocATA",
+      "monthlyCost": "36.01",
+      "monthlyRevenue": "0.00",
+      "marginPct": "-100.0",
+      "customerName": "Complete Care Doctors",
+      "marginStatus": "no_revenue"
+    },
+    {
+      "externalId": "SVFZ32A",
+      "planName": "WidebayTransport and Mech",
+      "monthlyCost": "70.00",
+      "monthlyRevenue": "0.00",
+      "marginPct": "-100.0",
+      "customerName": "Wide Bay Transport & Mechanical",
+      "marginStatus": "no_revenue"
+    },
+    {
+      "externalId": "SG3D608",
+      "planName": "Logan Medical",
+      "monthlyCost": "80.00",
+      "monthlyRevenue": "35.00",
+      "marginPct": "-56.3",
+      "customerName": "Cleveland Medical",
+      "marginStatus": "negative_partial"
+    },
+    {
+      "externalId": "SYY3IJW",
+      "planName": "DocAtKawaOut",
+      "monthlyCost": "73.22",
+      "monthlyRevenue": "36.00",
+      "marginPct": "-50.8",
+      "customerName": "Doctors At Kawana Shopping World",
+      "marginStatus": "negative_partial"
+    },
+    {
+      "externalId": "S5ZNGFT",
+      "planName": "FirstCDocAdmin",
+      "monthlyCost": "37.40",
+      "monthlyRevenue": "27.00",
+      "marginPct": "-27.8",
+      "customerName": "Aspley Firstcare Doctors",
+      "marginStatus": "negative_partial"
+    },
+    {
+      "externalId": "SB3PFMC",
+      "planName": "LoganCentral",
+      "monthlyCost": "140.00",
+      "monthlyRevenue": "129.00",
+      "marginPct": "-7.9",
+      "customerName": "Logan Central Family Clinic",
+      "marginStatus": "negative_partial"
+    },
+    {
+      "externalId": "SAP1G3A",
+      "planName": "MedPodsDorIn",
+      "monthlyCost": "29.21",
+      "monthlyRevenue": "27.00",
+      "marginPct": "-7.6",
+      "customerName": "Havilah Medical Centre Doreen",
+      "marginStatus": "negative_partial"
+    },
+    {
+      "externalId": "STBVXCV",
+      "planName": "MotherDuckBR",
+      "monthlyCost": "76.25",
+      "monthlyRevenue": "75.00",
+      "marginPct": "-1.6",
+      "customerName": "Mother Duck - Bellbowrie",
+      "marginStatus": "negative_partial"
+    },
+    {
+      "externalId": "S75CTIT",
+      "planName": "kawanaFClIn",
+      "monthlyCost": "36.00",
+      "monthlyRevenue": "36.00",
+      "marginPct": "0.0",
+      "customerName": "Kawana Family Clinic",
+      "marginStatus": "breakeven"
+    },
+    {
+      "externalId": "S1UMCO4",
+      "planName": "AspleySCout",
+      "monthlyCost": "159.00",
+      "monthlyRevenue": "159.00",
+      "marginPct": "0.0",
+      "customerName": "Aspley Firstcare Doctors",
+      "marginStatus": "breakeven"
+    },
+    {
+      "externalId": "SJFKCR0",
+      "planName": "AusdocCarindIn",
+      "monthlyCost": "36.00",
+      "monthlyRevenue": "36.00",
+      "marginPct": "0.0",
+      "customerName": "Ausdocs Carindale Pty Ltd",
+      "marginStatus": "breakeven"
+    },
+    {
+      "externalId": "SGVQT30",
+      "planName": "AlbyFDocsOut",
+      "monthlyCost": "212.00",
+      "monthlyRevenue": "212.00",
+      "marginPct": "0.0",
+      "customerName": "Albany Family Doctors",
+      "marginStatus": "breakeven"
+    },
+    {
+      "externalId": "SXQLTTS",
+      "planName": "AspleySCin",
+      "monthlyCost": "27.00",
+      "monthlyRevenue": "27.00",
+      "marginPct": "0.0",
+      "customerName": "Aspley Firstcare Doctors",
+      "marginStatus": "breakeven"
+    },
+    {
+      "externalId": "S81LV9S",
+      "planName": "AlbnyFmDocIN",
+      "monthlyCost": "36.00",
+      "monthlyRevenue": "36.00",
+      "marginPct": "0.0",
+      "customerName": "Albany Family Doctors",
+      "marginStatus": "breakeven"
+    },
+    {
+      "externalId": "SHU42OX",
+      "planName": "Staff Heights Medical Practice",
+      "monthlyCost": "192.00",
+      "monthlyRevenue": "192.00",
+      "marginPct": "0.0",
+      "customerName": "Stafford Heights Medical Practice",
+      "marginStatus": "breakeven"
+    },
+    {
+      "externalId": "SEEV150",
+      "planName": "AusdCarindOut",
+      "monthlyCost": "192.00",
+      "monthlyRevenue": "192.00",
+      "marginPct": "0.0",
+      "customerName": "Ausdocs Carindale Pty Ltd",
+      "marginStatus": "breakeven"
+    },
+    {
+      "externalId": "SGBHVJV",
+      "planName": "MtCottnMCIN",
+      "monthlyCost": "27.00",
+      "monthlyRevenue": "27.00",
+      "marginPct": "0.0",
+      "customerName": "Mount Cotton Medical Centre",
+      "marginStatus": "breakeven"
+    }
+  ],
+  "messages": [],
+  "stdout": "externalId\tplanName\tmonthlyCost\tmonthlyRevenue\tmarginPct\tcustomerName\tmarginStatus\nSKSZDDG\tAllegraApHB\t135.25\t0.00\t-100.0\tAllegra Property Management Pty Ltd\tno_revenue\nSEJX1FL\tsthsidemed\t144.93\t0.00\t-100.0\tCreek St Pharmacy\tno_revenue\nSD5S22R\tRVC PBX USER\t135.11\t0.00\t-100.0\tSmile IT\tno_revenue\nSNCXJ3U\tComplCDocATA\t36.01\t0.00\t-100.0\tComplete Care Doctors\tno_revenue\nSVFZ32A\tWidebayTransport and Mech\t70.00\t0.00\t-100.0\tWide Bay Transport & Mechanical\tno_revenue\nSG3D608\tLogan Medical\t80.00\t35.00\t-56.3\tCleveland Medical\tnegative_partial\nSYY3IJW\tDocAtKawaOut\t73.22\t36.00\t-50.8\tDoctors At Kawana Shopping World\tnegative_partial\nS5ZNGFT\tFirstCDocAdmin\t37.40\t27.00\t-27.8\tAspley Firstcare Doctors\tnegative_partial\nSB3PFMC\tLoganCentral\t140.00\t129.00\t-7.9\tLogan Central Family Clinic\tnegative_partial\nSAP1G3A\tMedPodsDorIn\t29.21\t27.00\t-7.6\tHavilah Medical Centre Doreen\tnegative_partial\nSTBVXCV\tMotherDuckBR\t76.25\t75.00\t-1.6\tMother Duck - Bellbowrie\tnegative_partial\nS75CTIT\tkawanaFClIn\t36.00\t36.00\t0.0\tKawana Family Clinic\tbreakeven\nS1UMCO4\tAspleySCout\t159.00\t159.00\t0.0\tAspley Firstcare Doctors\tbreakeven\nSJFKCR0\tAusdocCarindIn\t36.00\t36.00\t0.0\tAusdocs Carindale Pty Ltd\tbreakeven\nSGVQT30\tAlbyFDocsOut\t212.00\t212.00\t0.0\tAlbany Family Doctors\tbreakeven\nSXQLTTS\tAspleySCin\t27.00\t27.00\t0.0\tAspley Firstcare Doctors\tbreakeven\nS81LV9S\tAlbnyFmDocIN\t36.00\t36.00\t0.0\tAlbany Family Doctors\tbreakeven\nSHU42OX\tStaff Heights Medical Practice\t192.00\t192.00\t0.0\tStafford Heights Medical Practice\tbreakeven\nSEEV150\tAusdCarindOut\t192.00\t192.00\t0.0\tAusdocs Carindale Pty Ltd\tbreakeven\nSGBHVJV\tMtCottnMCIN\t27.00\t27.00\t0.0\tMount Cotton Medical Centre\tbreakeven\n",
+  "stderr": "",
+  "execution_time_ms": 1611
+}

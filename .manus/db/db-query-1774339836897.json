@@ -1,0 +1,218 @@
+{
+  "query": "DESCRIBE tiab_supplier_invoices;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute DESCRIBE tiab_supplier_invoices;",
+  "rows": [
+    {
+      "Field": "id",
+      "Type": "int",
+      "Null": "NO",
+      "Key": "PRI",
+      "Default": "NULL",
+      "Extra": "auto_increment"
+    },
+    {
+      "Field": "invoiceNumber",
+      "Type": "varchar(64)",
+      "Null": "NO",
+      "Key": "UNI",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "invoiceReference",
+      "Type": "varchar(128)",
+      "Null": "NO",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "accountNumber",
+      "Type": "varchar(64)",
+      "Null": "NO",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "accountName",
+      "Type": "varchar(256)",
+      "Null": "NO",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "invoiceDate",
+      "Type": "varchar(32)",
+      "Null": "NO",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "paymentDueDate",
+      "Type": "varchar(32)",
+      "Null": "NO",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "billingMonth",
+      "Type": "varchar(7)",
+      "Null": "NO",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "supplierName",
+      "Type": "varchar(256)",
+      "Null": "NO",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "supplierAbn",
+      "Type": "varchar(32)",
+      "Null": "NO",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "billedToName",
+      "Type": "varchar(256)",
+      "Null": "NO",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "billedToAbn",
+      "Type": "varchar(32)",
+      "Null": "NO",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "billedToAddress",
+      "Type": "varchar(512)",
+      "Null": "NO",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "totalExGst",
+      "Type": "decimal(10,2)",
+      "Null": "NO",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "totalGst",
+      "Type": "decimal(10,2)",
+      "Null": "NO",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "totalIncGst",
+      "Type": "decimal(10,2)",
+      "Null": "NO",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "paymentBsb",
+      "Type": "varchar(16)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "032-002",
+      "Extra": ""
+    },
+    {
+      "Field": "paymentAccount",
+      "Type": "varchar(32)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "483217",
+      "Extra": ""
+    },
+    {
+      "Field": "paymentEmail",
+      "Type": "varchar(320)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "finance@telcoinabox.com",
+      "Extra": ""
+    },
+    {
+      "Field": "importedBy",
+      "Type": "varchar(256)",
+      "Null": "NO",
+      "Key": "",
+      "Default": "system",
+      "Extra": ""
+    },
+    {
+      "Field": "fileUrl",
+      "Type": "text",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "fileName",
+      "Type": "varchar(256)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "status",
+      "Type": "varchar(32)",
+      "Null": "NO",
+      "Key": "",
+      "Default": "imported",
+      "Extra": ""
+    },
+    {
+      "Field": "notes",
+      "Type": "text",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "createdAt",
+      "Type": "timestamp",
+      "Null": "NO",
+      "Key": "",
+      "Default": "CURRENT_TIMESTAMP",
+      "Extra": ""
+    },
+    {
+      "Field": "updatedAt",
+      "Type": "timestamp",
+      "Null": "NO",
+      "Key": "",
+      "Default": "CURRENT_TIMESTAMP",
+      "Extra": "DEFAULT_GENERATED on update CURRENT_TIMESTAMP"
+    }
+  ],
+  "messages": [],
+  "stdout": "Field\tType\tNull\tKey\tDefault\tExtra\nid\tint\tNO\tPRI\tNULL\tauto_increment\ninvoiceNumber\tvarchar(64)\tNO\tUNI\tNULL\t\ninvoiceReference\tvarchar(128)\tNO\t\tNULL\t\naccountNumber\tvarchar(64)\tNO\t\tNULL\t\naccountName\tvarchar(256)\tNO\t\tNULL\t\ninvoiceDate\tvarchar(32)\tNO\t\tNULL\t\npaymentDueDate\tvarchar(32)\tNO\t\tNULL\t\nbillingMonth\tvarchar(7)\tNO\t\tNULL\t\nsupplierName\tvarchar(256)\tNO\t\tNULL\t\nsupplierAbn\tvarchar(32)\tNO\t\tNULL\t\nbilledToName\tvarchar(256)\tNO\t\tNULL\t\nbilledToAbn\tvarchar(32)\tNO\t\tNULL\t\nbilledToAddress\tvarchar(512)\tNO\t\tNULL\t\ntotalExGst\tdecimal(10,2)\tNO\t\tNULL\t\ntotalGst\tdecimal(10,2)\tNO\t\tNULL\t\ntotalIncGst\tdecimal(10,2)\tNO\t\tNULL\t\npaymentBsb\tvarchar(16)\tYES\t\t032-002\t\npaymentAccount\tvarchar(32)\tYES\t\t483217\t\npaymentEmail\tvarchar(320)\tYES\t\tfinance@telcoinabox.com\t\nimportedBy\tvarchar(256)\tNO\t\tsystem\t\nfileUrl\ttext\tYES\t\tNULL\t\nfileName\tvarchar(256)\tYES\t\tNULL\t\nstatus\tvarchar(32)\tNO\t\timported\t\nnotes\ttext\tYES\t\tNULL\t\ncreatedAt\ttimestamp\tNO\t\tCURRENT_TIMESTAMP\t\nupdatedAt\ttimestamp\tNO\t\tCURRENT_TIMESTAMP\tDEFAULT_GENERATED on update CURRENT_TIMESTAMP\n",
+  "stderr": "",
+  "execution_time_ms": 1645
+}

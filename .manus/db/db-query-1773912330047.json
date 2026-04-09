@@ -1,0 +1,32 @@
+{
+  "query": "\n-- Check blitzImportDate and blitzReportName distribution for Telstra services\nSELECT blitzImportDate, blitzReportName, COUNT(*) as cnt\nFROM services\nWHERE provider = 'Telstra'\nGROUP BY blitzImportDate, blitzReportName\nORDER BY blitzImportDate DESC\nLIMIT 30;\n\n-- Sample 10 active Telstra services to understand structure\nSELECT externalId, avcId, phoneNumber, planName, status, customerName, monthlyCost, monthlyRevenue, \n       blitzImportDate, blitzReportName, blitzAccountNumber, blitzBillFeb26, blitzBillJan26, blitzBillMar26\nFROM services\nWHERE provider = 'Telstra' AND status = 'active'\nLIMIT 10;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Check blitzImportDate and blitzReportName distribution for Telstra services\nSELECT blitzImportDate, blitzReportName, COUNT(*) as cnt\nFROM services\nWHERE provider = 'Telstra'\nGROUP BY blitzImportDate, blitzReportName\nORDER BY blitzImportDate DESC\nLIMIT 30;\n\n-- Sample 10 active Telstra services to understand structure\nSELECT externalId, avcId, phoneNumber, planName, status, customerName, monthlyCost, monthlyRevenue, \n       blitzImportDate, blitzReportName, blitzAccountNumber, blitzBillFeb26, blitzBillJan26, blitzBillMar26\nFROM services\nWHERE provider = 'Telstra' AND status = 'active'\nLIMIT 10;\n",
+  "rows": [
+    {
+      "blitzImportDate": "2026-03-16",
+      "blitzReportName": "March 2026 Blitz Summary",
+      "cnt": "221"
+    },
+    {
+      "blitzImportDate": "",
+      "blitzReportName": "",
+      "cnt": "405"
+    }
+  ],
+  "messages": [
+    "externalId\tavcId\tphoneNumber\tplanName\tstatus\tcustomerName\tmonthlyCost\tmonthlyRevenue\tblitzImportDate\tblitzReportName\tblitzAccountNumber\tblitzBillFeb26\tblitzBillJan26\tblitzBillMar26",
+    "S0002\t\t02 4365 0249\tCore Internet\tactive\tLittle Cha Erina Fair\t93.00\t0.00\t\t\t\tNULL\tNULL\tNULL",
+    "S0003\t\t08 8359 2256\tCore Internet ,Static IP\tactive\tUnassigned\t93.00\t0.00\t\t\t\tNULL\tNULL\tNULL",
+    "S0004\t\t03 5975 3104\tCore Internet ,Static IP\tactive\tZambrero Mornington Main St\t93.00\t136.36\t\t\t\tNULL\tNULL\tNULL",
+    "S0010\t\t03 5976 4649\tCore Internet, Static IP\tactive\tZambrero Mornington (Yullies RD)\t93.00\t0.00\t\t\t\tNULL\tNULL\tNULL",
+    "S0013\t\t08 9524 2863\tCore Internet\tactive\tZambrero Baldivis\t93.00\t0.00\t\t\t\tNULL\tNULL\tNULL",
+    "S0017\t\t07 3324 8463\tUnlimited Internet\tactive\tNodo Camp Hill\t93.00\t0.00\t\t\t\tNULL\tNULL\tNULL",
+    "S0019\t\t07 4862 5254\tCore Internet\tactive\tZambrero Mackay\t93.00\t136.36\t\t\t\tNULL\tNULL\tNULL",
+    "S0020\t\t\tCore Internet\tactive\tUnassigned\t93.00\t0.00\t\t\t\tNULL\tNULL\tNULL",
+    "S0021\t\t\tCore Internet\tactive\tUnassigned\t93.00\t0.00\t\t\t\tNULL\tNULL\tNULL",
+    "S0022\t\t\tCore Internet,Static IP\tactive\tUnassigned\t93.00\t0.00\t\t\t\tNULL\tNULL\tNULL"
+  ],
+  "stdout": "blitzImportDate\tblitzReportName\tcnt\n2026-03-16\tMarch 2026 Blitz Summary\t221\n\t\t405\nexternalId\tavcId\tphoneNumber\tplanName\tstatus\tcustomerName\tmonthlyCost\tmonthlyRevenue\tblitzImportDate\tblitzReportName\tblitzAccountNumber\tblitzBillFeb26\tblitzBillJan26\tblitzBillMar26\nS0002\t\t02 4365 0249\tCore Internet\tactive\tLittle Cha Erina Fair\t93.00\t0.00\t\t\t\tNULL\tNULL\tNULL\nS0003\t\t08 8359 2256\tCore Internet ,Static IP\tactive\tUnassigned\t93.00\t0.00\t\t\t\tNULL\tNULL\tNULL\nS0004\t\t03 5975 3104\tCore Internet ,Static IP\tactive\tZambrero Mornington Main St\t93.00\t136.36\t\t\t\tNULL\tNULL\tNULL\nS0010\t\t03 5976 4649\tCore Internet, Static IP\tactive\tZambrero Mornington (Yullies RD)\t93.00\t0.00\t\t\t\tNULL\tNULL\tNULL\nS0013\t\t08 9524 2863\tCore Internet\tactive\tZambrero Baldivis\t93.00\t0.00\t\t\t\tNULL\tNULL\tNULL\nS0017\t\t07 3324 8463\tUnlimited Internet\tactive\tNodo Camp Hill\t93.00\t0.00\t\t\t\tNULL\tNULL\tNULL\nS0019\t\t07 4862 5254\tCore Internet\tactive\tZambrero Mackay\t93.00\t136.36\t\t\t\tNULL\tNULL\tNULL\nS0020\t\t\tCore Internet\tactive\tUnassigned\t93.00\t0.00\t\t\t\tNULL\tNULL\tNULL\nS0021\t\t\tCore Internet\tactive\tUnassigned\t93.00\t0.00\t\t\t\tNULL\tNULL\tNULL\nS0022\t\t\tCore Internet,Static IP\tactive\tUnassigned\t93.00\t0.00\t\t\t\tNULL\tNULL\tNULL\n",
+  "stderr": "",
+  "execution_time_ms": 1910
+}

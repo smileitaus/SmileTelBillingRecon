@@ -1,0 +1,94 @@
+{
+  "query": "SELECT externalId, name, businessName, contactEmail, status\nFROM customers \nWHERE name LIKE '%W%T Parcel%' OR name LIKE '%W&T%' OR name LIKE '%Freight%'\n   OR name LIKE '%Expert Electrical%'\n   OR name LIKE '%Helloworld%' OR name LIKE '%Catolin%'\n   OR name LIKE '%Hervey Bay Garden%'\n   OR name LIKE '%Rochedale Doctor%'\n   OR name LIKE '%TerryWhite%' OR name LIKE '%Terry White%' OR name LIKE '%Chemmart%'\n   OR name LIKE '%Locanda%'\n   OR name LIKE '%Coastal Dental%'\n   OR name LIKE '%Southside Specialist%' OR name LIKE '%Springfield%'\n   OR name LIKE '%Medpods%' OR name LIKE '%Yeppoon%'\n   OR name LIKE '%UMC North%'\n   OR name LIKE '%Mother Duck Enoggera%'\nORDER BY name LIMIT 30;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute SELECT externalId, name, businessName, contactEmail, status\nFROM customers \nWHERE name LIKE '%W%T Parcel%' OR name LIKE '%W&T%' OR name LIKE '%Freight%'\n   OR name LIKE '%Expert Electrical%'\n   OR name LIKE '%Helloworld%' OR name LIKE '%Catolin%'\n   OR name LIKE '%Hervey Bay Garden%'\n   OR name LIKE '%Rochedale Doctor%'\n   OR name LIKE '%TerryWhite%' OR name LIKE '%Terry White%' OR name LIKE '%Chemmart%'\n   OR name LIKE '%Locanda%'\n   OR name LIKE '%Coastal Dental%'\n   OR name LIKE '%Southside Specialist%' OR name LIKE '%Springfield%'\n   OR name LIKE '%Medpods%' OR name LIKE '%Yeppoon%'\n   OR name LIKE '%UMC North%'\n   OR name LIKE '%Mother Duck Enoggera%'\nORDER BY name LIMIT 30;",
+  "rows": [
+    {
+      "externalId": "C0055",
+      "name": "Catolin Pty Ltd T-A Helloworld Strathpine",
+      "businessName": "",
+      "contactEmail": "cathy.strathpine@helloworld.com.au",
+      "status": "active"
+    },
+    {
+      "externalId": "C0063",
+      "name": "Coastal Dental Specialists",
+      "businessName": "",
+      "contactEmail": "belinda@coastaldentalspecialists.com.au",
+      "status": "active"
+    },
+    {
+      "externalId": "C0119",
+      "name": "Hervey Bay Garden Centre",
+      "businessName": "",
+      "contactEmail": "paul.vanzetta@bigpond.com",
+      "status": "active"
+    },
+    {
+      "externalId": "C0150",
+      "name": "Locanda Pty Ltd",
+      "businessName": "",
+      "contactEmail": "info@localenoosa.com.au",
+      "status": "active"
+    },
+    {
+      "externalId": "C0165",
+      "name": "Mother Duck Enoggera Pty Ltd",
+      "businessName": "",
+      "contactEmail": "enoggera@motherduck.com.au",
+      "status": "active"
+    },
+    {
+      "externalId": "C0201",
+      "name": "Rochedale Doctors",
+      "businessName": "",
+      "contactEmail": "accounts@rochedaledoctors.com.au",
+      "status": "active"
+    },
+    {
+      "externalId": "C0221",
+      "name": "Southside Specialist Medical and Geriatric Centre",
+      "businessName": "",
+      "contactEmail": "drmujtaba@hotmail.com",
+      "status": "active"
+    },
+    {
+      "externalId": "C0239",
+      "name": "TerryWhite Chemmart Caboolture North",
+      "businessName": "",
+      "contactEmail": "cabooltureadmin@sbpm.net.au",
+      "status": "active"
+    },
+    {
+      "externalId": "C0240",
+      "name": "TerryWhite Chemmart Oxenford",
+      "businessName": "",
+      "contactEmail": "oxenfordadmin@sbpm.net.au",
+      "status": "active"
+    },
+    {
+      "externalId": "C0276",
+      "name": "UMC North Lakes",
+      "businessName": "",
+      "contactEmail": "umcnorthlakes@unitedmedical.net.au",
+      "status": "active"
+    },
+    {
+      "externalId": "C0283",
+      "name": "W&T Parcel & Freight",
+      "businessName": "",
+      "contactEmail": "wtparcelfreight@bigpond.com",
+      "status": "active"
+    },
+    {
+      "externalId": "C2886",
+      "name": "Zambrero - Yeppoon",
+      "businessName": "Hyszka Enterprises Pty Ltd",
+      "contactEmail": "yeppoon@zambrero.com",
+      "status": "inactive"
+    }
+  ],
+  "messages": [],
+  "stdout": "externalId\tname\tbusinessName\tcontactEmail\tstatus\nC0055\tCatolin Pty Ltd T-A Helloworld Strathpine\t\tcathy.strathpine@helloworld.com.au\tactive\nC0063\tCoastal Dental Specialists\t\tbelinda@coastaldentalspecialists.com.au\tactive\nC0119\tHervey Bay Garden Centre\t\tpaul.vanzetta@bigpond.com\tactive\nC0150\tLocanda Pty Ltd\t\tinfo@localenoosa.com.au\tactive\nC0165\tMother Duck Enoggera Pty Ltd\t\tenoggera@motherduck.com.au\tactive\nC0201\tRochedale Doctors\t\taccounts@rochedaledoctors.com.au\tactive\nC0221\tSouthside Specialist Medical and Geriatric Centre\t\tdrmujtaba@hotmail.com\tactive\nC0239\tTerryWhite Chemmart Caboolture North\t\tcabooltureadmin@sbpm.net.au\tactive\nC0240\tTerryWhite Chemmart Oxenford\t\toxenfordadmin@sbpm.net.au\tactive\nC0276\tUMC North Lakes\t\tumcnorthlakes@unitedmedical.net.au\tactive\nC0283\tW&T Parcel & Freight\t\twtparcelfreight@bigpond.com\tactive\nC2886\tZambrero - Yeppoon\tHyszka Enterprises Pty Ltd\tyeppoon@zambrero.com\tinactive\n",
+  "stderr": "",
+  "execution_time_ms": 1547
+}

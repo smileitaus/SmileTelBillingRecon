@@ -1,0 +1,50 @@
+{
+  "query": "\n-- Check what other SasBoss services cost $49 to understand if it's a standard product price\nSELECT planName, serviceType, COUNT(*) as count, \n  MIN(monthlyRevenue) as minRev, MAX(monthlyRevenue) as maxRev,\n  GROUP_CONCAT(DISTINCT supplierName) as suppliers\nFROM services\nWHERE monthlyCost = 49.00\nGROUP BY planName, serviceType\nORDER BY count DESC;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Check what other SasBoss services cost $49 to understand if it's a standard product price\nSELECT planName, serviceType, COUNT(*) as count, \n  MIN(monthlyRevenue) as minRev, MAX(monthlyRevenue) as maxRev,\n  GROUP_CONCAT(DISTINCT supplierName) as suppliers\nFROM services\nWHERE monthlyCost = 49.00\nGROUP BY planName, serviceType\nORDER BY count DESC;\n",
+  "rows": [
+    {
+      "planName": "Other",
+      "serviceType": "Other",
+      "count": "16",
+      "minRev": "20.00",
+      "maxRev": "3098.58",
+      "suppliers": "SasBoss"
+    },
+    {
+      "planName": "NBN 100/40",
+      "serviceType": "Internet",
+      "count": "1",
+      "minRev": "228.00",
+      "maxRev": "228.00",
+      "suppliers": "Vocus"
+    },
+    {
+      "planName": "4G Data Backup Service",
+      "serviceType": "Other",
+      "count": "1",
+      "minRev": "30.00",
+      "maxRev": "30.00",
+      "suppliers": "SasBoss"
+    },
+    {
+      "planName": "Other",
+      "serviceType": "Voice",
+      "count": "1",
+      "minRev": "0.80",
+      "maxRev": "0.80",
+      "suppliers": "SasBoss"
+    },
+    {
+      "planName": "Internet 100/40",
+      "serviceType": "Internet",
+      "count": "1",
+      "minRev": "114.00",
+      "maxRev": "114.00",
+      "suppliers": "SasBoss"
+    }
+  ],
+  "messages": [],
+  "stdout": "planName\tserviceType\tcount\tminRev\tmaxRev\tsuppliers\nOther\tOther\t16\t20.00\t3098.58\tSasBoss\nNBN 100/40\tInternet\t1\t228.00\t228.00\tVocus\n4G Data Backup Service\tOther\t1\t30.00\t30.00\tSasBoss\nOther\tVoice\t1\t0.80\t0.80\tSasBoss\nInternet 100/40\tInternet\t1\t114.00\t114.00\tSasBoss\n",
+  "stderr": "",
+  "execution_time_ms": 1573
+}

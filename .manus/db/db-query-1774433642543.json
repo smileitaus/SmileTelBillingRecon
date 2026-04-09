@@ -1,0 +1,85 @@
+{
+  "query": "\n-- Breakdown by service type and supplier\nSELECT serviceType, supplierName, COUNT(*) AS cnt\nFROM services\nWHERE (customerExternalId IS NULL OR customerExternalId = '')\nGROUP BY serviceType, supplierName\nORDER BY cnt DESC;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Breakdown by service type and supplier\nSELECT serviceType, supplierName, COUNT(*) AS cnt\nFROM services\nWHERE (customerExternalId IS NULL OR customerExternalId = '')\nGROUP BY serviceType, supplierName\nORDER BY cnt DESC;\n",
+  "rows": [
+    {
+      "serviceType": "Mobile",
+      "supplierName": "Telstra",
+      "cnt": "391"
+    },
+    {
+      "serviceType": "Data",
+      "supplierName": "Telstra",
+      "cnt": "126"
+    },
+    {
+      "serviceType": "Internet",
+      "supplierName": "Telstra",
+      "cnt": "10"
+    },
+    {
+      "serviceType": "Voice",
+      "supplierName": "SasBoss",
+      "cnt": "9"
+    },
+    {
+      "serviceType": "Internet",
+      "supplierName": "ABB",
+      "cnt": "6"
+    },
+    {
+      "serviceType": "VoIP",
+      "supplierName": "Vocus",
+      "cnt": "2"
+    },
+    {
+      "serviceType": "Mobile",
+      "supplierName": "Vocus",
+      "cnt": "2"
+    },
+    {
+      "serviceType": "Internet",
+      "supplierName": "AAPT",
+      "cnt": "2"
+    },
+    {
+      "serviceType": "Voice",
+      "supplierName": "Telstra",
+      "cnt": "2"
+    },
+    {
+      "serviceType": "Voice",
+      "supplierName": "CommsCode",
+      "cnt": "2"
+    },
+    {
+      "serviceType": "VoIP",
+      "supplierName": "Telstra",
+      "cnt": "1"
+    },
+    {
+      "serviceType": "Other",
+      "supplierName": "AAPT",
+      "cnt": "1"
+    },
+    {
+      "serviceType": "Data",
+      "supplierName": "TIAB",
+      "cnt": "1"
+    },
+    {
+      "serviceType": "Internet",
+      "supplierName": "ChannelHaus",
+      "cnt": "1"
+    },
+    {
+      "serviceType": "Voice",
+      "supplierName": "ChannelHaus",
+      "cnt": "1"
+    }
+  ],
+  "messages": [],
+  "stdout": "serviceType\tsupplierName\tcnt\nMobile\tTelstra\t391\nData\tTelstra\t126\nInternet\tTelstra\t10\nVoice\tSasBoss\t9\nInternet\tABB\t6\nVoIP\tVocus\t2\nMobile\tVocus\t2\nInternet\tAAPT\t2\nVoice\tTelstra\t2\nVoice\tCommsCode\t2\nVoIP\tTelstra\t1\nOther\tAAPT\t1\nData\tTIAB\t1\nInternet\tChannelHaus\t1\nVoice\tChannelHaus\t1\n",
+  "stderr": "",
+  "execution_time_ms": 1641
+}

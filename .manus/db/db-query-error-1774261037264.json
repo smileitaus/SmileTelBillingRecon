@@ -1,0 +1,8 @@
+{
+  "query": "SELECT \n  COUNT(*) as total_vocus_services,\n  COUNT(CASE WHEN contractEndDate IS NOT NULL AND contractEndDate != '' THEN 1 END) as with_contract_end,\n  COUNT(CASE WHEN discoveryNotes LIKE '%Vocus Services Import%' THEN 1 END) as with_vocus_notes,\n  COUNT(CASE WHEN connectionId LIKE 'VBU%' THEN 1 END) as internet_services\nFROM services \nWHERE supplier = 'Vocus';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute SELECT \n  COUNT(*) as total_vocus_services,\n  COUNT(CASE WHEN contractEndDate IS NOT NULL AND contractEndDate != '' THEN 1 END) as with_contract_end,\n  COUNT(CASE WHEN discoveryNotes LIKE '%Vocus Services Import%' THEN 1 END) as with_vocus_notes,\n  COUNT(CASE WHEN connectionId LIKE 'VBU%' THEN 1 END) as internet_services\nFROM services \nWHERE supplier = 'Vocus';",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1054 (42S22) at line 1: Unknown column 'supplier' in 'where clause'"
+  ]
+}

@@ -1,0 +1,130 @@
+{
+  "query": "SELECT c.name as customerName, c.externalId as customerId,\n  COUNT(*) as serviceCount,\n  SUM(s.monthlyCost) as totalCost\nFROM services s\nJOIN customers c ON s.customerExternalId = c.externalId\nWHERE s.monthlyCost > 0\n  AND s.monthlyRevenue = 0\n  AND (s.status IS NULL OR s.status = 'active')\n  AND s.customerExternalId IS NOT NULL AND s.customerExternalId != ''\nGROUP BY c.externalId, c.name\nORDER BY totalCost DESC\nLIMIT 20;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute SELECT c.name as customerName, c.externalId as customerId,\n  COUNT(*) as serviceCount,\n  SUM(s.monthlyCost) as totalCost\nFROM services s\nJOIN customers c ON s.customerExternalId = c.externalId\nWHERE s.monthlyCost > 0\n  AND s.monthlyRevenue = 0\n  AND (s.status IS NULL OR s.status = 'active')\n  AND s.customerExternalId IS NOT NULL AND s.customerExternalId != ''\nGROUP BY c.externalId, c.name\nORDER BY totalCost DESC\nLIMIT 20;",
+  "rows": [
+    {
+      "customerName": "Smile IT",
+      "customerId": "C2441",
+      "serviceCount": "45",
+      "totalCost": "6189.72"
+    },
+    {
+      "customerName": "GBA Consulting Engineers",
+      "customerId": "C0101",
+      "serviceCount": "4",
+      "totalCost": "1485.07"
+    },
+    {
+      "customerName": "Middlemount Coal Pty Ltd",
+      "customerId": "C0161",
+      "serviceCount": "3",
+      "totalCost": "1214.79"
+    },
+    {
+      "customerName": "Body Corporate for Osprey Mooloolaba CTS4773",
+      "customerId": "C0038",
+      "serviceCount": "1",
+      "totalCost": "799.00"
+    },
+    {
+      "customerName": "ASG Hail Pty Ltd",
+      "customerId": "C0015",
+      "serviceCount": "18",
+      "totalCost": "758.84"
+    },
+    {
+      "customerName": "Salter Brothers (Vineyards) Pty Ltd",
+      "customerId": "C0213",
+      "serviceCount": "1",
+      "totalCost": "750.00"
+    },
+    {
+      "customerName": "Salter Brothers (Clovelly) Pty Ltd",
+      "customerId": "C0208",
+      "serviceCount": "1",
+      "totalCost": "727.27"
+    },
+    {
+      "customerName": "Legrand AV Australia",
+      "customerId": "C2651",
+      "serviceCount": "1",
+      "totalCost": "703.01"
+    },
+    {
+      "customerName": "Sta Consulting Engineers",
+      "customerId": "C0226",
+      "serviceCount": "16",
+      "totalCost": "635.35"
+    },
+    {
+      "customerName": "The Yiros Marketplace",
+      "customerId": "C1412",
+      "serviceCount": "7",
+      "totalCost": "631.69"
+    },
+    {
+      "customerName": "Salter Brothers Luxury Collection Operations Pty LTD",
+      "customerId": "C0214",
+      "serviceCount": "1",
+      "totalCost": "613.64"
+    },
+    {
+      "customerName": "OFFC 14A, 100 EDWARD ST, BRISBANE CITY QLD",
+      "customerId": "C2534",
+      "serviceCount": "2",
+      "totalCost": "600.60"
+    },
+    {
+      "customerName": "BROOKHOLLOW UNIT 5, 40 BROOKHOLLOW AV, NORWEST NSW",
+      "customerId": "C2611",
+      "serviceCount": "1",
+      "totalCost": "579.74"
+    },
+    {
+      "customerName": "Auriga Group Pty Ltd",
+      "customerId": "C0020",
+      "serviceCount": "4",
+      "totalCost": "568.00"
+    },
+    {
+      "customerName": "ASG",
+      "customerId": "C2415",
+      "serviceCount": "14",
+      "totalCost": "557.08"
+    },
+    {
+      "customerName": "BrewDog Australia",
+      "customerId": "C0046",
+      "serviceCount": "1",
+      "totalCost": "530.00"
+    },
+    {
+      "customerName": "Institute for Healthy Communities Australia",
+      "customerId": "C0123",
+      "serviceCount": "6",
+      "totalCost": "515.75"
+    },
+    {
+      "customerName": "Cornwalls (QLD)",
+      "customerId": "C0069",
+      "serviceCount": "2",
+      "totalCost": "499.00"
+    },
+    {
+      "customerName": "Zambrero - Fortitude Valley",
+      "customerId": "C2772",
+      "serviceCount": "2",
+      "totalCost": "449.00"
+    },
+    {
+      "customerName": "UNIT 301 10 MARKET ST BRISBANE CITY QLD 4000 BRISBANE CITY",
+      "customerId": "C2618",
+      "serviceCount": "1",
+      "totalCost": "438.90"
+    }
+  ],
+  "messages": [],
+  "stdout": "customerName\tcustomerId\tserviceCount\ttotalCost\nSmile IT\tC2441\t45\t6189.72\nGBA Consulting Engineers\tC0101\t4\t1485.07\nMiddlemount Coal Pty Ltd\tC0161\t3\t1214.79\nBody Corporate for Osprey Mooloolaba CTS4773\tC0038\t1\t799.00\nASG Hail Pty Ltd\tC0015\t18\t758.84\nSalter Brothers (Vineyards) Pty Ltd\tC0213\t1\t750.00\nSalter Brothers (Clovelly) Pty Ltd\tC0208\t1\t727.27\nLegrand AV Australia\tC2651\t1\t703.01\nSta Consulting Engineers\tC0226\t16\t635.35\nThe Yiros Marketplace\tC1412\t7\t631.69\nSalter Brothers Luxury Collection Operations Pty LTD\tC0214\t1\t613.64\nOFFC 14A, 100 EDWARD ST, BRISBANE CITY QLD\tC2534\t2\t600.60\nBROOKHOLLOW UNIT 5, 40 BROOKHOLLOW AV, NORWEST NSW\tC2611\t1\t579.74\nAuriga Group Pty Ltd\tC0020\t4\t568.00\nASG\tC2415\t14\t557.08\nBrewDog Australia\tC0046\t1\t530.00\nInstitute for Healthy Communities Australia\tC0123\t6\t515.75\nCornwalls (QLD)\tC0069\t2\t499.00\nZambrero - Fortitude Valley\tC2772\t2\t449.00\nUNIT 301 10 MARKET ST BRISBANE CITY QLD 4000 BRISBANE CITY\tC2618\t1\t438.90\n",
+  "stderr": "",
+  "execution_time_ms": 1505
+}

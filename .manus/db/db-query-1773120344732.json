@@ -1,0 +1,17 @@
+{
+  "query": "SELECT externalId, phoneNumber, status, customerExternalId, customerName FROM services WHERE status IN ('flagged_for_termination', 'terminated');",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3M17pEiktKAmnzx.5240b4750712 --database 4LVfr96qhVoYSkLinpTZkt --execute SELECT externalId, phoneNumber, status, customerExternalId, customerName FROM services WHERE status IN ('flagged_for_termination', 'terminated');",
+  "rows": [
+    {
+      "externalId": "S0015",
+      "phoneNumber": "08 9140 4068",
+      "status": "flagged_for_termination",
+      "customerExternalId": "C0385",
+      "customerName": "Zambrero South Hedland"
+    }
+  ],
+  "messages": [],
+  "stdout": "externalId\tphoneNumber\tstatus\tcustomerExternalId\tcustomerName\nS0015\t08 9140 4068\tflagged_for_termination\tC0385\tZambrero South Hedland\n",
+  "stderr": "",
+  "execution_time_ms": 1599
+}

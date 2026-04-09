@@ -1,0 +1,25 @@
+{
+  "query": "\n-- Create a Voice/UCaaS service for Caravan and RV Works (C0054) - they have voice items in DataGate but no voice service\nINSERT INTO services (externalId, serviceType, serviceTypeDetail, planName, status, customerExternalId, customerName, monthlyCost, monthlyRevenue, supplierName)\nVALUES ('DG-C0054-VOICE', 'Voice', 'UCaaS', 'BroadSoft UCaaS Bundle', 'active', 'C0054', 'Caravan and RV Works', 0, 0, 'DataGate');\n\n-- Match all Caravan and RV Works voice items to the new service\nUPDATE billing_items \nSET serviceExternalId = 'DG-C0054-VOICE', matchStatus = 'matched', matchConfidence = 'high'\nWHERE billingPlatform = 'DataGate'\nAND customerExternalId = 'C0054'\nAND description NOT LIKE '%NBN%';\n\n-- CF Aust (C0058) - has 2 unmatched \"Business Grade NBN 100/40 - 12 Months\" items (no AVC code)\n-- Check what NBN services exist for C0058\nSELECT s.externalId, s.planName, s.serviceTypeDetail FROM services s WHERE s.customerExternalId = 'C0058' AND s.serviceType IN ('Internet', 'Data') AND s.status = 'active';\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Create a Voice/UCaaS service for Caravan and RV Works (C0054) - they have voice items in DataGate but no voice service\nINSERT INTO services (externalId, serviceType, serviceTypeDetail, planName, status, customerExternalId, customerName, monthlyCost, monthlyRevenue, supplierName)\nVALUES ('DG-C0054-VOICE', 'Voice', 'UCaaS', 'BroadSoft UCaaS Bundle', 'active', 'C0054', 'Caravan and RV Works', 0, 0, 'DataGate');\n\n-- Match all Caravan and RV Works voice items to the new service\nUPDATE billing_items \nSET serviceExternalId = 'DG-C0054-VOICE', matchStatus = 'matched', matchConfidence = 'high'\nWHERE billingPlatform = 'DataGate'\nAND customerExternalId = 'C0054'\nAND description NOT LIKE '%NBN%';\n\n-- CF Aust (C0058) - has 2 unmatched \"Business Grade NBN 100/40 - 12 Months\" items (no AVC code)\n-- Check what NBN services exist for C0058\nSELECT s.externalId, s.planName, s.serviceTypeDetail FROM services s WHERE s.customerExternalId = 'C0058' AND s.serviceType IN ('Internet', 'Data') AND s.status = 'active';\n",
+  "rows": [
+    {
+      "externalId": "S0883",
+      "planName": "Business Grade NBN 100/40 - 24 Months AVC000101436766",
+      "serviceTypeDetail": "Business Grade NBN 100/40 - 24 Months AVC000101436766"
+    },
+    {
+      "externalId": "S0884",
+      "planName": "Business Grade NBN 100/40 - 36 Months AVC000106664528",
+      "serviceTypeDetail": "Business Grade NBN 100/40 - 36 Months AVC000106664528"
+    },
+    {
+      "externalId": "SVC0014",
+      "planName": "AAPT IP-Line Link 5655776",
+      "serviceTypeDetail": "IP-Line Link"
+    }
+  ],
+  "messages": [],
+  "stdout": "externalId\tplanName\tserviceTypeDetail\nS0883\tBusiness Grade NBN 100/40 - 24 Months AVC000101436766\tBusiness Grade NBN 100/40 - 24 Months AVC000101436766\nS0884\tBusiness Grade NBN 100/40 - 36 Months AVC000106664528\tBusiness Grade NBN 100/40 - 36 Months AVC000106664528\nSVC0014\tAAPT IP-Line Link 5655776\tIP-Line Link\n",
+  "stderr": "",
+  "execution_time_ms": 1954
+}

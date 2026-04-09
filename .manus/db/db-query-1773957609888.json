@@ -1,0 +1,25 @@
+{
+  "query": "\n-- Check Smile IT customer and existing Telstra mobile services\nSELECT c.externalId, c.name, COUNT(s.id) as serviceCount, SUM(s.monthlyCost) as totalCost\nFROM customers c\nLEFT JOIN services s ON s.customerExternalId = c.externalId AND s.provider = 'Telstra' AND s.serviceType = 'Mobile'\nWHERE c.name LIKE '%Smile IT%' OR c.name LIKE '%SmileIT%'\nGROUP BY c.externalId, c.name;\n\n-- Check if any of these phone numbers already exist in the DB\nSELECT externalId, phoneNumber, planName, monthlyCost, status, customerExternalId\nFROM services\nWHERE provider = 'Telstra' AND serviceType = 'Mobile'\n  AND phoneNumber IN ('0400323555','0400338176','0400676294','0400989113','0418974328','0428726634','0448300317')\nLIMIT 20;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Check Smile IT customer and existing Telstra mobile services\nSELECT c.externalId, c.name, COUNT(s.id) as serviceCount, SUM(s.monthlyCost) as totalCost\nFROM customers c\nLEFT JOIN services s ON s.customerExternalId = c.externalId AND s.provider = 'Telstra' AND s.serviceType = 'Mobile'\nWHERE c.name LIKE '%Smile IT%' OR c.name LIKE '%SmileIT%'\nGROUP BY c.externalId, c.name;\n\n-- Check if any of these phone numbers already exist in the DB\nSELECT externalId, phoneNumber, planName, monthlyCost, status, customerExternalId\nFROM services\nWHERE provider = 'Telstra' AND serviceType = 'Mobile'\n  AND phoneNumber IN ('0400323555','0400338176','0400676294','0400989113','0418974328','0428726634','0448300317')\nLIMIT 20;\n",
+  "rows": [
+    {
+      "externalId": "C2441",
+      "name": "Smile IT",
+      "serviceCount": "1",
+      "totalCost": "80.00"
+    }
+  ],
+  "messages": [
+    "externalId\tphoneNumber\tplanName\tmonthlyCost\tstatus\tcustomerExternalId",
+    "BLITZ-0400338176\t0400338176\tBusiness Data Plan - Small\t30.00\tflagged_for_termination\tC0332",
+    "BLITZ-0418974328\t0418974328\tBusiness Data Plan - Medium\t82.33\tactive\t",
+    "BLITZ-0400323555\t0400323555\tBusiness Bundle Data Plan\t15.00\tflagged_for_termination\t",
+    "BLITZ-0400989113\t0400989113\tBusiness Data Plan - Medium\t65.00\tactive\t",
+    "BLITZ-0400676294\t0400676294\tBusiness Data Plan - Small\t30.00\tflagged_for_termination\t",
+    "BLITZ-0448300317\t0448300317\tBusiness Data Plan - Medium\t82.33\tactive\t",
+    "BLITZ-0428726634\t0428726634\tBusiness Data Plan - Medium\t82.33\tflagged_for_termination\t"
+  ],
+  "stdout": "externalId\tname\tserviceCount\ttotalCost\nC2441\tSmile IT\t1\t80.00\nexternalId\tphoneNumber\tplanName\tmonthlyCost\tstatus\tcustomerExternalId\nBLITZ-0400338176\t0400338176\tBusiness Data Plan - Small\t30.00\tflagged_for_termination\tC0332\nBLITZ-0418974328\t0418974328\tBusiness Data Plan - Medium\t82.33\tactive\t\nBLITZ-0400323555\t0400323555\tBusiness Bundle Data Plan\t15.00\tflagged_for_termination\t\nBLITZ-0400989113\t0400989113\tBusiness Data Plan - Medium\t65.00\tactive\t\nBLITZ-0400676294\t0400676294\tBusiness Data Plan - Small\t30.00\tflagged_for_termination\t\nBLITZ-0448300317\t0448300317\tBusiness Data Plan - Medium\t82.33\tactive\t\nBLITZ-0428726634\t0428726634\tBusiness Data Plan - Medium\t82.33\tflagged_for_termination\t\n",
+  "stderr": "",
+  "execution_time_ms": 2050
+}

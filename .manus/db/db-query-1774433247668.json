@@ -1,0 +1,142 @@
+{
+  "query": "\nSELECT id, number, numberDisplay, provider, customerName, providerServiceCode, notes, status, serviceExternalId, customerExternalId\nFROM phone_numbers\nWHERE provider = 'CommsCode'\n  AND (customerName LIKE '%Action Smart%' OR customerName LIKE '%Envest%')\nORDER BY customerName, number;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \nSELECT id, number, numberDisplay, provider, customerName, providerServiceCode, notes, status, serviceExternalId, customerExternalId\nFROM phone_numbers\nWHERE provider = 'CommsCode'\n  AND (customerName LIKE '%Action Smart%' OR customerName LIKE '%Envest%')\nORDER BY customerName, number;\n",
+  "rows": [
+    {
+      "id": "60017",
+      "number": "1300 021 436",
+      "numberDisplay": "",
+      "provider": "CommsCode",
+      "customerName": "Action Smart Group",
+      "providerServiceCode": "Action Smart Group Hail",
+      "notes": "Action Smart Group Hail (CommsCode 29785)",
+      "status": "active",
+      "serviceExternalId": "",
+      "customerExternalId": ""
+    },
+    {
+      "id": "60018",
+      "number": "1300 114 985",
+      "numberDisplay": "",
+      "provider": "CommsCode",
+      "customerName": "Action Smart Group",
+      "providerServiceCode": "Action Smart Group CC",
+      "notes": "Action Smart Group CC (CommsCode 29785)",
+      "status": "active",
+      "serviceExternalId": "",
+      "customerExternalId": ""
+    },
+    {
+      "id": "60016",
+      "number": "1300 159 988",
+      "numberDisplay": "",
+      "provider": "CommsCode",
+      "customerName": "Action Smart Group",
+      "providerServiceCode": "Action Smart Group",
+      "notes": "Action Smart Group (CommsCode 29785)",
+      "status": "active",
+      "serviceExternalId": "",
+      "customerExternalId": ""
+    },
+    {
+      "id": "60014",
+      "number": "1300 184 684",
+      "numberDisplay": "",
+      "provider": "CommsCode",
+      "customerName": "Action Smart Group",
+      "providerServiceCode": "Scan and Go",
+      "notes": "Scan and Go (CommsCode 29785)",
+      "status": "active",
+      "serviceExternalId": "",
+      "customerExternalId": ""
+    },
+    {
+      "id": "60015",
+      "number": "1300 416 779",
+      "numberDisplay": "",
+      "provider": "CommsCode",
+      "customerName": "Action Smart Group",
+      "providerServiceCode": "Action Smart Group",
+      "notes": "Action Smart Group (CommsCode 29785)",
+      "status": "active",
+      "serviceExternalId": "",
+      "customerExternalId": ""
+    },
+    {
+      "id": "60004",
+      "number": "1300 544 923",
+      "numberDisplay": "",
+      "provider": "CommsCode",
+      "customerName": "Action Smart Group",
+      "providerServiceCode": "E2E Pinkenba",
+      "notes": "E2E Pinkenba (CommsCode 29785)",
+      "status": "active",
+      "serviceExternalId": "",
+      "customerExternalId": ""
+    },
+    {
+      "id": "60006",
+      "number": "1300 826 349",
+      "numberDisplay": "",
+      "provider": "CommsCode",
+      "customerName": "Action Smart Group",
+      "providerServiceCode": "Caravan Fix",
+      "notes": "Caravan Fix (CommsCode 29785)",
+      "status": "active",
+      "serviceExternalId": "",
+      "customerExternalId": ""
+    },
+    {
+      "id": "60007",
+      "number": "1800 747 747",
+      "numberDisplay": "",
+      "provider": "CommsCode",
+      "customerName": "Action Smart Group",
+      "providerServiceCode": "Specialist Hail Repairs",
+      "notes": "Specialist Hail Repairs (CommsCode 29785)",
+      "status": "active",
+      "serviceExternalId": "",
+      "customerExternalId": ""
+    },
+    {
+      "id": "60034",
+      "number": "1800 842 002",
+      "numberDisplay": "",
+      "provider": "CommsCode",
+      "customerName": "Action Smart Group",
+      "providerServiceCode": "ASG Transport",
+      "notes": "ASG Transport (CommsCode 29785)",
+      "status": "active",
+      "serviceExternalId": "",
+      "customerExternalId": ""
+    },
+    {
+      "id": "60008",
+      "number": "1800 879 019",
+      "numberDisplay": "",
+      "provider": "CommsCode",
+      "customerName": "Action Smart Group",
+      "providerServiceCode": "End 2 End 1800",
+      "notes": "End 2 End 1800 (CommsCode 29785)",
+      "status": "active",
+      "serviceExternalId": "",
+      "customerExternalId": ""
+    },
+    {
+      "id": "60033",
+      "number": "1300 962 529",
+      "numberDisplay": "",
+      "provider": "CommsCode",
+      "customerName": "Envest",
+      "providerServiceCode": "Envest Routing",
+      "notes": "Envest Routing (CommsCode 30271)",
+      "status": "active",
+      "serviceExternalId": "",
+      "customerExternalId": ""
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tnumber\tnumberDisplay\tprovider\tcustomerName\tproviderServiceCode\tnotes\tstatus\tserviceExternalId\tcustomerExternalId\n60017\t1300 021 436\t\tCommsCode\tAction Smart Group\tAction Smart Group Hail\tAction Smart Group Hail (CommsCode 29785)\tactive\t\t\n60018\t1300 114 985\t\tCommsCode\tAction Smart Group\tAction Smart Group CC\tAction Smart Group CC (CommsCode 29785)\tactive\t\t\n60016\t1300 159 988\t\tCommsCode\tAction Smart Group\tAction Smart Group\tAction Smart Group (CommsCode 29785)\tactive\t\t\n60014\t1300 184 684\t\tCommsCode\tAction Smart Group\tScan and Go\tScan and Go (CommsCode 29785)\tactive\t\t\n60015\t1300 416 779\t\tCommsCode\tAction Smart Group\tAction Smart Group\tAction Smart Group (CommsCode 29785)\tactive\t\t\n60004\t1300 544 923\t\tCommsCode\tAction Smart Group\tE2E Pinkenba\tE2E Pinkenba (CommsCode 29785)\tactive\t\t\n60006\t1300 826 349\t\tCommsCode\tAction Smart Group\tCaravan Fix\tCaravan Fix (CommsCode 29785)\tactive\t\t\n60007\t1800 747 747\t\tCommsCode\tAction Smart Group\tSpecialist Hail Repairs\tSpecialist Hail Repairs (CommsCode 29785)\tactive\t\t\n60034\t1800 842 002\t\tCommsCode\tAction Smart Group\tASG Transport\tASG Transport (CommsCode 29785)\tactive\t\t\n60008\t1800 879 019\t\tCommsCode\tAction Smart Group\tEnd 2 End 1800\tEnd 2 End 1800 (CommsCode 29785)\tactive\t\t\n60033\t1300 962 529\t\tCommsCode\tEnvest\tEnvest Routing\tEnvest Routing (CommsCode 30271)\tactive\t\t\n",
+  "stderr": "",
+  "execution_time_ms": 1699
+}

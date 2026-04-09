@@ -1,0 +1,46 @@
+{
+  "query": "\n-- Final count of unlinked CommsCode numbers\nSELECT COUNT(*) AS still_unlinked FROM phone_numbers\nWHERE provider = 'CommsCode' AND (serviceExternalId IS NULL OR serviceExternalId = '');\n\n-- Summary of all CommsCode numbers by customer with link status\nSELECT customerName,\n       COUNT(*) AS total,\n       SUM(CASE WHEN serviceExternalId IS NOT NULL AND serviceExternalId != '' THEN 1 ELSE 0 END) AS linked,\n       SUM(CASE WHEN serviceExternalId IS NULL OR serviceExternalId = '' THEN 1 ELSE 0 END) AS unlinked\nFROM phone_numbers\nWHERE provider = 'CommsCode'\nGROUP BY customerName\nORDER BY customerName;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Final count of unlinked CommsCode numbers\nSELECT COUNT(*) AS still_unlinked FROM phone_numbers\nWHERE provider = 'CommsCode' AND (serviceExternalId IS NULL OR serviceExternalId = '');\n\n-- Summary of all CommsCode numbers by customer with link status\nSELECT customerName,\n       COUNT(*) AS total,\n       SUM(CASE WHEN serviceExternalId IS NOT NULL AND serviceExternalId != '' THEN 1 ELSE 0 END) AS linked,\n       SUM(CASE WHEN serviceExternalId IS NULL OR serviceExternalId = '' THEN 1 ELSE 0 END) AS unlinked\nFROM phone_numbers\nWHERE provider = 'CommsCode'\nGROUP BY customerName\nORDER BY customerName;\n",
+  "rows": [
+    {
+      "still_unlinked": "0"
+    },
+    {
+      "still_unlinked": "customerName\ttotal\tlinked\tunlinked"
+    },
+    {
+      "still_unlinked": "Action Smart Group\t10\t10\t0"
+    },
+    {
+      "still_unlinked": "Air Restore\t2\t2\t0"
+    },
+    {
+      "still_unlinked": "Australian Computer Traders\t1\t1\t0"
+    },
+    {
+      "still_unlinked": "CPM\t1\t1\t0"
+    },
+    {
+      "still_unlinked": "Envest\t1\t1\t0"
+    },
+    {
+      "still_unlinked": "Gateway\t1\t1\t0"
+    },
+    {
+      "still_unlinked": "Salter Brothers Luxury Collection\t1\t1\t0"
+    },
+    {
+      "still_unlinked": "Smile IT\t3\t3\t0"
+    },
+    {
+      "still_unlinked": "Spicers Retreats and Hotels\t14\t14\t0"
+    },
+    {
+      "still_unlinked": "Wineology\t1\t1\t0"
+    }
+  ],
+  "messages": [],
+  "stdout": "still_unlinked\n0\ncustomerName\ttotal\tlinked\tunlinked\nAction Smart Group\t10\t10\t0\nAir Restore\t2\t2\t0\nAustralian Computer Traders\t1\t1\t0\nCPM\t1\t1\t0\nEnvest\t1\t1\t0\nGateway\t1\t1\t0\nSalter Brothers Luxury Collection\t1\t1\t0\nSmile IT\t3\t3\t0\nSpicers Retreats and Hotels\t14\t14\t0\nWineology\t1\t1\t0\n",
+  "stderr": "",
+  "execution_time_ms": 1848
+}

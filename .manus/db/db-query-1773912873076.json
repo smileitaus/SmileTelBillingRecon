@@ -1,0 +1,88 @@
+{
+  "query": "\n-- Apply migration\nALTER TABLE `services` ADD `billingPeriod` varchar(32) DEFAULT 'current';\nALTER TABLE `services` ADD `invoiceMonth` varchar(7) DEFAULT '';\n\n-- Stamp all Blitz-imported services (March 2026 Blitz) as current, invoiceMonth = 2026-03\nUPDATE services SET billingPeriod = 'current', invoiceMonth = '2026-03'\nWHERE blitzImportDate = '2026-03-16' AND provider = 'Telstra';\n\n-- Stamp AAPT services with their billing period from aaptBillingPeriod\nUPDATE services SET billingPeriod = 'current', invoiceMonth = '2026-02'\nWHERE provider = 'AAPT' AND aaptBillingPeriod != '' AND aaptImportDate >= '2026-02';\n\n-- Stamp SasBoss services as current (they come from the live SasBoss workbook)\nUPDATE services SET billingPeriod = 'current', invoiceMonth = '2026-02'\nWHERE provider = 'SasBoss' AND billingPeriod = 'current';\n\n-- Archive Telstra services that:\n-- 1. Have NO blitzImportDate (not from the March 2026 Blitz)\n-- 2. Have NO customerExternalId (not linked to any customer)\n-- 3. Have $0 revenue (not generating income)\n-- These are the historical/orphaned services from older invoice imports\nUPDATE services SET billingPeriod = 'archived', invoiceMonth = ''\nWHERE provider = 'Telstra'\n  AND (blitzImportDate IS NULL OR blitzImportDate = '')\n  AND (customerExternalId IS NULL OR customerExternalId = '')\n  AND monthlyRevenue = 0.00\n  AND status NOT IN ('terminated');\n\n-- Check the result\nSELECT provider, billingPeriod, COUNT(*) as cnt, SUM(monthlyCost) as cost\nFROM services\nGROUP BY provider, billingPeriod\nORDER BY provider, billingPeriod;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Apply migration\nALTER TABLE `services` ADD `billingPeriod` varchar(32) DEFAULT 'current';\nALTER TABLE `services` ADD `invoiceMonth` varchar(7) DEFAULT '';\n\n-- Stamp all Blitz-imported services (March 2026 Blitz) as current, invoiceMonth = 2026-03\nUPDATE services SET billingPeriod = 'current', invoiceMonth = '2026-03'\nWHERE blitzImportDate = '2026-03-16' AND provider = 'Telstra';\n\n-- Stamp AAPT services with their billing period from aaptBillingPeriod\nUPDATE services SET billingPeriod = 'current', invoiceMonth = '2026-02'\nWHERE provider = 'AAPT' AND aaptBillingPeriod != '' AND aaptImportDate >= '2026-02';\n\n-- Stamp SasBoss services as current (they come from the live SasBoss workbook)\nUPDATE services SET billingPeriod = 'current', invoiceMonth = '2026-02'\nWHERE provider = 'SasBoss' AND billingPeriod = 'current';\n\n-- Archive Telstra services that:\n-- 1. Have NO blitzImportDate (not from the March 2026 Blitz)\n-- 2. Have NO customerExternalId (not linked to any customer)\n-- 3. Have $0 revenue (not generating income)\n-- These are the historical/orphaned services from older invoice imports\nUPDATE services SET billingPeriod = 'archived', invoiceMonth = ''\nWHERE provider = 'Telstra'\n  AND (blitzImportDate IS NULL OR blitzImportDate = '')\n  AND (customerExternalId IS NULL OR customerExternalId = '')\n  AND monthlyRevenue = 0.00\n  AND status NOT IN ('terminated');\n\n-- Check the result\nSELECT provider, billingPeriod, COUNT(*) as cnt, SUM(monthlyCost) as cost\nFROM services\nGROUP BY provider, billingPeriod\nORDER BY provider, billingPeriod;\n",
+  "rows": [
+    {
+      "provider": "AAPT",
+      "billingPeriod": "current",
+      "cnt": "64",
+      "cost": "8312.31"
+    },
+    {
+      "provider": "ABB",
+      "billingPeriod": "current",
+      "cnt": "274",
+      "cost": "24622.25"
+    },
+    {
+      "provider": "ChannelHaus",
+      "billingPeriod": "current",
+      "cnt": "67",
+      "cost": "7386.98"
+    },
+    {
+      "provider": "Exetel",
+      "billingPeriod": "current",
+      "cnt": "13",
+      "cost": "6657.73"
+    },
+    {
+      "provider": "Legion",
+      "billingPeriod": "current",
+      "cnt": "1",
+      "cost": "799.00"
+    },
+    {
+      "provider": "SasBoss",
+      "billingPeriod": "current",
+      "cnt": "1145",
+      "cost": "1972.90"
+    },
+    {
+      "provider": "SmileTel",
+      "billingPeriod": "current",
+      "cnt": "65",
+      "cost": "-18.18"
+    },
+    {
+      "provider": "Tech-e",
+      "billingPeriod": "current",
+      "cnt": "1",
+      "cost": "250.00"
+    },
+    {
+      "provider": "Telstra",
+      "billingPeriod": "archived",
+      "cnt": "314",
+      "cost": "9720.00"
+    },
+    {
+      "provider": "Telstra",
+      "billingPeriod": "current",
+      "cnt": "312",
+      "cost": "11034.29"
+    },
+    {
+      "provider": "TIAB",
+      "billingPeriod": "current",
+      "cnt": "119",
+      "cost": "0.00"
+    },
+    {
+      "provider": "Unknown",
+      "billingPeriod": "current",
+      "cnt": "117",
+      "cost": "-160.73"
+    },
+    {
+      "provider": "Vocus",
+      "billingPeriod": "current",
+      "cnt": "301",
+      "cost": "5964.06"
+    }
+  ],
+  "messages": [],
+  "stdout": "provider\tbillingPeriod\tcnt\tcost\nAAPT\tcurrent\t64\t8312.31\nABB\tcurrent\t274\t24622.25\nChannelHaus\tcurrent\t67\t7386.98\nExetel\tcurrent\t13\t6657.73\nLegion\tcurrent\t1\t799.00\nSasBoss\tcurrent\t1145\t1972.90\nSmileTel\tcurrent\t65\t-18.18\nTech-e\tcurrent\t1\t250.00\nTelstra\tarchived\t314\t9720.00\nTelstra\tcurrent\t312\t11034.29\nTIAB\tcurrent\t119\t0.00\nUnknown\tcurrent\t117\t-160.73\nVocus\tcurrent\t301\t5964.06\n",
+  "stderr": "",
+  "execution_time_ms": 4888
+}

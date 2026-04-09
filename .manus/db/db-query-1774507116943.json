@@ -1,0 +1,106 @@
+{
+  "query": "\nSELECT s.id, s.externalId, s.planName, s.monthlyCost, s.customerExternalId, c.name as customerName\nFROM services s\nLEFT JOIN customers c ON s.customerExternalId = c.externalId\nWHERE s.supplierName = 'ChannelHaus'\n  AND c.name IN ('Albany Family Doctors', 'Aspley Firstcare Doctors', 'Ausdocs Carindale Pty Ltd', 'Kawana Family Clinic', 'Mount Cotton Medical Centre', 'Stafford Heights Medical Practice')\nORDER BY c.name, s.planName;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \nSELECT s.id, s.externalId, s.planName, s.monthlyCost, s.customerExternalId, c.name as customerName\nFROM services s\nLEFT JOIN customers c ON s.customerExternalId = c.externalId\nWHERE s.supplierName = 'ChannelHaus'\n  AND c.name IN ('Albany Family Doctors', 'Aspley Firstcare Doctors', 'Ausdocs Carindale Pty Ltd', 'Kawana Family Clinic', 'Mount Cotton Medical Centre', 'Stafford Heights Medical Practice')\nORDER BY c.name, s.planName;\n",
+  "rows": [
+    {
+      "id": "180015",
+      "externalId": "S81LV9S",
+      "planName": "AlbnyFmDocIN",
+      "monthlyCost": "25.60",
+      "customerExternalId": "C0009",
+      "customerName": "Albany Family Doctors"
+    },
+    {
+      "id": "180016",
+      "externalId": "SGVQT30",
+      "planName": "AlbyFDocsOut",
+      "monthlyCost": "146.51",
+      "customerExternalId": "C0009",
+      "customerName": "Albany Family Doctors"
+    },
+    {
+      "id": "180018",
+      "externalId": "SXQLTTS",
+      "planName": "AspleySCin",
+      "monthlyCost": "18.90",
+      "customerExternalId": "C0016",
+      "customerName": "Aspley Firstcare Doctors"
+    },
+    {
+      "id": "180019",
+      "externalId": "S1UMCO4",
+      "planName": "AspleySCout",
+      "monthlyCost": "108.48",
+      "customerExternalId": "C0016",
+      "customerName": "Aspley Firstcare Doctors"
+    },
+    {
+      "id": "180032",
+      "externalId": "S5ZNGFT",
+      "planName": "FirstCDocAdmin",
+      "monthlyCost": "37.40",
+      "customerExternalId": "C0016",
+      "customerName": "Aspley Firstcare Doctors"
+    },
+    {
+      "id": "180020",
+      "externalId": "SEEV150",
+      "planName": "AusdCarindOut",
+      "monthlyCost": "143.98",
+      "customerExternalId": "C0022",
+      "customerName": "Ausdocs Carindale Pty Ltd"
+    },
+    {
+      "id": "180021",
+      "externalId": "SJFKCR0",
+      "planName": "AusdocCarindIn",
+      "monthlyCost": "33.07",
+      "customerExternalId": "C0022",
+      "customerName": "Ausdocs Carindale Pty Ltd"
+    },
+    {
+      "id": "180040",
+      "externalId": "S75CTIT",
+      "planName": "kawanaFClIn",
+      "monthlyCost": "24.40",
+      "customerExternalId": "C0132",
+      "customerName": "Kawana Family Clinic"
+    },
+    {
+      "id": "180041",
+      "externalId": "SKY3MLC",
+      "planName": "KawanaFClout",
+      "monthlyCost": "142.72",
+      "customerExternalId": "C0132",
+      "customerName": "Kawana Family Clinic"
+    },
+    {
+      "id": "180048",
+      "externalId": "SGBHVJV",
+      "planName": "MtCottnMCIN",
+      "monthlyCost": "72.65",
+      "customerExternalId": "C0166",
+      "customerName": "Mount Cotton Medical Centre"
+    },
+    {
+      "id": "180049",
+      "externalId": "SZR96SE",
+      "planName": "MtCottnMCOUT",
+      "monthlyCost": "75.50",
+      "customerExternalId": "C0166",
+      "customerName": "Mount Cotton Medical Centre"
+    },
+    {
+      "id": "180011",
+      "externalId": "SHU42OX",
+      "planName": "Staff Heights Medical Practice",
+      "monthlyCost": "148.79",
+      "customerExternalId": "C0229",
+      "customerName": "Stafford Heights Medical Practice"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\texternalId\tplanName\tmonthlyCost\tcustomerExternalId\tcustomerName\n180015\tS81LV9S\tAlbnyFmDocIN\t25.60\tC0009\tAlbany Family Doctors\n180016\tSGVQT30\tAlbyFDocsOut\t146.51\tC0009\tAlbany Family Doctors\n180018\tSXQLTTS\tAspleySCin\t18.90\tC0016\tAspley Firstcare Doctors\n180019\tS1UMCO4\tAspleySCout\t108.48\tC0016\tAspley Firstcare Doctors\n180032\tS5ZNGFT\tFirstCDocAdmin\t37.40\tC0016\tAspley Firstcare Doctors\n180020\tSEEV150\tAusdCarindOut\t143.98\tC0022\tAusdocs Carindale Pty Ltd\n180021\tSJFKCR0\tAusdocCarindIn\t33.07\tC0022\tAusdocs Carindale Pty Ltd\n180040\tS75CTIT\tkawanaFClIn\t24.40\tC0132\tKawana Family Clinic\n180041\tSKY3MLC\tKawanaFClout\t142.72\tC0132\tKawana Family Clinic\n180048\tSGBHVJV\tMtCottnMCIN\t72.65\tC0166\tMount Cotton Medical Centre\n180049\tSZR96SE\tMtCottnMCOUT\t75.50\tC0166\tMount Cotton Medical Centre\n180011\tSHU42OX\tStaff Heights Medical Practice\t148.79\tC0229\tStafford Heights Medical Practice\n",
+  "stderr": "",
+  "execution_time_ms": 1581
+}

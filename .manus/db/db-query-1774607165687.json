@@ -1,0 +1,82 @@
+{
+  "query": "\n-- Check octane_customer_links for these 15 MSISDNs\nSELECT ocl.msisdn, ocl.octaneServiceName, ocl.internalCustomerExternalId, ocl.internalCustomerName\nFROM octane_customer_links ocl\nWHERE ocl.msisdn IN (\n  '0493802664', '0493834640', '0493835175', '0493837165', '0494655563', '0494655895',\n  '0493803414', '0493834375', '0493834397', '0493834429', '0493834499', '0493834594',\n  '0493834657', '0494655764', '0494655765'\n)\nORDER BY ocl.msisdn;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Check octane_customer_links for these 15 MSISDNs\nSELECT ocl.msisdn, ocl.octaneServiceName, ocl.internalCustomerExternalId, ocl.internalCustomerName\nFROM octane_customer_links ocl\nWHERE ocl.msisdn IN (\n  '0493802664', '0493834640', '0493835175', '0493837165', '0494655563', '0494655895',\n  '0493803414', '0493834375', '0493834397', '0493834429', '0493834499', '0493834594',\n  '0493834657', '0494655764', '0494655765'\n)\nORDER BY ocl.msisdn;\n",
+  "rows": [
+    {
+      "msisdn": "0493802664",
+      "octaneServiceName": "Zambrero Bullsbrook",
+      "internalCustomerExternalId": "C2731",
+      "internalCustomerName": "Zambrero - Bullsbrook"
+    },
+    {
+      "msisdn": "0493834375",
+      "octaneServiceName": "Zambrero Baldivis",
+      "internalCustomerExternalId": "C0300",
+      "internalCustomerName": "Zambrero Baldivis"
+    },
+    {
+      "msisdn": "0493834397",
+      "octaneServiceName": "Zambrero Kelmscott 4G",
+      "internalCustomerExternalId": "C0352",
+      "internalCustomerName": "Zambrero Kelmscott"
+    },
+    {
+      "msisdn": "0493834429",
+      "octaneServiceName": "Zambrero Bassendean",
+      "internalCustomerExternalId": "C0303",
+      "internalCustomerName": "Zambrero Bassendean"
+    },
+    {
+      "msisdn": "0493834594",
+      "octaneServiceName": "Zambrero Majura Park 4G",
+      "internalCustomerExternalId": "C0357",
+      "internalCustomerName": "Zambrero Majura Park"
+    },
+    {
+      "msisdn": "0493834640",
+      "octaneServiceName": "Zambrero Northpoint 4G",
+      "internalCustomerExternalId": "C0373",
+      "internalCustomerName": "Zambrero Northpoint"
+    },
+    {
+      "msisdn": "0493835175",
+      "octaneServiceName": "Zambrero Albion",
+      "internalCustomerExternalId": "C0296",
+      "internalCustomerName": "Zambrero Albion"
+    },
+    {
+      "msisdn": "0493837165",
+      "octaneServiceName": "Zambrero Box Hill 4G",
+      "internalCustomerExternalId": "C0310",
+      "internalCustomerName": "Zambrero Box Hill"
+    },
+    {
+      "msisdn": "0494655563",
+      "octaneServiceName": "Zambrero Sippy Downs",
+      "internalCustomerExternalId": "C0384",
+      "internalCustomerName": "Zambrero Sippy Downs"
+    },
+    {
+      "msisdn": "0494655764",
+      "octaneServiceName": "Zambrero Patterson Lakes",
+      "internalCustomerExternalId": "C7572",
+      "internalCustomerName": "Zambrero Patterson Lakes"
+    },
+    {
+      "msisdn": "0494655765",
+      "octaneServiceName": "Zambrero Carrum Downs",
+      "internalCustomerExternalId": "C7577",
+      "internalCustomerName": "Zambrero Carrum Downs"
+    },
+    {
+      "msisdn": "0494655895",
+      "octaneServiceName": "Zambrero Mackay",
+      "internalCustomerExternalId": "C0356",
+      "internalCustomerName": "Zambrero Mackay"
+    }
+  ],
+  "messages": [],
+  "stdout": "msisdn\toctaneServiceName\tinternalCustomerExternalId\tinternalCustomerName\n0493802664\tZambrero Bullsbrook\tC2731\tZambrero - Bullsbrook\n0493834375\tZambrero Baldivis\tC0300\tZambrero Baldivis\n0493834397\tZambrero Kelmscott 4G\tC0352\tZambrero Kelmscott\n0493834429\tZambrero Bassendean\tC0303\tZambrero Bassendean\n0493834594\tZambrero Majura Park 4G\tC0357\tZambrero Majura Park\n0493834640\tZambrero Northpoint 4G\tC0373\tZambrero Northpoint\n0493835175\tZambrero Albion\tC0296\tZambrero Albion\n0493837165\tZambrero Box Hill 4G\tC0310\tZambrero Box Hill\n0494655563\tZambrero Sippy Downs\tC0384\tZambrero Sippy Downs\n0494655764\tZambrero Patterson Lakes\tC7572\tZambrero Patterson Lakes\n0494655765\tZambrero Carrum Downs\tC7577\tZambrero Carrum Downs\n0494655895\tZambrero Mackay\tC0356\tZambrero Mackay\n",
+  "stderr": "",
+  "execution_time_ms": 1538
+}

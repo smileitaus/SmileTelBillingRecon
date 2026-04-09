@@ -1,0 +1,190 @@
+{
+  "query": "\nSELECT \n  product_name,\n  sheet_name,\n  partner_buy_price,\n  bundled_buy,\n  partner_sell_price,\n  bundled_sell,\n  (partner_buy_price - bundled_buy) as price_diff\nFROM sasboss_pricebook_items\nWHERE bundled_buy IS NOT NULL \n  AND bundled_buy != partner_buy_price\n  AND version_id = (SELECT id FROM sasboss_pricebook_versions WHERE is_active = 1 LIMIT 1)\nORDER BY ABS(partner_buy_price - bundled_buy) DESC\nLIMIT 20;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \nSELECT \n  product_name,\n  sheet_name,\n  partner_buy_price,\n  bundled_buy,\n  partner_sell_price,\n  bundled_sell,\n  (partner_buy_price - bundled_buy) as price_diff\nFROM sasboss_pricebook_items\nWHERE bundled_buy IS NOT NULL \n  AND bundled_buy != partner_buy_price\n  AND version_id = (SELECT id FROM sasboss_pricebook_versions WHERE is_active = 1 LIMIT 1)\nORDER BY ABS(partner_buy_price - bundled_buy) DESC\nLIMIT 20;\n",
+  "rows": [
+    {
+      "product_name": "External Channels",
+      "sheet_name": "UCaaS",
+      "partner_buy_price": "2.000000",
+      "bundled_buy": "24.000000",
+      "partner_sell_price": "8.600000",
+      "bundled_sell": "50.000000",
+      "price_diff": "-22.000000"
+    },
+    {
+      "product_name": "Business Trunk (PAYG)",
+      "sheet_name": "UCaaS",
+      "partner_buy_price": "2.000000",
+      "bundled_buy": "24.000000",
+      "partner_sell_price": "9.000000",
+      "bundled_sell": "50.000000",
+      "price_diff": "-22.000000"
+    },
+    {
+      "product_name": "Microsoft Teams Channel",
+      "sheet_name": "UCaaS",
+      "partner_buy_price": "10.799977",
+      "bundled_buy": "26.999942",
+      "partner_sell_price": "18.000000",
+      "bundled_sell": "45.000000",
+      "price_diff": "-16.199965"
+    },
+    {
+      "product_name": "Operator Connect SIP Trunk",
+      "sheet_name": "UCaaS",
+      "partner_buy_price": "10.799977",
+      "bundled_buy": "26.999942",
+      "partner_sell_price": "18.000000",
+      "bundled_sell": "45.000000",
+      "price_diff": "-16.199965"
+    },
+    {
+      "product_name": "Premium Call Queue",
+      "sheet_name": "UCaaS",
+      "partner_buy_price": "15.300000",
+      "bundled_buy": "0.000000",
+      "partner_sell_price": "25.500000",
+      "bundled_sell": "0.000000",
+      "price_diff": "15.300000"
+    },
+    {
+      "product_name": "MC - SmileTel Executive User License",
+      "sheet_name": "UCaaS",
+      "partner_buy_price": "9.000000",
+      "bundled_buy": "21.000000",
+      "partner_sell_price": "15.000000",
+      "bundled_sell": "35.000000",
+      "price_diff": "-12.000000"
+    },
+    {
+      "product_name": "SmileTel Basic User License",
+      "sheet_name": "UCaaS",
+      "partner_buy_price": "6.000000",
+      "bundled_buy": "18.000000",
+      "partner_sell_price": "10.000000",
+      "bundled_sell": "30.000000",
+      "price_diff": "-12.000000"
+    },
+    {
+      "product_name": "MC - SmileTel Basic User License",
+      "sheet_name": "UCaaS",
+      "partner_buy_price": "6.000000",
+      "bundled_buy": "18.000000",
+      "partner_sell_price": "10.000000",
+      "bundled_sell": "30.000000",
+      "price_diff": "-12.000000"
+    },
+    {
+      "product_name": "Microsoft Teams Enhanced User",
+      "sheet_name": "UCaaS",
+      "partner_buy_price": "9.003707",
+      "bundled_buy": "21.003681",
+      "partner_sell_price": "15.000000",
+      "bundled_sell": "35.000000",
+      "price_diff": "-11.999974"
+    },
+    {
+      "product_name": "Collaborate Basic User with Cisco Webex",
+      "sheet_name": "UCaaS",
+      "partner_buy_price": "13.803697",
+      "bundled_buy": "23.999948",
+      "partner_sell_price": "23.000000",
+      "bundled_sell": "40.000000",
+      "price_diff": "-10.196251"
+    },
+    {
+      "product_name": "Enhanced Call Queue",
+      "sheet_name": "UCaaS",
+      "partner_buy_price": "9.300000",
+      "bundled_buy": "0.000000",
+      "partner_sell_price": "15.500000",
+      "bundled_sell": "0.000000",
+      "price_diff": "9.300000"
+    },
+    {
+      "product_name": "Collaborate Standard User with Cisco Webex",
+      "sheet_name": "UCaaS",
+      "partner_buy_price": "17.999961",
+      "bundled_buy": "27.003668",
+      "partner_sell_price": "30.000000",
+      "bundled_sell": "45.000000",
+      "price_diff": "-9.003707"
+    },
+    {
+      "product_name": "Collaborate Premium User with Cisco Webex",
+      "sheet_name": "UCaaS",
+      "partner_buy_price": "29.999935",
+      "bundled_buy": "39.003642",
+      "partner_sell_price": "50.000000",
+      "bundled_sell": "65.000000",
+      "price_diff": "-9.003707"
+    },
+    {
+      "product_name": "Auto Attendant with Time of Day Routing",
+      "sheet_name": "UCaaS",
+      "partner_buy_price": "9.000000",
+      "bundled_buy": "0.000000",
+      "partner_sell_price": "15.000000",
+      "bundled_sell": "0.000000",
+      "price_diff": "9.000000"
+    },
+    {
+      "product_name": "UCXcel Lite",
+      "sheet_name": "UCaaS",
+      "partner_buy_price": "5.999987",
+      "bundled_buy": "14.999968",
+      "partner_sell_price": "10.000000",
+      "bundled_sell": "25.000000",
+      "price_diff": "-8.999981"
+    },
+    {
+      "product_name": "SmileTel Lite user",
+      "sheet_name": "UCaaS",
+      "partner_buy_price": "5.999987",
+      "bundled_buy": "14.999968",
+      "partner_sell_price": "10.000000",
+      "bundled_sell": "25.000000",
+      "price_diff": "-8.999981"
+    },
+    {
+      "product_name": "UCXcel Essential",
+      "sheet_name": "UCaaS",
+      "partner_buy_price": "9.003707",
+      "bundled_buy": "17.999961",
+      "partner_sell_price": "15.000000",
+      "bundled_sell": "30.000000",
+      "price_diff": "-8.996254"
+    },
+    {
+      "product_name": "SmileTel Essential user",
+      "sheet_name": "UCaaS",
+      "partner_buy_price": "9.003707",
+      "bundled_buy": "17.999961",
+      "partner_sell_price": "15.000000",
+      "bundled_sell": "30.000000",
+      "price_diff": "-8.996254"
+    },
+    {
+      "product_name": "Basic Call Queue",
+      "sheet_name": "UCaaS",
+      "partner_buy_price": "6.300000",
+      "bundled_buy": "0.000000",
+      "partner_sell_price": "10.500000",
+      "bundled_sell": "0.000000",
+      "price_diff": "6.300000"
+    },
+    {
+      "product_name": "UCXcel Professional",
+      "sheet_name": "UCaaS",
+      "partner_buy_price": "15.003694",
+      "bundled_buy": "21.003681",
+      "partner_sell_price": "25.000000",
+      "bundled_sell": "35.000000",
+      "price_diff": "-5.999987"
+    }
+  ],
+  "messages": [],
+  "stdout": "product_name\tsheet_name\tpartner_buy_price\tbundled_buy\tpartner_sell_price\tbundled_sell\tprice_diff\nExternal Channels\tUCaaS\t2.000000\t24.000000\t8.600000\t50.000000\t-22.000000\nBusiness Trunk (PAYG)\tUCaaS\t2.000000\t24.000000\t9.000000\t50.000000\t-22.000000\nMicrosoft Teams Channel\tUCaaS\t10.799977\t26.999942\t18.000000\t45.000000\t-16.199965\nOperator Connect SIP Trunk\tUCaaS\t10.799977\t26.999942\t18.000000\t45.000000\t-16.199965\nPremium Call Queue\tUCaaS\t15.300000\t0.000000\t25.500000\t0.000000\t15.300000\nMC - SmileTel Executive User License\tUCaaS\t9.000000\t21.000000\t15.000000\t35.000000\t-12.000000\nSmileTel Basic User License\tUCaaS\t6.000000\t18.000000\t10.000000\t30.000000\t-12.000000\nMC - SmileTel Basic User License\tUCaaS\t6.000000\t18.000000\t10.000000\t30.000000\t-12.000000\nMicrosoft Teams Enhanced User\tUCaaS\t9.003707\t21.003681\t15.000000\t35.000000\t-11.999974\nCollaborate Basic User with Cisco Webex\tUCaaS\t13.803697\t23.999948\t23.000000\t40.000000\t-10.196251\nEnhanced Call Queue\tUCaaS\t9.300000\t0.000000\t15.500000\t0.000000\t9.300000\nCollaborate Standard User with Cisco Webex\tUCaaS\t17.999961\t27.003668\t30.000000\t45.000000\t-9.003707\nCollaborate Premium User with Cisco Webex\tUCaaS\t29.999935\t39.003642\t50.000000\t65.000000\t-9.003707\nAuto Attendant with Time of Day Routing\tUCaaS\t9.000000\t0.000000\t15.000000\t0.000000\t9.000000\nUCXcel Lite\tUCaaS\t5.999987\t14.999968\t10.000000\t25.000000\t-8.999981\nSmileTel Lite user\tUCaaS\t5.999987\t14.999968\t10.000000\t25.000000\t-8.999981\nUCXcel Essential\tUCaaS\t9.003707\t17.999961\t15.000000\t30.000000\t-8.996254\nSmileTel Essential user\tUCaaS\t9.003707\t17.999961\t15.000000\t30.000000\t-8.996254\nBasic Call Queue\tUCaaS\t6.300000\t0.000000\t10.500000\t0.000000\t6.300000\nUCXcel Professional\tUCaaS\t15.003694\t21.003681\t25.000000\t35.000000\t-5.999987\n",
+  "stderr": "",
+  "execution_time_ms": 1576
+}

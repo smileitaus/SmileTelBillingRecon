@@ -1,0 +1,18 @@
+{
+  "query": "\n-- Check all matchStatus values for non-DataGate items\nSELECT matchStatus, COUNT(*) as cnt\nFROM billing_items\nWHERE billingPlatform = '' OR billingPlatform IS NULL\nGROUP BY matchStatus;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Check all matchStatus values for non-DataGate items\nSELECT matchStatus, COUNT(*) as cnt\nFROM billing_items\nWHERE billingPlatform = '' OR billingPlatform IS NULL\nGROUP BY matchStatus;\n",
+  "rows": [
+    {
+      "matchStatus": "service-matched",
+      "cnt": "1331"
+    },
+    {
+      "matchStatus": "unmatched",
+      "cnt": "8"
+    }
+  ],
+  "messages": [],
+  "stdout": "matchStatus\tcnt\nservice-matched\t1331\nunmatched\t8\n",
+  "stderr": "",
+  "execution_time_ms": 1502
+}

@@ -1,0 +1,142 @@
+{
+  "query": "\nSELECT \n  s.planName,\n  s.customerName,\n  s.monthlyCost as currentCost,\n  s.monthlyRevenue as currentRevenue,\n  bi.externalId as biExternalId,\n  bi.description as biDescription,\n  bi.lineAmount as biLineAmount,\n  bi.unitAmount,\n  bi.quantity,\n  sba.assignmentBucket\nFROM services s\nJOIN service_billing_assignments sba ON sba.serviceExternalId = s.externalId\nJOIN billing_items bi ON bi.externalId = sba.billingItemExternalId\nWHERE s.supplierName = 'ChannelHaus'\n  AND s.monthlyCost = s.monthlyRevenue\n  AND s.monthlyCost > 0\nORDER BY s.customerName, s.planName;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \nSELECT \n  s.planName,\n  s.customerName,\n  s.monthlyCost as currentCost,\n  s.monthlyRevenue as currentRevenue,\n  bi.externalId as biExternalId,\n  bi.description as biDescription,\n  bi.lineAmount as biLineAmount,\n  bi.unitAmount,\n  bi.quantity,\n  sba.assignmentBucket\nFROM services s\nJOIN service_billing_assignments sba ON sba.serviceExternalId = s.externalId\nJOIN billing_items bi ON bi.externalId = sba.billingItemExternalId\nWHERE s.supplierName = 'ChannelHaus'\n  AND s.monthlyCost = s.monthlyRevenue\n  AND s.monthlyCost > 0\nORDER BY s.customerName, s.planName;\n",
+  "rows": [
+    {
+      "planName": "AlbnyFmDocIN",
+      "customerName": "Albany Family Doctors",
+      "currentCost": "36.00",
+      "currentRevenue": "36.00",
+      "biExternalId": "BI00598",
+      "biDescription": "4 Channels Business SIP. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "biLineAmount": "36.00",
+      "unitAmount": "39.60",
+      "quantity": "1.00",
+      "assignmentBucket": "standard"
+    },
+    {
+      "planName": "AlbyFDocsOut",
+      "customerName": "Albany Family Doctors",
+      "currentCost": "212.00",
+      "currentRevenue": "212.00",
+      "biExternalId": "BI00601",
+      "biDescription": "4 Channels Business SIP. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "biLineAmount": "212.00",
+      "unitAmount": "233.20",
+      "quantity": "1.00",
+      "assignmentBucket": "standard"
+    },
+    {
+      "planName": "AspleySCin",
+      "customerName": "Aspley Firstcare Doctors",
+      "currentCost": "27.00",
+      "currentRevenue": "27.00",
+      "biExternalId": "BI00631",
+      "biDescription": "3 Channels Business SIP Inbound. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "biLineAmount": "27.00",
+      "unitAmount": "29.70",
+      "quantity": "1.00",
+      "assignmentBucket": "standard"
+    },
+    {
+      "planName": "AspleySCout",
+      "customerName": "Aspley Firstcare Doctors",
+      "currentCost": "159.00",
+      "currentRevenue": "159.00",
+      "biExternalId": "BI00633",
+      "biDescription": "3 Channels Business SIP Outbound. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "biLineAmount": "159.00",
+      "unitAmount": "174.90",
+      "quantity": "1.00",
+      "assignmentBucket": "standard"
+    },
+    {
+      "planName": "AusdCarindOut",
+      "customerName": "Ausdocs Carindale Pty Ltd",
+      "currentCost": "192.00",
+      "currentRevenue": "192.00",
+      "biExternalId": "BI00621",
+      "biDescription": "4 Channels Business SIP. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "biLineAmount": "192.00",
+      "unitAmount": "211.20",
+      "quantity": "1.00",
+      "assignmentBucket": "standard"
+    },
+    {
+      "planName": "AusdocCarindIn",
+      "customerName": "Ausdocs Carindale Pty Ltd",
+      "currentCost": "36.00",
+      "currentRevenue": "36.00",
+      "biExternalId": "BI00618",
+      "biDescription": "4 Channels Business SIP. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "biLineAmount": "36.00",
+      "unitAmount": "39.60",
+      "quantity": "1.00",
+      "assignmentBucket": "standard"
+    },
+    {
+      "planName": "kawanaFClIn",
+      "customerName": "Kawana Family Clinic",
+      "currentCost": "36.00",
+      "currentRevenue": "36.00",
+      "biExternalId": "BI00651",
+      "biDescription": "4 Channels Business SIP. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "biLineAmount": "36.00",
+      "unitAmount": "39.60",
+      "quantity": "1.00",
+      "assignmentBucket": "standard"
+    },
+    {
+      "planName": "KawanaFClout",
+      "customerName": "Kawana Family Clinic",
+      "currentCost": "212.00",
+      "currentRevenue": "212.00",
+      "biExternalId": "BI00653",
+      "biDescription": "4 Channels Business SIP. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "biLineAmount": "212.00",
+      "unitAmount": "233.20",
+      "quantity": "1.00",
+      "assignmentBucket": "standard"
+    },
+    {
+      "planName": "MtCottnMCIN",
+      "customerName": "Mount Cotton Medical Centre",
+      "currentCost": "27.00",
+      "currentRevenue": "27.00",
+      "biExternalId": "BI00658",
+      "biDescription": "3 Channels Business SIP Inbound. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "biLineAmount": "27.00",
+      "unitAmount": "29.70",
+      "quantity": "1.00",
+      "assignmentBucket": "standard"
+    },
+    {
+      "planName": "MtCottnMCOUT",
+      "customerName": "Mount Cotton Medical Centre",
+      "currentCost": "106.00",
+      "currentRevenue": "106.00",
+      "biExternalId": "BI00660",
+      "biDescription": "2 Channels Business SIP Outbound. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "biLineAmount": "106.00",
+      "unitAmount": "116.60",
+      "quantity": "1.00",
+      "assignmentBucket": "standard"
+    },
+    {
+      "planName": "Staff Heights Medical Practice",
+      "customerName": "Stafford Heights Medical Practice",
+      "currentCost": "192.00",
+      "currentRevenue": "192.00",
+      "biExternalId": "BI00736",
+      "biDescription": "4 Channels Business SIP. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "biLineAmount": "192.00",
+      "unitAmount": "211.20",
+      "quantity": "1.00",
+      "assignmentBucket": "standard"
+    }
+  ],
+  "messages": [],
+  "stdout": "planName\tcustomerName\tcurrentCost\tcurrentRevenue\tbiExternalId\tbiDescription\tbiLineAmount\tunitAmount\tquantity\tassignmentBucket\nAlbnyFmDocIN\tAlbany Family Doctors\t36.00\t36.00\tBI00598\t4 Channels Business SIP. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t36.00\t39.60\t1.00\tstandard\nAlbyFDocsOut\tAlbany Family Doctors\t212.00\t212.00\tBI00601\t4 Channels Business SIP. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t212.00\t233.20\t1.00\tstandard\nAspleySCin\tAspley Firstcare Doctors\t27.00\t27.00\tBI00631\t3 Channels Business SIP Inbound. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t27.00\t29.70\t1.00\tstandard\nAspleySCout\tAspley Firstcare Doctors\t159.00\t159.00\tBI00633\t3 Channels Business SIP Outbound. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t159.00\t174.90\t1.00\tstandard\nAusdCarindOut\tAusdocs Carindale Pty Ltd\t192.00\t192.00\tBI00621\t4 Channels Business SIP. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t192.00\t211.20\t1.00\tstandard\nAusdocCarindIn\tAusdocs Carindale Pty Ltd\t36.00\t36.00\tBI00618\t4 Channels Business SIP. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t36.00\t39.60\t1.00\tstandard\nkawanaFClIn\tKawana Family Clinic\t36.00\t36.00\tBI00651\t4 Channels Business SIP. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t36.00\t39.60\t1.00\tstandard\nKawanaFClout\tKawana Family Clinic\t212.00\t212.00\tBI00653\t4 Channels Business SIP. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t212.00\t233.20\t1.00\tstandard\nMtCottnMCIN\tMount Cotton Medical Centre\t27.00\t27.00\tBI00658\t3 Channels Business SIP Inbound. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t27.00\t29.70\t1.00\tstandard\nMtCottnMCOUT\tMount Cotton Medical Centre\t106.00\t106.00\tBI00660\t2 Channels Business SIP Outbound. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t106.00\t116.60\t1.00\tstandard\nStaff Heights Medical Practice\tStafford Heights Medical Practice\t192.00\t192.00\tBI00736\t4 Channels Business SIP. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t192.00\t211.20\t1.00\tstandard\n",
+  "stderr": "",
+  "execution_time_ms": 1590
+}

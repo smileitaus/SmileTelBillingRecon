@@ -1,0 +1,410 @@
+{
+  "query": "\nSELECT\n  s.externalId,\n  s.planName,\n  s.monthlyCost AS currentCost,\n  p.partner_buy_price AS pricebookCost,\n  p.sheet_name AS sheet,\n  c.name AS customerName\nFROM services s\nLEFT JOIN customers c ON s.customerExternalId = c.externalId\nJOIN sasboss_pricebook_items p\n  ON p.version_id = (SELECT id FROM sasboss_pricebook_versions WHERE is_active = 1 LIMIT 1)\n  AND LOWER(TRIM(s.planName)) = LOWER(TRIM(p.product_name))\nWHERE\n  s.status != 'terminated'\n  AND LOWER(IFNULL(s.billingPlatform,'')) LIKE '%sasboss%'\n  AND ABS(IFNULL(s.monthlyCost, -999) - IFNULL(p.partner_buy_price, -999)) > 0.005\nORDER BY c.name, s.planName\nLIMIT 50;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \nSELECT\n  s.externalId,\n  s.planName,\n  s.monthlyCost AS currentCost,\n  p.partner_buy_price AS pricebookCost,\n  p.sheet_name AS sheet,\n  c.name AS customerName\nFROM services s\nLEFT JOIN customers c ON s.customerExternalId = c.externalId\nJOIN sasboss_pricebook_items p\n  ON p.version_id = (SELECT id FROM sasboss_pricebook_versions WHERE is_active = 1 LIMIT 1)\n  AND LOWER(TRIM(s.planName)) = LOWER(TRIM(p.product_name))\nWHERE\n  s.status != 'terminated'\n  AND LOWER(IFNULL(s.billingPlatform,'')) LIKE '%sasboss%'\n  AND ABS(IFNULL(s.monthlyCost, -999) - IFNULL(p.partner_buy_price, -999)) > 0.005\nORDER BY c.name, s.planName\nLIMIT 50;\n",
+  "rows": [
+    {
+      "externalId": "SS2KY5J1",
+      "planName": "Call Centre Queue with Time of Day Routing",
+      "currentCost": "9.00",
+      "pricebookCost": "0.000000",
+      "sheet": "UCaaS",
+      "customerName": "Active Living - Allen Developments Pty Ltd"
+    },
+    {
+      "externalId": "SSF1N4KK",
+      "planName": "DID Australia (1)",
+      "currentCost": "4.00",
+      "pricebookCost": "17.142820",
+      "sheet": "Managed Voice - Porting",
+      "customerName": "Active Living - Allen Developments Pty Ltd"
+    },
+    {
+      "externalId": "SSF1N4KK",
+      "planName": "DID Australia (1)",
+      "currentCost": "4.00",
+      "pricebookCost": "0.200000",
+      "sheet": "Managed Voice - DID Hosting",
+      "customerName": "Active Living - Allen Developments Pty Ltd"
+    },
+    {
+      "externalId": "SSER3ABI",
+      "planName": "UCXcel Basic Queue Agent",
+      "currentCost": "6.30",
+      "pricebookCost": "0.000000",
+      "sheet": "UCaaS",
+      "customerName": "Active Living - Allen Developments Pty Ltd"
+    },
+    {
+      "externalId": "SSK8SQ39",
+      "planName": "UCXcel Essential",
+      "currentCost": "60.00",
+      "pricebookCost": "9.003707",
+      "sheet": "UCaaS",
+      "customerName": "Active Living - Allen Developments Pty Ltd"
+    },
+    {
+      "externalId": "SSQFTN8L",
+      "planName": "Call Centre Queue with Time of Day Routing",
+      "currentCost": "9.00",
+      "pricebookCost": "0.000000",
+      "sheet": "UCaaS",
+      "customerName": "Adams Financial Group"
+    },
+    {
+      "externalId": "SSMDMIFV",
+      "planName": "DID Australia (1)",
+      "currentCost": "0.20",
+      "pricebookCost": "17.142820",
+      "sheet": "Managed Voice - Porting",
+      "customerName": "Adams Financial Group"
+    },
+    {
+      "externalId": "SSH87KVL",
+      "planName": "Softphone add-on with Cisco Webex",
+      "currentCost": "3.00",
+      "pricebookCost": "0.000000",
+      "sheet": "UCaaS",
+      "customerName": "Adams Financial Group"
+    },
+    {
+      "externalId": "SS4K831F",
+      "planName": "Call Centre Queue with Time of Day Routing",
+      "currentCost": "9.00",
+      "pricebookCost": "0.000000",
+      "sheet": "UCaaS",
+      "customerName": "Affinage Professional"
+    },
+    {
+      "externalId": "SSB8BK0B",
+      "planName": "DID Australia (1)",
+      "currentCost": "0.20",
+      "pricebookCost": "17.142820",
+      "sheet": "Managed Voice - Porting",
+      "customerName": "Affinage Professional"
+    },
+    {
+      "externalId": "SS9QT17T",
+      "planName": "DID Australia (100)",
+      "currentCost": "20.00",
+      "pricebookCost": "NULL",
+      "sheet": "Managed Voice - Porting",
+      "customerName": "Affinage Professional"
+    },
+    {
+      "externalId": "SS5V48F9",
+      "planName": "Inbound 1800 Number Hosting",
+      "currentCost": "5.00",
+      "pricebookCost": "42.857050",
+      "sheet": "Managed Voice - Porting",
+      "customerName": "Affinage Professional"
+    },
+    {
+      "externalId": "SSBJE32I",
+      "planName": "Operator Connect SIP Trunk",
+      "currentCost": "9.00",
+      "pricebookCost": "10.799977",
+      "sheet": "UCaaS",
+      "customerName": "Affinage Professional"
+    },
+    {
+      "externalId": "SSS8U1XR",
+      "planName": "Operator Connect SIP Trunk",
+      "currentCost": "9.00",
+      "pricebookCost": "10.799977",
+      "sheet": "UCaaS",
+      "customerName": "Affinage Professional"
+    },
+    {
+      "externalId": "SSFJ7R9W",
+      "planName": "Call Centre Queue with Time of Day Routing",
+      "currentCost": "9.00",
+      "pricebookCost": "0.000000",
+      "sheet": "UCaaS",
+      "customerName": "ARM Group Pty Ltd ATF ARM Property Trust No. 2"
+    },
+    {
+      "externalId": "SSQBG7RP",
+      "planName": "DID Australia (1)",
+      "currentCost": "2.00",
+      "pricebookCost": "17.142820",
+      "sheet": "Managed Voice - Porting",
+      "customerName": "ARM Group Pty Ltd ATF ARM Property Trust No. 2"
+    },
+    {
+      "externalId": "SSQBG7RP",
+      "planName": "DID Australia (1)",
+      "currentCost": "2.00",
+      "pricebookCost": "0.200000",
+      "sheet": "Managed Voice - DID Hosting",
+      "customerName": "ARM Group Pty Ltd ATF ARM Property Trust No. 2"
+    },
+    {
+      "externalId": "SSAWNUOO",
+      "planName": "MC - SmileTel Executive User License",
+      "currentCost": "60.00",
+      "pricebookCost": "9.000000",
+      "sheet": "UCaaS",
+      "customerName": "ARM Group Pty Ltd ATF ARM Property Trust No. 2"
+    },
+    {
+      "externalId": "SSN7DJ1I",
+      "planName": "Call Centre Queue with Time of Day Routing",
+      "currentCost": "9.00",
+      "pricebookCost": "0.000000",
+      "sheet": "UCaaS",
+      "customerName": "Aromas Noosa"
+    },
+    {
+      "externalId": "SS3TQCQT",
+      "planName": "DID Australia (1)",
+      "currentCost": "2.00",
+      "pricebookCost": "17.142820",
+      "sheet": "Managed Voice - Porting",
+      "customerName": "Aromas Noosa"
+    },
+    {
+      "externalId": "SS3TQCQT",
+      "planName": "DID Australia (1)",
+      "currentCost": "2.00",
+      "pricebookCost": "0.200000",
+      "sheet": "Managed Voice - DID Hosting",
+      "customerName": "Aromas Noosa"
+    },
+    {
+      "externalId": "SSM3IR29",
+      "planName": "MC - SmileTel Executive User License",
+      "currentCost": "30.00",
+      "pricebookCost": "9.000000",
+      "sheet": "UCaaS",
+      "customerName": "Aromas Noosa"
+    },
+    {
+      "externalId": "SSVB44AM",
+      "planName": "Call Recording - Unlimited",
+      "currentCost": "420.55",
+      "pricebookCost": "9.500000",
+      "sheet": "UCaaS",
+      "customerName": "ASG Hail Pty Ltd"
+    },
+    {
+      "externalId": "SSRLW4S4",
+      "planName": "DID Australia (1)",
+      "currentCost": "40.00",
+      "pricebookCost": "0.200000",
+      "sheet": "Managed Voice - DID Hosting",
+      "customerName": "ASG Hail Pty Ltd"
+    },
+    {
+      "externalId": "SSRLW4S4",
+      "planName": "DID Australia (1)",
+      "currentCost": "40.00",
+      "pricebookCost": "17.142820",
+      "sheet": "Managed Voice - Porting",
+      "customerName": "ASG Hail Pty Ltd"
+    },
+    {
+      "externalId": "SS6UWHJC",
+      "planName": "DID Australia (10)",
+      "currentCost": "40.00",
+      "pricebookCost": "NULL",
+      "sheet": "Managed Voice - Porting",
+      "customerName": "ASG Hail Pty Ltd"
+    },
+    {
+      "externalId": "SS6UWHJC",
+      "planName": "DID Australia (10)",
+      "currentCost": "40.00",
+      "pricebookCost": "2.000000",
+      "sheet": "Managed Voice - DID Hosting",
+      "customerName": "ASG Hail Pty Ltd"
+    },
+    {
+      "externalId": "SSZVBRZ8",
+      "planName": "iCall Suite - Ultimate User Licence",
+      "currentCost": "258.00",
+      "pricebookCost": "119.250000",
+      "sheet": "UCaaS",
+      "customerName": "ASG Hail Pty Ltd"
+    },
+    {
+      "externalId": "SSYW3LX5",
+      "planName": "Inbound 1800 Number Hosting",
+      "currentCost": "10.50",
+      "pricebookCost": "5.000000",
+      "sheet": "Managed Voice - DID Hosting",
+      "customerName": "ASG Hail Pty Ltd"
+    },
+    {
+      "externalId": "SSYW3LX5",
+      "planName": "Inbound 1800 Number Hosting",
+      "currentCost": "10.50",
+      "pricebookCost": "42.857050",
+      "sheet": "Managed Voice - Porting",
+      "customerName": "ASG Hail Pty Ltd"
+    },
+    {
+      "externalId": "SS947FNZ",
+      "planName": "UCXcel Call Centre Queue",
+      "currentCost": "6.30",
+      "pricebookCost": "0.000000",
+      "sheet": "UCaaS",
+      "customerName": "ASG Hail Pty Ltd"
+    },
+    {
+      "externalId": "SS3VUZ0A",
+      "planName": "UCXcel Hunt Group",
+      "currentCost": "9.00",
+      "pricebookCost": "0.000000",
+      "sheet": "UCaaS",
+      "customerName": "ASG Hail Pty Ltd"
+    },
+    {
+      "externalId": "SS1Y445L",
+      "planName": "UCXcel Premium",
+      "currentCost": "37.50",
+      "pricebookCost": "22.501815",
+      "sheet": "UCaaS",
+      "customerName": "ASG Hail Pty Ltd"
+    },
+    {
+      "externalId": "SSK9RK0U",
+      "planName": "UCXcel Premium Queue Agent",
+      "currentCost": "30.00",
+      "pricebookCost": "0.000000",
+      "sheet": "UCaaS",
+      "customerName": "ASG Hail Pty Ltd"
+    },
+    {
+      "externalId": "SSF48BID",
+      "planName": "UCXcel Professional",
+      "currentCost": "1132.26",
+      "pricebookCost": "15.003694",
+      "sheet": "UCaaS",
+      "customerName": "ASG Hail Pty Ltd"
+    },
+    {
+      "externalId": "SSHLN94F",
+      "planName": "UCXcel Webex Basic",
+      "currentCost": "13.80",
+      "pricebookCost": "0.000000",
+      "sheet": "UCaaS",
+      "customerName": "ASG Hail Pty Ltd"
+    },
+    {
+      "externalId": "SSQOSPL7",
+      "planName": "Call Centre Queue with Time of Day Routing",
+      "currentCost": "9.00",
+      "pricebookCost": "0.000000",
+      "sheet": "UCaaS",
+      "customerName": "Atlantis Pool Shop"
+    },
+    {
+      "externalId": "SSCWW4T7",
+      "planName": "DID Australia (1)",
+      "currentCost": "0.20",
+      "pricebookCost": "17.142820",
+      "sheet": "Managed Voice - Porting",
+      "customerName": "Atlantis Pool Shop"
+    },
+    {
+      "externalId": "SSL0F109",
+      "planName": "DID Australia (1)",
+      "currentCost": "0.20",
+      "pricebookCost": "17.142820",
+      "sheet": "Managed Voice - Porting",
+      "customerName": "Aus Ships"
+    },
+    {
+      "externalId": "SS7P5KR1",
+      "planName": "DID Australia (1)",
+      "currentCost": "0.20",
+      "pricebookCost": "17.142820",
+      "sheet": "Managed Voice - Porting",
+      "customerName": "Aus Ships"
+    },
+    {
+      "externalId": "SS3BHT9T",
+      "planName": "DID Australia (1)",
+      "currentCost": "0.20",
+      "pricebookCost": "17.142820",
+      "sheet": "Managed Voice - Porting",
+      "customerName": "Australian Air Science Pty Ltd"
+    },
+    {
+      "externalId": "SSCLR2F4",
+      "planName": "Auto Attendant with Time of Day Routing",
+      "currentCost": "15.00",
+      "pricebookCost": "9.000000",
+      "sheet": "UCaaS",
+      "customerName": "Australian Computer Traders"
+    },
+    {
+      "externalId": "SSN9N380",
+      "planName": "DID Australia (1)",
+      "currentCost": "4.00",
+      "pricebookCost": "0.200000",
+      "sheet": "Managed Voice - DID Hosting",
+      "customerName": "Australian Computer Traders"
+    },
+    {
+      "externalId": "SSN9N380",
+      "planName": "DID Australia (1)",
+      "currentCost": "4.00",
+      "pricebookCost": "17.142820",
+      "sheet": "Managed Voice - Porting",
+      "customerName": "Australian Computer Traders"
+    },
+    {
+      "externalId": "SS6C86YX",
+      "planName": "MC - SmileTel Lite User License",
+      "currentCost": "10.00",
+      "pricebookCost": "3.900000",
+      "sheet": "UCaaS",
+      "customerName": "Australian Computer Traders"
+    },
+    {
+      "externalId": "SSTGI2RC",
+      "planName": "SmileTel Essential User Special",
+      "currentCost": "337.50",
+      "pricebookCost": "9.003707",
+      "sheet": "UCaaS",
+      "customerName": "Australian Computer Traders"
+    },
+    {
+      "externalId": "SS7F3UZ6",
+      "planName": "DID Australia (1)",
+      "currentCost": "0.20",
+      "pricebookCost": "17.142820",
+      "sheet": "Managed Voice - Porting",
+      "customerName": "Australian Resort Management Pty Ltd"
+    },
+    {
+      "externalId": "SS0R7B39",
+      "planName": "DID Australia (1)",
+      "currentCost": "0.20",
+      "pricebookCost": "17.142820",
+      "sheet": "Managed Voice - Porting",
+      "customerName": "Australian Resort Management Pty Ltd"
+    },
+    {
+      "externalId": "SSDGDXA5",
+      "planName": "Essentials",
+      "currentCost": "6.75",
+      "pricebookCost": "0.000000",
+      "sheet": "UCaaS",
+      "customerName": "Australian Resort Management Pty Ltd"
+    },
+    {
+      "externalId": "SSF7GGVK",
+      "planName": "External Channels",
+      "currentCost": "4.80",
+      "pricebookCost": "2.000000",
+      "sheet": "UCaaS",
+      "customerName": "Australian Resort Management Pty Ltd"
+    }
+  ],
+  "messages": [],
+  "stdout": "externalId\tplanName\tcurrentCost\tpricebookCost\tsheet\tcustomerName\nSS2KY5J1\tCall Centre Queue with Time of Day Routing\t9.00\t0.000000\tUCaaS\tActive Living - Allen Developments Pty Ltd\nSSF1N4KK\tDID Australia (1)\t4.00\t17.142820\tManaged Voice - Porting\tActive Living - Allen Developments Pty Ltd\nSSF1N4KK\tDID Australia (1)\t4.00\t0.200000\tManaged Voice - DID Hosting\tActive Living - Allen Developments Pty Ltd\nSSER3ABI\tUCXcel Basic Queue Agent\t6.30\t0.000000\tUCaaS\tActive Living - Allen Developments Pty Ltd\nSSK8SQ39\tUCXcel Essential\t60.00\t9.003707\tUCaaS\tActive Living - Allen Developments Pty Ltd\nSSQFTN8L\tCall Centre Queue with Time of Day Routing\t9.00\t0.000000\tUCaaS\tAdams Financial Group\nSSMDMIFV\tDID Australia (1)\t0.20\t17.142820\tManaged Voice - Porting\tAdams Financial Group\nSSH87KVL\tSoftphone add-on with Cisco Webex\t3.00\t0.000000\tUCaaS\tAdams Financial Group\nSS4K831F\tCall Centre Queue with Time of Day Routing\t9.00\t0.000000\tUCaaS\tAffinage Professional\nSSB8BK0B\tDID Australia (1)\t0.20\t17.142820\tManaged Voice - Porting\tAffinage Professional\nSS9QT17T\tDID Australia (100)\t20.00\tNULL\tManaged Voice - Porting\tAffinage Professional\nSS5V48F9\tInbound 1800 Number Hosting\t5.00\t42.857050\tManaged Voice - Porting\tAffinage Professional\nSSBJE32I\tOperator Connect SIP Trunk\t9.00\t10.799977\tUCaaS\tAffinage Professional\nSSS8U1XR\tOperator Connect SIP Trunk\t9.00\t10.799977\tUCaaS\tAffinage Professional\nSSFJ7R9W\tCall Centre Queue with Time of Day Routing\t9.00\t0.000000\tUCaaS\tARM Group Pty Ltd ATF ARM Property Trust No. 2\nSSQBG7RP\tDID Australia (1)\t2.00\t17.142820\tManaged Voice - Porting\tARM Group Pty Ltd ATF ARM Property Trust No. 2\nSSQBG7RP\tDID Australia (1)\t2.00\t0.200000\tManaged Voice - DID Hosting\tARM Group Pty Ltd ATF ARM Property Trust No. 2\nSSAWNUOO\tMC - SmileTel Executive User License\t60.00\t9.000000\tUCaaS\tARM Group Pty Ltd ATF ARM Property Trust No. 2\nSSN7DJ1I\tCall Centre Queue with Time of Day Routing\t9.00\t0.000000\tUCaaS\tAromas Noosa\nSS3TQCQT\tDID Australia (1)\t2.00\t17.142820\tManaged Voice - Porting\tAromas Noosa\nSS3TQCQT\tDID Australia (1)\t2.00\t0.200000\tManaged Voice - DID Hosting\tAromas Noosa\nSSM3IR29\tMC - SmileTel Executive User License\t30.00\t9.000000\tUCaaS\tAromas Noosa\nSSVB44AM\tCall Recording - Unlimited\t420.55\t9.500000\tUCaaS\tASG Hail Pty Ltd\nSSRLW4S4\tDID Australia (1)\t40.00\t0.200000\tManaged Voice - DID Hosting\tASG Hail Pty Ltd\nSSRLW4S4\tDID Australia (1)\t40.00\t17.142820\tManaged Voice - Porting\tASG Hail Pty Ltd\nSS6UWHJC\tDID Australia (10)\t40.00\tNULL\tManaged Voice - Porting\tASG Hail Pty Ltd\nSS6UWHJC\tDID Australia (10)\t40.00\t2.000000\tManaged Voice - DID Hosting\tASG Hail Pty Ltd\nSSZVBRZ8\tiCall Suite - Ultimate User Licence\t258.00\t119.250000\tUCaaS\tASG Hail Pty Ltd\nSSYW3LX5\tInbound 1800 Number Hosting\t10.50\t5.000000\tManaged Voice - DID Hosting\tASG Hail Pty Ltd\nSSYW3LX5\tInbound 1800 Number Hosting\t10.50\t42.857050\tManaged Voice - Porting\tASG Hail Pty Ltd\nSS947FNZ\tUCXcel Call Centre Queue\t6.30\t0.000000\tUCaaS\tASG Hail Pty Ltd\nSS3VUZ0A\tUCXcel Hunt Group\t9.00\t0.000000\tUCaaS\tASG Hail Pty Ltd\nSS1Y445L\tUCXcel Premium\t37.50\t22.501815\tUCaaS\tASG Hail Pty Ltd\nSSK9RK0U\tUCXcel Premium Queue Agent\t30.00\t0.000000\tUCaaS\tASG Hail Pty Ltd\nSSF48BID\tUCXcel Professional\t1132.26\t15.003694\tUCaaS\tASG Hail Pty Ltd\nSSHLN94F\tUCXcel Webex Basic\t13.80\t0.000000\tUCaaS\tASG Hail Pty Ltd\nSSQOSPL7\tCall Centre Queue with Time of Day Routing\t9.00\t0.000000\tUCaaS\tAtlantis Pool Shop\nSSCWW4T7\tDID Australia (1)\t0.20\t17.142820\tManaged Voice - Porting\tAtlantis Pool Shop\nSSL0F109\tDID Australia (1)\t0.20\t17.142820\tManaged Voice - Porting\tAus Ships\nSS7P5KR1\tDID Australia (1)\t0.20\t17.142820\tManaged Voice - Porting\tAus Ships\nSS3BHT9T\tDID Australia (1)\t0.20\t17.142820\tManaged Voice - Porting\tAustralian Air Science Pty Ltd\nSSCLR2F4\tAuto Attendant with Time of Day Routing\t15.00\t9.000000\tUCaaS\tAustralian Computer Traders\nSSN9N380\tDID Australia (1)\t4.00\t0.200000\tManaged Voice - DID Hosting\tAustralian Computer Traders\nSSN9N380\tDID Australia (1)\t4.00\t17.142820\tManaged Voice - Porting\tAustralian Computer Traders\nSS6C86YX\tMC - SmileTel Lite User License\t10.00\t3.900000\tUCaaS\tAustralian Computer Traders\nSSTGI2RC\tSmileTel Essential User Special\t337.50\t9.003707\tUCaaS\tAustralian Computer Traders\nSS7F3UZ6\tDID Australia (1)\t0.20\t17.142820\tManaged Voice - Porting\tAustralian Resort Management Pty Ltd\nSS0R7B39\tDID Australia (1)\t0.20\t17.142820\tManaged Voice - Porting\tAustralian Resort Management Pty Ltd\nSSDGDXA5\tEssentials\t6.75\t0.000000\tUCaaS\tAustralian Resort Management Pty Ltd\nSSF7GGVK\tExternal Channels\t4.80\t2.000000\tUCaaS\tAustralian Resort Management Pty Ltd\n",
+  "stderr": "",
+  "execution_time_ms": 1616
+}

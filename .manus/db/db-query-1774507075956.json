@@ -1,0 +1,9 @@
+{
+  "query": "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'services' AND (COLUMN_NAME LIKE '%unbill%' OR COLUMN_NAME LIKE '%active%' OR COLUMN_NAME LIKE '%exclude%' OR COLUMN_NAME LIKE '%ignore%');",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'services' AND (COLUMN_NAME LIKE '%unbill%' OR COLUMN_NAME LIKE '%active%' OR COLUMN_NAME LIKE '%exclude%' OR COLUMN_NAME LIKE '%ignore%');",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 1514
+}

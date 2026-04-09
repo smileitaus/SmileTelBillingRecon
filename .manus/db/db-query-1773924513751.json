@@ -1,0 +1,154 @@
+{
+  "query": "-- Get all billing items with no service linked\nSELECT bi.id, bi.contactName, bi.description, bi.lineAmount, bi.serviceExternalId, bi.invoiceNumber\nFROM billing_items bi\nWHERE (bi.serviceExternalId IS NULL OR bi.serviceExternalId = '')\nORDER BY bi.lineAmount DESC\nLIMIT 25;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute -- Get all billing items with no service linked\nSELECT bi.id, bi.contactName, bi.description, bi.lineAmount, bi.serviceExternalId, bi.invoiceNumber\nFROM billing_items bi\nWHERE (bi.serviceExternalId IS NULL OR bi.serviceExternalId = '')\nORDER BY bi.lineAmount DESC\nLIMIT 25;",
+  "rows": [
+    {
+      "id": "33174",
+      "contactName": "Compass Assurance Services Pty Ltd",
+      "description": "Smile Tel NBN Enterprise Ethernet Fibre 500mb up/down - 36 MonthsEach",
+      "lineAmount": "500.00",
+      "serviceExternalId": "NULL",
+      "invoiceNumber": "INV-47382"
+    },
+    {
+      "id": "33176",
+      "contactName": "AUREE - Auriga Group",
+      "description": "Fibre 400 Internet Service with AAPT\\, 36 mth commit\\, Effective 01/04/2022- Address  400 - Suite 2\\, 14 Argyle Street\\, Albion\\, QLD - Unlimited Data\\, Carrier SLA Service Restoration Target < 8Hrs",
+      "lineAmount": "399.00",
+      "serviceExternalId": "NULL",
+      "invoiceNumber": "INV-47343"
+    },
+    {
+      "id": "33173",
+      "contactName": "Lead Education and Training Pty Ltd ATF the Piara",
+      "description": "FIBRE400/36",
+      "lineAmount": "399.00",
+      "serviceExternalId": "NULL",
+      "invoiceNumber": "INV-47442"
+    },
+    {
+      "id": "33181",
+      "contactName": "Nu-Dev Pty Ltd",
+      "description": "Smile It TPG Fibre 400 36 Months + InstallEach",
+      "lineAmount": "399.00",
+      "serviceExternalId": "NULL",
+      "invoiceNumber": "INV-47470"
+    },
+    {
+      "id": "33180",
+      "contactName": "Strata Dynamics Pty Ltd",
+      "description": "400/400 Fibre Internet Service (Renewal 05/03/2027)",
+      "lineAmount": "374.00",
+      "serviceExternalId": "NULL",
+      "invoiceNumber": "INV-47526"
+    },
+    {
+      "id": "33168",
+      "contactName": "TYS MOLENDINAR PTY LTD",
+      "description": "Site Bundle - Recurring: 100/40 Connectivity - Suitable for Enterprise Grade, Premium Dedicated Support, Business Grade Hardware, 24/7 Connectivity Monitoring, 4G Backup, Enhanced Remote Assistance, Unlimited Phone Calls",
+      "lineAmount": "200.91",
+      "serviceExternalId": "NULL",
+      "invoiceNumber": "ST7974"
+    },
+    {
+      "id": "33178",
+      "contactName": "Strata Dynamics Pty Ltd",
+      "description": "Teams Voice SIP Trunk - Unlimited Local/National/Mobile",
+      "lineAmount": "180.00",
+      "serviceExternalId": "NULL",
+      "invoiceNumber": "INV-47526"
+    },
+    {
+      "id": "33175",
+      "contactName": "Jack Green",
+      "description": "PowerSheild 1200VA UPS - refurbished unit supplied to replace the failed APC 950VA unit.Two new Batteries installed and tested.No product warranty is available with this refurbished UPS unit.New Batteries provided with 12 Months Warranty.",
+      "lineAmount": "174.73",
+      "serviceExternalId": "NULL",
+      "invoiceNumber": "INV-47377"
+    },
+    {
+      "id": "33170",
+      "contactName": "Zam Marrickville Pty Ltd",
+      "description": "SmileTel supplied NBN voice and internet bundle. 36-month plan with 25/10 Mbps internet and hardware (omada router, Voip gateway and cordless phone)",
+      "lineAmount": "164.27",
+      "serviceExternalId": "NULL",
+      "invoiceNumber": "ST7958"
+    },
+    {
+      "id": "33169",
+      "contactName": "Zam Coomera Square Pty Ltd",
+      "description": "SmileTel supplied NBN voice and internet bundle. 36-month plan with 25/10 Mbps internet and hardware (omada router, Voip gateway and cordless phone)",
+      "lineAmount": "142.30",
+      "serviceExternalId": "NULL",
+      "invoiceNumber": "ST7969"
+    },
+    {
+      "id": "33167",
+      "contactName": "ZAMVIS PTY LTD for Zambrero Baldivis",
+      "description": "SmileTel supplied NBN voice and internet bundle. Month to month plan. Includes:- 1xVoice phone line,1xInternet service,1x4G Back-up, Static IP.  Unlimited calls to standard Australian numbers, Unlimited data allowance, Account management support.",
+      "lineAmount": "140.91",
+      "serviceExternalId": "NULL",
+      "invoiceNumber": "ST7978"
+    },
+    {
+      "id": "7",
+      "contactName": "Zambrero Karratha (The Trustee for SURYAVEER UNIT TRUST)",
+      "description": "SmileTel supplied NBN voice and internet bundle. 36 month plan. Includes:- 1xVoice phone line,1xInternet service,1x4G Back-up, Static IP.  Unlimited calls to standard Australian numbers, Unlimited data allowance, Account management support.",
+      "lineAmount": "136.36",
+      "serviceExternalId": "NULL",
+      "invoiceNumber": "ST7968"
+    },
+    {
+      "id": "144",
+      "contactName": "Zambrero Brabham (Surya Pty Ltd)",
+      "description": "SmileTel supplied NBN voice and internet bundle. Month to month plan. Includes:- 1xVoice phone line,1xInternet service,1x4G Back-up, Static IP.  Unlimited calls to standard Australian numbers, Unlimited data allowance, Account management support.",
+      "lineAmount": "136.36",
+      "serviceExternalId": "NULL",
+      "invoiceNumber": "ST7825"
+    },
+    {
+      "id": "162",
+      "contactName": "Ma Pa Me",
+      "description": "SmileTel supplied mobile broadband. Month to month plan. Includes:- Unlimited data allowance, Account management support.",
+      "lineAmount": "131.36",
+      "serviceExternalId": "NULL",
+      "invoiceNumber": "ST7806"
+    },
+    {
+      "id": "33171",
+      "contactName": "Zambrero West Pinjarra Southbound",
+      "description": "SmileTel supplied NBN voice and internet bundle. Month to month plan. Includes:- 1xVoice phone line,1xInternet service,1x4G Back-up, Static IP.  Unlimited calls to standard Australian numbers, Unlimited data allowance, Account management support.",
+      "lineAmount": "92.53",
+      "serviceExternalId": "NULL",
+      "invoiceNumber": "ST7913"
+    },
+    {
+      "id": "33172",
+      "contactName": "Little Cha Tuggerah",
+      "description": "SmileTel supplied NBN voice and internet bundle. Month to month plan. Includes:- 1xVoice phone line,1xInternet service,1x4G Back-up, Static IP.  Unlimited calls to standard Australian numbers, Unlimited data allowance, Account management support.",
+      "lineAmount": "75.49",
+      "serviceExternalId": "NULL",
+      "invoiceNumber": "ST7876"
+    },
+    {
+      "id": "33179",
+      "contactName": "Strata Dynamics Pty Ltd",
+      "description": "Teams Voice SIP DID - 100 Range",
+      "lineAmount": "40.00",
+      "serviceExternalId": "NULL",
+      "invoiceNumber": "INV-47526"
+    },
+    {
+      "id": "33177",
+      "contactName": "Strata Dynamics Pty Ltd",
+      "description": "Telstra Data SIM$30 per month for 100Gb + $1 per GB for additional usageTrimbles to pay all excess fees (Email 18/04/2024)",
+      "lineAmount": "30.00",
+      "serviceExternalId": "NULL",
+      "invoiceNumber": "INV-47526"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tcontactName\tdescription\tlineAmount\tserviceExternalId\tinvoiceNumber\n33174\tCompass Assurance Services Pty Ltd\tSmile Tel NBN Enterprise Ethernet Fibre 500mb up/down - 36 MonthsEach\t500.00\tNULL\tINV-47382\n33176\tAUREE - Auriga Group\tFibre 400 Internet Service with AAPT\\, 36 mth commit\\, Effective 01/04/2022- Address  400 - Suite 2\\, 14 Argyle Street\\, Albion\\, QLD - Unlimited Data\\, Carrier SLA Service Restoration Target < 8Hrs\t399.00\tNULL\tINV-47343\n33173\tLead Education and Training Pty Ltd ATF the Piara\tFIBRE400/36\t399.00\tNULL\tINV-47442\n33181\tNu-Dev Pty Ltd\tSmile It TPG Fibre 400 36 Months + InstallEach\t399.00\tNULL\tINV-47470\n33180\tStrata Dynamics Pty Ltd\t400/400 Fibre Internet Service (Renewal 05/03/2027)\t374.00\tNULL\tINV-47526\n33168\tTYS MOLENDINAR PTY LTD\tSite Bundle - Recurring: 100/40 Connectivity - Suitable for Enterprise Grade, Premium Dedicated Support, Business Grade Hardware, 24/7 Connectivity Monitoring, 4G Backup, Enhanced Remote Assistance, Unlimited Phone Calls\t200.91\tNULL\tST7974\n33178\tStrata Dynamics Pty Ltd\tTeams Voice SIP Trunk - Unlimited Local/National/Mobile\t180.00\tNULL\tINV-47526\n33175\tJack Green\tPowerSheild 1200VA UPS - refurbished unit supplied to replace the failed APC 950VA unit.Two new Batteries installed and tested.No product warranty is available with this refurbished UPS unit.New Batteries provided with 12 Months Warranty.\t174.73\tNULL\tINV-47377\n33170\tZam Marrickville Pty Ltd\tSmileTel supplied NBN voice and internet bundle. 36-month plan with 25/10 Mbps internet and hardware (omada router, Voip gateway and cordless phone)\t164.27\tNULL\tST7958\n33169\tZam Coomera Square Pty Ltd\tSmileTel supplied NBN voice and internet bundle. 36-month plan with 25/10 Mbps internet and hardware (omada router, Voip gateway and cordless phone)\t142.30\tNULL\tST7969\n33167\tZAMVIS PTY LTD for Zambrero Baldivis\tSmileTel supplied NBN voice and internet bundle. Month to month plan. Includes:- 1xVoice phone line,1xInternet service,1x4G Back-up, Static IP.  Unlimited calls to standard Australian numbers, Unlimited data allowance, Account management support.\t140.91\tNULL\tST7978\n7\tZambrero Karratha (The Trustee for SURYAVEER UNIT TRUST)\tSmileTel supplied NBN voice and internet bundle. 36 month plan. Includes:- 1xVoice phone line,1xInternet service,1x4G Back-up, Static IP.  Unlimited calls to standard Australian numbers, Unlimited data allowance, Account management support.\t136.36\tNULL\tST7968\n144\tZambrero Brabham (Surya Pty Ltd)\tSmileTel supplied NBN voice and internet bundle. Month to month plan. Includes:- 1xVoice phone line,1xInternet service,1x4G Back-up, Static IP.  Unlimited calls to standard Australian numbers, Unlimited data allowance, Account management support.\t136.36\tNULL\tST7825\n162\tMa Pa Me\tSmileTel supplied mobile broadband. Month to month plan. Includes:- Unlimited data allowance, Account management support.\t131.36\tNULL\tST7806\n33171\tZambrero West Pinjarra Southbound\tSmileTel supplied NBN voice and internet bundle. Month to month plan. Includes:- 1xVoice phone line,1xInternet service,1x4G Back-up, Static IP.  Unlimited calls to standard Australian numbers, Unlimited data allowance, Account management support.\t92.53\tNULL\tST7913\n33172\tLittle Cha Tuggerah\tSmileTel supplied NBN voice and internet bundle. Month to month plan. Includes:- 1xVoice phone line,1xInternet service,1x4G Back-up, Static IP.  Unlimited calls to standard Australian numbers, Unlimited data allowance, Account management support.\t75.49\tNULL\tST7876\n33179\tStrata Dynamics Pty Ltd\tTeams Voice SIP DID - 100 Range\t40.00\tNULL\tINV-47526\n33177\tStrata Dynamics Pty Ltd\tTelstra Data SIM$30 per month for 100Gb + $1 per GB for additional usageTrimbles to pay all excess fees (Email 18/04/2024)\t30.00\tNULL\tINV-47526\n",
+  "stderr": "",
+  "execution_time_ms": 1518
+}

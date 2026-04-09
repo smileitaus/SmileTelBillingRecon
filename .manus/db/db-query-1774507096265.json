@@ -1,0 +1,62 @@
+{
+  "query": "SELECT DISTINCT supplierName, COUNT(*) as cnt FROM services GROUP BY supplierName ORDER BY cnt DESC LIMIT 20;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute SELECT DISTINCT supplierName, COUNT(*) as cnt FROM services GROUP BY supplierName ORDER BY cnt DESC LIMIT 20;",
+  "rows": [
+    {
+      "supplierName": "SasBoss",
+      "cnt": "1132"
+    },
+    {
+      "supplierName": "Telstra",
+      "cnt": "768"
+    },
+    {
+      "supplierName": "Vocus",
+      "cnt": "327"
+    },
+    {
+      "supplierName": "ABB",
+      "cnt": "268"
+    },
+    {
+      "supplierName": "Unknown",
+      "cnt": "114"
+    },
+    {
+      "supplierName": "TIAB",
+      "cnt": "113"
+    },
+    {
+      "supplierName": "ChannelHaus",
+      "cnt": "67"
+    },
+    {
+      "supplierName": "AAPT",
+      "cnt": "64"
+    },
+    {
+      "supplierName": "SmileTel",
+      "cnt": "63"
+    },
+    {
+      "supplierName": "CommsCode",
+      "cnt": "16"
+    },
+    {
+      "supplierName": "Exetel",
+      "cnt": "13"
+    },
+    {
+      "supplierName": "Tech-e",
+      "cnt": "1"
+    },
+    {
+      "supplierName": "Legion",
+      "cnt": "1"
+    }
+  ],
+  "messages": [],
+  "stdout": "supplierName\tcnt\nSasBoss\t1132\nTelstra\t768\nVocus\t327\nABB\t268\nUnknown\t114\nTIAB\t113\nChannelHaus\t67\nAAPT\t64\nSmileTel\t63\nCommsCode\t16\nExetel\t13\nTech-e\t1\nLegion\t1\n",
+  "stderr": "",
+  "execution_time_ms": 1529
+}

@@ -1,0 +1,13 @@
+{
+  "query": "\n-- First: find supplier accounts that map to exactly one customer among matched services\n-- Then update unmatched services with those accounts\nUPDATE services AS u\nJOIN (\n  SELECT supplierAccount, supplierName, MIN(customerExternalId) AS customerExternalId\n  FROM services\n  WHERE customerExternalId IS NOT NULL AND customerExternalId != ''\n    AND supplierAccount IS NOT NULL AND supplierAccount != ''\n  GROUP BY supplierAccount, supplierName\n  HAVING COUNT(DISTINCT customerExternalId) = 1\n) AS mapping ON mapping.supplierAccount = u.supplierAccount\n  AND mapping.supplierName = u.supplierName\nSET u.customerExternalId = mapping.customerExternalId\nWHERE (u.customerExternalId IS NULL OR u.customerExternalId = '')\n  AND u.supplierAccount IS NOT NULL AND u.supplierAccount != '';\n\nSELECT ROW_COUNT() AS rows_updated;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- First: find supplier accounts that map to exactly one customer among matched services\n-- Then update unmatched services with those accounts\nUPDATE services AS u\nJOIN (\n  SELECT supplierAccount, supplierName, MIN(customerExternalId) AS customerExternalId\n  FROM services\n  WHERE customerExternalId IS NOT NULL AND customerExternalId != ''\n    AND supplierAccount IS NOT NULL AND supplierAccount != ''\n  GROUP BY supplierAccount, supplierName\n  HAVING COUNT(DISTINCT customerExternalId) = 1\n) AS mapping ON mapping.supplierAccount = u.supplierAccount\n  AND mapping.supplierName = u.supplierName\nSET u.customerExternalId = mapping.customerExternalId\nWHERE (u.customerExternalId IS NULL OR u.customerExternalId = '')\n  AND u.supplierAccount IS NOT NULL AND u.supplierAccount != '';\n\nSELECT ROW_COUNT() AS rows_updated;\n",
+  "rows": [
+    {
+      "rows_updated": "0"
+    }
+  ],
+  "messages": [],
+  "stdout": "rows_updated\n0\n",
+  "stderr": "",
+  "execution_time_ms": 1871
+}

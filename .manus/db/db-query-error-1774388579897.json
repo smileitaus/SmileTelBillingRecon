@@ -1,0 +1,8 @@
+{
+  "query": "\nSELECT \n  ssm.supplier_name,\n  ssm.supplier_service_id,\n  ssm.supplier_service_name,\n  ssm.monthly_cost,\n  ssm.monthly_revenue,\n  ssm.match_confidence,\n  ssm.notes,\n  ssm.customer_external_id,\n  ssm.last_invoice_date\nFROM supplier_service_map ssm\nWHERE ssm.supplier_service_name LIKE '%Voice Support%'\n   OR ssm.supplier_service_id LIKE '%Voice Support%'\nORDER BY ssm.supplier_service_name\nLIMIT 20;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \nSELECT \n  ssm.supplier_name,\n  ssm.supplier_service_id,\n  ssm.supplier_service_name,\n  ssm.monthly_cost,\n  ssm.monthly_revenue,\n  ssm.match_confidence,\n  ssm.notes,\n  ssm.customer_external_id,\n  ssm.last_invoice_date\nFROM supplier_service_map ssm\nWHERE ssm.supplier_service_name LIKE '%Voice Support%'\n   OR ssm.supplier_service_id LIKE '%Voice Support%'\nORDER BY ssm.supplier_service_name\nLIMIT 20;\n",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1054 (42S22) at line 2: Unknown column 'ssm.supplier_service_name' in 'order clause'"
+  ]
+}

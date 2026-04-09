@@ -1,0 +1,13 @@
+{
+  "query": "\n-- Step 1: Fix the 66 unique Excel-serial-date items by converting their dates to ISO format\n-- Excel serial 46054 = 2026-02-01, 46057 = 2026-02-04, 46058 = 2026-02-05, 46080 = 2026-02-27\n-- Formula: DATE_ADD('1899-12-30', INTERVAL invoiceDate DAY)\nUPDATE billing_items\nSET invoiceDate = DATE_FORMAT(DATE_ADD('1899-12-30', INTERVAL CAST(invoiceDate AS UNSIGNED) DAY), '%Y-%m-%d')\nWHERE invoiceDate REGEXP '^[0-9]{5}$'\n  AND NOT EXISTS (\n    SELECT 1 FROM (\n      SELECT externalId AS eid FROM billing_items AS proper_item2\n      WHERE proper_item2.invoiceDate NOT REGEXP '^[0-9]{5}$'\n    ) AS tmp\n    JOIN billing_items AS proper_item \n      ON proper_item.externalId = tmp.eid\n      AND proper_item.invoiceNumber = billing_items.invoiceNumber\n      AND proper_item.description = billing_items.description\n      AND proper_item.contactName = billing_items.contactName\n      AND proper_item.lineAmount = billing_items.lineAmount\n  );\n\nSELECT ROW_COUNT() AS dates_fixed;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Step 1: Fix the 66 unique Excel-serial-date items by converting their dates to ISO format\n-- Excel serial 46054 = 2026-02-01, 46057 = 2026-02-04, 46058 = 2026-02-05, 46080 = 2026-02-27\n-- Formula: DATE_ADD('1899-12-30', INTERVAL invoiceDate DAY)\nUPDATE billing_items\nSET invoiceDate = DATE_FORMAT(DATE_ADD('1899-12-30', INTERVAL CAST(invoiceDate AS UNSIGNED) DAY), '%Y-%m-%d')\nWHERE invoiceDate REGEXP '^[0-9]{5}$'\n  AND NOT EXISTS (\n    SELECT 1 FROM (\n      SELECT externalId AS eid FROM billing_items AS proper_item2\n      WHERE proper_item2.invoiceDate NOT REGEXP '^[0-9]{5}$'\n    ) AS tmp\n    JOIN billing_items AS proper_item \n      ON proper_item.externalId = tmp.eid\n      AND proper_item.invoiceNumber = billing_items.invoiceNumber\n      AND proper_item.description = billing_items.description\n      AND proper_item.contactName = billing_items.contactName\n      AND proper_item.lineAmount = billing_items.lineAmount\n  );\n\nSELECT ROW_COUNT() AS dates_fixed;\n",
+  "rows": [
+    {
+      "dates_fixed": "66"
+    }
+  ],
+  "messages": [],
+  "stdout": "dates_fixed\n66\n",
+  "stderr": "",
+  "execution_time_ms": 1843
+}

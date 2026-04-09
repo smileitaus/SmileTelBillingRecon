@@ -1,0 +1,589 @@
+{
+  "query": "SELECT COUNT(*) as total_vocus FROM services WHERE supplierName = 'Vocus' AND status != 'archived';\nSELECT externalId, customerName, technology, locId, ipAddress, serviceActivationDate FROM services WHERE supplierName = 'Vocus' AND status != 'archived' ORDER BY customerName;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute SELECT COUNT(*) as total_vocus FROM services WHERE supplierName = 'Vocus' AND status != 'archived';\nSELECT externalId, customerName, technology, locId, ipAddress, serviceActivationDate FROM services WHERE supplierName = 'Vocus' AND status != 'archived' ORDER BY customerName;",
+  "rows": [
+    {
+      "total_vocus": "191"
+    },
+    {
+      "total_vocus": "externalId\tcustomerName\ttechnology\tlocId\tipAddress\tserviceActivationDate"
+    },
+    {
+      "total_vocus": "S6956\tNULL\t\t\t\t45617"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13611790\t\t\t\t\t"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13635366\t\t\t\t\t"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13529650\t\t\t\t\t"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13530680\t\t\t\t\t"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13532686\t\t\t\t\t"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13538420\t\t\t\t\t"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13539733\t\t\t\t\t"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13541468\t\t\t\t\t"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13545006\t\t\t\t\t"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13545725\t\t\t\t\t"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13547662\t\t\t\t\t"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13548862\t\t\t\t\t"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13550793\t\t\t\t\t"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13562705\t\t\t\t\t"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13571827\t\t\t\t\t"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13582756\t\t\t\t\t"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13679895\t\t\t\t\t"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13676164\t\t\t\t\t"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13674110\t\t\t\t\t"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13674103\t\t\t\t\t"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13672873\t\t\t\t\t"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13671277\t\t\t\t\t"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13586747\t\t\t\t\t"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13671201\t\t\t\t\t"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13663796\t\t\t\t\t"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13663791\t\t\t\t\t"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13586766\t\t\t\t\t"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13663779\t\t\t\t\t"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13663774\t\t\t\t\t"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13662194\t\t\t\t\t"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13660687\t\t\t\t\t"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13660685\t\t\t\t\t"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13660684\t\t\t\t\t"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13660683\t\t\t\t\t"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13660676\t\t\t\t\t"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13660672\t\t\t\t\t"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13650650\t\t\t\t\t"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13649289\t\t\t\t\t"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13587200\t\t\t\t\t"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13596446\t\t\t\t\t"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13596454\t\t\t\t\t"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13596468\t\t\t\t\t"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13597441\t\t\t\t\t"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13599000\t\t\t\t\t"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13663784\t\t\t\t\t"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13600115\t\t\t\t\t"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13641540\t\t\t\t\t"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13642701\t\t\t\t\t"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13642698\t\t\t\t\t"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13642082\t\t\t\t\t"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13603700\t\t\t\t\t"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13638779\t\t\t\t\t"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13637789\t\t\t\t\t"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13636411\t\t\t\t\t"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13645217\t\t\t\t\t"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13635300\t\t\t\t\t"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13633830\t\t\t\t\t"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13633217\t\t\t\t\t"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13529385\t\t\t\t\t"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13631263\t\t\t\t\t"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13630639\t\t\t\t\t"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13629940\t\t\t\t\t"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13622390\t\t\t\t\t"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13619752\t\t\t\t\t"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13615558\t\t\t\t\t"
+    },
+    {
+      "total_vocus": "S0748\tA M Emerick & T J Morrice\tWLS\tLOC00007636392866\t122.151.165.26\t2021-06-23"
+    },
+    {
+      "total_vocus": "S0754\tAcumen Building Projects\tNBN\tLOC000089499835\t202.62.138.81\t2023-08-21"
+    },
+    {
+      "total_vocus": "S0758\tAgnes Water Beauty Hub\tFTTC\tLOC000193215889\t122.151.163.33\t2024-05-16"
+    },
+    {
+      "total_vocus": "S0765\tAll Crops Haulage Pty Ltd\tFTTC\tLOC000081659603\t125.168.88.232\t2023-02-09"
+    },
+    {
+      "total_vocus": "S0318\tAromas Noosa Heads\tHFC\tLOC00017170328715\t139.218.116.193\t2023-10-05"
+    },
+    {
+      "total_vocus": "S0700\tBody Corporate for Osprey Mooloolaba CTS4773\tFTTN\tLOC000094441031\t159.196.43.200\t2023-11-01"
+    },
+    {
+      "total_vocus": "S0850\tCala Luna Rental\tNBN\tLOC00013580558232\t122.148.151.59\t2023-11-16"
+    },
+    {
+      "total_vocus": "S0851\tCanossa Medical Centre Pharmacy\tFTTN\tLOC100056051987\t202.62.138.105\t2023-11-16"
+    },
+    {
+      "total_vocus": "S0902\tCore Glass & Aluminium\tFTTP\tLOC00005971997592\t202.62.138.84\t2021-10-28"
+    },
+    {
+      "total_vocus": "S6940\tCory Johnston\t\t\t\t45831"
+    },
+    {
+      "total_vocus": "S0958\tEdens Landing Doctors\tHFC\tLOC00010279227789\t203.91.240.231\t2022-11-02"
+    },
+    {
+      "total_vocus": "S6957\tFast Cut Qld Pty Ltd\t\t\t\t45699"
+    },
+    {
+      "total_vocus": "S0972\tFirstcare Doctors Pty Ltd\tFTTC\tLOC00006182426142\t202.62.138.96\t2022-01-24"
+    },
+    {
+      "total_vocus": "S6958\tGRAPHENE MANUFACTURING GROUP LTD\t\t\t\t45762"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13632423\tGRAPHENE MANUFACTURING GROUP LTD\t\t\t\t"
+    },
+    {
+      "total_vocus": "S1001\tGreg & Jan Taylor\tHFC\tLOC000045627616\t122.151.191.50\t2022-07-11"
+    },
+    {
+      "total_vocus": "S1005\tGumdale Dentists\tFTTB\tLOC000156764230\t122.148.147.47\t2023-02-16"
+    },
+    {
+      "total_vocus": "S6959\tHKS Financial Planning\t\t\t\t45965"
+    },
+    {
+      "total_vocus": "S1027\tJayden Adams\tNBN\tLOC00001660507618\t122.148.147.141\t2021-07-06"
+    },
+    {
+      "total_vocus": "S6960\tJust Better Care\t\t\t\t45615"
+    },
+    {
+      "total_vocus": "S1040\tKaleidoscope Australasia Pty Ltd\tNBN\tLOC000047334051\t\t2024-01-28"
+    },
+    {
+      "total_vocus": "S6961\tLondon Fire And Safe\t\t\t\t45733"
+    },
+    {
+      "total_vocus": "MOMC_CP\tMooloolaba Osteopathy and Massage Centre\tFTTN\tLOC000168247411\t122.151.202.186\t2024-04-08"
+    },
+    {
+      "total_vocus": "S6962\tNodo Camp Hill\t\t\t\t45834"
+    },
+    {
+      "total_vocus": "S0705\tNodo CBD\tFTTB\tLOC000010322410\t144.6.241.7\t2023-06-06"
+    },
+    {
+      "total_vocus": "S6964\tNodo Pty Ltd\t\t\t\t45764"
+    },
+    {
+      "total_vocus": "S6968\tNodo Pty Ltd\t\t\t\t45834"
+    },
+    {
+      "total_vocus": "S6966\tNodo Pty Ltd\t\t\t\t45631"
+    },
+    {
+      "total_vocus": "S6965\tNodo Pty Ltd\t\t\t\t45834"
+    },
+    {
+      "total_vocus": "S6963\tNodo Pty Ltd\t\t\t\t45642"
+    },
+    {
+      "total_vocus": "S6967\tNodo Pty Ltd\t\t\t\t45756"
+    },
+    {
+      "total_vocus": "S6969\tNodo Pty Ltd\t\t\t\t45680"
+    },
+    {
+      "total_vocus": "S6970\tNodo Pty Ltd\t\t\t\t45834"
+    },
+    {
+      "total_vocus": "S6971\tNodo Pty Ltd\t\t\t\t45616"
+    },
+    {
+      "total_vocus": "S6972\tNodo Pty Ltd\t\t\t\t45834"
+    },
+    {
+      "total_vocus": "S0355\tNodo Westfield Carindale\tFTTB\tLOC000081428122\t202.62.138.91\t2022-03-22"
+    },
+    {
+      "total_vocus": "S1172\tOakhurst Gun Works\tWLS\tLOC000023368665\t125.168.87.239\t2023-02-08"
+    },
+    {
+      "total_vocus": "S6974\tQCOS Orthopaedic Pty Ltd\t\t\t\t45757"
+    },
+    {
+      "total_vocus": "S1184\tRed Ridge Produce\tWLS\tLOC000068657211\t122.151.245.214\t2022-04-28"
+    },
+    {
+      "total_vocus": "S1194\tRio Capurso\tFTTP\tLOC000193633113\t122.151.204.1\t2024-06-03"
+    },
+    {
+      "total_vocus": "S6949\tRSSGM Pty Ltd for Zambrero Cranbourne North\t\t\t\t45804"
+    },
+    {
+      "total_vocus": "S1218\tRVC ICT Consulting\tNBN\tLOC000068629069\t202.62.138.79\t2024-03-16"
+    },
+    {
+      "total_vocus": "S6941\tSigns ETC\t\t\t\t45628"
+    },
+    {
+      "total_vocus": "S6976\tSmile IT\t\t\t\t45785"
+    },
+    {
+      "total_vocus": "S6977\tSmile IT\t\t\t\t45785"
+    },
+    {
+      "total_vocus": "S6978\tSmile IT\t\t\t\t45831"
+    },
+    {
+      "total_vocus": "S6975\tSmile IT\t\t\t\t45716"
+    },
+    {
+      "total_vocus": "S6973\tSmile IT\t\t\t\t45593"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13513923\tSmile IT\t\t\t\t"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13662287\tSmileIT (Internal)\t\t\t\t"
+    },
+    {
+      "total_vocus": "S6942\tStrata Dynamics Pty Ltd\t\t\t\t45758"
+    },
+    {
+      "total_vocus": "S6979\tThe Yiros Shop Albion\t\t\t\t45870"
+    },
+    {
+      "total_vocus": "S6943\tThe Yiros Shop Burleigh\t\t\t\t45883"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13687390\tThe Yiros Shop Burleigh\t\t\t\t"
+    },
+    {
+      "total_vocus": "S6980\tThe Yiros Shop Cannon Hill\t\t\t\t45800"
+    },
+    {
+      "total_vocus": "S6981\tThe Yiros Shop Capalaba\t\t\t\t45860"
+    },
+    {
+      "total_vocus": "S6944\tThe Yiros Shop Chermside\t\t\t\t45791"
+    },
+    {
+      "total_vocus": "S6945\tThe Yiros Shop Factory Unit 4\t\t\t\t45860"
+    },
+    {
+      "total_vocus": "S6982\tThe Yiros Shop Jindalee\t\t\t\t45783"
+    },
+    {
+      "total_vocus": "S6983\tThe Yiros Shop MOLENDINAR\t\t\t\t45930"
+    },
+    {
+      "total_vocus": "S6984\tThe Yiros Shop Morayfield\t\t\t\t45693"
+    },
+    {
+      "total_vocus": "S6985\tThe Yiros Shop Newmarket\t\t\t\t45891"
+    },
+    {
+      "total_vocus": "S6986\tThe Yiros Shop North Lakes\t\t\t\t45736"
+    },
+    {
+      "total_vocus": "S6987\tThe Yiros Shop Southbank (Cold Room)\t\t\t\t45891"
+    },
+    {
+      "total_vocus": "S6988\tThe Yiros Shop Southport\t\t\t\t45646"
+    },
+    {
+      "total_vocus": "S6989\tThe Yiros Shop Stafford\t\t\t\t45909"
+    },
+    {
+      "total_vocus": "S6990\tThe Yiros Shop Valley Metro\t\t\t\t45909"
+    },
+    {
+      "total_vocus": "S1448\tTouring Solutions Australia\tFTTP\tLOC000192515883\t125.168.95.165\t2024-05-08"
+    },
+    {
+      "total_vocus": "S6991\tTroocoo\t\t\t\t45699"
+    },
+    {
+      "total_vocus": "S1466\tUMC North Lakes\tFTTN\tLOC00019070762337\t202.62.138.80\t2024-01-12"
+    },
+    {
+      "total_vocus": "S7028\tWilletton Z Pty Ltd (for Zambrero Willetton)\t\t\t\t45863"
+    },
+    {
+      "total_vocus": "S6953\tZam Marrickville Pty Ltd\t\t\t\t45741"
+    },
+    {
+      "total_vocus": "S6952\tZam Marrickville Pty Ltd\t\t\t\t45715"
+    },
+    {
+      "total_vocus": "S6996\tZambrero - Belmont\t\t\t\t46003"
+    },
+    {
+      "total_vocus": "S6950\tZambrero - Cronulla\t\t\t\t45769"
+    },
+    {
+      "total_vocus": "S7006\tZambrero - Darwin CBD\t\t\t\t45953"
+    },
+    {
+      "total_vocus": "S6951\tZambrero - Karratha\t\t\t\t45891"
+    },
+    {
+      "total_vocus": "S7016\tZambrero - Malvern\t\t\t\t45712"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13679722\tZambrero - Sutherland\t\t\t\t"
+    },
+    {
+      "total_vocus": "S7024\tZambrero - Sutherland\t\t\t\t45870"
+    },
+    {
+      "total_vocus": "S6946\tZambrero Albury\t\t\t\t45771"
+    },
+    {
+      "total_vocus": "S6992\tZambrero Balaclava\t\t\t\t45743"
+    },
+    {
+      "total_vocus": "S6993\tZambrero Banksia Grove\t\t\t\t45853"
+    },
+    {
+      "total_vocus": "S6994\tZambrero Beldon\t\t\t\t45853"
+    },
+    {
+      "total_vocus": "S6995\tZambrero Beldon\t\t\t\t45972"
+    },
+    {
+      "total_vocus": "S6997\tZambrero Bentleigh\t\t\t\t45713"
+    },
+    {
+      "total_vocus": "S6998\tZambrero Biggera Waters\t\t\t\t45826"
+    },
+    {
+      "total_vocus": "S6999\tZambrero Brabham\t\t\t\t45891"
+    },
+    {
+      "total_vocus": "S6947\tZambrero Broadbeach\t\t\t\t45826"
+    },
+    {
+      "total_vocus": "S6948\tZambrero Buranda\t\t\t\t45784"
+    },
+    {
+      "total_vocus": "S7000\tZambrero Burleigh Heads\t\t\t\t45638"
+    },
+    {
+      "total_vocus": "S7001\tZambrero Caroline Springs\t\t\t\t45630"
+    },
+    {
+      "total_vocus": "S7002\tZambrero Casey Central (AAKVH Pty Ltd)\t\t\t\t45826"
+    },
+    {
+      "total_vocus": "S7003\tZambrero Coolangatta\t\t\t\t45670"
+    },
+    {
+      "total_vocus": "S7004\tZambrero Coolangatta\t\t\t\t45826"
+    },
+    {
+      "total_vocus": "S7005\tZambrero Coomera Square\t\t\t\t45895"
+    },
+    {
+      "total_vocus": "S7008\tZambrero Deception Bay\t\t\t\t45856"
+    },
+    {
+      "total_vocus": "S7007\tZambrero Deception Bay\t\t\t\t45826"
+    },
+    {
+      "total_vocus": "S7009\tZambrero Elizabeth St\t\t\t\t45712"
+    },
+    {
+      "total_vocus": "S7010\tZambrero Everton Park Pty Ltd\t\t\t\t45826"
+    },
+    {
+      "total_vocus": "S7011\tZambrero Fairfield\t\t\t\t45933"
+    },
+    {
+      "total_vocus": "S7012\tZambrero Gold Coast University Hospital\t\t\t\t45637"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13544784\tZambrero Gold Coast University Hospital\t\t\t\t"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13528596\tZambrero Hawthorn\t\t\t\t"
+    },
+    {
+      "total_vocus": "S7013\tZambrero Hawthorn\t\t\t\t45614"
+    },
+    {
+      "total_vocus": "S7014\tZambrero Keilor Downs\t\t\t\t45769"
+    },
+    {
+      "total_vocus": "S7015\tZambrero Kings Cross\t\t\t\t45896"
+    },
+    {
+      "total_vocus": "S7017\tZambrero Mater\t\t\t\t45932"
+    },
+    {
+      "total_vocus": "S7018\tZambrero Mooloolaba Pty Ltd\t\t\t\t45721"
+    },
+    {
+      "total_vocus": "S7019\tZambrero Newtown\t\t\t\t45937"
+    },
+    {
+      "total_vocus": "S7020\tZambrero Ocean Grove\t\t\t\t45775"
+    },
+    {
+      "total_vocus": "S7027\tZambrero Retail Operations Pty Ltd\t\t\t\t45699"
+    },
+    {
+      "total_vocus": "S6954\tZambrero Richmond\t\t\t\t45712"
+    },
+    {
+      "total_vocus": "S7021\tZambrero Sanctuary Lakes\t\t\t\t45637"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13528591\tZambrero Scarborough\t\t\t\t"
+    },
+    {
+      "total_vocus": "S7022\tZambrero Scarborough\t\t\t\t45614"
+    },
+    {
+      "total_vocus": "S6955\tZambrero St Albans\t\t\t\t45777"
+    },
+    {
+      "total_vocus": "S7023\tZambrero Subiaco\t\t\t\t45763"
+    },
+    {
+      "total_vocus": "S7026\tZambrero Torquay\t\t\t\t45621"
+    },
+    {
+      "total_vocus": "S7025\tZambrero Torquay\t\t\t\t45965"
+    },
+    {
+      "total_vocus": "S7029\tZambrero Wodonga\t\t\t\t45614"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13528594\tZambrero Wodonga\t\t\t\t"
+    },
+    {
+      "total_vocus": "VOCUS-MOB-13528598\tZambrero Wodonga East\t\t\t\t"
+    },
+    {
+      "total_vocus": "S7030\tZambrero Wodonga East\t\t\t\t45614"
+    },
+    {
+      "total_vocus": "S7031\tZambrero Wyoming\t\t\t\t45644"
+    }
+  ],
+  "messages": [],
+  "stdout": "total_vocus\n191\nexternalId\tcustomerName\ttechnology\tlocId\tipAddress\tserviceActivationDate\nS6956\tNULL\t\t\t\t45617\nVOCUS-MOB-13611790\t\t\t\t\t\nVOCUS-MOB-13635366\t\t\t\t\t\nVOCUS-MOB-13529650\t\t\t\t\t\nVOCUS-MOB-13530680\t\t\t\t\t\nVOCUS-MOB-13532686\t\t\t\t\t\nVOCUS-MOB-13538420\t\t\t\t\t\nVOCUS-MOB-13539733\t\t\t\t\t\nVOCUS-MOB-13541468\t\t\t\t\t\nVOCUS-MOB-13545006\t\t\t\t\t\nVOCUS-MOB-13545725\t\t\t\t\t\nVOCUS-MOB-13547662\t\t\t\t\t\nVOCUS-MOB-13548862\t\t\t\t\t\nVOCUS-MOB-13550793\t\t\t\t\t\nVOCUS-MOB-13562705\t\t\t\t\t\nVOCUS-MOB-13571827\t\t\t\t\t\nVOCUS-MOB-13582756\t\t\t\t\t\nVOCUS-MOB-13679895\t\t\t\t\t\nVOCUS-MOB-13676164\t\t\t\t\t\nVOCUS-MOB-13674110\t\t\t\t\t\nVOCUS-MOB-13674103\t\t\t\t\t\nVOCUS-MOB-13672873\t\t\t\t\t\nVOCUS-MOB-13671277\t\t\t\t\t\nVOCUS-MOB-13586747\t\t\t\t\t\nVOCUS-MOB-13671201\t\t\t\t\t\nVOCUS-MOB-13663796\t\t\t\t\t\nVOCUS-MOB-13663791\t\t\t\t\t\nVOCUS-MOB-13586766\t\t\t\t\t\nVOCUS-MOB-13663779\t\t\t\t\t\nVOCUS-MOB-13663774\t\t\t\t\t\nVOCUS-MOB-13662194\t\t\t\t\t\nVOCUS-MOB-13660687\t\t\t\t\t\nVOCUS-MOB-13660685\t\t\t\t\t\nVOCUS-MOB-13660684\t\t\t\t\t\nVOCUS-MOB-13660683\t\t\t\t\t\nVOCUS-MOB-13660676\t\t\t\t\t\nVOCUS-MOB-13660672\t\t\t\t\t\nVOCUS-MOB-13650650\t\t\t\t\t\nVOCUS-MOB-13649289\t\t\t\t\t\nVOCUS-MOB-13587200\t\t\t\t\t\nVOCUS-MOB-13596446\t\t\t\t\t\nVOCUS-MOB-13596454\t\t\t\t\t\nVOCUS-MOB-13596468\t\t\t\t\t\nVOCUS-MOB-13597441\t\t\t\t\t\nVOCUS-MOB-13599000\t\t\t\t\t\nVOCUS-MOB-13663784\t\t\t\t\t\nVOCUS-MOB-13600115\t\t\t\t\t\nVOCUS-MOB-13641540\t\t\t\t\t\nVOCUS-MOB-13642701\t\t\t\t\t\nVOCUS-MOB-13642698\t\t\t\t\t\nVOCUS-MOB-13642082\t\t\t\t\t\nVOCUS-MOB-13603700\t\t\t\t\t\nVOCUS-MOB-13638779\t\t\t\t\t\nVOCUS-MOB-13637789\t\t\t\t\t\nVOCUS-MOB-13636411\t\t\t\t\t\nVOCUS-MOB-13645217\t\t\t\t\t\nVOCUS-MOB-13635300\t\t\t\t\t\nVOCUS-MOB-13633830\t\t\t\t\t\nVOCUS-MOB-13633217\t\t\t\t\t\nVOCUS-MOB-13529385\t\t\t\t\t\nVOCUS-MOB-13631263\t\t\t\t\t\nVOCUS-MOB-13630639\t\t\t\t\t\nVOCUS-MOB-13629940\t\t\t\t\t\nVOCUS-MOB-13622390\t\t\t\t\t\nVOCUS-MOB-13619752\t\t\t\t\t\nVOCUS-MOB-13615558\t\t\t\t\t\nS0748\tA M Emerick & T J Morrice\tWLS\tLOC00007636392866\t122.151.165.26\t2021-06-23\nS0754\tAcumen Building Projects\tNBN\tLOC000089499835\t202.62.138.81\t2023-08-21\nS0758\tAgnes Water Beauty Hub\tFTTC\tLOC000193215889\t122.151.163.33\t2024-05-16\nS0765\tAll Crops Haulage Pty Ltd\tFTTC\tLOC000081659603\t125.168.88.232\t2023-02-09\nS0318\tAromas Noosa Heads\tHFC\tLOC00017170328715\t139.218.116.193\t2023-10-05\nS0700\tBody Corporate for Osprey Mooloolaba CTS4773\tFTTN\tLOC000094441031\t159.196.43.200\t2023-11-01\nS0850\tCala Luna Rental\tNBN\tLOC00013580558232\t122.148.151.59\t2023-11-16\nS0851\tCanossa Medical Centre Pharmacy\tFTTN\tLOC100056051987\t202.62.138.105\t2023-11-16\nS0902\tCore Glass & Aluminium\tFTTP\tLOC00005971997592\t202.62.138.84\t2021-10-28\nS6940\tCory Johnston\t\t\t\t45831\nS0958\tEdens Landing Doctors\tHFC\tLOC00010279227789\t203.91.240.231\t2022-11-02\nS6957\tFast Cut Qld Pty Ltd\t\t\t\t45699\nS0972\tFirstcare Doctors Pty Ltd\tFTTC\tLOC00006182426142\t202.62.138.96\t2022-01-24\nS6958\tGRAPHENE MANUFACTURING GROUP LTD\t\t\t\t45762\nVOCUS-MOB-13632423\tGRAPHENE MANUFACTURING GROUP LTD\t\t\t\t\nS1001\tGreg & Jan Taylor\tHFC\tLOC000045627616\t122.151.191.50\t2022-07-11\nS1005\tGumdale Dentists\tFTTB\tLOC000156764230\t122.148.147.47\t2023-02-16\nS6959\tHKS Financial Planning\t\t\t\t45965\nS1027\tJayden Adams\tNBN\tLOC00001660507618\t122.148.147.141\t2021-07-06\nS6960\tJust Better Care\t\t\t\t45615\nS1040\tKaleidoscope Australasia Pty Ltd\tNBN\tLOC000047334051\t\t2024-01-28\nS6961\tLondon Fire And Safe\t\t\t\t45733\nMOMC_CP\tMooloolaba Osteopathy and Massage Centre\tFTTN\tLOC000168247411\t122.151.202.186\t2024-04-08\nS6962\tNodo Camp Hill\t\t\t\t45834\nS0705\tNodo CBD\tFTTB\tLOC000010322410\t144.6.241.7\t2023-06-06\nS6964\tNodo Pty Ltd\t\t\t\t45764\nS6968\tNodo Pty Ltd\t\t\t\t45834\nS6966\tNodo Pty Ltd\t\t\t\t45631\nS6965\tNodo Pty Ltd\t\t\t\t45834\nS6963\tNodo Pty Ltd\t\t\t\t45642\nS6967\tNodo Pty Ltd\t\t\t\t45756\nS6969\tNodo Pty Ltd\t\t\t\t45680\nS6970\tNodo Pty Ltd\t\t\t\t45834\nS6971\tNodo Pty Ltd\t\t\t\t45616\nS6972\tNodo Pty Ltd\t\t\t\t45834\nS0355\tNodo Westfield Carindale\tFTTB\tLOC000081428122\t202.62.138.91\t2022-03-22\nS1172\tOakhurst Gun Works\tWLS\tLOC000023368665\t125.168.87.239\t2023-02-08\nS6974\tQCOS Orthopaedic Pty Ltd\t\t\t\t45757\nS1184\tRed Ridge Produce\tWLS\tLOC000068657211\t122.151.245.214\t2022-04-28\nS1194\tRio Capurso\tFTTP\tLOC000193633113\t122.151.204.1\t2024-06-03\nS6949\tRSSGM Pty Ltd for Zambrero Cranbourne North\t\t\t\t45804\nS1218\tRVC ICT Consulting\tNBN\tLOC000068629069\t202.62.138.79\t2024-03-16\nS6941\tSigns ETC\t\t\t\t45628\nS6976\tSmile IT\t\t\t\t45785\nS6977\tSmile IT\t\t\t\t45785\nS6978\tSmile IT\t\t\t\t45831\nS6975\tSmile IT\t\t\t\t45716\nS6973\tSmile IT\t\t\t\t45593\nVOCUS-MOB-13513923\tSmile IT\t\t\t\t\nVOCUS-MOB-13662287\tSmileIT (Internal)\t\t\t\t\nS6942\tStrata Dynamics Pty Ltd\t\t\t\t45758\nS6979\tThe Yiros Shop Albion\t\t\t\t45870\nS6943\tThe Yiros Shop Burleigh\t\t\t\t45883\nVOCUS-MOB-13687390\tThe Yiros Shop Burleigh\t\t\t\t\nS6980\tThe Yiros Shop Cannon Hill\t\t\t\t45800\nS6981\tThe Yiros Shop Capalaba\t\t\t\t45860\nS6944\tThe Yiros Shop Chermside\t\t\t\t45791\nS6945\tThe Yiros Shop Factory Unit 4\t\t\t\t45860\nS6982\tThe Yiros Shop Jindalee\t\t\t\t45783\nS6983\tThe Yiros Shop MOLENDINAR\t\t\t\t45930\nS6984\tThe Yiros Shop Morayfield\t\t\t\t45693\nS6985\tThe Yiros Shop Newmarket\t\t\t\t45891\nS6986\tThe Yiros Shop North Lakes\t\t\t\t45736\nS6987\tThe Yiros Shop Southbank (Cold Room)\t\t\t\t45891\nS6988\tThe Yiros Shop Southport\t\t\t\t45646\nS6989\tThe Yiros Shop Stafford\t\t\t\t45909\nS6990\tThe Yiros Shop Valley Metro\t\t\t\t45909\nS1448\tTouring Solutions Australia\tFTTP\tLOC000192515883\t125.168.95.165\t2024-05-08\nS6991\tTroocoo\t\t\t\t45699\nS1466\tUMC North Lakes\tFTTN\tLOC00019070762337\t202.62.138.80\t2024-01-12\nS7028\tWilletton Z Pty Ltd (for Zambrero Willetton)\t\t\t\t45863\nS6953\tZam Marrickville Pty Ltd\t\t\t\t45741\nS6952\tZam Marrickville Pty Ltd\t\t\t\t45715\nS6996\tZambrero - Belmont\t\t\t\t46003\nS6950\tZambrero - Cronulla\t\t\t\t45769\nS7006\tZambrero - Darwin CBD\t\t\t\t45953\nS6951\tZambrero - Karratha\t\t\t\t45891\nS7016\tZambrero - Malvern\t\t\t\t45712\nVOCUS-MOB-13679722\tZambrero - Sutherland\t\t\t\t\nS7024\tZambrero - Sutherland\t\t\t\t45870\nS6946\tZambrero Albury\t\t\t\t45771\nS6992\tZambrero Balaclava\t\t\t\t45743\nS6993\tZambrero Banksia Grove\t\t\t\t45853\nS6994\tZambrero Beldon\t\t\t\t45853\nS6995\tZambrero Beldon\t\t\t\t45972\nS6997\tZambrero Bentleigh\t\t\t\t45713\nS6998\tZambrero Biggera Waters\t\t\t\t45826\nS6999\tZambrero Brabham\t\t\t\t45891\nS6947\tZambrero Broadbeach\t\t\t\t45826\nS6948\tZambrero Buranda\t\t\t\t45784\nS7000\tZambrero Burleigh Heads\t\t\t\t45638\nS7001\tZambrero Caroline Springs\t\t\t\t45630\nS7002\tZambrero Casey Central (AAKVH Pty Ltd)\t\t\t\t45826\nS7003\tZambrero Coolangatta\t\t\t\t45670\nS7004\tZambrero Coolangatta\t\t\t\t45826\nS7005\tZambrero Coomera Square\t\t\t\t45895\nS7008\tZambrero Deception Bay\t\t\t\t45856\nS7007\tZambrero Deception Bay\t\t\t\t45826\nS7009\tZambrero Elizabeth St\t\t\t\t45712\nS7010\tZambrero Everton Park Pty Ltd\t\t\t\t45826\nS7011\tZambrero Fairfield\t\t\t\t45933\nS7012\tZambrero Gold Coast University Hospital\t\t\t\t45637\nVOCUS-MOB-13544784\tZambrero Gold Coast University Hospital\t\t\t\t\nVOCUS-MOB-13528596\tZambrero Hawthorn\t\t\t\t\nS7013\tZambrero Hawthorn\t\t\t\t45614\nS7014\tZambrero Keilor Downs\t\t\t\t45769\nS7015\tZambrero Kings Cross\t\t\t\t45896\nS7017\tZambrero Mater\t\t\t\t45932\nS7018\tZambrero Mooloolaba Pty Ltd\t\t\t\t45721\nS7019\tZambrero Newtown\t\t\t\t45937\nS7020\tZambrero Ocean Grove\t\t\t\t45775\nS7027\tZambrero Retail Operations Pty Ltd\t\t\t\t45699\nS6954\tZambrero Richmond\t\t\t\t45712\nS7021\tZambrero Sanctuary Lakes\t\t\t\t45637\nVOCUS-MOB-13528591\tZambrero Scarborough\t\t\t\t\nS7022\tZambrero Scarborough\t\t\t\t45614\nS6955\tZambrero St Albans\t\t\t\t45777\nS7023\tZambrero Subiaco\t\t\t\t45763\nS7026\tZambrero Torquay\t\t\t\t45621\nS7025\tZambrero Torquay\t\t\t\t45965\nS7029\tZambrero Wodonga\t\t\t\t45614\nVOCUS-MOB-13528594\tZambrero Wodonga\t\t\t\t\nVOCUS-MOB-13528598\tZambrero Wodonga East\t\t\t\t\nS7030\tZambrero Wodonga East\t\t\t\t45614\nS7031\tZambrero Wyoming\t\t\t\t45644\n",
+  "stderr": "",
+  "execution_time_ms": 32802
+}

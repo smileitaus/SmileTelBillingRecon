@@ -1,0 +1,42 @@
+{
+  "query": "\nSELECT invoiceReference, billingMonth, invoiceDate, totalExGst, totalIncGst, status \nFROM tiab_supplier_invoices \nORDER BY billingMonth;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \nSELECT invoiceReference, billingMonth, invoiceDate, totalExGst, totalIncGst, status \nFROM tiab_supplier_invoices \nORDER BY billingMonth;\n",
+  "rows": [
+    {
+      "invoiceReference": "100998-279",
+      "billingMonth": "2025-11",
+      "invoiceDate": "30/11/2025",
+      "totalExGst": "1343.58",
+      "totalIncGst": "1477.94",
+      "status": "imported"
+    },
+    {
+      "invoiceReference": "100998-280",
+      "billingMonth": "2025-12",
+      "invoiceDate": "31/12/2025",
+      "totalExGst": "735.95",
+      "totalIncGst": "809.55",
+      "status": "imported"
+    },
+    {
+      "invoiceReference": "100998-281",
+      "billingMonth": "2026-01",
+      "invoiceDate": "31/01/2026",
+      "totalExGst": "2407.44",
+      "totalIncGst": "2648.18",
+      "status": "imported"
+    },
+    {
+      "invoiceReference": "100998-282",
+      "billingMonth": "2026-02",
+      "invoiceDate": "28/02/2026",
+      "totalExGst": "6606.49",
+      "totalIncGst": "7267.14",
+      "status": "imported"
+    }
+  ],
+  "messages": [],
+  "stdout": "invoiceReference\tbillingMonth\tinvoiceDate\ttotalExGst\ttotalIncGst\tstatus\n100998-279\t2025-11\t30/11/2025\t1343.58\t1477.94\timported\n100998-280\t2025-12\t31/12/2025\t735.95\t809.55\timported\n100998-281\t2026-01\t31/01/2026\t2407.44\t2648.18\timported\n100998-282\t2026-02\t28/02/2026\t6606.49\t7267.14\timported\n",
+  "stderr": "",
+  "execution_time_ms": 1524
+}

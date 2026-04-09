@@ -1,0 +1,40 @@
+{
+  "query": "\nSELECT COUNT(*) as retailCount FROM customers WHERE customerType = 'retail_offering';\n\nSELECT externalId, name FROM customers \nWHERE customerType = 'retail_offering' \n  AND (name LIKE '%Booroodabin%' OR name LIKE '%Boyd Legal%' OR name LIKE '%Holy Shot%' \n    OR name LIKE '%Reezo%' OR name LIKE '%Froyay%' OR name LIKE '%Fritzenberger%'\n    OR name LIKE '%Two Yolks%' OR name LIKE '%Haig St%')\nORDER BY name\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \nSELECT COUNT(*) as retailCount FROM customers WHERE customerType = 'retail_offering';\n\nSELECT externalId, name FROM customers \nWHERE customerType = 'retail_offering' \n  AND (name LIKE '%Booroodabin%' OR name LIKE '%Boyd Legal%' OR name LIKE '%Holy Shot%' \n    OR name LIKE '%Reezo%' OR name LIKE '%Froyay%' OR name LIKE '%Fritzenberger%'\n    OR name LIKE '%Two Yolks%' OR name LIKE '%Haig St%')\nORDER BY name\n",
+  "rows": [
+    {
+      "retailCount": "151"
+    },
+    {
+      "retailCount": "externalId\tname"
+    },
+    {
+      "retailCount": "C0042\tBooroodabin"
+    },
+    {
+      "retailCount": "C0043\tBoyd Legal"
+    },
+    {
+      "retailCount": "C0097\tFritzenberger Southbank"
+    },
+    {
+      "retailCount": "C0098\tFroyay Hawthorne"
+    },
+    {
+      "retailCount": "C0115\tHaig St Cafe"
+    },
+    {
+      "retailCount": "C0122\tHoly Shot"
+    },
+    {
+      "retailCount": "C0192\tReezo Kebab"
+    },
+    {
+      "retailCount": "C0274\tTwo Yolks Burleigh"
+    }
+  ],
+  "messages": [],
+  "stdout": "retailCount\n151\nexternalId\tname\nC0042\tBooroodabin\nC0043\tBoyd Legal\nC0097\tFritzenberger Southbank\nC0098\tFroyay Hawthorne\nC0115\tHaig St Cafe\nC0122\tHoly Shot\nC0192\tReezo Kebab\nC0274\tTwo Yolks Burleigh\n",
+  "stderr": "",
+  "execution_time_ms": 1800
+}

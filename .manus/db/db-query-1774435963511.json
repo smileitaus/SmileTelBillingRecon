@@ -1,0 +1,60 @@
+{
+  "query": "\nSELECT invoiceNumber, lineAmount, COUNT(*) AS cnt\nFROM billing_items\nWHERE matchStatus != 'credit'\nGROUP BY invoiceNumber, lineAmount\nHAVING cnt > 1\nORDER BY cnt DESC\nLIMIT 10;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \nSELECT invoiceNumber, lineAmount, COUNT(*) AS cnt\nFROM billing_items\nWHERE matchStatus != 'credit'\nGROUP BY invoiceNumber, lineAmount\nHAVING cnt > 1\nORDER BY cnt DESC\nLIMIT 10;\n",
+  "rows": [
+    {
+      "invoiceNumber": "INV-47520",
+      "lineAmount": "113.64",
+      "cnt": "18"
+    },
+    {
+      "invoiceNumber": "ST-6821",
+      "lineAmount": "5.00",
+      "cnt": "16"
+    },
+    {
+      "invoiceNumber": "ST-6821",
+      "lineAmount": "0.08",
+      "cnt": "5"
+    },
+    {
+      "invoiceNumber": "ST-6821",
+      "lineAmount": "0.32",
+      "cnt": "3"
+    },
+    {
+      "invoiceNumber": "ST7920",
+      "lineAmount": "171.00",
+      "cnt": "3"
+    },
+    {
+      "invoiceNumber": "ST-6803",
+      "lineAmount": "0.25",
+      "cnt": "3"
+    },
+    {
+      "invoiceNumber": "ST-6803",
+      "lineAmount": "0.30",
+      "cnt": "3"
+    },
+    {
+      "invoiceNumber": "ST-6801",
+      "lineAmount": "0.16",
+      "cnt": "3"
+    },
+    {
+      "invoiceNumber": "ST-6803",
+      "lineAmount": "0.14",
+      "cnt": "3"
+    },
+    {
+      "invoiceNumber": "ST-6811",
+      "lineAmount": "0.08",
+      "cnt": "3"
+    }
+  ],
+  "messages": [],
+  "stdout": "invoiceNumber\tlineAmount\tcnt\nINV-47520\t113.64\t18\nST-6821\t5.00\t16\nST-6821\t0.08\t5\nST-6821\t0.32\t3\nST7920\t171.00\t3\nST-6803\t0.25\t3\nST-6803\t0.30\t3\nST-6801\t0.16\t3\nST-6803\t0.14\t3\nST-6811\t0.08\t3\n",
+  "stderr": "",
+  "execution_time_ms": 1623
+}

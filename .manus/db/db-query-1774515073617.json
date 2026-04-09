@@ -1,0 +1,9 @@
+{
+  "query": "\nSELECT \n  s.externalId, s.planName, s.serviceType, s.supplierName, s.status,\n  s.monthlyCost, s.monthlyRevenue, s.dataSource,\n  s.customerExternalId,\n  c.name as customerName,\n  s.serviceId, s.connectionId, s.locationAddress\nFROM services s\nLEFT JOIN customers c ON c.externalId = s.customerExternalId\nWHERE s.serviceId IN ('BU278922','BU278923','BU290126','BU291154','BU301770','BU312372','BU123907155','BU123970473')\n   OR s.connectionId IN ('BU278922','BU278923','BU290126','BU291154','BU301770','BU312372','BU123907155','BU123970473')\n   OR s.planName IN ('BU278922','BU278923','BU290126','BU291154','BU301770','BU312372','BU123907155','BU123970473')\nORDER BY s.status;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \nSELECT \n  s.externalId, s.planName, s.serviceType, s.supplierName, s.status,\n  s.monthlyCost, s.monthlyRevenue, s.dataSource,\n  s.customerExternalId,\n  c.name as customerName,\n  s.serviceId, s.connectionId, s.locationAddress\nFROM services s\nLEFT JOIN customers c ON c.externalId = s.customerExternalId\nWHERE s.serviceId IN ('BU278922','BU278923','BU290126','BU291154','BU301770','BU312372','BU123907155','BU123970473')\n   OR s.connectionId IN ('BU278922','BU278923','BU290126','BU291154','BU301770','BU312372','BU123907155','BU123970473')\n   OR s.planName IN ('BU278922','BU278923','BU290126','BU291154','BU301770','BU312372','BU123907155','BU123970473')\nORDER BY s.status;\n",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 1535
+}

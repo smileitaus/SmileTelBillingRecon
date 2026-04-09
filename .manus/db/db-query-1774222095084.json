@@ -1,0 +1,46 @@
+{
+  "query": "\nSELECT \n  COUNT(*) as total_abb,\n  SUM(CASE WHEN carbonServiceId IS NOT NULL AND carbonServiceId != '' THEN 1 ELSE 0 END) as verified_by_carbon,\n  SUM(CASE WHEN carbonServiceId IS NULL OR carbonServiceId = '' THEN 1 ELSE 0 END) as unverified_abb\nFROM services WHERE provider = 'ABB' AND status != 'terminated';\n\nSELECT externalId, customerExternalId, planName, serviceType, avcId, carbonServiceId, dataSource\nFROM services \nWHERE provider = 'ABB' AND (carbonServiceId IS NULL OR carbonServiceId = '') AND status != 'terminated'\nLIMIT 15;\n\nSELECT provider, \n  COUNT(*) as total,\n  SUM(CASE WHEN carbonServiceId IS NOT NULL AND carbonServiceId != '' THEN 1 ELSE 0 END) as has_carbon_id,\n  SUM(CASE WHEN avcId IS NOT NULL AND avcId != '' THEN 1 ELSE 0 END) as has_avc\nFROM services \nWHERE status != 'terminated'\nGROUP BY provider\nORDER BY total DESC;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \nSELECT \n  COUNT(*) as total_abb,\n  SUM(CASE WHEN carbonServiceId IS NOT NULL AND carbonServiceId != '' THEN 1 ELSE 0 END) as verified_by_carbon,\n  SUM(CASE WHEN carbonServiceId IS NULL OR carbonServiceId = '' THEN 1 ELSE 0 END) as unverified_abb\nFROM services WHERE provider = 'ABB' AND status != 'terminated';\n\nSELECT externalId, customerExternalId, planName, serviceType, avcId, carbonServiceId, dataSource\nFROM services \nWHERE provider = 'ABB' AND (carbonServiceId IS NULL OR carbonServiceId = '') AND status != 'terminated'\nLIMIT 15;\n\nSELECT provider, \n  COUNT(*) as total,\n  SUM(CASE WHEN carbonServiceId IS NOT NULL AND carbonServiceId != '' THEN 1 ELSE 0 END) as has_carbon_id,\n  SUM(CASE WHEN avcId IS NOT NULL AND avcId != '' THEN 1 ELSE 0 END) as has_avc\nFROM services \nWHERE status != 'terminated'\nGROUP BY provider\nORDER BY total DESC;\n",
+  "rows": [
+    {
+      "total_abb": "273",
+      "verified_by_carbon": "240",
+      "unverified_abb": "33"
+    }
+  ],
+  "messages": [
+    "externalId\tcustomerExternalId\tplanName\tserviceType\tavcId\tcarbonServiceId\tdataSource",
+    "S0334\tC0090\tNBN 250/100\tInternet\t\t\tSmileTel Internet Services - ABB Sheet",
+    "S0338\tC0112\tNBN 100/40\tInternet\t\t\tSmileTel Internet Services - ABB Sheet",
+    "S0345\tC2487\tNBN 100/40\tInternet\t\t\tSmileTel Internet Services - ABB Sheet",
+    "S0374\tC2516\tNBN 100/40\tInternet\t\t\tSmileTel Internet Services - ABB Sheet",
+    "S0388\tC0265\tNBN 50/20\tInternet\t\t\tSmileTel Internet Services - ABB Sheet",
+    "S0447\tC0391\tNBN 100/40\tInternet\t\t\tSmileTel Internet Services - ABB Sheet",
+    "S0458\t\t\tInternet\t\t\tSmileTel Internet Services - ABB Sheet",
+    "S0459\tC2601\tOpticomm 100/20\tInternet\t\t\tSmileTel Internet Services - ABB Sheet",
+    "S0460\tC0029\tOpticomm 100/40\tInternet\t\t\tSmileTel Internet Services - ABB Sheet",
+    "S0462\tC0008\tOpticomm 50/20\tInternet\t\t\tSmileTel Internet Services - ABB Sheet",
+    "S0463\tC0359\tOpticomm 25/10\tInternet\t\t\tSmileTel Internet Services - ABB Sheet",
+    "S0464\tC0263\tOpticomm 100/40\tInternet\t\t\tSmileTel Internet Services - ABB Sheet",
+    "S0465\tC0222\tOpticomm 100/40\tInternet\t\t\tSmileTel Internet Services - ABB Sheet",
+    "S0466\tC0222\tOpticomm 100/40\tInternet\t\t\tSmileTel Internet Services - ABB Sheet",
+    "S0467\tC0076\tOpticomm 100/40\tInternet\t\t\tSmileTel Internet Services - ABB Sheet",
+    "provider\ttotal\thas_carbon_id\thas_avc",
+    "SasBoss\t1139\t0\t0",
+    "Telstra\t620\t0\t0",
+    "Vocus\t317\t0\t0",
+    "ABB\t273\t240\t240",
+    "Unknown\t117\t0\t0",
+    "TIAB\t113\t0\t0",
+    "ChannelHaus\t67\t0\t0",
+    "SmileTel\t65\t0\t0",
+    "AAPT\t64\t0\t61",
+    "Exetel\t12\t0\t1",
+    "Blitznet\t2\t0\t0",
+    "Legion\t1\t0\t0",
+    "Tech-e\t1\t0\t0"
+  ],
+  "stdout": "total_abb\tverified_by_carbon\tunverified_abb\n273\t240\t33\nexternalId\tcustomerExternalId\tplanName\tserviceType\tavcId\tcarbonServiceId\tdataSource\nS0334\tC0090\tNBN 250/100\tInternet\t\t\tSmileTel Internet Services - ABB Sheet\nS0338\tC0112\tNBN 100/40\tInternet\t\t\tSmileTel Internet Services - ABB Sheet\nS0345\tC2487\tNBN 100/40\tInternet\t\t\tSmileTel Internet Services - ABB Sheet\nS0374\tC2516\tNBN 100/40\tInternet\t\t\tSmileTel Internet Services - ABB Sheet\nS0388\tC0265\tNBN 50/20\tInternet\t\t\tSmileTel Internet Services - ABB Sheet\nS0447\tC0391\tNBN 100/40\tInternet\t\t\tSmileTel Internet Services - ABB Sheet\nS0458\t\t\tInternet\t\t\tSmileTel Internet Services - ABB Sheet\nS0459\tC2601\tOpticomm 100/20\tInternet\t\t\tSmileTel Internet Services - ABB Sheet\nS0460\tC0029\tOpticomm 100/40\tInternet\t\t\tSmileTel Internet Services - ABB Sheet\nS0462\tC0008\tOpticomm 50/20\tInternet\t\t\tSmileTel Internet Services - ABB Sheet\nS0463\tC0359\tOpticomm 25/10\tInternet\t\t\tSmileTel Internet Services - ABB Sheet\nS0464\tC0263\tOpticomm 100/40\tInternet\t\t\tSmileTel Internet Services - ABB Sheet\nS0465\tC0222\tOpticomm 100/40\tInternet\t\t\tSmileTel Internet Services - ABB Sheet\nS0466\tC0222\tOpticomm 100/40\tInternet\t\t\tSmileTel Internet Services - ABB Sheet\nS0467\tC0076\tOpticomm 100/40\tInternet\t\t\tSmileTel Internet Services - ABB Sheet\nprovider\ttotal\thas_carbon_id\thas_avc\nSasBoss\t1139\t0\t0\nTelstra\t620\t0\t0\nVocus\t317\t0\t0\nABB\t273\t240\t240\nUnknown\t117\t0\t0\nTIAB\t113\t0\t0\nChannelHaus\t67\t0\t0\nSmileTel\t65\t0\t0\nAAPT\t64\t0\t61\nExetel\t12\t0\t1\nBlitznet\t2\t0\t0\nLegion\t1\t0\t0\nTech-e\t1\t0\t0\n",
+  "stderr": "",
+  "execution_time_ms": 1919
+}

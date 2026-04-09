@@ -1,0 +1,22 @@
+{
+  "query": "\nSELECT rb.id as bundleId, rb.customerExternalId, rb.subscriberName, c.externalId, c.name\nFROM retail_bundles rb\nLEFT JOIN customers c ON rb.customerExternalId = c.externalId\nWHERE rb.id = 133;\n\nSELECT * FROM retail_bundle_cost_inputs WHERE bundleId = 133;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \nSELECT rb.id as bundleId, rb.customerExternalId, rb.subscriberName, c.externalId, c.name\nFROM retail_bundles rb\nLEFT JOIN customers c ON rb.customerExternalId = c.externalId\nWHERE rb.id = 133;\n\nSELECT * FROM retail_bundle_cost_inputs WHERE bundleId = 133;\n",
+  "rows": [
+    {
+      "bundleId": "133",
+      "customerExternalId": "C2753",
+      "subscriberName": "The Trustee for Zam Cronulla Unit Trust",
+      "externalId": "C2753",
+      "name": "Zambrero - Cronulla"
+    }
+  ],
+  "messages": [
+    "id\tbundleId\tslotType\tlabel\tmonthlyCostExGst\tcostSource\tlinkedServiceId\tlinkedServiceExternalId\tnotes\tisActive\tcreatedAt\tupdatedAt",
+    "317\t133\thardware\tHardware Rental\t7.5000\tdefault\tNULL\tNULL\tDefault $7.50/mo hardware rental\t1\t2026-03-28 05:41:58\t2026-03-28 05:41:58",
+    "318\t133\tsupport\tSupport\t21.0000\tdefault\tNULL\tNULL\tDefault $21.00/mo support\t1\t2026-03-28 05:41:58\t2026-03-28 05:41:58",
+    "319\t133\tsip_channel\tSIP Channel\t1.5000\tdefault\tNULL\tNULL\tDefault $1.50/mo SIP channel\t1\t2026-03-28 05:41:58\t2026-03-28 05:41:58"
+  ],
+  "stdout": "bundleId\tcustomerExternalId\tsubscriberName\texternalId\tname\n133\tC2753\tThe Trustee for Zam Cronulla Unit Trust\tC2753\tZambrero - Cronulla\nid\tbundleId\tslotType\tlabel\tmonthlyCostExGst\tcostSource\tlinkedServiceId\tlinkedServiceExternalId\tnotes\tisActive\tcreatedAt\tupdatedAt\n317\t133\thardware\tHardware Rental\t7.5000\tdefault\tNULL\tNULL\tDefault $7.50/mo hardware rental\t1\t2026-03-28 05:41:58\t2026-03-28 05:41:58\n318\t133\tsupport\tSupport\t21.0000\tdefault\tNULL\tNULL\tDefault $21.00/mo support\t1\t2026-03-28 05:41:58\t2026-03-28 05:41:58\n319\t133\tsip_channel\tSIP Channel\t1.5000\tdefault\tNULL\tNULL\tDefault $1.50/mo SIP channel\t1\t2026-03-28 05:41:58\t2026-03-28 05:41:58\n",
+  "stderr": "",
+  "execution_time_ms": 6514
+}

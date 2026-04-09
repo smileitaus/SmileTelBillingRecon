@@ -1,0 +1,30 @@
+{
+  "query": "\n-- Check all unmatched SasBoss services grouped by plan type\nSELECT planName, COUNT(*) as cnt, SUM(monthlyCost) as totalCost\nFROM services\nWHERE status = 'unmatched' AND provider = 'SasBoss'\nGROUP BY planName\nORDER BY cnt DESC\nLIMIT 30;\n\n-- Check billing items with no contact name match - look for account 94152 pattern\nSELECT bi.externalId, bi.description, bi.lineAmount, bi.contactName, bi.matchStatus, bi.serviceExternalId, bi.invoiceNumber\nFROM billing_items bi\nWHERE bi.matchStatus IN ('unmatched', 'pending')\n  AND (bi.lineAmount > 80 AND bi.lineAmount < 100)\nORDER BY bi.lineAmount DESC\nLIMIT 20;\n\n-- Check if there's a Xero contact named Mooloolaba Osteopathy with different spelling\nSELECT externalId, name, xeroContactName, status\nFROM customers\nWHERE LOWER(name) LIKE '%osteo%' OR LOWER(xeroContactName) LIKE '%osteo%';\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Check all unmatched SasBoss services grouped by plan type\nSELECT planName, COUNT(*) as cnt, SUM(monthlyCost) as totalCost\nFROM services\nWHERE status = 'unmatched' AND provider = 'SasBoss'\nGROUP BY planName\nORDER BY cnt DESC\nLIMIT 30;\n\n-- Check billing items with no contact name match - look for account 94152 pattern\nSELECT bi.externalId, bi.description, bi.lineAmount, bi.contactName, bi.matchStatus, bi.serviceExternalId, bi.invoiceNumber\nFROM billing_items bi\nWHERE bi.matchStatus IN ('unmatched', 'pending')\n  AND (bi.lineAmount > 80 AND bi.lineAmount < 100)\nORDER BY bi.lineAmount DESC\nLIMIT 20;\n\n-- Check if there's a Xero contact named Mooloolaba Osteopathy with different spelling\nSELECT externalId, name, xeroContactName, status\nFROM customers\nWHERE LOWER(name) LIKE '%osteo%' OR LOWER(xeroContactName) LIKE '%osteo%';\n",
+  "rows": [
+    {
+      "planName": "(blank)",
+      "cnt": "3",
+      "totalCost": "0.00"
+    },
+    {
+      "planName": "UCXcel Webex Basic",
+      "cnt": "2",
+      "totalCost": "27.60"
+    },
+    {
+      "planName": "Premium-2",
+      "cnt": "2",
+      "totalCost": "0.00"
+    },
+    {
+      "planName": "UCXcel Essential",
+      "cnt": "2",
+      "totalCost": "18.00"
+    }
+  ],
+  "messages": [],
+  "stdout": "planName\tcnt\ttotalCost\n(blank)\t3\t0.00\nUCXcel Webex Basic\t2\t27.60\nPremium-2\t2\t0.00\nUCXcel Essential\t2\t18.00\n",
+  "stderr": "",
+  "execution_time_ms": 2094
+}

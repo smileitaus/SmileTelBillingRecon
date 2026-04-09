@@ -1,0 +1,66 @@
+{
+  "query": "\n-- Create customer records for the 8 unmatched Xero billing items\n-- Analysis:\n-- 1. Jack Green - $174.73 - UPS hardware supply (one-off, not recurring service)\n-- 2. Ma Pa Me - $131.36 - mobile broadband (recurring)\n-- 3. Nu-Dev Pty Ltd - $399.00 - TPG Fibre 400 (recurring)\n-- 4. TYS MOLENDINAR PTY LTD - $200.91 - Site Bundle (recurring)\n-- 5. Zam Coomera Square Pty Ltd - $142.30 - Zambrero site NBN bundle (recurring)\n-- 6. Zam Marrickville Pty Ltd - $164.27 - Zambrero site NBN bundle (recurring)\n-- 7. Zambrero Brabham (Surya Pty Ltd) - $136.36 - NBN bundle (recurring)\n-- 8. Zambrero Karratha (The Trustee for SURYAVEER UNIT TRUST) - $136.36 - NBN bundle (recurring)\n\nINSERT INTO customers (externalId, name, xeroContactName, billingPlatforms, status, createdAt, updatedAt)\nVALUES\n  ('C9034', 'Jack Green', 'Jack Green', '[\"Xero\"]', 'active', NOW(), NOW()),\n  ('C9035', 'Ma Pa Me', 'Ma Pa Me', '[\"Xero\"]', 'active', NOW(), NOW()),\n  ('C9036', 'Nu-Dev Pty Ltd', 'Nu-Dev Pty Ltd', '[\"Xero\"]', 'active', NOW(), NOW()),\n  ('C9037', 'TYS Molendinar Pty Ltd', 'TYS MOLENDINAR PTY LTD', '[\"Xero\"]', 'active', NOW(), NOW()),\n  ('C9038', 'Zambrero Coomera Square', 'Zam Coomera Square Pty Ltd', '[\"Xero\"]', 'active', NOW(), NOW()),\n  ('C9039', 'Zambrero Marrickville', 'Zam Marrickville Pty Ltd', '[\"Xero\"]', 'active', NOW(), NOW()),\n  ('C9040', 'Zambrero Brabham', 'Zambrero Brabham (Surya Pty Ltd)', '[\"Xero\"]', 'active', NOW(), NOW()),\n  ('C9041', 'Zambrero Karratha', 'Zambrero Karratha (The Trustee for SURYAVEER UNIT TRUST)', '[\"Xero\"]', 'active', NOW(), NOW());\n\n-- Now link the billing items to the new customers\nUPDATE billing_items bi\nJOIN customers c ON bi.contactName = c.xeroContactName\nSET bi.customerExternalId = c.externalId\nWHERE bi.matchStatus = 'unmatched'\n  AND bi.contactName IN (\n    'Jack Green', 'Ma Pa Me', 'Nu-Dev Pty Ltd', 'TYS MOLENDINAR PTY LTD',\n    'Zam Coomera Square Pty Ltd', 'Zam Marrickville Pty Ltd',\n    'Zambrero Brabham (Surya Pty Ltd)', 'Zambrero Karratha (The Trustee for SURYAVEER UNIT TRUST)'\n  );\n\n-- Verify\nSELECT bi.externalId, bi.contactName, bi.lineAmount, bi.customerExternalId, bi.matchStatus\nFROM billing_items bi\nWHERE bi.contactName IN (\n  'Jack Green', 'Ma Pa Me', 'Nu-Dev Pty Ltd', 'TYS MOLENDINAR PTY LTD',\n  'Zam Coomera Square Pty Ltd', 'Zam Marrickville Pty Ltd',\n  'Zambrero Brabham (Surya Pty Ltd)', 'Zambrero Karratha (The Trustee for SURYAVEER UNIT TRUST)'\n);\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Create customer records for the 8 unmatched Xero billing items\n-- Analysis:\n-- 1. Jack Green - $174.73 - UPS hardware supply (one-off, not recurring service)\n-- 2. Ma Pa Me - $131.36 - mobile broadband (recurring)\n-- 3. Nu-Dev Pty Ltd - $399.00 - TPG Fibre 400 (recurring)\n-- 4. TYS MOLENDINAR PTY LTD - $200.91 - Site Bundle (recurring)\n-- 5. Zam Coomera Square Pty Ltd - $142.30 - Zambrero site NBN bundle (recurring)\n-- 6. Zam Marrickville Pty Ltd - $164.27 - Zambrero site NBN bundle (recurring)\n-- 7. Zambrero Brabham (Surya Pty Ltd) - $136.36 - NBN bundle (recurring)\n-- 8. Zambrero Karratha (The Trustee for SURYAVEER UNIT TRUST) - $136.36 - NBN bundle (recurring)\n\nINSERT INTO customers (externalId, name, xeroContactName, billingPlatforms, status, createdAt, updatedAt)\nVALUES\n  ('C9034', 'Jack Green', 'Jack Green', '[\"Xero\"]', 'active', NOW(), NOW()),\n  ('C9035', 'Ma Pa Me', 'Ma Pa Me', '[\"Xero\"]', 'active', NOW(), NOW()),\n  ('C9036', 'Nu-Dev Pty Ltd', 'Nu-Dev Pty Ltd', '[\"Xero\"]', 'active', NOW(), NOW()),\n  ('C9037', 'TYS Molendinar Pty Ltd', 'TYS MOLENDINAR PTY LTD', '[\"Xero\"]', 'active', NOW(), NOW()),\n  ('C9038', 'Zambrero Coomera Square', 'Zam Coomera Square Pty Ltd', '[\"Xero\"]', 'active', NOW(), NOW()),\n  ('C9039', 'Zambrero Marrickville', 'Zam Marrickville Pty Ltd', '[\"Xero\"]', 'active', NOW(), NOW()),\n  ('C9040', 'Zambrero Brabham', 'Zambrero Brabham (Surya Pty Ltd)', '[\"Xero\"]', 'active', NOW(), NOW()),\n  ('C9041', 'Zambrero Karratha', 'Zambrero Karratha (The Trustee for SURYAVEER UNIT TRUST)', '[\"Xero\"]', 'active', NOW(), NOW());\n\n-- Now link the billing items to the new customers\nUPDATE billing_items bi\nJOIN customers c ON bi.contactName = c.xeroContactName\nSET bi.customerExternalId = c.externalId\nWHERE bi.matchStatus = 'unmatched'\n  AND bi.contactName IN (\n    'Jack Green', 'Ma Pa Me', 'Nu-Dev Pty Ltd', 'TYS MOLENDINAR PTY LTD',\n    'Zam Coomera Square Pty Ltd', 'Zam Marrickville Pty Ltd',\n    'Zambrero Brabham (Surya Pty Ltd)', 'Zambrero Karratha (The Trustee for SURYAVEER UNIT TRUST)'\n  );\n\n-- Verify\nSELECT bi.externalId, bi.contactName, bi.lineAmount, bi.customerExternalId, bi.matchStatus\nFROM billing_items bi\nWHERE bi.contactName IN (\n  'Jack Green', 'Ma Pa Me', 'Nu-Dev Pty Ltd', 'TYS MOLENDINAR PTY LTD',\n  'Zam Coomera Square Pty Ltd', 'Zam Marrickville Pty Ltd',\n  'Zambrero Brabham (Surya Pty Ltd)', 'Zambrero Karratha (The Trustee for SURYAVEER UNIT TRUST)'\n);\n",
+  "rows": [
+    {
+      "externalId": "BI00007",
+      "contactName": "Zambrero Karratha (The Trustee for SURYAVEER UNIT TRUST)",
+      "lineAmount": "136.36",
+      "customerExternalId": "C2791",
+      "matchStatus": "unmatched"
+    },
+    {
+      "externalId": "BI00144",
+      "contactName": "Zambrero Brabham (Surya Pty Ltd)",
+      "lineAmount": "136.36",
+      "customerExternalId": "C1405",
+      "matchStatus": "unmatched"
+    },
+    {
+      "externalId": "BI00162",
+      "contactName": "Ma Pa Me",
+      "lineAmount": "131.36",
+      "customerExternalId": "C0155",
+      "matchStatus": "unmatched"
+    },
+    {
+      "externalId": "BI002684",
+      "contactName": "TYS MOLENDINAR PTY LTD",
+      "lineAmount": "200.91",
+      "customerExternalId": "C9037",
+      "matchStatus": "unmatched"
+    },
+    {
+      "externalId": "BI002685",
+      "contactName": "Zam Coomera Square Pty Ltd",
+      "lineAmount": "142.30",
+      "customerExternalId": "C9038",
+      "matchStatus": "unmatched"
+    },
+    {
+      "externalId": "BI002686",
+      "contactName": "Zam Marrickville Pty Ltd",
+      "lineAmount": "164.27",
+      "customerExternalId": "C0295",
+      "matchStatus": "unmatched"
+    },
+    {
+      "externalId": "BI002691",
+      "contactName": "Jack Green",
+      "lineAmount": "174.73",
+      "customerExternalId": "C0125",
+      "matchStatus": "unmatched"
+    },
+    {
+      "externalId": "BI002697",
+      "contactName": "Nu-Dev Pty Ltd",
+      "lineAmount": "399.00",
+      "customerExternalId": "C0176",
+      "matchStatus": "unmatched"
+    }
+  ],
+  "messages": [],
+  "stdout": "externalId\tcontactName\tlineAmount\tcustomerExternalId\tmatchStatus\nBI00007\tZambrero Karratha (The Trustee for SURYAVEER UNIT TRUST)\t136.36\tC2791\tunmatched\nBI00144\tZambrero Brabham (Surya Pty Ltd)\t136.36\tC1405\tunmatched\nBI00162\tMa Pa Me\t131.36\tC0155\tunmatched\nBI002684\tTYS MOLENDINAR PTY LTD\t200.91\tC9037\tunmatched\nBI002685\tZam Coomera Square Pty Ltd\t142.30\tC9038\tunmatched\nBI002686\tZam Marrickville Pty Ltd\t164.27\tC0295\tunmatched\nBI002691\tJack Green\t174.73\tC0125\tunmatched\nBI002697\tNu-Dev Pty Ltd\t399.00\tC0176\tunmatched\n",
+  "stderr": "",
+  "execution_time_ms": 2012
+}

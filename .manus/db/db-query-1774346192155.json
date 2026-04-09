@@ -1,0 +1,136 @@
+{
+  "query": "-- Services with zero revenue grouped by supplier/platform\nSELECT \n  s.supplierName,\n  s.billingPlatform,\n  COUNT(*) as serviceCount,\n  SUM(s.monthlyCost) as totalCost,\n  SUM(s.monthlyRevenue) as totalRevenue\nFROM services s\nWHERE s.status NOT IN ('inactive', 'terminated')\n  AND s.customerExternalId IS NOT NULL\n  AND s.customerExternalId != ''\n  AND (s.monthlyRevenue = 0 OR s.monthlyRevenue IS NULL)\n  AND s.monthlyCost > 0\nGROUP BY s.supplierName, s.billingPlatform\nORDER BY totalCost DESC\nLIMIT 20;\n\n-- Overall picture: matched vs unmatched revenue\nSELECT \n  COUNT(*) as totalServices,\n  SUM(CASE WHEN monthlyRevenue > 0 THEN 1 ELSE 0 END) as withRevenue,\n  SUM(CASE WHEN monthlyRevenue = 0 OR monthlyRevenue IS NULL THEN 1 ELSE 0 END) as zeroRevenue,\n  SUM(monthlyCost) as totalCost,\n  SUM(monthlyRevenue) as totalRevenue\nFROM services \nWHERE status NOT IN ('inactive', 'terminated')\n  AND customerExternalId IS NOT NULL AND customerExternalId != '';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute -- Services with zero revenue grouped by supplier/platform\nSELECT \n  s.supplierName,\n  s.billingPlatform,\n  COUNT(*) as serviceCount,\n  SUM(s.monthlyCost) as totalCost,\n  SUM(s.monthlyRevenue) as totalRevenue\nFROM services s\nWHERE s.status NOT IN ('inactive', 'terminated')\n  AND s.customerExternalId IS NOT NULL\n  AND s.customerExternalId != ''\n  AND (s.monthlyRevenue = 0 OR s.monthlyRevenue IS NULL)\n  AND s.monthlyCost > 0\nGROUP BY s.supplierName, s.billingPlatform\nORDER BY totalCost DESC\nLIMIT 20;\n\n-- Overall picture: matched vs unmatched revenue\nSELECT \n  COUNT(*) as totalServices,\n  SUM(CASE WHEN monthlyRevenue > 0 THEN 1 ELSE 0 END) as withRevenue,\n  SUM(CASE WHEN monthlyRevenue = 0 OR monthlyRevenue IS NULL THEN 1 ELSE 0 END) as zeroRevenue,\n  SUM(monthlyCost) as totalCost,\n  SUM(monthlyRevenue) as totalRevenue\nFROM services \nWHERE status NOT IN ('inactive', 'terminated')\n  AND customerExternalId IS NOT NULL AND customerExternalId != '';",
+  "rows": [
+    {
+      "supplierName": "ChannelHaus",
+      "billingPlatform": "NULL",
+      "serviceCount": "65",
+      "totalCost": "7205.28",
+      "totalRevenue": "0.00"
+    },
+    {
+      "supplierName": "AAPT",
+      "billingPlatform": "NULL",
+      "serviceCount": "48",
+      "totalCost": "6844.33",
+      "totalRevenue": "0.00"
+    },
+    {
+      "supplierName": "ABB",
+      "billingPlatform": "NULL",
+      "serviceCount": "69",
+      "totalCost": "6276.19",
+      "totalRevenue": "0.00"
+    },
+    {
+      "supplierName": "Exetel",
+      "billingPlatform": "NULL",
+      "serviceCount": "10",
+      "totalCost": "5607.73",
+      "totalRevenue": "0.00"
+    },
+    {
+      "supplierName": "Vocus",
+      "billingPlatform": "DataGate",
+      "serviceCount": "109",
+      "totalCost": "5310.34",
+      "totalRevenue": "0.00"
+    },
+    {
+      "supplierName": "Telstra",
+      "billingPlatform": "[\"Datagate\"]",
+      "serviceCount": "108",
+      "totalCost": "5174.75",
+      "totalRevenue": "0.00"
+    },
+    {
+      "supplierName": "Telstra",
+      "billingPlatform": "NULL",
+      "serviceCount": "74",
+      "totalCost": "4206.87",
+      "totalRevenue": "0.00"
+    },
+    {
+      "supplierName": "SmileTel",
+      "billingPlatform": "NULL",
+      "serviceCount": "37",
+      "totalCost": "3047.19",
+      "totalRevenue": "0.00"
+    },
+    {
+      "supplierName": "SasBoss",
+      "billingPlatform": "[\"SasBoss\"]",
+      "serviceCount": "253",
+      "totalCost": "2658.62",
+      "totalRevenue": "0.00"
+    },
+    {
+      "supplierName": "Legion",
+      "billingPlatform": "NULL",
+      "serviceCount": "1",
+      "totalCost": "799.00",
+      "totalRevenue": "0.00"
+    },
+    {
+      "supplierName": "ABB",
+      "billingPlatform": "[]",
+      "serviceCount": "2",
+      "totalCost": "719.10",
+      "totalRevenue": "0.00"
+    },
+    {
+      "supplierName": "Vocus",
+      "billingPlatform": "NULL",
+      "serviceCount": "5",
+      "totalCost": "562.88",
+      "totalRevenue": "0.00"
+    },
+    {
+      "supplierName": "AAPT",
+      "billingPlatform": "[]",
+      "serviceCount": "2",
+      "totalCost": "455.68",
+      "totalRevenue": "0.00"
+    },
+    {
+      "supplierName": "Tech-e",
+      "billingPlatform": "NULL",
+      "serviceCount": "1",
+      "totalCost": "250.00",
+      "totalRevenue": "0.00"
+    },
+    {
+      "supplierName": "Telstra",
+      "billingPlatform": "[]",
+      "serviceCount": "7",
+      "totalCost": "180.00",
+      "totalRevenue": "0.00"
+    },
+    {
+      "supplierName": "Telstra",
+      "billingPlatform": "[\"OneBill\"]",
+      "serviceCount": "1",
+      "totalCost": "25.00",
+      "totalRevenue": "0.00"
+    },
+    {
+      "supplierName": "totalServices",
+      "billingPlatform": "withRevenue",
+      "serviceCount": "zeroRevenue",
+      "totalCost": "totalCost",
+      "totalRevenue": "totalRevenue"
+    },
+    {
+      "supplierName": "2365",
+      "billingPlatform": "1111",
+      "serviceCount": "1249",
+      "totalCost": "73539.80",
+      "totalRevenue": "293695.83"
+    }
+  ],
+  "messages": [],
+  "stdout": "supplierName\tbillingPlatform\tserviceCount\ttotalCost\ttotalRevenue\nChannelHaus\tNULL\t65\t7205.28\t0.00\nAAPT\tNULL\t48\t6844.33\t0.00\nABB\tNULL\t69\t6276.19\t0.00\nExetel\tNULL\t10\t5607.73\t0.00\nVocus\tDataGate\t109\t5310.34\t0.00\nTelstra\t[\"Datagate\"]\t108\t5174.75\t0.00\nTelstra\tNULL\t74\t4206.87\t0.00\nSmileTel\tNULL\t37\t3047.19\t0.00\nSasBoss\t[\"SasBoss\"]\t253\t2658.62\t0.00\nLegion\tNULL\t1\t799.00\t0.00\nABB\t[]\t2\t719.10\t0.00\nVocus\tNULL\t5\t562.88\t0.00\nAAPT\t[]\t2\t455.68\t0.00\nTech-e\tNULL\t1\t250.00\t0.00\nTelstra\t[]\t7\t180.00\t0.00\nTelstra\t[\"OneBill\"]\t1\t25.00\t0.00\ntotalServices\twithRevenue\tzeroRevenue\ttotalCost\ttotalRevenue\n2365\t1111\t1249\t73539.80\t293695.83\n",
+  "stderr": "",
+  "execution_time_ms": 1781
+}

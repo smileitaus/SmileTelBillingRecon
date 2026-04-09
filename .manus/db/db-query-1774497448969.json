@@ -1,0 +1,40 @@
+{
+  "query": "\n-- Check S1315 full details\nSELECT externalId, planName, serviceType, provider, monthlyCost, dataSource, \n       serviceCategory, status, customerExternalId\nFROM services \nWHERE externalId = 'S1315';\n\n-- All SasBoss services for C0214 ordered by cost\nSELECT externalId, planName, monthlyCost, dataSource\nFROM services\nWHERE customerExternalId = 'C0214' AND provider = 'SasBoss'\nORDER BY monthlyCost DESC;\n\n-- Check the Revenue & Margin view - per-customer aggregation\nSELECT \n  bi.externalId as billingItem,\n  bi.description,\n  bi.lineAmount as xeroRevenue,\n  s.externalId as serviceId,\n  s.planName,\n  s.monthlyCost as supplierCost,\n  bi.lineAmount - s.monthlyCost as margin,\n  ROUND((bi.lineAmount - s.monthlyCost) / NULLIF(bi.lineAmount, 0) * 100, 1) as marginPct\nFROM service_billing_assignments sba\nJOIN billing_items bi ON sba.billingItemExternalId = bi.externalId\nJOIN services s ON sba.serviceExternalId = s.externalId\nWHERE s.externalId = 'S1315';\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Check S1315 full details\nSELECT externalId, planName, serviceType, provider, monthlyCost, dataSource, \n       serviceCategory, status, customerExternalId\nFROM services \nWHERE externalId = 'S1315';\n\n-- All SasBoss services for C0214 ordered by cost\nSELECT externalId, planName, monthlyCost, dataSource\nFROM services\nWHERE customerExternalId = 'C0214' AND provider = 'SasBoss'\nORDER BY monthlyCost DESC;\n\n-- Check the Revenue & Margin view - per-customer aggregation\nSELECT \n  bi.externalId as billingItem,\n  bi.description,\n  bi.lineAmount as xeroRevenue,\n  s.externalId as serviceId,\n  s.planName,\n  s.monthlyCost as supplierCost,\n  bi.lineAmount - s.monthlyCost as margin,\n  ROUND((bi.lineAmount - s.monthlyCost) / NULLIF(bi.lineAmount, 0) * 100, 1) as marginPct\nFROM service_billing_assignments sba\nJOIN billing_items bi ON sba.billingItemExternalId = bi.externalId\nJOIN services s ON sba.serviceExternalId = s.externalId\nWHERE s.externalId = 'S1315';\n",
+  "rows": [
+    {
+      "externalId": "S1315",
+      "planName": "Other",
+      "serviceType": "Voice",
+      "provider": "SasBoss",
+      "monthlyCost": "49.00",
+      "dataSource": "Xero Feb 2026 Invoice",
+      "serviceCategory": "other",
+      "status": "active",
+      "customerExternalId": "C0214"
+    }
+  ],
+  "messages": [
+    "externalId\tplanName\tmonthlyCost\tdataSource",
+    "S1315\tOther\t49.00\tXero Feb 2026 Invoice",
+    "S1305\tCollaboration\t10.00\tXero Feb 2026 Invoice",
+    "S1316\tPremium\t9.00\tXero Feb 2026 Invoice",
+    "S1319\tStandard\t6.00\tXero Feb 2026 Invoice",
+    "S1303\tBasic\t5.80\tXero Feb 2026 Invoice",
+    "S1318\tSingle Number\t2.31\tXero Feb 2026 Invoice",
+    "S1312\tMobile\t0.07\tXero Feb 2026 Invoice",
+    "S1311\tLocal\t0.07\tXero Feb 2026 Invoice",
+    "S1314\tNational\t0.04\tXero Feb 2026 Invoice",
+    "S1317\tRegional\t0.04\tXero Feb 2026 Invoice",
+    "S1285\t100 Number block\t0.00\tXero Feb 2026 Invoice",
+    "S1304\tCall Forward Selective\t0.00\tXero Feb 2026 Invoice",
+    "S1302\tAuto Attendant Basic\t0.00\tXero Feb 2026 Invoice",
+    "S1320\tVoicemail\t0.00\tXero Feb 2026 Invoice",
+    "S1323\tManaged Voice Support 1 - 10 Users\t0.00\tXero Feb 2026 Invoice",
+    "billingItem\tdescription\txeroRevenue\tserviceId\tplanName\tsupplierCost\tmargin\tmarginPct",
+    "BI00938\tOther\t0.80\tS1315\tOther\t49.00\t-48.20\t-6025.0"
+  ],
+  "stdout": "externalId\tplanName\tserviceType\tprovider\tmonthlyCost\tdataSource\tserviceCategory\tstatus\tcustomerExternalId\nS1315\tOther\tVoice\tSasBoss\t49.00\tXero Feb 2026 Invoice\tother\tactive\tC0214\nexternalId\tplanName\tmonthlyCost\tdataSource\nS1315\tOther\t49.00\tXero Feb 2026 Invoice\nS1305\tCollaboration\t10.00\tXero Feb 2026 Invoice\nS1316\tPremium\t9.00\tXero Feb 2026 Invoice\nS1319\tStandard\t6.00\tXero Feb 2026 Invoice\nS1303\tBasic\t5.80\tXero Feb 2026 Invoice\nS1318\tSingle Number\t2.31\tXero Feb 2026 Invoice\nS1312\tMobile\t0.07\tXero Feb 2026 Invoice\nS1311\tLocal\t0.07\tXero Feb 2026 Invoice\nS1314\tNational\t0.04\tXero Feb 2026 Invoice\nS1317\tRegional\t0.04\tXero Feb 2026 Invoice\nS1285\t100 Number block\t0.00\tXero Feb 2026 Invoice\nS1304\tCall Forward Selective\t0.00\tXero Feb 2026 Invoice\nS1302\tAuto Attendant Basic\t0.00\tXero Feb 2026 Invoice\nS1320\tVoicemail\t0.00\tXero Feb 2026 Invoice\nS1323\tManaged Voice Support 1 - 10 Users\t0.00\tXero Feb 2026 Invoice\nbillingItem\tdescription\txeroRevenue\tserviceId\tplanName\tsupplierCost\tmargin\tmarginPct\nBI00938\tOther\t0.80\tS1315\tOther\t49.00\t-48.20\t-6025.0\n",
+  "stderr": "",
+  "execution_time_ms": 1953
+}

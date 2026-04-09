@@ -1,0 +1,15 @@
+{
+  "query": "\n-- Check customers table for any golf club or Tewantin customer\nSELECT externalId, name, siteAddress FROM customers \nWHERE name LIKE '%Golf%' OR name LIKE '%Tewantin%' OR siteAddress LIKE '%Tewantin%' OR siteAddress LIKE '%Cooroy%';\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Check customers table for any golf club or Tewantin customer\nSELECT externalId, name, siteAddress FROM customers \nWHERE name LIKE '%Golf%' OR name LIKE '%Tewantin%' OR siteAddress LIKE '%Tewantin%' OR siteAddress LIKE '%Cooroy%';\n",
+  "rows": [
+    {
+      "externalId": "C0241",
+      "name": "Tewantin Noosa Golf Club Inc",
+      "siteAddress": "PO BOX 56, TEWANTIN, QLD, 4565"
+    }
+  ],
+  "messages": [],
+  "stdout": "externalId\tname\tsiteAddress\nC0241\tTewantin Noosa Golf Club Inc\tPO BOX 56, TEWANTIN, QLD, 4565\n",
+  "stderr": "",
+  "execution_time_ms": 1540
+}

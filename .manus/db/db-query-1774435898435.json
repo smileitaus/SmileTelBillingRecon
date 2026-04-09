@@ -1,0 +1,60 @@
+{
+  "query": "\nSELECT s1.externalId AS sasboss_id, s1.customerExternalId,\n  (SELECT COUNT(DISTINCT sx.externalId) FROM services sx WHERE sx.customerExternalId = s1.customerExternalId AND sx.supplierName != 'SasBoss' AND sx.serviceType = 'Internet') AS real_count\nFROM services s1\nWHERE s1.supplierName = 'SasBoss' AND s1.serviceType = 'Internet'\n  AND EXISTS (SELECT 1 FROM billing_items bi WHERE bi.serviceExternalId = s1.externalId)\nLIMIT 10;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \nSELECT s1.externalId AS sasboss_id, s1.customerExternalId,\n  (SELECT COUNT(DISTINCT sx.externalId) FROM services sx WHERE sx.customerExternalId = s1.customerExternalId AND sx.supplierName != 'SasBoss' AND sx.serviceType = 'Internet') AS real_count\nFROM services s1\nWHERE s1.supplierName = 'SasBoss' AND s1.serviceType = 'Internet'\n  AND EXISTS (SELECT 1 FROM billing_items bi WHERE bi.serviceExternalId = s1.externalId)\nLIMIT 10;\n",
+  "rows": [
+    {
+      "sasboss_id": "S0929",
+      "customerExternalId": "C0078",
+      "real_count": "2"
+    },
+    {
+      "sasboss_id": "S0928",
+      "customerExternalId": "C0078",
+      "real_count": "2"
+    },
+    {
+      "sasboss_id": "S0988",
+      "customerExternalId": "C0101",
+      "real_count": "4"
+    },
+    {
+      "sasboss_id": "S1119",
+      "customerExternalId": "C0159",
+      "real_count": "4"
+    },
+    {
+      "sasboss_id": "S1372",
+      "customerExternalId": "C0222",
+      "real_count": "3"
+    },
+    {
+      "sasboss_id": "S1371",
+      "customerExternalId": "C0222",
+      "real_count": "3"
+    },
+    {
+      "sasboss_id": "S1352",
+      "customerExternalId": "C0222",
+      "real_count": "3"
+    },
+    {
+      "sasboss_id": "S1546",
+      "customerExternalId": "C2888",
+      "real_count": "3"
+    },
+    {
+      "sasboss_id": "S0904",
+      "customerExternalId": "C0069",
+      "real_count": "3"
+    },
+    {
+      "sasboss_id": "S1405",
+      "customerExternalId": "C0231",
+      "real_count": "3"
+    }
+  ],
+  "messages": [],
+  "stdout": "sasboss_id\tcustomerExternalId\treal_count\nS0929\tC0078\t2\nS0928\tC0078\t2\nS0988\tC0101\t4\nS1119\tC0159\t4\nS1372\tC0222\t3\nS1371\tC0222\t3\nS1352\tC0222\t3\nS1546\tC2888\t3\nS0904\tC0069\t3\nS1405\tC0231\t3\n",
+  "stderr": "",
+  "execution_time_ms": 1576
+}

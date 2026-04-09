@@ -1,0 +1,11 @@
+{
+  "query": "\nSELECT sb.customerExternalId, sb.externalId AS sasboss_id, sb.monthlyCost AS sasboss_cost, real.externalId AS real_id, real.supplierName AS real_supplier, real.monthlyCost AS real_cost\nFROM services sb\nJOIN services real ON real.customerExternalId = sb.customerExternalId AND real.supplierName != 'SasBoss' AND real.serviceType = 'Internet' AND real.status != 'terminated'\nWHERE sb.supplierName = 'SasBoss' AND sb.serviceType = 'Internet' AND sb.status != 'terminated'\nORDER BY sb.customerExternalId\nLIMIT 15;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \nSELECT sb.customerExternalId, sb.externalId AS sasboss_id, sb.monthlyCost AS sasboss_cost, real.externalId AS real_id, real.supplierName AS real_supplier, real.monthlyCost AS real_cost\nFROM services sb\nJOIN services real ON real.customerExternalId = sb.customerExternalId AND real.supplierName != 'SasBoss' AND real.serviceType = 'Internet' AND real.status != 'terminated'\nWHERE sb.supplierName = 'SasBoss' AND sb.serviceType = 'Internet' AND sb.status != 'terminated'\nORDER BY sb.customerExternalId\nLIMIT 15;\n",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1064 (42000) at line 2: You have an error in your SQL syntax; check the manual that corresponds to your TiDB version for the right syntax to use line 3 column 19 near \"real ON real.customerExternalId = sb.customerExternalId AND real.supplierName != 'SasBoss' AND real.serviceType = 'Internet' AND real.status != 'terminated'",
+    "WHERE sb.supplierName = 'SasBoss' AND sb.serviceType = 'Internet' AND sb.status != 'terminated'",
+    "ORDER BY sb.customerExternalId",
+    "LIMIT 15\""
+  ]
+}

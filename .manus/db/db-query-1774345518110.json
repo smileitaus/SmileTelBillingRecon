@@ -1,0 +1,85 @@
+{
+  "query": "-- Check what billing_items look like for SmileTel invoice (879338) vs Xero\n-- The invoice PDF is account 94968, invoice 879338, Jan 2026\n-- Let's see if there are any billing_items with that invoice number\nSELECT externalId, invoiceNumber, invoiceDate, contactName, description, lineAmount, accountCode, category, matchStatus\nFROM billing_items WHERE invoiceNumber = '879338' LIMIT 10;\n\n-- Check what the SmileTel invoice categories look like (Sasboss/OneBill)\nSELECT category, COUNT(*) as cnt, SUM(lineAmount) as total\nFROM billing_items WHERE category NOT LIKE 'xero%'\nGROUP BY category ORDER BY cnt DESC;\n\n-- Check if there's a smiletel_invoices or similar table\nSELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES \nWHERE TABLE_SCHEMA = DATABASE() AND (TABLE_NAME LIKE '%smiletel%' OR TABLE_NAME LIKE '%sasboss%' OR TABLE_NAME LIKE '%onebill%');",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute -- Check what billing_items look like for SmileTel invoice (879338) vs Xero\n-- The invoice PDF is account 94968, invoice 879338, Jan 2026\n-- Let's see if there are any billing_items with that invoice number\nSELECT externalId, invoiceNumber, invoiceDate, contactName, description, lineAmount, accountCode, category, matchStatus\nFROM billing_items WHERE invoiceNumber = '879338' LIMIT 10;\n\n-- Check what the SmileTel invoice categories look like (Sasboss/OneBill)\nSELECT category, COUNT(*) as cnt, SUM(lineAmount) as total\nFROM billing_items WHERE category NOT LIKE 'xero%'\nGROUP BY category ORDER BY cnt DESC;\n\n-- Check if there's a smiletel_invoices or similar table\nSELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES \nWHERE TABLE_SCHEMA = DATABASE() AND (TABLE_NAME LIKE '%smiletel%' OR TABLE_NAME LIKE '%sasboss%' OR TABLE_NAME LIKE '%onebill%');",
+  "rows": [
+    {
+      "category": "voice",
+      "cnt": "612",
+      "total": "32181.99"
+    },
+    {
+      "category": "internet",
+      "cnt": "219",
+      "total": "59192.49"
+    },
+    {
+      "category": "mobile",
+      "cnt": "139",
+      "total": "4394.93"
+    },
+    {
+      "category": "nbn-bundle",
+      "cnt": "134",
+      "total": "19179.17"
+    },
+    {
+      "category": "sip",
+      "cnt": "79",
+      "total": "11442.00"
+    },
+    {
+      "category": "number-rental",
+      "cnt": "75",
+      "total": "1233.43"
+    },
+    {
+      "category": "other",
+      "cnt": "25",
+      "total": "7149.12"
+    },
+    {
+      "category": "bundle",
+      "cnt": "15",
+      "total": "1788.10"
+    },
+    {
+      "category": "starlink",
+      "cnt": "8",
+      "total": "97.00"
+    },
+    {
+      "category": "nbn-service",
+      "cnt": "4",
+      "total": "443.50"
+    },
+    {
+      "category": "abb-passthrough",
+      "cnt": "4",
+      "total": "710.00"
+    },
+    {
+      "category": "maintenance",
+      "cnt": "3",
+      "total": "305.00"
+    },
+    {
+      "category": "telstra-passthrough",
+      "cnt": "2",
+      "total": "100.00"
+    },
+    {
+      "category": "hosted-pbx",
+      "cnt": "2",
+      "total": "2971.69"
+    },
+    {
+      "category": "hardware-lease",
+      "cnt": "2",
+      "total": "358.00"
+    }
+  ],
+  "messages": [],
+  "stdout": "category\tcnt\ttotal\nvoice\t612\t32181.99\ninternet\t219\t59192.49\nmobile\t139\t4394.93\nnbn-bundle\t134\t19179.17\nsip\t79\t11442.00\nnumber-rental\t75\t1233.43\nother\t25\t7149.12\nbundle\t15\t1788.10\nstarlink\t8\t97.00\nnbn-service\t4\t443.50\nabb-passthrough\t4\t710.00\nmaintenance\t3\t305.00\ntelstra-passthrough\t2\t100.00\nhosted-pbx\t2\t2971.69\nhardware-lease\t2\t358.00\n",
+  "stderr": "",
+  "execution_time_ms": 1928
+}

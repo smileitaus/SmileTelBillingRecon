@@ -1,0 +1,91 @@
+{
+  "query": "\n-- Get remaining rows\nSELECT \n  s.externalId as serviceId,\n  s.planName,\n  s.serviceType,\n  s.monthlyCost,\n  s.monthlyRevenue,\n  ROUND((s.monthlyRevenue - s.monthlyCost) / NULLIF(s.monthlyCost,0) * 100, 1) as marginPct,\n  MAX(c.name) as customerName\nFROM services s\nJOIN customers c ON s.customerExternalId = c.externalId\nWHERE s.supplierName = 'SasBoss'\n  AND s.monthlyCost = 49.00\nGROUP BY s.externalId, s.planName, s.serviceType, s.monthlyCost, s.monthlyRevenue, s.customerExternalId\nORDER BY s.monthlyRevenue ASC\nLIMIT 20 OFFSET 10;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Get remaining rows\nSELECT \n  s.externalId as serviceId,\n  s.planName,\n  s.serviceType,\n  s.monthlyCost,\n  s.monthlyRevenue,\n  ROUND((s.monthlyRevenue - s.monthlyCost) / NULLIF(s.monthlyCost,0) * 100, 1) as marginPct,\n  MAX(c.name) as customerName\nFROM services s\nJOIN customers c ON s.customerExternalId = c.externalId\nWHERE s.supplierName = 'SasBoss'\n  AND s.monthlyCost = 49.00\nGROUP BY s.externalId, s.planName, s.serviceType, s.monthlyCost, s.monthlyRevenue, s.customerExternalId\nORDER BY s.monthlyRevenue ASC\nLIMIT 20 OFFSET 10;\n",
+  "rows": [
+    {
+      "serviceId": "S0815",
+      "planName": "Other",
+      "serviceType": "Other",
+      "monthlyCost": "49.00",
+      "monthlyRevenue": "75.00",
+      "marginPct": "53.1",
+      "customerName": "Balgra Shopping Centre Management Pty Ltd"
+    },
+    {
+      "serviceId": "SSPVNO3A",
+      "planName": "Internet 100/40",
+      "serviceType": "Internet",
+      "monthlyCost": "49.00",
+      "monthlyRevenue": "114.00",
+      "marginPct": "132.7",
+      "customerName": "All Crops Haulage Pty Ltd"
+    },
+    {
+      "serviceId": "S1576",
+      "planName": "Other",
+      "serviceType": "Other",
+      "monthlyCost": "49.00",
+      "monthlyRevenue": "116.77",
+      "marginPct": "138.3",
+      "customerName": "Red Roo Australia"
+    },
+    {
+      "serviceId": "S1388",
+      "planName": "Other",
+      "serviceType": "Other",
+      "monthlyCost": "49.00",
+      "monthlyRevenue": "250.00",
+      "marginPct": "410.2",
+      "customerName": "Sta Consulting Engineers"
+    },
+    {
+      "serviceId": "S0777",
+      "planName": "Other",
+      "serviceType": "Other",
+      "monthlyCost": "49.00",
+      "monthlyRevenue": "400.00",
+      "marginPct": "716.3",
+      "customerName": "ASG Hail Pty Ltd"
+    },
+    {
+      "serviceId": "S0915",
+      "planName": "Other",
+      "serviceType": "Other",
+      "monthlyCost": "49.00",
+      "monthlyRevenue": "470.00",
+      "marginPct": "859.2",
+      "customerName": "Creek St Pharmacy"
+    },
+    {
+      "serviceId": "S0989",
+      "planName": "Other",
+      "serviceType": "Other",
+      "monthlyCost": "49.00",
+      "monthlyRevenue": "1084.00",
+      "marginPct": "2112.2",
+      "customerName": "GBA Consulting Engineers"
+    },
+    {
+      "serviceId": "S1589",
+      "planName": "Other",
+      "serviceType": "Other",
+      "monthlyCost": "49.00",
+      "monthlyRevenue": "2968.66",
+      "marginPct": "5958.5",
+      "customerName": "Scout Talent Pty Ltd"
+    },
+    {
+      "serviceId": "S1547",
+      "planName": "Other",
+      "serviceType": "Other",
+      "monthlyCost": "49.00",
+      "monthlyRevenue": "3098.58",
+      "marginPct": "6223.6",
+      "customerName": "BT LAWYERS PTY LTD"
+    }
+  ],
+  "messages": [],
+  "stdout": "serviceId\tplanName\tserviceType\tmonthlyCost\tmonthlyRevenue\tmarginPct\tcustomerName\nS0815\tOther\tOther\t49.00\t75.00\t53.1\tBalgra Shopping Centre Management Pty Ltd\nSSPVNO3A\tInternet 100/40\tInternet\t49.00\t114.00\t132.7\tAll Crops Haulage Pty Ltd\nS1576\tOther\tOther\t49.00\t116.77\t138.3\tRed Roo Australia\nS1388\tOther\tOther\t49.00\t250.00\t410.2\tSta Consulting Engineers\nS0777\tOther\tOther\t49.00\t400.00\t716.3\tASG Hail Pty Ltd\nS0915\tOther\tOther\t49.00\t470.00\t859.2\tCreek St Pharmacy\nS0989\tOther\tOther\t49.00\t1084.00\t2112.2\tGBA Consulting Engineers\nS1589\tOther\tOther\t49.00\t2968.66\t5958.5\tScout Talent Pty Ltd\nS1547\tOther\tOther\t49.00\t3098.58\t6223.6\tBT LAWYERS PTY LTD\n",
+  "stderr": "",
+  "execution_time_ms": 1597
+}

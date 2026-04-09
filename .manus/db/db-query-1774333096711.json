@@ -1,0 +1,37 @@
+{
+  "query": "\n-- Check how many Vocus NBN services have AVC IDs that match services.connectionId\nSELECT COUNT(*) AS exact_avc_matches\nFROM vocus_nbn_services v\nJOIN services s ON s.connectionId = v.avcId\nWHERE v.avcId IS NOT NULL AND v.avcId != '';\n\n-- Check how many services have a Vocus/ABB provider with empty connectionId that could be filled\nSELECT COUNT(*) AS vocus_services_missing_avc\nFROM services\nWHERE (supplierName LIKE '%Vocus%' OR supplierName LIKE '%ABB%' OR provider LIKE '%Vocus%' OR provider LIKE '%ABB%')\n  AND (connectionId IS NULL OR connectionId = '')\n  AND serviceType = 'Internet'\nLIMIT 1;\n\n-- Check what the avcId field looks like in vocus_nbn_services\nSELECT avcId, locId, address, username, internalServiceExternalId\nFROM vocus_nbn_services\nWHERE avcId IS NOT NULL AND avcId != ''\nLIMIT 5;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Check how many Vocus NBN services have AVC IDs that match services.connectionId\nSELECT COUNT(*) AS exact_avc_matches\nFROM vocus_nbn_services v\nJOIN services s ON s.connectionId = v.avcId\nWHERE v.avcId IS NOT NULL AND v.avcId != '';\n\n-- Check how many services have a Vocus/ABB provider with empty connectionId that could be filled\nSELECT COUNT(*) AS vocus_services_missing_avc\nFROM services\nWHERE (supplierName LIKE '%Vocus%' OR supplierName LIKE '%ABB%' OR provider LIKE '%Vocus%' OR provider LIKE '%ABB%')\n  AND (connectionId IS NULL OR connectionId = '')\n  AND serviceType = 'Internet'\nLIMIT 1;\n\n-- Check what the avcId field looks like in vocus_nbn_services\nSELECT avcId, locId, address, username, internalServiceExternalId\nFROM vocus_nbn_services\nWHERE avcId IS NOT NULL AND avcId != ''\nLIMIT 5;\n",
+  "rows": [
+    {
+      "exact_avc_matches": "1"
+    },
+    {
+      "exact_avc_matches": "vocus_services_missing_avc"
+    },
+    {
+      "exact_avc_matches": "58"
+    },
+    {
+      "exact_avc_matches": "avcId\tlocId\taddress\tusername\tinternalServiceExternalId"
+    },
+    {
+      "exact_avc_matches": "AVC000191546910\tLOC000010831486\t38 Sugarwood Street Bellbowrie QLD 4070\tmotherduckbellbowrie@wba.rvcict.com.au\tNULL"
+    },
+    {
+      "exact_avc_matches": "AVC000191016024\tLOC000192515883\tLot 9 31 Jones St Harlaxton QLD 4350\ttouringsolaust@wba.rvcict.com.au\tS1448"
+    },
+    {
+      "exact_avc_matches": "AVC000189527266\tLOC000045765626\tUnit 3 33 Lorn Rd Crestwood NSW 2153\tecolifecanberra@wba.rvcict.com.au\tNULL"
+    },
+    {
+      "exact_avc_matches": "AVC000188300054\tLOC000047334051\tLot 148 11 Enterprise St Richlands QLD 4077\tKaleidosco15@wba.rvcict.com.au\tS1040"
+    },
+    {
+      "exact_avc_matches": "AVC000186915715\tLOC000068629069\tLot 518 14 Page St North Lakes QLD 4509\trvchome@wba.rvcict.com.au\tS1218"
+    }
+  ],
+  "messages": [],
+  "stdout": "exact_avc_matches\n1\nvocus_services_missing_avc\n58\navcId\tlocId\taddress\tusername\tinternalServiceExternalId\nAVC000191546910\tLOC000010831486\t38 Sugarwood Street Bellbowrie QLD 4070\tmotherduckbellbowrie@wba.rvcict.com.au\tNULL\nAVC000191016024\tLOC000192515883\tLot 9 31 Jones St Harlaxton QLD 4350\ttouringsolaust@wba.rvcict.com.au\tS1448\nAVC000189527266\tLOC000045765626\tUnit 3 33 Lorn Rd Crestwood NSW 2153\tecolifecanberra@wba.rvcict.com.au\tNULL\nAVC000188300054\tLOC000047334051\tLot 148 11 Enterprise St Richlands QLD 4077\tKaleidosco15@wba.rvcict.com.au\tS1040\nAVC000186915715\tLOC000068629069\tLot 518 14 Page St North Lakes QLD 4509\trvchome@wba.rvcict.com.au\tS1218\n",
+  "stderr": "",
+  "execution_time_ms": 2006
+}

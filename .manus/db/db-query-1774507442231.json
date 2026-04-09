@@ -1,0 +1,22 @@
+{
+  "query": "\nSELECT \n  c.name as customerName,\n  ROUND(SUM(bi.lineAmount), 2) as totalRevenue,\n  ROUND(SUM(s.monthlyCost), 2) as totalCost,\n  ROUND(SUM(bi.lineAmount) - SUM(s.monthlyCost), 2) as margin\nFROM customers c\nJOIN billing_items bi ON bi.customerExternalId = c.externalId\nJOIN service_billing_assignments sba ON sba.billingItemExternalId = bi.externalId\nJOIN services s ON s.externalId = sba.serviceExternalId\nWHERE c.name LIKE '%Salter%'\nGROUP BY c.name;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \nSELECT \n  c.name as customerName,\n  ROUND(SUM(bi.lineAmount), 2) as totalRevenue,\n  ROUND(SUM(s.monthlyCost), 2) as totalCost,\n  ROUND(SUM(bi.lineAmount) - SUM(s.monthlyCost), 2) as margin\nFROM customers c\nJOIN billing_items bi ON bi.customerExternalId = c.externalId\nJOIN service_billing_assignments sba ON sba.billingItemExternalId = bi.externalId\nJOIN services s ON s.externalId = sba.serviceExternalId\nWHERE c.name LIKE '%Salter%'\nGROUP BY c.name;\n",
+  "rows": [
+    {
+      "customerName": "Salter Brothers Management Company Pty Ltd t/a Spicers Potts Point",
+      "totalRevenue": "250.00",
+      "totalCost": "1.55",
+      "margin": "248.45"
+    },
+    {
+      "customerName": "Salter Brothers (Vineyards) Pty Ltd",
+      "totalRevenue": "6.00",
+      "totalCost": "3.00",
+      "margin": "3.00"
+    }
+  ],
+  "messages": [],
+  "stdout": "customerName\ttotalRevenue\ttotalCost\tmargin\nSalter Brothers Management Company Pty Ltd t/a Spicers Potts Point\t250.00\t1.55\t248.45\nSalter Brothers (Vineyards) Pty Ltd\t6.00\t3.00\t3.00\n",
+  "stderr": "",
+  "execution_time_ms": 1576
+}

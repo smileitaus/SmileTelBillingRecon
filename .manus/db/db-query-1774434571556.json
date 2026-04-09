@@ -1,0 +1,23 @@
+{
+  "query": "\nSELECT externalId, name FROM customers WHERE name LIKE '%Shenanigan%' OR name LIKE '%Opticomm%' OR name LIKE '%Aussie%';\n\n-- Also check what service S0314 (Shenanigans) and S0458 (Opticomm) look like\nSELECT externalId, customerName, serviceType, supplierName, phoneNumber, locationAddress FROM services WHERE externalId IN ('S0314', 'S0458', 'S0480');\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \nSELECT externalId, name FROM customers WHERE name LIKE '%Shenanigan%' OR name LIKE '%Opticomm%' OR name LIKE '%Aussie%';\n\n-- Also check what service S0314 (Shenanigans) and S0458 (Opticomm) look like\nSELECT externalId, customerName, serviceType, supplierName, phoneNumber, locationAddress FROM services WHERE externalId IN ('S0314', 'S0458', 'S0480');\n",
+  "rows": [
+    {
+      "externalId": "C2615",
+      "name": "Aussie Traveller"
+    },
+    {
+      "externalId": "C2639",
+      "name": "Aussie Hail Pty Ltd"
+    }
+  ],
+  "messages": [
+    "externalId\tcustomerName\tserviceType\tsupplierName\tphoneNumber\tlocationAddress",
+    "S0314\tShenanigans 3x Internet - 1x ADSL 2xLTE\tMobile\tTelstra\t0457 857 453\t",
+    "S0458\tOpticomm\tInternet\tABB\t\t",
+    "S0480\tAussie Fibre\tInternet\tABB\t\t"
+  ],
+  "stdout": "externalId\tname\nC2615\tAussie Traveller\nC2639\tAussie Hail Pty Ltd\nexternalId\tcustomerName\tserviceType\tsupplierName\tphoneNumber\tlocationAddress\nS0314\tShenanigans 3x Internet - 1x ADSL 2xLTE\tMobile\tTelstra\t0457 857 453\t\nS0458\tOpticomm\tInternet\tABB\t\t\nS0480\tAussie Fibre\tInternet\tABB\t\t\n",
+  "stderr": "",
+  "execution_time_ms": 1857
+}

@@ -1,0 +1,170 @@
+{
+  "query": "\nSELECT id, connectionId, locationAddress, serviceType, supplierName, customerName\nFROM services\nWHERE (\n  locationAddress LIKE '%127 Adelaide%'\n  OR locationAddress LIKE '%122 Adelaide%'\n  OR locationAddress LIKE '%Bloomfield%Cleveland%'\n  OR locationAddress LIKE '%Anzac%Kippa%'\n  OR locationAddress LIKE '%Maryborough%'\n  OR locationAddress LIKE '%Esplanade%Torquay%'\n  OR locationAddress LIKE '%Margaret%Coolum%'\n  OR locationAddress LIKE '%Varsity%Sippy%'\n  OR locationAddress LIKE '%Creek St%Brisbane%'\n  OR locationAddress LIKE '%Coronation%Milton%'\n  OR locationAddress LIKE '%Melbourne St%South Brisbane%'\n  OR locationAddress LIKE '%Terrence%Brendale%'\n  OR locationAddress LIKE '%104 Melbourne%'\n)\nORDER BY id\nLIMIT 20;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \nSELECT id, connectionId, locationAddress, serviceType, supplierName, customerName\nFROM services\nWHERE (\n  locationAddress LIKE '%127 Adelaide%'\n  OR locationAddress LIKE '%122 Adelaide%'\n  OR locationAddress LIKE '%Bloomfield%Cleveland%'\n  OR locationAddress LIKE '%Anzac%Kippa%'\n  OR locationAddress LIKE '%Maryborough%'\n  OR locationAddress LIKE '%Esplanade%Torquay%'\n  OR locationAddress LIKE '%Margaret%Coolum%'\n  OR locationAddress LIKE '%Varsity%Sippy%'\n  OR locationAddress LIKE '%Creek St%Brisbane%'\n  OR locationAddress LIKE '%Coronation%Milton%'\n  OR locationAddress LIKE '%Melbourne St%South Brisbane%'\n  OR locationAddress LIKE '%Terrence%Brendale%'\n  OR locationAddress LIKE '%104 Melbourne%'\n)\nORDER BY id\nLIMIT 20;\n",
+  "rows": [
+    {
+      "id": "60167",
+      "connectionId": "",
+      "locationAddress": "STE 2, LEVEL 8, 100 Creek ST Brisbane QLD 4000 Brisbane",
+      "serviceType": "Internet",
+      "supplierName": "ABB",
+      "customerName": "CPM Brisbane Office"
+    },
+    {
+      "id": "90006",
+      "connectionId": "AVC000239799549",
+      "locationAddress": "SHOP 7, 40 CREEK ST, BRISBANE CITY QLD",
+      "serviceType": "Internet",
+      "supplierName": "Vocus",
+      "customerName": "Nodo CBD"
+    },
+    {
+      "id": "120143",
+      "connectionId": "",
+      "locationAddress": "Cleveland House Shop 2 120 Bloomfield St, CLEVELAND, QLD, 4163",
+      "serviceType": "Voice",
+      "supplierName": "SasBoss",
+      "customerName": "Cleveland Medical"
+    },
+    {
+      "id": "120144",
+      "connectionId": "",
+      "locationAddress": "Cleveland House Shop 2 120 Bloomfield St, CLEVELAND, QLD, 4163",
+      "serviceType": "Internet",
+      "supplierName": "SasBoss",
+      "customerName": "Cleveland Medical"
+    },
+    {
+      "id": "120154",
+      "connectionId": "",
+      "locationAddress": "129 Adelaide Street, Maryborough, Maryborough, QLD, 4650",
+      "serviceType": "Internet",
+      "supplierName": "SasBoss",
+      "customerName": "Community Lifestyle Agency Inc"
+    },
+    {
+      "id": "120155",
+      "connectionId": "",
+      "locationAddress": "129 Adelaide Street, Maryborough, Maryborough, QLD, 4650",
+      "serviceType": "Other",
+      "supplierName": "SasBoss",
+      "customerName": "Community Lifestyle Agency Inc"
+    },
+    {
+      "id": "120171",
+      "connectionId": "",
+      "locationAddress": "Shop 1 Ground Floor, 40 Creek Street, Brisbane, QLD, 4000",
+      "serviceType": "Internet",
+      "supplierName": "SasBoss",
+      "customerName": "Creek St Pharmacy"
+    },
+    {
+      "id": "120172",
+      "connectionId": "",
+      "locationAddress": "Shop 1 Ground Floor, 40 Creek Street, Brisbane, QLD, 4000",
+      "serviceType": "Other",
+      "supplierName": "SasBoss",
+      "customerName": "Creek St Pharmacy"
+    },
+    {
+      "id": "120210",
+      "connectionId": "",
+      "locationAddress": "Unit 1 23 Terrence Rd, BRENDALE, QLD, 4500",
+      "serviceType": "Voice",
+      "supplierName": "SasBoss",
+      "customerName": "EcoLife Solutions"
+    },
+    {
+      "id": "120211",
+      "connectionId": "",
+      "locationAddress": "Unit 1 23 Terrence Rd, BRENDALE, QLD, 4500",
+      "serviceType": "VoIP",
+      "supplierName": "SasBoss",
+      "customerName": "EcoLife Solutions"
+    },
+    {
+      "id": "120212",
+      "connectionId": "",
+      "locationAddress": "Unit 1 23 Terrence Rd, BRENDALE, QLD, 4500",
+      "serviceType": "Voice",
+      "supplierName": "SasBoss",
+      "customerName": "EcoLife Solutions"
+    },
+    {
+      "id": "120213",
+      "connectionId": "",
+      "locationAddress": "Unit 1 23 Terrence Rd, BRENDALE, QLD, 4500",
+      "serviceType": "Internet",
+      "supplierName": "Unknown",
+      "customerName": "EcoLife Solutions"
+    },
+    {
+      "id": "120214",
+      "connectionId": "",
+      "locationAddress": "Unit 1 23 Terrence Rd, BRENDALE, QLD, 4500",
+      "serviceType": "Internet",
+      "supplierName": "Unknown",
+      "customerName": "EcoLife Solutions"
+    },
+    {
+      "id": "120285",
+      "connectionId": "",
+      "locationAddress": "Shop 6 133 Lennox St, MARYBOROUGH, QLD, 4650",
+      "serviceType": "Voice",
+      "supplierName": "SasBoss",
+      "customerName": "Jema Clinic"
+    },
+    {
+      "id": "120286",
+      "connectionId": "",
+      "locationAddress": "Shop 6 133 Lennox St, MARYBOROUGH, QLD, 4650",
+      "serviceType": "Voice",
+      "supplierName": "SasBoss",
+      "customerName": "Jema Clinic"
+    },
+    {
+      "id": "120287",
+      "connectionId": "",
+      "locationAddress": "Shop 6 133 Lennox St, MARYBOROUGH, QLD, 4650",
+      "serviceType": "Mobile",
+      "supplierName": "SasBoss",
+      "customerName": "Jema Clinic"
+    },
+    {
+      "id": "120288",
+      "connectionId": "",
+      "locationAddress": "Shop 6 133 Lennox St, MARYBOROUGH, QLD, 4650",
+      "serviceType": "VoIP",
+      "supplierName": "SasBoss",
+      "customerName": "Jema Clinic"
+    },
+    {
+      "id": "120289",
+      "connectionId": "",
+      "locationAddress": "Shop 6 133 Lennox St, MARYBOROUGH, QLD, 4650",
+      "serviceType": "Mobile",
+      "supplierName": "SasBoss",
+      "customerName": "Jema Clinic"
+    },
+    {
+      "id": "120290",
+      "connectionId": "",
+      "locationAddress": "Shop 6 133 Lennox St, MARYBOROUGH, QLD, 4650",
+      "serviceType": "VoIP",
+      "supplierName": "SasBoss",
+      "customerName": "Jema Clinic"
+    },
+    {
+      "id": "120291",
+      "connectionId": "",
+      "locationAddress": "Shop 6 133 Lennox St, MARYBOROUGH, QLD, 4650",
+      "serviceType": "Internet",
+      "supplierName": "SasBoss",
+      "customerName": "Jema Clinic"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tconnectionId\tlocationAddress\tserviceType\tsupplierName\tcustomerName\n60167\t\tSTE 2, LEVEL 8, 100 Creek ST Brisbane QLD 4000 Brisbane\tInternet\tABB\tCPM Brisbane Office\n90006\tAVC000239799549\tSHOP 7, 40 CREEK ST, BRISBANE CITY QLD\tInternet\tVocus\tNodo CBD\n120143\t\tCleveland House Shop 2 120 Bloomfield St, CLEVELAND, QLD, 4163\tVoice\tSasBoss\tCleveland Medical\n120144\t\tCleveland House Shop 2 120 Bloomfield St, CLEVELAND, QLD, 4163\tInternet\tSasBoss\tCleveland Medical\n120154\t\t129 Adelaide Street, Maryborough, Maryborough, QLD, 4650\tInternet\tSasBoss\tCommunity Lifestyle Agency Inc\n120155\t\t129 Adelaide Street, Maryborough, Maryborough, QLD, 4650\tOther\tSasBoss\tCommunity Lifestyle Agency Inc\n120171\t\tShop 1 Ground Floor, 40 Creek Street, Brisbane, QLD, 4000\tInternet\tSasBoss\tCreek St Pharmacy\n120172\t\tShop 1 Ground Floor, 40 Creek Street, Brisbane, QLD, 4000\tOther\tSasBoss\tCreek St Pharmacy\n120210\t\tUnit 1 23 Terrence Rd, BRENDALE, QLD, 4500\tVoice\tSasBoss\tEcoLife Solutions\n120211\t\tUnit 1 23 Terrence Rd, BRENDALE, QLD, 4500\tVoIP\tSasBoss\tEcoLife Solutions\n120212\t\tUnit 1 23 Terrence Rd, BRENDALE, QLD, 4500\tVoice\tSasBoss\tEcoLife Solutions\n120213\t\tUnit 1 23 Terrence Rd, BRENDALE, QLD, 4500\tInternet\tUnknown\tEcoLife Solutions\n120214\t\tUnit 1 23 Terrence Rd, BRENDALE, QLD, 4500\tInternet\tUnknown\tEcoLife Solutions\n120285\t\tShop 6 133 Lennox St, MARYBOROUGH, QLD, 4650\tVoice\tSasBoss\tJema Clinic\n120286\t\tShop 6 133 Lennox St, MARYBOROUGH, QLD, 4650\tVoice\tSasBoss\tJema Clinic\n120287\t\tShop 6 133 Lennox St, MARYBOROUGH, QLD, 4650\tMobile\tSasBoss\tJema Clinic\n120288\t\tShop 6 133 Lennox St, MARYBOROUGH, QLD, 4650\tVoIP\tSasBoss\tJema Clinic\n120289\t\tShop 6 133 Lennox St, MARYBOROUGH, QLD, 4650\tMobile\tSasBoss\tJema Clinic\n120290\t\tShop 6 133 Lennox St, MARYBOROUGH, QLD, 4650\tVoIP\tSasBoss\tJema Clinic\n120291\t\tShop 6 133 Lennox St, MARYBOROUGH, QLD, 4650\tInternet\tSasBoss\tJema Clinic\n",
+  "stderr": "",
+  "execution_time_ms": 1595
+}

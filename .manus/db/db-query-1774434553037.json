@@ -1,0 +1,80 @@
+{
+  "query": "\n-- What customerNames remain on unmatched services?\nSELECT customerName, COUNT(*) AS cnt, GROUP_CONCAT(externalId SEPARATOR ',') AS service_ids\nFROM services\nWHERE (customerExternalId IS NULL OR customerExternalId = '')\n  AND customerName IS NOT NULL AND customerName != ''\nGROUP BY customerName\nORDER BY cnt DESC;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- What customerNames remain on unmatched services?\nSELECT customerName, COUNT(*) AS cnt, GROUP_CONCAT(externalId SEPARATOR ',') AS service_ids\nFROM services\nWHERE (customerExternalId IS NULL OR customerExternalId = '')\n  AND customerName IS NOT NULL AND customerName != ''\nGROUP BY customerName\nORDER BY cnt DESC;\n",
+  "rows": [
+    {
+      "customerName": "Unassigned",
+      "cnt": "239",
+      "service_ids": "S0020,S0021,S0022,S0023,S0024,S0025,S0026,S0032,S0033,S0034,S0035,S0036,S0037,S0038,S0039,S0040,S0041,S0042,S0043,S0044,S0045,S0046,S0047,S0048,S0049,S0050,S0051,S0052,S0054,S0055,S0056,S0057,S0058,S0059,S0060,S0061,S0085,S0306,S0501,S0502,S0503,S0504,S0505,S0506,S0507,S0508,S0509,S0510,S0511,S0512,S0513,S0514,S0515,S0516,S0517,S0518,S0519,S0520,S0521,S0522,S0523,S0524,S0525,S0526,S0527,S0528,S0529,S0530,S0531,S0532,S0533,S0534,S0535,S0536,S0537,S0538,S0539,S0540,S0541,S0542,S0543,S0544,S0545,S0546,S0547,S0548,S0549,S0550,S0551,S0552,S0553,S0554,S0555,S0556,S0557,S0558,S0559,S0560,S0561,S0562,S0563,S0564,S0565,S0566,S0567,S0568,S0569,S0570,S0571,S0572,S0573,S0574,S0575,S0576,S0577,S0578,S0579,S0580,S0581,S0582,S0583,S0584,S0585,S0586,S0587,S0588,S0589,S0590,S0591,S0592,S0593,S0594,S0595,S0596,S0597,S0598,S0599,S0600,S0601,S0602,S0603,S0604,S0605,S0606,S0607,S0608,S0609,S0610,S0611,S0612,S0613,S0614,S0615,S0616,S0617,S0618,S0619,S0620,S0621,S0622,S0623,S0624,S0625,S0626,S0627,S0628,S0629,S0630,S0631,S0632,S063"
+    },
+    {
+      "customerName": "Aussie Fibre",
+      "cnt": "1",
+      "service_ids": "S0480"
+    },
+    {
+      "customerName": "Kate Mobile",
+      "cnt": "1",
+      "service_ids": "S0313"
+    },
+    {
+      "customerName": "Enterprise SIM",
+      "cnt": "1",
+      "service_ids": "S0483"
+    },
+    {
+      "customerName": "SBH",
+      "cnt": "1",
+      "service_ids": "IPTEL-AB038552"
+    },
+    {
+      "customerName": "Ian - T14",
+      "cnt": "1",
+      "service_ids": "S0311"
+    },
+    {
+      "customerName": "Cindy Mobile",
+      "cnt": "1",
+      "service_ids": "S0312"
+    },
+    {
+      "customerName": "Shenanigans 3x Internet - 1x ADSL 2xLTE",
+      "cnt": "1",
+      "service_ids": "S0314"
+    },
+    {
+      "customerName": "Caitlin Mobile",
+      "cnt": "1",
+      "service_ids": "S0315"
+    },
+    {
+      "customerName": "Action Smart End 2 End",
+      "cnt": "1",
+      "service_ids": "IPTEL-AB056135"
+    },
+    {
+      "customerName": "Ian Mobile - iPhone 13 Pro MAX",
+      "cnt": "1",
+      "service_ids": "S0310"
+    },
+    {
+      "customerName": "Opticomm",
+      "cnt": "1",
+      "service_ids": "S0458"
+    },
+    {
+      "customerName": "(blank)",
+      "cnt": "1",
+      "service_ids": "SSQ16U1I"
+    },
+    {
+      "customerName": "NBN EE",
+      "cnt": "1",
+      "service_ids": "S0468"
+    }
+  ],
+  "messages": [],
+  "stdout": "customerName\tcnt\tservice_ids\nUnassigned\t239\tS0020,S0021,S0022,S0023,S0024,S0025,S0026,S0032,S0033,S0034,S0035,S0036,S0037,S0038,S0039,S0040,S0041,S0042,S0043,S0044,S0045,S0046,S0047,S0048,S0049,S0050,S0051,S0052,S0054,S0055,S0056,S0057,S0058,S0059,S0060,S0061,S0085,S0306,S0501,S0502,S0503,S0504,S0505,S0506,S0507,S0508,S0509,S0510,S0511,S0512,S0513,S0514,S0515,S0516,S0517,S0518,S0519,S0520,S0521,S0522,S0523,S0524,S0525,S0526,S0527,S0528,S0529,S0530,S0531,S0532,S0533,S0534,S0535,S0536,S0537,S0538,S0539,S0540,S0541,S0542,S0543,S0544,S0545,S0546,S0547,S0548,S0549,S0550,S0551,S0552,S0553,S0554,S0555,S0556,S0557,S0558,S0559,S0560,S0561,S0562,S0563,S0564,S0565,S0566,S0567,S0568,S0569,S0570,S0571,S0572,S0573,S0574,S0575,S0576,S0577,S0578,S0579,S0580,S0581,S0582,S0583,S0584,S0585,S0586,S0587,S0588,S0589,S0590,S0591,S0592,S0593,S0594,S0595,S0596,S0597,S0598,S0599,S0600,S0601,S0602,S0603,S0604,S0605,S0606,S0607,S0608,S0609,S0610,S0611,S0612,S0613,S0614,S0615,S0616,S0617,S0618,S0619,S0620,S0621,S0622,S0623,S0624,S0625,S0626,S0627,S0628,S0629,S0630,S0631,S0632,S063\nAussie Fibre\t1\tS0480\nKate Mobile\t1\tS0313\nEnterprise SIM\t1\tS0483\nSBH\t1\tIPTEL-AB038552\nIan - T14\t1\tS0311\nCindy Mobile\t1\tS0312\nShenanigans 3x Internet - 1x ADSL 2xLTE\t1\tS0314\nCaitlin Mobile\t1\tS0315\nAction Smart End 2 End\t1\tIPTEL-AB056135\nIan Mobile - iPhone 13 Pro MAX\t1\tS0310\nOpticomm\t1\tS0458\n(blank)\t1\tSSQ16U1I\nNBN EE\t1\tS0468\n",
+  "stderr": "",
+  "execution_time_ms": 1578
+}

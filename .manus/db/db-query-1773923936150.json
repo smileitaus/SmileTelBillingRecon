@@ -1,0 +1,154 @@
+{
+  "query": "SELECT externalId, planName, serviceType, monthlyCost, monthlyRevenue, customerExternalId\nFROM services\nWHERE provider = 'SasBoss'\n  AND monthlyRevenue = 0\n  AND (status IS NULL OR status != 'terminated')\n  AND customerExternalId IS NOT NULL AND customerExternalId != ''\n  AND (\n    planName LIKE '%NBN%' OR planName LIKE '%Cellular%' OR planName LIKE '%Acronis%'\n    OR planName LIKE '%Bonder%' OR planName LIKE '%4G%' OR planName LIKE '%Fibre%'\n    OR planName LIKE '%TPG%' OR planName LIKE '%PremSupport%' OR planName LIKE '%StandSupport%'\n    OR planName LIKE '%Auto Dialler%' OR planName LIKE '%Estimated Phone%'\n    OR planName LIKE '%Backup%' OR planName LIKE '%Internet%'\n  )\nORDER BY planName;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute SELECT externalId, planName, serviceType, monthlyCost, monthlyRevenue, customerExternalId\nFROM services\nWHERE provider = 'SasBoss'\n  AND monthlyRevenue = 0\n  AND (status IS NULL OR status != 'terminated')\n  AND customerExternalId IS NOT NULL AND customerExternalId != ''\n  AND (\n    planName LIKE '%NBN%' OR planName LIKE '%Cellular%' OR planName LIKE '%Acronis%'\n    OR planName LIKE '%Bonder%' OR planName LIKE '%4G%' OR planName LIKE '%Fibre%'\n    OR planName LIKE '%TPG%' OR planName LIKE '%PremSupport%' OR planName LIKE '%StandSupport%'\n    OR planName LIKE '%Auto Dialler%' OR planName LIKE '%Estimated Phone%'\n    OR planName LIKE '%Backup%' OR planName LIKE '%Internet%'\n  )\nORDER BY planName;",
+  "rows": [
+    {
+      "externalId": "S1353",
+      "planName": "- BENTLEY - 81B MANNING RD, BENTLEY WA 6102, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data",
+      "serviceType": "Internet",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C0222"
+    },
+    {
+      "externalId": "S1354",
+      "planName": "- CANNING VALE - 2 FORUM AVE, CANNING VALE WA 6155, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data",
+      "serviceType": "Internet",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C0222"
+    },
+    {
+      "externalId": "S1355",
+      "planName": "- ELLENBROOK - 1 DELMAGE CIR, ELLENBROOK WA 6069, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data",
+      "serviceType": "Internet",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C0222"
+    },
+    {
+      "externalId": "S1356",
+      "planName": "- GREENWOOD - 65 WANNEROO RD, GREENWOOD WA 6024, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data",
+      "serviceType": "Internet",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C0222"
+    },
+    {
+      "externalId": "S1357",
+      "planName": "- HIGH WYCOMBE - 1 BERLE WAY, HIGH WYCOMBE WA 6057, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data",
+      "serviceType": "Internet",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C0222"
+    },
+    {
+      "externalId": "S1358",
+      "planName": "- HILTON - 299 SOUTH ST, HILTON WA 6163, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data",
+      "serviceType": "Internet",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C0222"
+    },
+    {
+      "externalId": "S1359",
+      "planName": "- MORLEY - CHERRY COURT CHILD CARE CENTRE, 10 CHERRY CT, MORLEY WA 6062, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data",
+      "serviceType": "Internet",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C0222"
+    },
+    {
+      "externalId": "S1360",
+      "planName": "- NEDLANDS - 73 STIRLING HWY, NEDLANDS WA 6009, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data",
+      "serviceType": "Internet",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C0222"
+    },
+    {
+      "externalId": "S1361",
+      "planName": "- NORTHAM - 8 DUKE ST E, NORTHAM WA 6401, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data",
+      "serviceType": "Internet",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C0222"
+    },
+    {
+      "externalId": "S1362",
+      "planName": "- SEVILLE GROVE - 11 LISBON WAY, SEVILLE GROVE WA 6112, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data",
+      "serviceType": "Internet",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C0222"
+    },
+    {
+      "externalId": "S1363",
+      "planName": "- SWANBOURNE - 153 CLAREMONT CRES, SWANBOURNE WA 6010, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data",
+      "serviceType": "Internet",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C0222"
+    },
+    {
+      "externalId": "S1364",
+      "planName": "- THORNLIE - 190 YALE RD, THORNLIE WA 6108, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data",
+      "serviceType": "Internet",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C0222"
+    },
+    {
+      "externalId": "S1365",
+      "planName": "- WANNEROO - 32 MULWARRIE CIR, WANNEROO WA 6065, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data",
+      "serviceType": "Internet",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C0222"
+    },
+    {
+      "externalId": "S1366",
+      "planName": "- WANNEROO - 42 SCOTT RD, WANNEROO WA 6065, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data",
+      "serviceType": "Internet",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C0222"
+    },
+    {
+      "externalId": "S1367",
+      "planName": "- WARWICK - 121 ELLERSDALE AVE, WARWICK WA 6024, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data",
+      "serviceType": "Internet",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C0222"
+    },
+    {
+      "externalId": "S1368",
+      "planName": "- WEST LEEDERVILLE - 170 RAILWAY PARADE, WEST LEEDERVILLE WA 6007, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data",
+      "serviceType": "Internet",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C0222"
+    },
+    {
+      "externalId": "S1588",
+      "planName": "Data - Internet",
+      "serviceType": "Internet",
+      "monthlyCost": "0.00",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C0088"
+    },
+    {
+      "externalId": "MOMC_NBN",
+      "planName": "Standard Support NBN 50/20",
+      "serviceType": "Internet",
+      "monthlyCost": "73.69",
+      "monthlyRevenue": "0.00",
+      "customerExternalId": "C_MOMC"
+    }
+  ],
+  "messages": [],
+  "stdout": "externalId\tplanName\tserviceType\tmonthlyCost\tmonthlyRevenue\tcustomerExternalId\nS1353\t- BENTLEY - 81B MANNING RD, BENTLEY WA 6102, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data\tInternet\t0.00\t0.00\tC0222\nS1354\t- CANNING VALE - 2 FORUM AVE, CANNING VALE WA 6155, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data\tInternet\t0.00\t0.00\tC0222\nS1355\t- ELLENBROOK - 1 DELMAGE CIR, ELLENBROOK WA 6069, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data\tInternet\t0.00\t0.00\tC0222\nS1356\t- GREENWOOD - 65 WANNEROO RD, GREENWOOD WA 6024, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data\tInternet\t0.00\t0.00\tC0222\nS1357\t- HIGH WYCOMBE - 1 BERLE WAY, HIGH WYCOMBE WA 6057, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data\tInternet\t0.00\t0.00\tC0222\nS1358\t- HILTON - 299 SOUTH ST, HILTON WA 6163, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data\tInternet\t0.00\t0.00\tC0222\nS1359\t- MORLEY - CHERRY COURT CHILD CARE CENTRE, 10 CHERRY CT, MORLEY WA 6062, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data\tInternet\t0.00\t0.00\tC0222\nS1360\t- NEDLANDS - 73 STIRLING HWY, NEDLANDS WA 6009, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data\tInternet\t0.00\t0.00\tC0222\nS1361\t- NORTHAM - 8 DUKE ST E, NORTHAM WA 6401, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data\tInternet\t0.00\t0.00\tC0222\nS1362\t- SEVILLE GROVE - 11 LISBON WAY, SEVILLE GROVE WA 6112, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data\tInternet\t0.00\t0.00\tC0222\nS1363\t- SWANBOURNE - 153 CLAREMONT CRES, SWANBOURNE WA 6010, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data\tInternet\t0.00\t0.00\tC0222\nS1364\t- THORNLIE - 190 YALE RD, THORNLIE WA 6108, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data\tInternet\t0.00\t0.00\tC0222\nS1365\t- WANNEROO - 32 MULWARRIE CIR, WANNEROO WA 6065, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data\tInternet\t0.00\t0.00\tC0222\nS1366\t- WANNEROO - 42 SCOTT RD, WANNEROO WA 6065, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data\tInternet\t0.00\t0.00\tC0222\nS1367\t- WARWICK - 121 ELLERSDALE AVE, WARWICK WA 6024, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data\tInternet\t0.00\t0.00\tC0222\nS1368\t- WEST LEEDERVILLE - 170 RAILWAY PARADE, WEST LEEDERVILLE WA 6007, AUSTRALIA - Up to 100/40Mbps NBN Basic Unlimited Data\tInternet\t0.00\t0.00\tC0222\nS1588\tData - Internet\tInternet\t0.00\t0.00\tC0088\nMOMC_NBN\tStandard Support NBN 50/20\tInternet\t73.69\t0.00\tC_MOMC\n",
+  "stderr": "",
+  "execution_time_ms": 1644
+}

@@ -1,0 +1,367 @@
+{
+  "query": "SELECT id, productName, wholesaleCost, defaultRetailPrice, notes\nFROM supplier_product_cost_map\nWHERE supplier = 'SasBoss'\nAND (\n  productName LIKE '%Collaborate%' OR\n  productName LIKE '%Common Phone%' OR\n  productName LIKE '%Lite User%' OR\n  productName LIKE '%Essential User%' OR\n  productName LIKE '%Basic User%' OR\n  productName LIKE '%Premium%' OR\n  productName LIKE '%UCXcel%' OR\n  productName LIKE '%Virtual Park%' OR\n  productName LIKE '%Voicemail User%' OR\n  productName LIKE '%Microsoft Teams%' OR\n  productName LIKE '%Residential%' OR\n  productName LIKE '%SIP Trunk%' OR\n  productName LIKE '%Business Trunk%' OR\n  productName LIKE '%Executive User%' OR\n  productName LIKE '%SmileTel%'\n)\nORDER BY productName;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute SELECT id, productName, wholesaleCost, defaultRetailPrice, notes\nFROM supplier_product_cost_map\nWHERE supplier = 'SasBoss'\nAND (\n  productName LIKE '%Collaborate%' OR\n  productName LIKE '%Common Phone%' OR\n  productName LIKE '%Lite User%' OR\n  productName LIKE '%Essential User%' OR\n  productName LIKE '%Basic User%' OR\n  productName LIKE '%Premium%' OR\n  productName LIKE '%UCXcel%' OR\n  productName LIKE '%Virtual Park%' OR\n  productName LIKE '%Voicemail User%' OR\n  productName LIKE '%Microsoft Teams%' OR\n  productName LIKE '%Residential%' OR\n  productName LIKE '%SIP Trunk%' OR\n  productName LIKE '%Business Trunk%' OR\n  productName LIKE '%Executive User%' OR\n  productName LIKE '%SmileTel%'\n)\nORDER BY productName;",
+  "rows": [
+    {
+      "id": "30002",
+      "productName": "Basic User - Included Calls",
+      "wholesaleCost": "10.80000",
+      "defaultRetailPrice": "18.00000",
+      "notes": "Diamond=10.80 | Gold=12.60 | Platinum=11.70"
+    },
+    {
+      "id": "30005",
+      "productName": "Basic User - PAYG",
+      "wholesaleCost": "7.20000",
+      "defaultRetailPrice": "12.00000",
+      "notes": "Diamond=7.20 | Gold=8.40 | Platinum=7.80"
+    },
+    {
+      "id": "72",
+      "productName": "Business Trunk (PAYG)",
+      "wholesaleCost": "4.80000",
+      "defaultRetailPrice": "8.60000",
+      "notes": "SasBoss name for SIP Channel - PAYG"
+    },
+    {
+      "id": "106",
+      "productName": "Collaborate Basic User with Cisco Webex",
+      "wholesaleCost": "13.80000",
+      "defaultRetailPrice": "23.00000",
+      "notes": "Diamond=13.80 | Gold=16.10 | Platinum=14.95"
+    },
+    {
+      "id": "30019",
+      "productName": "Collaborate Basic User with Cisco Webex - Bundled",
+      "wholesaleCost": "24.00000",
+      "defaultRetailPrice": "40.00000",
+      "notes": "Diamond=24.00 | Gold=28.00 | Platinum=26.00"
+    },
+    {
+      "id": "30022",
+      "productName": "Collaborate Basic User with Cisco Webex - Included Calls",
+      "wholesaleCost": "21.00000",
+      "defaultRetailPrice": "35.00000",
+      "notes": "Diamond=21.00 | Gold=24.50 | Platinum=22.75"
+    },
+    {
+      "id": "108",
+      "productName": "Collaborate Premium User with Cisco Webex",
+      "wholesaleCost": "30.00000",
+      "defaultRetailPrice": "50.00000",
+      "notes": "Diamond=30.00 | Gold=35.00 | Platinum=32.50"
+    },
+    {
+      "id": "30021",
+      "productName": "Collaborate Premium User with Cisco Webex - Bundled",
+      "wholesaleCost": "39.00000",
+      "defaultRetailPrice": "65.00000",
+      "notes": "Diamond=39.00 | Gold=45.50 | Platinum=42.25"
+    },
+    {
+      "id": "30024",
+      "productName": "Collaborate Premium User with Cisco Webex - Included Calls",
+      "wholesaleCost": "36.00000",
+      "defaultRetailPrice": "60.00000",
+      "notes": "Diamond=36.00 | Gold=42.00 | Platinum=39.00"
+    },
+    {
+      "id": "107",
+      "productName": "Collaborate Standard User with Cisco Webex",
+      "wholesaleCost": "18.00000",
+      "defaultRetailPrice": "30.00000",
+      "notes": "Diamond=18.00 | Gold=21.00 | Platinum=19.50"
+    },
+    {
+      "id": "30020",
+      "productName": "Collaborate Standard User with Cisco Webex - Bundled",
+      "wholesaleCost": "27.00000",
+      "defaultRetailPrice": "45.00000",
+      "notes": "Diamond=27.00 | Gold=31.50 | Platinum=29.25"
+    },
+    {
+      "id": "30023",
+      "productName": "Collaborate Standard User with Cisco Webex - Included Calls",
+      "wholesaleCost": "24.00000",
+      "defaultRetailPrice": "40.00000",
+      "notes": "Diamond=24.00 | Gold=28.00 | Platinum=26.00"
+    },
+    {
+      "id": "8",
+      "productName": "Common Phone License",
+      "wholesaleCost": "3.90000",
+      "defaultRetailPrice": "6.50000",
+      "notes": "Diamond=3.90 | Gold=4.55 | Platinum=4.23"
+    },
+    {
+      "id": "6",
+      "productName": "Executive User",
+      "wholesaleCost": "9.00000",
+      "defaultRetailPrice": "15.00000",
+      "notes": "Diamond=9.00 | Gold=10.50 | Platinum=9.75"
+    },
+    {
+      "id": "2",
+      "productName": "Executive User - Bundled",
+      "wholesaleCost": "21.00000",
+      "defaultRetailPrice": "35.00000",
+      "notes": "Diamond=21.00 | Gold=24.50 | Platinum=22.75"
+    },
+    {
+      "id": "4",
+      "productName": "Executive user - Included Calls",
+      "wholesaleCost": "18.00000",
+      "defaultRetailPrice": "30.00000",
+      "notes": "Diamond=18.00 | Gold=21.00 | Platinum=19.50"
+    },
+    {
+      "id": "36",
+      "productName": "Hunt Group Premium",
+      "wholesaleCost": "9.00000",
+      "defaultRetailPrice": "15.00000",
+      "notes": "NULL"
+    },
+    {
+      "id": "29",
+      "productName": "MC - SmileTel Basic User License",
+      "wholesaleCost": "6.00000",
+      "defaultRetailPrice": "10.00000",
+      "notes": "Multi-channel variant"
+    },
+    {
+      "id": "30",
+      "productName": "MC - SmileTel Executive User License",
+      "wholesaleCost": "9.00000",
+      "defaultRetailPrice": "15.00000",
+      "notes": "Migration product: Buy $9.00, Sell $15.00 (Access4 migration) - MC variant"
+    },
+    {
+      "id": "31",
+      "productName": "MC - SmileTel Lite User License",
+      "wholesaleCost": "6.00000",
+      "defaultRetailPrice": "12.00000",
+      "notes": "Multi-channel variant"
+    },
+    {
+      "id": "32",
+      "productName": "MC - SmileTel Premium User License",
+      "wholesaleCost": "15.00000",
+      "defaultRetailPrice": "27.00000",
+      "notes": "Multi-channel variant"
+    },
+    {
+      "id": "33",
+      "productName": "MC (Special - Inc) - Executive User License",
+      "wholesaleCost": "18.00000",
+      "defaultRetailPrice": "30.00000",
+      "notes": "Special included calls variant"
+    },
+    {
+      "id": "34",
+      "productName": "MC (Special) - Executive User License",
+      "wholesaleCost": "7.20000",
+      "defaultRetailPrice": "12.00000",
+      "notes": "Special variant"
+    },
+    {
+      "id": "75",
+      "productName": "Operator Connect SIP Trunk",
+      "wholesaleCost": "9.00000",
+      "defaultRetailPrice": "18.00000",
+      "notes": "Microsoft Teams operator connect"
+    },
+    {
+      "id": "41",
+      "productName": "Premium",
+      "wholesaleCost": "9.00000",
+      "defaultRetailPrice": "15.00000",
+      "notes": "Executive User tier"
+    },
+    {
+      "id": "30062",
+      "productName": "Premium (13/1300)",
+      "wholesaleCost": "0.28000",
+      "defaultRetailPrice": "0.40000",
+      "notes": "Diamond=0.28 | Gold=0.28 | Platinum=0.28"
+    },
+    {
+      "id": "16",
+      "productName": "Premium Call Centre Agent",
+      "wholesaleCost": "15.30000",
+      "defaultRetailPrice": "25.50000",
+      "notes": "Diamond=15.30 | Gold=17.85 | Platinum=16.58"
+    },
+    {
+      "id": "104",
+      "productName": "Premium Call Queue",
+      "wholesaleCost": "15.30000",
+      "defaultRetailPrice": "25.50000",
+      "notes": "NULL"
+    },
+    {
+      "id": "39",
+      "productName": "Premium-1",
+      "wholesaleCost": "9.00000",
+      "defaultRetailPrice": "15.00000",
+      "notes": "Executive User tier"
+    },
+    {
+      "id": "40",
+      "productName": "Premium-2",
+      "wholesaleCost": "9.00000",
+      "defaultRetailPrice": "15.00000",
+      "notes": "Executive User tier"
+    },
+    {
+      "id": "42",
+      "productName": "Premium-3",
+      "wholesaleCost": "9.00000",
+      "defaultRetailPrice": "15.00000",
+      "notes": "Executive User tier"
+    },
+    {
+      "id": "7",
+      "productName": "Residential License",
+      "wholesaleCost": "3.90000",
+      "defaultRetailPrice": "6.50000",
+      "notes": "Diamond=3.90 | Gold=4.55 | Platinum=4.23"
+    },
+    {
+      "id": "27",
+      "productName": "SmileTel Basic User License",
+      "wholesaleCost": "6.00000",
+      "defaultRetailPrice": "10.00000",
+      "notes": "SasBoss product name for Office User"
+    },
+    {
+      "id": "23",
+      "productName": "SmileTel Essential user",
+      "wholesaleCost": "9.00000",
+      "defaultRetailPrice": "17.00000",
+      "notes": "SasBoss product name. Diamond cost = $9. RRP is SmileIT default retail."
+    },
+    {
+      "id": "24",
+      "productName": "SmileTel Essential User Special",
+      "wholesaleCost": "9.00000",
+      "defaultRetailPrice": "22.50000",
+      "notes": "Special pricing variant"
+    },
+    {
+      "id": "25",
+      "productName": "SmileTel Executive User License",
+      "wholesaleCost": "9.00000",
+      "defaultRetailPrice": "15.00000",
+      "notes": "Migration product: Buy $9.00, Sell $15.00 (Access4 migration)"
+    },
+    {
+      "id": "26",
+      "productName": "SmileTel Lite user",
+      "wholesaleCost": "6.00000",
+      "defaultRetailPrice": "12.00000",
+      "notes": "SasBoss product name for Office User"
+    },
+    {
+      "id": "28",
+      "productName": "SmileTel Professional User License",
+      "wholesaleCost": "15.00000",
+      "defaultRetailPrice": "27.00000",
+      "notes": "SasBoss product name for Executive User - Included Calls"
+    },
+    {
+      "id": "52",
+      "productName": "UCXcel Auto-Attendant",
+      "wholesaleCost": "9.00000",
+      "defaultRetailPrice": "15.00000",
+      "notes": "NULL"
+    },
+    {
+      "id": "54",
+      "productName": "UCXcel Basic Queue Agent",
+      "wholesaleCost": "6.30000",
+      "defaultRetailPrice": "10.50000",
+      "notes": "NULL"
+    },
+    {
+      "id": "53",
+      "productName": "UCXcel Call Centre Queue",
+      "wholesaleCost": "6.30000",
+      "defaultRetailPrice": "10.50000",
+      "notes": "NULL"
+    },
+    {
+      "id": "46",
+      "productName": "UCXcel Essential",
+      "wholesaleCost": "9.00000",
+      "defaultRetailPrice": "17.00000",
+      "notes": "UCXcel = UCaaS Licensing. Diamond cost $9."
+    },
+    {
+      "id": "51",
+      "productName": "UCXcel Hunt Group",
+      "wholesaleCost": "9.00000",
+      "defaultRetailPrice": "15.00000",
+      "notes": "NULL"
+    },
+    {
+      "id": "47",
+      "productName": "UCXcel Lite",
+      "wholesaleCost": "6.00000",
+      "defaultRetailPrice": "12.00000",
+      "notes": "UCXcel Lite = Office User tier"
+    },
+    {
+      "id": "49",
+      "productName": "UCXcel Premium",
+      "wholesaleCost": "21.00000",
+      "defaultRetailPrice": "37.50000",
+      "notes": "UCXcel Premium = Executive User - Bundled"
+    },
+    {
+      "id": "48",
+      "productName": "UCXcel Professional",
+      "wholesaleCost": "15.00000",
+      "defaultRetailPrice": "27.00000",
+      "notes": "UCXcel Professional = Executive User - Included Calls"
+    },
+    {
+      "id": "55",
+      "productName": "UCXcel Voicemail User",
+      "wholesaleCost": "3.00000",
+      "defaultRetailPrice": "5.00000",
+      "notes": "NULL"
+    },
+    {
+      "id": "50",
+      "productName": "UCXcel Webex Basic",
+      "wholesaleCost": "13.80000",
+      "defaultRetailPrice": "23.00000",
+      "notes": "Collaborate Basic User with Cisco Webex"
+    },
+    {
+      "id": "17",
+      "productName": "Virtual Park User",
+      "wholesaleCost": "3.00000",
+      "defaultRetailPrice": "5.00000",
+      "notes": "Diamond=3.00 | Gold=3.50 | Platinum=3.25"
+    },
+    {
+      "id": "20",
+      "productName": "Voicemail Add-On for Residential Services",
+      "wholesaleCost": "2.00000",
+      "defaultRetailPrice": "2.50000",
+      "notes": "Diamond=2.00 | Gold=2.00 | Platinum=2.00"
+    },
+    {
+      "id": "18",
+      "productName": "Voicemail User",
+      "wholesaleCost": "3.00000",
+      "defaultRetailPrice": "5.00000",
+      "notes": "Diamond=3.00 | Gold=3.50 | Platinum=3.25"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tproductName\twholesaleCost\tdefaultRetailPrice\tnotes\n30002\tBasic User - Included Calls\t10.80000\t18.00000\tDiamond=10.80 | Gold=12.60 | Platinum=11.70\n30005\tBasic User - PAYG\t7.20000\t12.00000\tDiamond=7.20 | Gold=8.40 | Platinum=7.80\n72\tBusiness Trunk (PAYG)\t4.80000\t8.60000\tSasBoss name for SIP Channel - PAYG\n106\tCollaborate Basic User with Cisco Webex\t13.80000\t23.00000\tDiamond=13.80 | Gold=16.10 | Platinum=14.95\n30019\tCollaborate Basic User with Cisco Webex - Bundled\t24.00000\t40.00000\tDiamond=24.00 | Gold=28.00 | Platinum=26.00\n30022\tCollaborate Basic User with Cisco Webex - Included Calls\t21.00000\t35.00000\tDiamond=21.00 | Gold=24.50 | Platinum=22.75\n108\tCollaborate Premium User with Cisco Webex\t30.00000\t50.00000\tDiamond=30.00 | Gold=35.00 | Platinum=32.50\n30021\tCollaborate Premium User with Cisco Webex - Bundled\t39.00000\t65.00000\tDiamond=39.00 | Gold=45.50 | Platinum=42.25\n30024\tCollaborate Premium User with Cisco Webex - Included Calls\t36.00000\t60.00000\tDiamond=36.00 | Gold=42.00 | Platinum=39.00\n107\tCollaborate Standard User with Cisco Webex\t18.00000\t30.00000\tDiamond=18.00 | Gold=21.00 | Platinum=19.50\n30020\tCollaborate Standard User with Cisco Webex - Bundled\t27.00000\t45.00000\tDiamond=27.00 | Gold=31.50 | Platinum=29.25\n30023\tCollaborate Standard User with Cisco Webex - Included Calls\t24.00000\t40.00000\tDiamond=24.00 | Gold=28.00 | Platinum=26.00\n8\tCommon Phone License\t3.90000\t6.50000\tDiamond=3.90 | Gold=4.55 | Platinum=4.23\n6\tExecutive User\t9.00000\t15.00000\tDiamond=9.00 | Gold=10.50 | Platinum=9.75\n2\tExecutive User - Bundled\t21.00000\t35.00000\tDiamond=21.00 | Gold=24.50 | Platinum=22.75\n4\tExecutive user - Included Calls\t18.00000\t30.00000\tDiamond=18.00 | Gold=21.00 | Platinum=19.50\n36\tHunt Group Premium\t9.00000\t15.00000\tNULL\n29\tMC - SmileTel Basic User License\t6.00000\t10.00000\tMulti-channel variant\n30\tMC - SmileTel Executive User License\t9.00000\t15.00000\tMigration product: Buy $9.00, Sell $15.00 (Access4 migration) - MC variant\n31\tMC - SmileTel Lite User License\t6.00000\t12.00000\tMulti-channel variant\n32\tMC - SmileTel Premium User License\t15.00000\t27.00000\tMulti-channel variant\n33\tMC (Special - Inc) - Executive User License\t18.00000\t30.00000\tSpecial included calls variant\n34\tMC (Special) - Executive User License\t7.20000\t12.00000\tSpecial variant\n75\tOperator Connect SIP Trunk\t9.00000\t18.00000\tMicrosoft Teams operator connect\n41\tPremium\t9.00000\t15.00000\tExecutive User tier\n30062\tPremium (13/1300)\t0.28000\t0.40000\tDiamond=0.28 | Gold=0.28 | Platinum=0.28\n16\tPremium Call Centre Agent\t15.30000\t25.50000\tDiamond=15.30 | Gold=17.85 | Platinum=16.58\n104\tPremium Call Queue\t15.30000\t25.50000\tNULL\n39\tPremium-1\t9.00000\t15.00000\tExecutive User tier\n40\tPremium-2\t9.00000\t15.00000\tExecutive User tier\n42\tPremium-3\t9.00000\t15.00000\tExecutive User tier\n7\tResidential License\t3.90000\t6.50000\tDiamond=3.90 | Gold=4.55 | Platinum=4.23\n27\tSmileTel Basic User License\t6.00000\t10.00000\tSasBoss product name for Office User\n23\tSmileTel Essential user\t9.00000\t17.00000\tSasBoss product name. Diamond cost = $9. RRP is SmileIT default retail.\n24\tSmileTel Essential User Special\t9.00000\t22.50000\tSpecial pricing variant\n25\tSmileTel Executive User License\t9.00000\t15.00000\tMigration product: Buy $9.00, Sell $15.00 (Access4 migration)\n26\tSmileTel Lite user\t6.00000\t12.00000\tSasBoss product name for Office User\n28\tSmileTel Professional User License\t15.00000\t27.00000\tSasBoss product name for Executive User - Included Calls\n52\tUCXcel Auto-Attendant\t9.00000\t15.00000\tNULL\n54\tUCXcel Basic Queue Agent\t6.30000\t10.50000\tNULL\n53\tUCXcel Call Centre Queue\t6.30000\t10.50000\tNULL\n46\tUCXcel Essential\t9.00000\t17.00000\tUCXcel = UCaaS Licensing. Diamond cost $9.\n51\tUCXcel Hunt Group\t9.00000\t15.00000\tNULL\n47\tUCXcel Lite\t6.00000\t12.00000\tUCXcel Lite = Office User tier\n49\tUCXcel Premium\t21.00000\t37.50000\tUCXcel Premium = Executive User - Bundled\n48\tUCXcel Professional\t15.00000\t27.00000\tUCXcel Professional = Executive User - Included Calls\n55\tUCXcel Voicemail User\t3.00000\t5.00000\tNULL\n50\tUCXcel Webex Basic\t13.80000\t23.00000\tCollaborate Basic User with Cisco Webex\n17\tVirtual Park User\t3.00000\t5.00000\tDiamond=3.00 | Gold=3.50 | Platinum=3.25\n20\tVoicemail Add-On for Residential Services\t2.00000\t2.50000\tDiamond=2.00 | Gold=2.00 | Platinum=2.00\n18\tVoicemail User\t3.00000\t5.00000\tDiamond=3.00 | Gold=3.50 | Platinum=3.25\n",
+  "stderr": "",
+  "execution_time_ms": 1698
+}

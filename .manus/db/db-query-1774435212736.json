@@ -1,0 +1,64 @@
+{
+  "query": "\n-- How many SasBoss services exist?\nSELECT COUNT(*) AS total_sasboss FROM services WHERE supplierName = 'SasBoss';\n\n-- What service types do SasBoss services have?\nSELECT serviceType, COUNT(*) AS cnt FROM services WHERE supplierName = 'SasBoss' GROUP BY serviceType ORDER BY cnt DESC;\n\n-- Sample SasBoss services with their fields\nSELECT externalId, serviceType, serviceTypeDetail, planName, supplierAccount, customerExternalId, monthlyCost, connectionId, locId, phoneNumber, locationAddress\nFROM services WHERE supplierName = 'SasBoss' LIMIT 10;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- How many SasBoss services exist?\nSELECT COUNT(*) AS total_sasboss FROM services WHERE supplierName = 'SasBoss';\n\n-- What service types do SasBoss services have?\nSELECT serviceType, COUNT(*) AS cnt FROM services WHERE supplierName = 'SasBoss' GROUP BY serviceType ORDER BY cnt DESC;\n\n-- Sample SasBoss services with their fields\nSELECT externalId, serviceType, serviceTypeDetail, planName, supplierAccount, customerExternalId, monthlyCost, connectionId, locId, phoneNumber, locationAddress\nFROM services WHERE supplierName = 'SasBoss' LIMIT 10;\n",
+  "rows": [
+    {
+      "total_sasboss": "1132"
+    },
+    {
+      "total_sasboss": "serviceType\tcnt"
+    },
+    {
+      "total_sasboss": "Voice\t889"
+    },
+    {
+      "total_sasboss": "Internet\t110"
+    },
+    {
+      "total_sasboss": "VoIP\t61"
+    },
+    {
+      "total_sasboss": "Other\t37"
+    },
+    {
+      "total_sasboss": "Mobile\t35"
+    },
+    {
+      "total_sasboss": "externalId\tserviceType\tserviceTypeDetail\tplanName\tsupplierAccount\tcustomerExternalId\tmonthlyCost\tconnectionId\tlocId\tphoneNumber\tlocationAddress"
+    },
+    {
+      "total_sasboss": "S0744\tVoice\tVoice - Direct In Dial Numbers\tVoice - Direct In Dial Numbers\t\tC0001\t0.33\t\t\t\tSuite 16 72 Wises Rd, BUDERIM, Queensland, Australia, 4556"
+    },
+    {
+      "total_sasboss": "S0745\tVoice\tVoice - Services\tVoice - Services\t\tC0001\t0.00\t\t\t\tSuite 16 72 Wises Rd, BUDERIM, Queensland, Australia, 4556"
+    },
+    {
+      "total_sasboss": "S0746\tVoice\tVoice - Telephone Usage\tVoice - Telephone Usage\t\tC0001\t0.00\t\t\t\tSuite 16 72 Wises Rd, BUDERIM, Queensland, Australia, 4556"
+    },
+    {
+      "total_sasboss": "S0747\tInternet\tData - Internet\tData - Internet\t\tC0001\t0.00\t\t\t\tSuite 16 72 Wises Rd, BUDERIM, Queensland, Australia, 4556"
+    },
+    {
+      "total_sasboss": "S0749\tVoice\tVoice - Direct In Dial Numbers\tVoice - Direct In Dial Numbers\t\tC0003\t0.66\t\t\t\tUnit 3, Eloura Towers, 81 Sixth AV, Maroochydore, QLD, 4558"
+    },
+    {
+      "total_sasboss": "S0750\tVoice\tVoice - Services\tVoice - Services\t\tC0003\t0.00\t\t\t\tUnit 3, Eloura Towers, 81 Sixth AV, Maroochydore, QLD, 4558"
+    },
+    {
+      "total_sasboss": "S0751\tVoice\tVoice - Telephone Usage\tVoice - Telephone Usage\t\tC0003\t0.00\t\t\t\tUnit 3, Eloura Towers, 81 Sixth AV, Maroochydore, QLD, 4558"
+    },
+    {
+      "total_sasboss": "S0752\tInternet\tData - Internet\tData - Internet\t\tC0003\t0.00\t\t\t\tUnit 3, Eloura Towers, 81 Sixth AV, Maroochydore, QLD, 4558"
+    },
+    {
+      "total_sasboss": "S0753\tOther\tOther\tOther\t\tC0003\t49.00\t\t\t\tUnit 3, Eloura Towers, 81 Sixth AV, Maroochydore, QLD, 4558"
+    },
+    {
+      "total_sasboss": "S0756\tVoice\tVoice - Direct In Dial Numbers\tVoice - Direct In Dial Numbers\t\tC0005\t0.33\t\t\t\tLevel 2, Building A/6, Innovation Pkwy, Birtinya, QLD, 4575"
+    }
+  ],
+  "messages": [],
+  "stdout": "total_sasboss\n1132\nserviceType\tcnt\nVoice\t889\nInternet\t110\nVoIP\t61\nOther\t37\nMobile\t35\nexternalId\tserviceType\tserviceTypeDetail\tplanName\tsupplierAccount\tcustomerExternalId\tmonthlyCost\tconnectionId\tlocId\tphoneNumber\tlocationAddress\nS0744\tVoice\tVoice - Direct In Dial Numbers\tVoice - Direct In Dial Numbers\t\tC0001\t0.33\t\t\t\tSuite 16 72 Wises Rd, BUDERIM, Queensland, Australia, 4556\nS0745\tVoice\tVoice - Services\tVoice - Services\t\tC0001\t0.00\t\t\t\tSuite 16 72 Wises Rd, BUDERIM, Queensland, Australia, 4556\nS0746\tVoice\tVoice - Telephone Usage\tVoice - Telephone Usage\t\tC0001\t0.00\t\t\t\tSuite 16 72 Wises Rd, BUDERIM, Queensland, Australia, 4556\nS0747\tInternet\tData - Internet\tData - Internet\t\tC0001\t0.00\t\t\t\tSuite 16 72 Wises Rd, BUDERIM, Queensland, Australia, 4556\nS0749\tVoice\tVoice - Direct In Dial Numbers\tVoice - Direct In Dial Numbers\t\tC0003\t0.66\t\t\t\tUnit 3, Eloura Towers, 81 Sixth AV, Maroochydore, QLD, 4558\nS0750\tVoice\tVoice - Services\tVoice - Services\t\tC0003\t0.00\t\t\t\tUnit 3, Eloura Towers, 81 Sixth AV, Maroochydore, QLD, 4558\nS0751\tVoice\tVoice - Telephone Usage\tVoice - Telephone Usage\t\tC0003\t0.00\t\t\t\tUnit 3, Eloura Towers, 81 Sixth AV, Maroochydore, QLD, 4558\nS0752\tInternet\tData - Internet\tData - Internet\t\tC0003\t0.00\t\t\t\tUnit 3, Eloura Towers, 81 Sixth AV, Maroochydore, QLD, 4558\nS0753\tOther\tOther\tOther\t\tC0003\t49.00\t\t\t\tUnit 3, Eloura Towers, 81 Sixth AV, Maroochydore, QLD, 4558\nS0756\tVoice\tVoice - Direct In Dial Numbers\tVoice - Direct In Dial Numbers\t\tC0005\t0.33\t\t\t\tLevel 2, Building A/6, Innovation Pkwy, Birtinya, QLD, 4575\n",
+  "stderr": "",
+  "execution_time_ms": 2136
+}

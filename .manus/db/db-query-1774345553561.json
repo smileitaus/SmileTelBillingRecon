@@ -1,0 +1,39 @@
+{
+  "query": "-- Sample of non-xero billing items to understand their source\nSELECT bi.externalId, bi.invoiceNumber, bi.invoiceDate, bi.contactName, bi.description, \n       bi.lineAmount, bi.accountCode, bi.category, bi.matchStatus, bi.matchConfidence, bi.billingPlatform,\n       bi.serviceExternalId,\n       s.planName, s.supplierName, s.locationAddress\nFROM billing_items bi\nLEFT JOIN services s ON s.externalId = bi.serviceExternalId\nWHERE bi.category = 'internet' AND bi.customerExternalId = 'C0159'\nLIMIT 10;\n\n-- Check what the 13 unassigned services in the screenshot are (from supplier services panel)\nSELECT externalId, serviceType, serviceTypeDetail, planName, supplierName, \n       monthlyCost, monthlyRevenue, locationAddress, connectionId\nFROM services WHERE customerExternalId = 'C0159' AND (monthlyRevenue = 0 OR monthlyRevenue IS NULL)\nORDER BY serviceType, monthlyCost DESC;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute -- Sample of non-xero billing items to understand their source\nSELECT bi.externalId, bi.invoiceNumber, bi.invoiceDate, bi.contactName, bi.description, \n       bi.lineAmount, bi.accountCode, bi.category, bi.matchStatus, bi.matchConfidence, bi.billingPlatform,\n       bi.serviceExternalId,\n       s.planName, s.supplierName, s.locationAddress\nFROM billing_items bi\nLEFT JOIN services s ON s.externalId = bi.serviceExternalId\nWHERE bi.category = 'internet' AND bi.customerExternalId = 'C0159'\nLIMIT 10;\n\n-- Check what the 13 unassigned services in the screenshot are (from supplier services panel)\nSELECT externalId, serviceType, serviceTypeDetail, planName, supplierName, \n       monthlyCost, monthlyRevenue, locationAddress, connectionId\nFROM services WHERE customerExternalId = 'C0159' AND (monthlyRevenue = 0 OR monthlyRevenue IS NULL)\nORDER BY serviceType, monthlyCost DESC;",
+  "rows": [
+    {
+      "externalId": "BI00250",
+      "invoiceNumber": "E-884448",
+      "invoiceDate": "2026-02-01",
+      "contactName": "Mega Electrics",
+      "description": "Data - Internet",
+      "lineAmount": "500.00",
+      "accountCode": "2378",
+      "category": "internet",
+      "matchStatus": "service-matched",
+      "matchConfidence": "auto",
+      "billingPlatform": "",
+      "serviceExternalId": "S1119",
+      "planName": "Data - Internet",
+      "supplierName": "SasBoss",
+      "locationAddress": "290 Darebin Rd, Fairfield, VIC, 3078"
+    }
+  ],
+  "messages": [
+    "externalId\tserviceType\tserviceTypeDetail\tplanName\tsupplierName\tmonthlyCost\tmonthlyRevenue\tlocationAddress\tconnectionId",
+    "S0347\tInternet\tHFC\tNBN 100/40\tABB\t77.00\t0.00\t290 DAREBIN RD, FAIRFIELD VIC\tAVC400051416347",
+    "SVC0047\tInternet\tIP-Line Link\tAAPT IP-Line Link 5770720\tAAPT\t62.23\t0.00\t\t",
+    "SVC0018\tInternet\tIP-Line Link\tAAPT IP-Line Link 5669987\tAAPT\t48.40\t0.00\t\t",
+    "SSP8YYUO\tVoice\t\tOperator Connect SIP Trunk\tSasBoss\t9.00\t0.00\t\t",
+    "SSE2JXUK\tVoice\t\tUCXcel Essential\tSasBoss\t9.00\t0.00\t\t",
+    "SS6OYXDR\tVoice\t\tInbound 1300 Number Hosting\tSasBoss\t5.00\t0.00\t\t",
+    "SSGM4OBH\tVoice\t\tDID Australia (10)\tSasBoss\t2.00\t0.00\t\t",
+    "S7366\tVoice\t\tIP Tel Single Number\tTelstra\t2.00\t0.00\t\t",
+    "IPTEL-AB041910\tVoice\tIPTel Service\t1/02/2026 to 1/03/2026 -- IP Tel Single Number\tVocus\t2.00\t0.00\t\tAB041910",
+    "SSTI1R35\tVoice\t\tPremium-1\tSasBoss\t0.00\t0.00\t\t"
+  ],
+  "stdout": "externalId\tinvoiceNumber\tinvoiceDate\tcontactName\tdescription\tlineAmount\taccountCode\tcategory\tmatchStatus\tmatchConfidence\tbillingPlatform\tserviceExternalId\tplanName\tsupplierName\tlocationAddress\nBI00250\tE-884448\t2026-02-01\tMega Electrics\tData - Internet\t500.00\t2378\tinternet\tservice-matched\tauto\t\tS1119\tData - Internet\tSasBoss\t290 Darebin Rd, Fairfield, VIC, 3078\nexternalId\tserviceType\tserviceTypeDetail\tplanName\tsupplierName\tmonthlyCost\tmonthlyRevenue\tlocationAddress\tconnectionId\nS0347\tInternet\tHFC\tNBN 100/40\tABB\t77.00\t0.00\t290 DAREBIN RD, FAIRFIELD VIC\tAVC400051416347\nSVC0047\tInternet\tIP-Line Link\tAAPT IP-Line Link 5770720\tAAPT\t62.23\t0.00\t\t\nSVC0018\tInternet\tIP-Line Link\tAAPT IP-Line Link 5669987\tAAPT\t48.40\t0.00\t\t\nSSP8YYUO\tVoice\t\tOperator Connect SIP Trunk\tSasBoss\t9.00\t0.00\t\t\nSSE2JXUK\tVoice\t\tUCXcel Essential\tSasBoss\t9.00\t0.00\t\t\nSS6OYXDR\tVoice\t\tInbound 1300 Number Hosting\tSasBoss\t5.00\t0.00\t\t\nSSGM4OBH\tVoice\t\tDID Australia (10)\tSasBoss\t2.00\t0.00\t\t\nS7366\tVoice\t\tIP Tel Single Number\tTelstra\t2.00\t0.00\t\t\nIPTEL-AB041910\tVoice\tIPTel Service\t1/02/2026 to 1/03/2026 -- IP Tel Single Number\tVocus\t2.00\t0.00\t\tAB041910\nSSTI1R35\tVoice\t\tPremium-1\tSasBoss\t0.00\t0.00\t\t\n",
+  "stderr": "",
+  "execution_time_ms": 1838
+}

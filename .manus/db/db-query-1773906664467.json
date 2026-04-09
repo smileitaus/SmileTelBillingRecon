@@ -1,0 +1,138 @@
+{
+  "query": "SHOW COLUMNS FROM supplier_product_cost_map;\nSHOW COLUMNS FROM services LIKE '%roduct%';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute SHOW COLUMNS FROM supplier_product_cost_map;\nSHOW COLUMNS FROM services LIKE '%roduct%';",
+  "rows": [
+    {
+      "Field": "id",
+      "Type": "int",
+      "Null": "NO",
+      "Key": "PRI",
+      "Default": "NULL",
+      "Extra": "auto_increment"
+    },
+    {
+      "Field": "supplier",
+      "Type": "varchar(128)",
+      "Null": "NO",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "productName",
+      "Type": "varchar(512)",
+      "Null": "NO",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "productCategory",
+      "Type": "varchar(128)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "",
+      "Extra": ""
+    },
+    {
+      "Field": "unit",
+      "Type": "varchar(64)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "Per Month",
+      "Extra": ""
+    },
+    {
+      "Field": "rrp",
+      "Type": "decimal(10,5)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "0.00000",
+      "Extra": ""
+    },
+    {
+      "Field": "wholesaleCost",
+      "Type": "decimal(10,5)",
+      "Null": "NO",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "defaultRetailPrice",
+      "Type": "decimal(10,5)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "0.00000",
+      "Extra": ""
+    },
+    {
+      "Field": "notes",
+      "Type": "text",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "isActive",
+      "Type": "int",
+      "Null": "NO",
+      "Key": "",
+      "Default": "1",
+      "Extra": ""
+    },
+    {
+      "Field": "source",
+      "Type": "varchar(128)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "Access4 Diamond Pricebook v3.4",
+      "Extra": ""
+    },
+    {
+      "Field": "createdAt",
+      "Type": "timestamp",
+      "Null": "NO",
+      "Key": "",
+      "Default": "CURRENT_TIMESTAMP",
+      "Extra": ""
+    },
+    {
+      "Field": "updatedAt",
+      "Type": "timestamp",
+      "Null": "NO",
+      "Key": "",
+      "Default": "CURRENT_TIMESTAMP",
+      "Extra": "DEFAULT_GENERATED on update CURRENT_TIMESTAMP"
+    },
+    {
+      "Field": "Field",
+      "Type": "Type",
+      "Null": "Null",
+      "Key": "Key",
+      "Default": "Default",
+      "Extra": "Extra"
+    },
+    {
+      "Field": "aaptProductType",
+      "Type": "varchar(128)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "",
+      "Extra": ""
+    },
+    {
+      "Field": "aaptProductCategory",
+      "Type": "varchar(64)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "",
+      "Extra": ""
+    }
+  ],
+  "messages": [],
+  "stdout": "Field\tType\tNull\tKey\tDefault\tExtra\nid\tint\tNO\tPRI\tNULL\tauto_increment\nsupplier\tvarchar(128)\tNO\t\tNULL\t\nproductName\tvarchar(512)\tNO\t\tNULL\t\nproductCategory\tvarchar(128)\tYES\t\t\t\nunit\tvarchar(64)\tYES\t\tPer Month\t\nrrp\tdecimal(10,5)\tYES\t\t0.00000\t\nwholesaleCost\tdecimal(10,5)\tNO\t\tNULL\t\ndefaultRetailPrice\tdecimal(10,5)\tYES\t\t0.00000\t\nnotes\ttext\tYES\t\tNULL\t\nisActive\tint\tNO\t\t1\t\nsource\tvarchar(128)\tYES\t\tAccess4 Diamond Pricebook v3.4\t\ncreatedAt\ttimestamp\tNO\t\tCURRENT_TIMESTAMP\t\nupdatedAt\ttimestamp\tNO\t\tCURRENT_TIMESTAMP\tDEFAULT_GENERATED on update CURRENT_TIMESTAMP\nField\tType\tNull\tKey\tDefault\tExtra\naaptProductType\tvarchar(128)\tYES\t\t\t\naaptProductCategory\tvarchar(64)\tYES\t\t\t\n",
+  "stderr": "",
+  "execution_time_ms": 2021
+}

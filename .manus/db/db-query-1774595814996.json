@@ -1,0 +1,405 @@
+{
+  "query": "\n-- Look at ChannelHaus services that have correct margins (cost != revenue, both > 0)\n-- to understand the pattern of how revenue was set for working services\nSELECT \n  s.planName,\n  s.customerName,\n  s.monthlyCost,\n  s.monthlyRevenue,\n  ROUND((s.monthlyRevenue - s.monthlyCost) / NULLIF(s.monthlyRevenue, 0) * 100, 1) as marginPct,\n  LEFT(s.discoveryNotes, 150) as notes\nFROM services s\nWHERE s.supplierName = 'ChannelHaus'\n  AND s.monthlyCost != s.monthlyRevenue\n  AND s.monthlyCost > 0\n  AND s.monthlyRevenue > 0\nORDER BY marginPct DESC;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Look at ChannelHaus services that have correct margins (cost != revenue, both > 0)\n-- to understand the pattern of how revenue was set for working services\nSELECT \n  s.planName,\n  s.customerName,\n  s.monthlyCost,\n  s.monthlyRevenue,\n  ROUND((s.monthlyRevenue - s.monthlyCost) / NULLIF(s.monthlyRevenue, 0) * 100, 1) as marginPct,\n  LEFT(s.discoveryNotes, 150) as notes\nFROM services s\nWHERE s.supplierName = 'ChannelHaus'\n  AND s.monthlyCost != s.monthlyRevenue\n  AND s.monthlyCost > 0\n  AND s.monthlyRevenue > 0\nORDER BY marginPct DESC;\n",
+  "rows": [
+    {
+      "planName": "Bay Apartments Door Relay",
+      "customerName": "Australian Resort Management Pty Ltd",
+      "monthlyCost": "4.80",
+      "monthlyRevenue": "210.00",
+      "marginPct": "97.7",
+      "notes": "NULL"
+    },
+    {
+      "planName": "RodeMedATA",
+      "customerName": "Rode Medical Clinic",
+      "monthlyCost": "25.00",
+      "monthlyRevenue": "240.00",
+      "marginPct": "89.6",
+      "notes": "NULL"
+    },
+    {
+      "planName": "GGPSCin",
+      "customerName": "Gladstone GP Super Clinic",
+      "monthlyCost": "34.70",
+      "monthlyRevenue": "265.00",
+      "marginPct": "86.9",
+      "notes": "NULL"
+    },
+    {
+      "planName": "JemaClinic_Inbound",
+      "customerName": "Jema Clinic",
+      "monthlyCost": "76.40",
+      "monthlyRevenue": "265.00",
+      "marginPct": "71.2",
+      "notes": "[REVIEWED] Multiple services at this site reviewed and accepted. "
+    },
+    {
+      "planName": "Shailer Park Medical",
+      "customerName": "Shailer Park Medical Centre",
+      "monthlyCost": "95.00",
+      "monthlyRevenue": "288.00",
+      "marginPct": "67.0",
+      "notes": "[REVIEWED] Multiple services at this site reviewed and accepted. "
+    },
+    {
+      "planName": "Locale",
+      "customerName": "Locanda Pty Ltd",
+      "monthlyCost": "47.54",
+      "monthlyRevenue": "144.00",
+      "marginPct": "67.0",
+      "notes": "NULL"
+    },
+    {
+      "planName": "DJ Steel",
+      "customerName": "DJ Steel Biloela - AJ and KL Fletcher",
+      "monthlyCost": "110.06",
+      "monthlyRevenue": "240.00",
+      "marginPct": "54.1",
+      "notes": "[SmileTel Import] Account: 586992900, Plan: Business Bundle Data Plan"
+    },
+    {
+      "planName": "pbx Coastal Dental Specialists",
+      "customerName": "Coastal Dental Specialists",
+      "monthlyCost": "90.65",
+      "monthlyRevenue": "150.00",
+      "marginPct": "39.6",
+      "notes": "NULL"
+    },
+    {
+      "planName": "StaffordCityDoctors",
+      "customerName": "Stafford City Doctors",
+      "monthlyCost": "224.93",
+      "monthlyRevenue": "365.00",
+      "marginPct": "38.4",
+      "notes": "[REVIEWED] Multiple services at this site reviewed and accepted. "
+    },
+    {
+      "planName": "DocAtKawanIn",
+      "customerName": "Doctors At Kawana Shopping World",
+      "monthlyCost": "23.20",
+      "monthlyRevenue": "36.00",
+      "marginPct": "35.6",
+      "notes": "[REVIEWED] Multiple services at this site reviewed and accepted. "
+    },
+    {
+      "planName": "MedPodsDoOut",
+      "customerName": "Havilah Medical Centre Doreen",
+      "monthlyCost": "71.20",
+      "monthlyRevenue": "106.00",
+      "marginPct": "32.8",
+      "notes": "[REVIEWED] Multiple services at this site reviewed and accepted. "
+    },
+    {
+      "planName": "DocSamfdVIN",
+      "customerName": "Doctors at Samford Valley",
+      "monthlyCost": "12.20",
+      "monthlyRevenue": "18.00",
+      "marginPct": "32.2",
+      "notes": "NULL"
+    },
+    {
+      "planName": "WarwkMCIn",
+      "customerName": "Warwick Medical Centre",
+      "monthlyCost": "18.90",
+      "monthlyRevenue": "27.00",
+      "marginPct": "30.0",
+      "notes": "NULL"
+    },
+    {
+      "planName": "OceanMed Enterprises",
+      "customerName": "OceanMed Enterprises Pty Ltd",
+      "monthlyCost": "145.75",
+      "monthlyRevenue": "208.00",
+      "marginPct": "29.9",
+      "notes": "NULL"
+    },
+    {
+      "planName": "docsamfdvout",
+      "customerName": "Doctors at Samford Valley",
+      "monthlyCost": "112.27",
+      "monthlyRevenue": "159.00",
+      "marginPct": "29.4",
+      "notes": "NULL"
+    },
+    {
+      "planName": "GGPSCout",
+      "customerName": "Gladstone GP Super Clinic",
+      "monthlyCost": "187.58",
+      "monthlyRevenue": "265.00",
+      "marginPct": "29.2",
+      "notes": "NULL"
+    },
+    {
+      "planName": "jemaClinic_Outbound",
+      "customerName": "Jema Clinic",
+      "monthlyCost": "192.07",
+      "monthlyRevenue": "265.00",
+      "marginPct": "27.5",
+      "notes": "[REVIEWED] Multiple services at this site reviewed and accepted. "
+    },
+    {
+      "planName": "Rode Medical Clinic",
+      "customerName": "Rode Medical Clinic",
+      "monthlyCost": "175.00",
+      "monthlyRevenue": "240.00",
+      "marginPct": "27.1",
+      "notes": "NULL"
+    },
+    {
+      "planName": "ControlEquip",
+      "customerName": "Control Equipment Pty Ltd",
+      "monthlyCost": "140.00",
+      "monthlyRevenue": "192.00",
+      "marginPct": "27.1",
+      "notes": "NULL"
+    },
+    {
+      "planName": "SkimmerLids",
+      "customerName": "Skimmer Lids Pty Ltd",
+      "monthlyCost": "105.00",
+      "monthlyRevenue": "144.00",
+      "marginPct": "27.1",
+      "notes": "NULL"
+    },
+    {
+      "planName": "GeebungMedical",
+      "customerName": "Geebung Medical Clinic",
+      "monthlyCost": "105.00",
+      "monthlyRevenue": "144.00",
+      "marginPct": "27.1",
+      "notes": "NULL"
+    },
+    {
+      "planName": "HbayGardenCenter",
+      "customerName": "Hervey Bay Garden Centre",
+      "monthlyCost": "73.16",
+      "monthlyRevenue": "100.00",
+      "marginPct": "26.8",
+      "notes": "NULL"
+    },
+    {
+      "planName": "rickysnoosa",
+      "customerName": "Rickys Noosa",
+      "monthlyCost": "141.01",
+      "monthlyRevenue": "192.00",
+      "marginPct": "26.6",
+      "notes": "NULL"
+    },
+    {
+      "planName": "Nth Bris Cardiology",
+      "customerName": "North Brisbane Cardiology Pty Ltd",
+      "monthlyCost": "141.77",
+      "monthlyRevenue": "192.00",
+      "marginPct": "26.2",
+      "notes": "NULL"
+    },
+    {
+      "planName": "EcolifeSol",
+      "customerName": "EcoLife Solutions",
+      "monthlyCost": "177.91",
+      "monthlyRevenue": "240.00",
+      "marginPct": "25.9",
+      "notes": "NULL"
+    },
+    {
+      "planName": "NWHospCardiology",
+      "customerName": "North West Hospital Cardiology",
+      "monthlyCost": "142.53",
+      "monthlyRevenue": "192.00",
+      "marginPct": "25.8",
+      "notes": "NULL"
+    },
+    {
+      "planName": "UMCcaboolture",
+      "customerName": "UMC Caboolture Pty Ltd",
+      "monthlyCost": "142.53",
+      "monthlyRevenue": "192.00",
+      "marginPct": "25.8",
+      "notes": "[REVIEWED] Multiple services at this site reviewed and accepted. "
+    },
+    {
+      "planName": "Workfit Medical",
+      "customerName": "WorkFit Medical Australia",
+      "monthlyCost": "71.20",
+      "monthlyRevenue": "96.00",
+      "marginPct": "25.8",
+      "notes": "NULL"
+    },
+    {
+      "planName": "GumdaleMed",
+      "customerName": "Gumdale Medical Center",
+      "monthlyCost": "214.30",
+      "monthlyRevenue": "288.00",
+      "marginPct": "25.6",
+      "notes": "NULL"
+    },
+    {
+      "planName": "UniChemOxenford",
+      "customerName": "TerryWhite Chemmart Oxenford",
+      "monthlyCost": "143.04",
+      "monthlyRevenue": "192.00",
+      "marginPct": "25.5",
+      "notes": "NULL"
+    },
+    {
+      "planName": "ShailerPkMed",
+      "customerName": "Shailer Park Medical Centre",
+      "monthlyCost": "215.06",
+      "monthlyRevenue": "288.00",
+      "marginPct": "25.3",
+      "notes": "[REVIEWED] Multiple services at this site reviewed and accepted. "
+    },
+    {
+      "planName": "StaffDentalStudio",
+      "customerName": "Stafford Dental Studio",
+      "monthlyCost": "108.04",
+      "monthlyRevenue": "144.00",
+      "marginPct": "25.0",
+      "notes": "NULL"
+    },
+    {
+      "planName": "banyovillage",
+      "customerName": "Banyo Village Medical Centre",
+      "monthlyCost": "144.30",
+      "monthlyRevenue": "192.00",
+      "marginPct": "24.8",
+      "notes": "NULL"
+    },
+    {
+      "planName": "WaterfordWestMedical",
+      "customerName": "Waterford Medical Surgery",
+      "monthlyCost": "144.55",
+      "monthlyRevenue": "192.00",
+      "marginPct": "24.7",
+      "notes": "[REVIEWED] Multiple services at this site reviewed and accepted. "
+    },
+    {
+      "planName": "MchyDocsPlaza",
+      "customerName": "Maroochydore Doctors at Sunshine Plaza",
+      "monthlyCost": "145.00",
+      "monthlyRevenue": "192.00",
+      "marginPct": "24.5",
+      "notes": "NULL"
+    },
+    {
+      "planName": "BeenleighMC",
+      "customerName": "Beenleigh Road Medical Practice",
+      "monthlyCost": "146.58",
+      "monthlyRevenue": "192.00",
+      "marginPct": "23.7",
+      "notes": "NULL"
+    },
+    {
+      "planName": "PLPharmCabN",
+      "customerName": "TerryWhite Chemmart Caboolture North",
+      "monthlyCost": "183.28",
+      "monthlyRevenue": "240.00",
+      "marginPct": "23.6",
+      "notes": "NULL"
+    },
+    {
+      "planName": "WarwkMCOut",
+      "customerName": "Warwick Medical Centre",
+      "monthlyCost": "81.07",
+      "monthlyRevenue": "106.00",
+      "marginPct": "23.5",
+      "notes": "NULL"
+    },
+    {
+      "planName": "EatonsQuality",
+      "customerName": "Eatons Quality Medical & Skin Cancer",
+      "monthlyCost": "146.83",
+      "monthlyRevenue": "192.00",
+      "marginPct": "23.5",
+      "notes": "NULL"
+    },
+    {
+      "planName": "RochedaleVillageDoctors",
+      "customerName": "Rochedale Village Doctors",
+      "monthlyCost": "110.75",
+      "monthlyRevenue": "144.00",
+      "marginPct": "23.1",
+      "notes": "NULL"
+    },
+    {
+      "planName": "RochedaleDoctors",
+      "customerName": "Rochedale Doctors",
+      "monthlyCost": "110.69",
+      "monthlyRevenue": "144.00",
+      "marginPct": "23.1",
+      "notes": "NULL"
+    },
+    {
+      "planName": "GBA",
+      "customerName": "GBA Consulting Engineers",
+      "monthlyCost": "451.01",
+      "monthlyRevenue": "576.00",
+      "marginPct": "21.7",
+      "notes": "[ABB Import] Provider: ABB | Speed: NBN 100/40 | Technology: FTTN | Buy Price: $144.6.127.34 | Activation: 05 Aug 2024 | Notes: Fibre Connect Eligible"
+    },
+    {
+      "planName": "MotherDuckEno",
+      "customerName": "Mother Duck Enoggera Pty Ltd",
+      "monthlyCost": "75.44",
+      "monthlyRevenue": "96.00",
+      "marginPct": "21.4",
+      "notes": "NULL"
+    },
+    {
+      "planName": "MotherDuckBR",
+      "customerName": "Mother Duck - Bellbowrie",
+      "monthlyCost": "76.25",
+      "monthlyRevenue": "75.00",
+      "marginPct": "-1.7",
+      "notes": "NULL"
+    },
+    {
+      "planName": "MedPodsDorIn",
+      "customerName": "Havilah Medical Centre Doreen",
+      "monthlyCost": "29.21",
+      "monthlyRevenue": "27.00",
+      "marginPct": "-8.2",
+      "notes": "[REVIEWED] Multiple services at this site reviewed and accepted. "
+    },
+    {
+      "planName": "LoganCentral",
+      "customerName": "Logan Central Family Clinic",
+      "monthlyCost": "140.00",
+      "monthlyRevenue": "129.00",
+      "marginPct": "-8.5",
+      "notes": "NULL"
+    },
+    {
+      "planName": "FirstCDocAdmin",
+      "customerName": "Aspley Firstcare Doctors",
+      "monthlyCost": "37.40",
+      "monthlyRevenue": "27.00",
+      "marginPct": "-38.5",
+      "notes": "NULL"
+    },
+    {
+      "planName": "DocAtKawaOut",
+      "customerName": "Doctors At Kawana Shopping World",
+      "monthlyCost": "73.22",
+      "monthlyRevenue": "36.00",
+      "marginPct": "-103.4",
+      "notes": "[REVIEWED] Multiple services at this site reviewed and accepted. "
+    },
+    {
+      "planName": "Logan Medical",
+      "customerName": "Cleveland Medical",
+      "monthlyCost": "80.00",
+      "monthlyRevenue": "35.00",
+      "marginPct": "-128.6",
+      "notes": "NULL"
+    }
+  ],
+  "messages": [
+    "[SM Import] Ella's SM upload: unassigned from RVC pending verification.",
+    "[REVIEWE"
+  ],
+  "stdout": "planName\tcustomerName\tmonthlyCost\tmonthlyRevenue\tmarginPct\tnotes\nBay Apartments Door Relay\tAustralian Resort Management Pty Ltd\t4.80\t210.00\t97.7\tNULL\nRodeMedATA\tRode Medical Clinic\t25.00\t240.00\t89.6\tNULL\nGGPSCin\tGladstone GP Super Clinic\t34.70\t265.00\t86.9\tNULL\nJemaClinic_Inbound\tJema Clinic\t76.40\t265.00\t71.2\t[REVIEWED] Multiple services at this site reviewed and accepted. \nShailer Park Medical\tShailer Park Medical Centre\t95.00\t288.00\t67.0\t[REVIEWED] Multiple services at this site reviewed and accepted. \nLocale\tLocanda Pty Ltd\t47.54\t144.00\t67.0\tNULL\nDJ Steel\tDJ Steel Biloela - AJ and KL Fletcher\t110.06\t240.00\t54.1\t[SmileTel Import] Account: 586992900, Plan: Business Bundle Data Plan\n[SM Import] Ella's SM upload: unassigned from RVC pending verification.\n[REVIEWE\npbx Coastal Dental Specialists\tCoastal Dental Specialists\t90.65\t150.00\t39.6\tNULL\nStaffordCityDoctors\tStafford City Doctors\t224.93\t365.00\t38.4\t[REVIEWED] Multiple services at this site reviewed and accepted. \nDocAtKawanIn\tDoctors At Kawana Shopping World\t23.20\t36.00\t35.6\t[REVIEWED] Multiple services at this site reviewed and accepted. \nMedPodsDoOut\tHavilah Medical Centre Doreen\t71.20\t106.00\t32.8\t[REVIEWED] Multiple services at this site reviewed and accepted. \nDocSamfdVIN\tDoctors at Samford Valley\t12.20\t18.00\t32.2\tNULL\nWarwkMCIn\tWarwick Medical Centre\t18.90\t27.00\t30.0\tNULL\nOceanMed Enterprises\tOceanMed Enterprises Pty Ltd\t145.75\t208.00\t29.9\tNULL\ndocsamfdvout\tDoctors at Samford Valley\t112.27\t159.00\t29.4\tNULL\nGGPSCout\tGladstone GP Super Clinic\t187.58\t265.00\t29.2\tNULL\njemaClinic_Outbound\tJema Clinic\t192.07\t265.00\t27.5\t[REVIEWED] Multiple services at this site reviewed and accepted. \nRode Medical Clinic\tRode Medical Clinic\t175.00\t240.00\t27.1\tNULL\nControlEquip\tControl Equipment Pty Ltd\t140.00\t192.00\t27.1\tNULL\nSkimmerLids\tSkimmer Lids Pty Ltd\t105.00\t144.00\t27.1\tNULL\nGeebungMedical\tGeebung Medical Clinic\t105.00\t144.00\t27.1\tNULL\nHbayGardenCenter\tHervey Bay Garden Centre\t73.16\t100.00\t26.8\tNULL\nrickysnoosa\tRickys Noosa\t141.01\t192.00\t26.6\tNULL\nNth Bris Cardiology\tNorth Brisbane Cardiology Pty Ltd\t141.77\t192.00\t26.2\tNULL\nEcolifeSol\tEcoLife Solutions\t177.91\t240.00\t25.9\tNULL\nNWHospCardiology\tNorth West Hospital Cardiology\t142.53\t192.00\t25.8\tNULL\nUMCcaboolture\tUMC Caboolture Pty Ltd\t142.53\t192.00\t25.8\t[REVIEWED] Multiple services at this site reviewed and accepted. \nWorkfit Medical\tWorkFit Medical Australia\t71.20\t96.00\t25.8\tNULL\nGumdaleMed\tGumdale Medical Center\t214.30\t288.00\t25.6\tNULL\nUniChemOxenford\tTerryWhite Chemmart Oxenford\t143.04\t192.00\t25.5\tNULL\nShailerPkMed\tShailer Park Medical Centre\t215.06\t288.00\t25.3\t[REVIEWED] Multiple services at this site reviewed and accepted. \nStaffDentalStudio\tStafford Dental Studio\t108.04\t144.00\t25.0\tNULL\nbanyovillage\tBanyo Village Medical Centre\t144.30\t192.00\t24.8\tNULL\nWaterfordWestMedical\tWaterford Medical Surgery\t144.55\t192.00\t24.7\t[REVIEWED] Multiple services at this site reviewed and accepted. \nMchyDocsPlaza\tMaroochydore Doctors at Sunshine Plaza\t145.00\t192.00\t24.5\tNULL\nBeenleighMC\tBeenleigh Road Medical Practice\t146.58\t192.00\t23.7\tNULL\nPLPharmCabN\tTerryWhite Chemmart Caboolture North\t183.28\t240.00\t23.6\tNULL\nWarwkMCOut\tWarwick Medical Centre\t81.07\t106.00\t23.5\tNULL\nEatonsQuality\tEatons Quality Medical & Skin Cancer\t146.83\t192.00\t23.5\tNULL\nRochedaleVillageDoctors\tRochedale Village Doctors\t110.75\t144.00\t23.1\tNULL\nRochedaleDoctors\tRochedale Doctors\t110.69\t144.00\t23.1\tNULL\nGBA\tGBA Consulting Engineers\t451.01\t576.00\t21.7\t[ABB Import] Provider: ABB | Speed: NBN 100/40 | Technology: FTTN | Buy Price: $144.6.127.34 | Activation: 05 Aug 2024 | Notes: Fibre Connect Eligible\nMotherDuckEno\tMother Duck Enoggera Pty Ltd\t75.44\t96.00\t21.4\tNULL\nMotherDuckBR\tMother Duck - Bellbowrie\t76.25\t75.00\t-1.7\tNULL\nMedPodsDorIn\tHavilah Medical Centre Doreen\t29.21\t27.00\t-8.2\t[REVIEWED] Multiple services at this site reviewed and accepted. \nLoganCentral\tLogan Central Family Clinic\t140.00\t129.00\t-8.5\tNULL\nFirstCDocAdmin\tAspley Firstcare Doctors\t37.40\t27.00\t-38.5\tNULL\nDocAtKawaOut\tDoctors At Kawana Shopping World\t73.22\t36.00\t-103.4\t[REVIEWED] Multiple services at this site reviewed and accepted. \nLogan Medical\tCleveland Medical\t80.00\t35.00\t-128.6\tNULL\n",
+  "stderr": "",
+  "execution_time_ms": 1558
+}

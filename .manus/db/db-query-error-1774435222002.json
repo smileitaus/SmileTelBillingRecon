@@ -1,0 +1,16 @@
+{
+  "query": "\n-- Find customers with BOTH a SasBoss Internet service AND a real-provider Internet service\n-- These are the duplicates\nSELECT \n  sb.customerExternalId,\n  sb.externalId AS sasboss_id,\n  sb.locationAddress AS sasboss_addr,\n  sb.monthlyCost AS sasboss_cost,\n  real.externalId AS real_id,\n  real.supplierName AS real_supplier,\n  real.monthlyCost AS real_cost,\n  real.locationAddress AS real_addr\nFROM services sb\nJOIN services real ON real.customerExternalId = sb.customerExternalId\n  AND real.supplierName != 'SasBoss'\n  AND real.serviceType = 'Internet'\n  AND (\n    LOWER(TRIM(real.locationAddress)) = LOWER(TRIM(sb.locationAddress))\n    OR real.locationAddress IS NULL OR real.locationAddress = ''\n    OR sb.locationAddress IS NULL OR sb.locationAddress = ''\n  )\nWHERE sb.supplierName = 'SasBoss'\n  AND sb.serviceType = 'Internet'\nLIMIT 10;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Find customers with BOTH a SasBoss Internet service AND a real-provider Internet service\n-- These are the duplicates\nSELECT \n  sb.customerExternalId,\n  sb.externalId AS sasboss_id,\n  sb.locationAddress AS sasboss_addr,\n  sb.monthlyCost AS sasboss_cost,\n  real.externalId AS real_id,\n  real.supplierName AS real_supplier,\n  real.monthlyCost AS real_cost,\n  real.locationAddress AS real_addr\nFROM services sb\nJOIN services real ON real.customerExternalId = sb.customerExternalId\n  AND real.supplierName != 'SasBoss'\n  AND real.serviceType = 'Internet'\n  AND (\n    LOWER(TRIM(real.locationAddress)) = LOWER(TRIM(sb.locationAddress))\n    OR real.locationAddress IS NULL OR real.locationAddress = ''\n    OR sb.locationAddress IS NULL OR sb.locationAddress = ''\n  )\nWHERE sb.supplierName = 'SasBoss'\n  AND sb.serviceType = 'Internet'\nLIMIT 10;\n",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1064 (42000) at line 4: You have an error in your SQL syntax; check the manual that corresponds to your TiDB version for the right syntax to use line 11 column 19 near \"real ON real.customerExternalId = sb.customerExternalId",
+    "  AND real.supplierName != 'SasBoss'",
+    "  AND real.serviceType = 'Internet'",
+    "  AND (",
+    "    LOWER(TRIM(real.locationAddress)) = LOWER(TRIM(sb.locationAddress))",
+    "    OR real.locationAddress IS NULL OR real.locationAddress = ''",
+    "    OR sb.locationAddress IS NULL OR sb.locationAddress = ''",
+    "  )",
+    "WHERE sb.supplierName = 'Sa"
+  ]
+}

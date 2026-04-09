@@ -315,7 +315,7 @@ export const billingItems = mysqlTable("billing_items", {
   // Whether 4G backup is included in this line item (1 = yes, 0 = no)
   parsedHas4gBackup: boolean("parsedHas4gBackup").default(false),
   // Raw JSON blob of all extracted attributes for forward compatibility
-  parsedAttributes: text("parsedAttributes").default(""),
+  parsedAttributes: text("parsedAttributes"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });

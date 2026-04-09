@@ -1,0 +1,8 @@
+{
+  "query": "\n-- Check supplier workbook line items for Managed Voice Support to find the wholesale cost\nSELECT \n  swli.productName,\n  swli.productType,\n  swli.amountExGst,\n  swli.amountIncGst,\n  swli.matchStatus,\n  swli.matchedServiceExternalId,\n  siu.supplier_name,\n  siu.invoice_date,\n  siu.total_ex_gst\nFROM supplier_workbook_line_items swli\nJOIN supplier_invoice_uploads siu ON swli.upload_id = siu.id\nWHERE swli.productName LIKE '%Voice Support%'\nORDER BY siu.invoice_date DESC\nLIMIT 20;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Check supplier workbook line items for Managed Voice Support to find the wholesale cost\nSELECT \n  swli.productName,\n  swli.productType,\n  swli.amountExGst,\n  swli.amountIncGst,\n  swli.matchStatus,\n  swli.matchedServiceExternalId,\n  siu.supplier_name,\n  siu.invoice_date,\n  siu.total_ex_gst\nFROM supplier_workbook_line_items swli\nJOIN supplier_invoice_uploads siu ON swli.upload_id = siu.id\nWHERE swli.productName LIKE '%Voice Support%'\nORDER BY siu.invoice_date DESC\nLIMIT 20;\n",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1054 (42S22) at line 3: Unknown column 'swli.upload_id' in 'on clause'"
+  ]
+}

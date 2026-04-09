@@ -1,0 +1,242 @@
+{
+  "query": "\n-- Check what eFax services exist and their current costs\nSELECT externalId, planName, monthlyCost, monthlyRevenue, supplierName, customerName\nFROM services\nWHERE LOWER(planName) LIKE '%fax%'\nORDER BY supplierName, monthlyCost;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Check what eFax services exist and their current costs\nSELECT externalId, planName, monthlyCost, monthlyRevenue, supplierName, customerName\nFROM services\nWHERE LOWER(planName) LIKE '%fax%'\nORDER BY supplierName, monthlyCost;\n",
+  "rows": [
+    {
+      "externalId": "S0763",
+      "planName": "eFax Service. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "monthlyCost": "7.20",
+      "monthlyRevenue": "35.00",
+      "supplierName": "SasBoss",
+      "customerName": "Albany Family Doctors"
+    },
+    {
+      "externalId": "S0781",
+      "planName": "eFax Service. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "monthlyCost": "7.20",
+      "monthlyRevenue": "35.00",
+      "supplierName": "SasBoss",
+      "customerName": "Aspley Firstcare Doctors"
+    },
+    {
+      "externalId": "S0819",
+      "planName": "eFax. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "monthlyCost": "7.20",
+      "monthlyRevenue": "35.00",
+      "supplierName": "SasBoss",
+      "customerName": "Banyo Village Medical Centre"
+    },
+    {
+      "externalId": "S0824",
+      "planName": "eFax. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "monthlyCost": "7.20",
+      "monthlyRevenue": "35.00",
+      "supplierName": "SasBoss",
+      "customerName": "Beenleigh Road Medical Practice"
+    },
+    {
+      "externalId": "S0886",
+      "planName": "eFax Service Flat Rate. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "monthlyCost": "7.20",
+      "monthlyRevenue": "70.00",
+      "supplierName": "SasBoss",
+      "customerName": "Cleveland Medical"
+    },
+    {
+      "externalId": "S0923",
+      "planName": "eFax. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "monthlyCost": "7.20",
+      "monthlyRevenue": "10.00",
+      "supplierName": "SasBoss",
+      "customerName": "DJ Steel - Lyndarr Constructions Pty Ltd"
+    },
+    {
+      "externalId": "S0933",
+      "planName": "eFax Service. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "monthlyCost": "7.20",
+      "monthlyRevenue": "35.00",
+      "supplierName": "SasBoss",
+      "customerName": "Doctors At Kawana Shopping World"
+    },
+    {
+      "externalId": "S0939",
+      "planName": "eFax Service. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "monthlyCost": "7.20",
+      "monthlyRevenue": "35.00",
+      "supplierName": "SasBoss",
+      "customerName": "Doctors at Samford Valley"
+    },
+    {
+      "externalId": "S0951",
+      "planName": "eFax. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "monthlyCost": "7.20",
+      "monthlyRevenue": "35.00",
+      "supplierName": "SasBoss",
+      "customerName": "Eatons Quality Medical & Skin Cancer"
+    },
+    {
+      "externalId": "S0973",
+      "planName": "eFax. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "monthlyCost": "7.20",
+      "monthlyRevenue": "35.00",
+      "supplierName": "SasBoss",
+      "customerName": "Firstcare Doctors Pty Ltd"
+    },
+    {
+      "externalId": "S0993",
+      "planName": "eFax Service. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "monthlyCost": "7.20",
+      "monthlyRevenue": "35.00",
+      "supplierName": "SasBoss",
+      "customerName": "Geebung Medical Clinic"
+    },
+    {
+      "externalId": "S1009",
+      "planName": "eFax Service Flat Rate. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "monthlyCost": "7.20",
+      "monthlyRevenue": "35.00",
+      "supplierName": "SasBoss",
+      "customerName": "Gumdale Medical Center"
+    },
+    {
+      "externalId": "S1018",
+      "planName": "eFax - Unlimited. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "monthlyCost": "7.20",
+      "monthlyRevenue": "48.00",
+      "supplierName": "SasBoss",
+      "customerName": "Havilah Medical Centre Doreen"
+    },
+    {
+      "externalId": "S1044",
+      "planName": "eFax Service. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "monthlyCost": "7.20",
+      "monthlyRevenue": "35.00",
+      "supplierName": "SasBoss",
+      "customerName": "Kawana Family Clinic"
+    },
+    {
+      "externalId": "S1100",
+      "planName": "eFax. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "monthlyCost": "7.20",
+      "monthlyRevenue": "35.00",
+      "supplierName": "SasBoss",
+      "customerName": "Logan Central Family Clinic"
+    },
+    {
+      "externalId": "S1114",
+      "planName": "eFax. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "monthlyCost": "7.20",
+      "monthlyRevenue": "35.00",
+      "supplierName": "SasBoss",
+      "customerName": "Maroochydore Doctors at Sunshine Plaza"
+    },
+    {
+      "externalId": "S1162",
+      "planName": "eFax. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "monthlyCost": "7.20",
+      "monthlyRevenue": "35.00",
+      "supplierName": "SasBoss",
+      "customerName": "North Brisbane Cardiology Pty Ltd"
+    },
+    {
+      "externalId": "S1166",
+      "planName": "eFax. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "monthlyCost": "7.20",
+      "monthlyRevenue": "35.00",
+      "supplierName": "SasBoss",
+      "customerName": "North West Hospital Cardiology"
+    },
+    {
+      "externalId": "S1175",
+      "planName": "eFax Service. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "monthlyCost": "7.20",
+      "monthlyRevenue": "35.00",
+      "supplierName": "SasBoss",
+      "customerName": "OceanMed Enterprises Pty Ltd"
+    },
+    {
+      "externalId": "S1339",
+      "planName": "eFax. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "monthlyCost": "7.20",
+      "monthlyRevenue": "35.00",
+      "supplierName": "SasBoss",
+      "customerName": "Shailer Park Medical Centre"
+    },
+    {
+      "externalId": "S1392",
+      "planName": "eFax Service Flat Rate. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "monthlyCost": "7.20",
+      "monthlyRevenue": "35.00",
+      "supplierName": "SasBoss",
+      "customerName": "Stafford City Doctors"
+    },
+    {
+      "externalId": "S1398",
+      "planName": "eFax. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "monthlyCost": "7.20",
+      "monthlyRevenue": "35.00",
+      "supplierName": "SasBoss",
+      "customerName": "Stafford Dental Studio"
+    },
+    {
+      "externalId": "S1403",
+      "planName": "eFax Service Flat Rate. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "monthlyCost": "7.20",
+      "monthlyRevenue": "35.00",
+      "supplierName": "SasBoss",
+      "customerName": "Stafford Heights Medical Practice"
+    },
+    {
+      "externalId": "S1425",
+      "planName": "eFax Service. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "monthlyCost": "7.20",
+      "monthlyRevenue": "35.00",
+      "supplierName": "SasBoss",
+      "customerName": "TerryWhite Chemmart Caboolture North"
+    },
+    {
+      "externalId": "S1430",
+      "planName": "eFax Service. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "monthlyCost": "7.20",
+      "monthlyRevenue": "35.00",
+      "supplierName": "SasBoss",
+      "customerName": "TerryWhite Chemmart Oxenford"
+    },
+    {
+      "externalId": "S1464",
+      "planName": "eFax. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "monthlyCost": "7.20",
+      "monthlyRevenue": "35.00",
+      "supplierName": "SasBoss",
+      "customerName": "UMC Caboolture Pty Ltd"
+    },
+    {
+      "externalId": "S1482",
+      "planName": "eFax. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "monthlyCost": "7.20",
+      "monthlyRevenue": "35.00",
+      "supplierName": "SasBoss",
+      "customerName": "Waterford Medical Surgery"
+    },
+    {
+      "externalId": "S1495",
+      "planName": "eFax Service. Starting: 01-Feb-2026. Ending: 28-Feb-2026",
+      "monthlyCost": "7.20",
+      "monthlyRevenue": "35.00",
+      "supplierName": "SasBoss",
+      "customerName": "WorkFit Medical Australia"
+    },
+    {
+      "externalId": "MOMC_FAX",
+      "planName": "eFax",
+      "monthlyCost": "3.00",
+      "monthlyRevenue": "0.00",
+      "supplierName": "Telstra",
+      "customerName": "Mooloolaba Osteopathy and Massage Centre"
+    }
+  ],
+  "messages": [],
+  "stdout": "externalId\tplanName\tmonthlyCost\tmonthlyRevenue\tsupplierName\tcustomerName\nS0763\teFax Service. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t7.20\t35.00\tSasBoss\tAlbany Family Doctors\nS0781\teFax Service. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t7.20\t35.00\tSasBoss\tAspley Firstcare Doctors\nS0819\teFax. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t7.20\t35.00\tSasBoss\tBanyo Village Medical Centre\nS0824\teFax. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t7.20\t35.00\tSasBoss\tBeenleigh Road Medical Practice\nS0886\teFax Service Flat Rate. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t7.20\t70.00\tSasBoss\tCleveland Medical\nS0923\teFax. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t7.20\t10.00\tSasBoss\tDJ Steel - Lyndarr Constructions Pty Ltd\nS0933\teFax Service. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t7.20\t35.00\tSasBoss\tDoctors At Kawana Shopping World\nS0939\teFax Service. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t7.20\t35.00\tSasBoss\tDoctors at Samford Valley\nS0951\teFax. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t7.20\t35.00\tSasBoss\tEatons Quality Medical & Skin Cancer\nS0973\teFax. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t7.20\t35.00\tSasBoss\tFirstcare Doctors Pty Ltd\nS0993\teFax Service. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t7.20\t35.00\tSasBoss\tGeebung Medical Clinic\nS1009\teFax Service Flat Rate. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t7.20\t35.00\tSasBoss\tGumdale Medical Center\nS1018\teFax - Unlimited. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t7.20\t48.00\tSasBoss\tHavilah Medical Centre Doreen\nS1044\teFax Service. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t7.20\t35.00\tSasBoss\tKawana Family Clinic\nS1100\teFax. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t7.20\t35.00\tSasBoss\tLogan Central Family Clinic\nS1114\teFax. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t7.20\t35.00\tSasBoss\tMaroochydore Doctors at Sunshine Plaza\nS1162\teFax. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t7.20\t35.00\tSasBoss\tNorth Brisbane Cardiology Pty Ltd\nS1166\teFax. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t7.20\t35.00\tSasBoss\tNorth West Hospital Cardiology\nS1175\teFax Service. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t7.20\t35.00\tSasBoss\tOceanMed Enterprises Pty Ltd\nS1339\teFax. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t7.20\t35.00\tSasBoss\tShailer Park Medical Centre\nS1392\teFax Service Flat Rate. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t7.20\t35.00\tSasBoss\tStafford City Doctors\nS1398\teFax. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t7.20\t35.00\tSasBoss\tStafford Dental Studio\nS1403\teFax Service Flat Rate. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t7.20\t35.00\tSasBoss\tStafford Heights Medical Practice\nS1425\teFax Service. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t7.20\t35.00\tSasBoss\tTerryWhite Chemmart Caboolture North\nS1430\teFax Service. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t7.20\t35.00\tSasBoss\tTerryWhite Chemmart Oxenford\nS1464\teFax. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t7.20\t35.00\tSasBoss\tUMC Caboolture Pty Ltd\nS1482\teFax. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t7.20\t35.00\tSasBoss\tWaterford Medical Surgery\nS1495\teFax Service. Starting: 01-Feb-2026. Ending: 28-Feb-2026\t7.20\t35.00\tSasBoss\tWorkFit Medical Australia\nMOMC_FAX\teFax\t3.00\t0.00\tTelstra\tMooloolaba Osteopathy and Massage Centre\n",
+  "stderr": "",
+  "execution_time_ms": 1572
+}

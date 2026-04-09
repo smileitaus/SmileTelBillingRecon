@@ -1,0 +1,34 @@
+{
+  "query": "\n-- Summary by supplier\nSELECT \n  s.supplierName,\n  COUNT(*) as serviceCount,\n  ROUND(SUM(s.monthlyCost - s.monthlyRevenue), 2) as totalMonthlyLoss,\n  ROUND(AVG((s.monthlyRevenue - s.monthlyCost) / s.monthlyRevenue * 100), 1) as avgMarginPct\nFROM services s\nWHERE s.monthlyRevenue > 0 AND s.monthlyCost > 0\n  AND (s.monthlyRevenue - s.monthlyCost) / s.monthlyRevenue * 100 < 0\nGROUP BY s.supplierName\nORDER BY totalMonthlyLoss DESC;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Summary by supplier\nSELECT \n  s.supplierName,\n  COUNT(*) as serviceCount,\n  ROUND(SUM(s.monthlyCost - s.monthlyRevenue), 2) as totalMonthlyLoss,\n  ROUND(AVG((s.monthlyRevenue - s.monthlyCost) / s.monthlyRevenue * 100), 1) as avgMarginPct\nFROM services s\nWHERE s.monthlyRevenue > 0 AND s.monthlyCost > 0\n  AND (s.monthlyRevenue - s.monthlyCost) / s.monthlyRevenue * 100 < 0\nGROUP BY s.supplierName\nORDER BY totalMonthlyLoss DESC;\n",
+  "rows": [
+    {
+      "supplierName": "ChannelHaus",
+      "serviceCount": "17",
+      "totalMonthlyLoss": "1443.57",
+      "avgMarginPct": "-515.4"
+    },
+    {
+      "supplierName": "SasBoss",
+      "serviceCount": "14",
+      "totalMonthlyLoss": "239.77",
+      "avgMarginPct": "-512.2"
+    },
+    {
+      "supplierName": "ABB",
+      "serviceCount": "2",
+      "totalMonthlyLoss": "72.01",
+      "avgMarginPct": "-99.6"
+    },
+    {
+      "supplierName": "Telstra",
+      "serviceCount": "2",
+      "totalMonthlyLoss": "16.17",
+      "avgMarginPct": "-9.7"
+    }
+  ],
+  "messages": [],
+  "stdout": "supplierName\tserviceCount\ttotalMonthlyLoss\tavgMarginPct\nChannelHaus\t17\t1443.57\t-515.4\nSasBoss\t14\t239.77\t-512.2\nABB\t2\t72.01\t-99.6\nTelstra\t2\t16.17\t-9.7\n",
+  "stderr": "",
+  "execution_time_ms": 1593
+}

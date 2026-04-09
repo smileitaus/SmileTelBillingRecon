@@ -1,0 +1,82 @@
+{
+  "query": "\n-- Find customers where one billing item is assigned to one service but other services of the same type have no revenue\n-- Focus on ABB internet services where the billing item description is \"Data - Internet\"\nSELECT \n  sba.billingItemExternalId,\n  bi.description,\n  bi.lineAmount as billingRevenue,\n  bi.customerExternalId,\n  c.name as customerName,\n  COUNT(sba.serviceExternalId) as assignedServiceCount,\n  -- How many internet services does this customer have total?\n  (SELECT COUNT(*) FROM services s2 \n   WHERE s2.customerExternalId = bi.customerExternalId \n   AND s2.serviceType = 'Internet' \n   AND s2.provider = 'ABB'\n   AND s2.status = 'active') as totalAbbInternetServices\nFROM service_billing_assignments sba\nJOIN billing_items bi ON sba.billingItemExternalId = bi.externalId\nJOIN customers c ON bi.customerExternalId = c.externalId\nWHERE bi.description IN ('Data - Internet', 'Data - NBN')\n  AND bi.lineAmount > 100\nGROUP BY sba.billingItemExternalId, bi.description, bi.lineAmount, bi.customerExternalId, c.name\nHAVING totalAbbInternetServices > 1\nORDER BY totalAbbInternetServices DESC, bi.lineAmount DESC\nLIMIT 15;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Find customers where one billing item is assigned to one service but other services of the same type have no revenue\n-- Focus on ABB internet services where the billing item description is \"Data - Internet\"\nSELECT \n  sba.billingItemExternalId,\n  bi.description,\n  bi.lineAmount as billingRevenue,\n  bi.customerExternalId,\n  c.name as customerName,\n  COUNT(sba.serviceExternalId) as assignedServiceCount,\n  -- How many internet services does this customer have total?\n  (SELECT COUNT(*) FROM services s2 \n   WHERE s2.customerExternalId = bi.customerExternalId \n   AND s2.serviceType = 'Internet' \n   AND s2.provider = 'ABB'\n   AND s2.status = 'active') as totalAbbInternetServices\nFROM service_billing_assignments sba\nJOIN billing_items bi ON sba.billingItemExternalId = bi.externalId\nJOIN customers c ON bi.customerExternalId = c.externalId\nWHERE bi.description IN ('Data - Internet', 'Data - NBN')\n  AND bi.lineAmount > 100\nGROUP BY sba.billingItemExternalId, bi.description, bi.lineAmount, bi.customerExternalId, c.name\nHAVING totalAbbInternetServices > 1\nORDER BY totalAbbInternetServices DESC, bi.lineAmount DESC\nLIMIT 15;\n",
+  "rows": [
+    {
+      "billingItemExternalId": "BI00170",
+      "description": "Data - Internet",
+      "billingRevenue": "3693.00",
+      "customerExternalId": "C0101",
+      "customerName": "GBA Consulting Engineers",
+      "assignedServiceCount": "5",
+      "totalAbbInternetServices": "3"
+    },
+    {
+      "billingItemExternalId": "BI001544",
+      "description": "Data - Internet",
+      "billingRevenue": "3693.00",
+      "customerExternalId": "C0101",
+      "customerName": "GBA Consulting Engineers",
+      "assignedServiceCount": "1",
+      "totalAbbInternetServices": "3"
+    },
+    {
+      "billingItemExternalId": "BI00413",
+      "description": "Data - Internet",
+      "billingRevenue": "358.05",
+      "customerExternalId": "C0222",
+      "customerName": "Sparrow Group Management Pty Ltd",
+      "assignedServiceCount": "1",
+      "totalAbbInternetServices": "3"
+    },
+    {
+      "billingItemExternalId": "BI001789",
+      "description": "Data - Internet",
+      "billingRevenue": "358.05",
+      "customerExternalId": "C0222",
+      "customerName": "Sparrow Group Management Pty Ltd",
+      "assignedServiceCount": "1",
+      "totalAbbInternetServices": "3"
+    },
+    {
+      "billingItemExternalId": "BI001593",
+      "description": "Data - Internet",
+      "billingRevenue": "186.15",
+      "customerExternalId": "C2888",
+      "customerName": "BT LAWYERS PTY LTD",
+      "assignedServiceCount": "1",
+      "totalAbbInternetServices": "3"
+    },
+    {
+      "billingItemExternalId": "BI00219",
+      "description": "Data - Internet",
+      "billingRevenue": "186.15",
+      "customerExternalId": "C2888",
+      "customerName": "BT LAWYERS PTY LTD",
+      "assignedServiceCount": "1",
+      "totalAbbInternetServices": "3"
+    },
+    {
+      "billingItemExternalId": "BI00250",
+      "description": "Data - Internet",
+      "billingRevenue": "500.00",
+      "customerExternalId": "C0159",
+      "customerName": "Mega Electrics",
+      "assignedServiceCount": "1",
+      "totalAbbInternetServices": "2"
+    },
+    {
+      "billingItemExternalId": "BI001626",
+      "description": "Data - Internet",
+      "billingRevenue": "500.00",
+      "customerExternalId": "C0159",
+      "customerName": "Mega Electrics",
+      "assignedServiceCount": "1",
+      "totalAbbInternetServices": "2"
+    }
+  ],
+  "messages": [],
+  "stdout": "billingItemExternalId\tdescription\tbillingRevenue\tcustomerExternalId\tcustomerName\tassignedServiceCount\ttotalAbbInternetServices\nBI00170\tData - Internet\t3693.00\tC0101\tGBA Consulting Engineers\t5\t3\nBI001544\tData - Internet\t3693.00\tC0101\tGBA Consulting Engineers\t1\t3\nBI00413\tData - Internet\t358.05\tC0222\tSparrow Group Management Pty Ltd\t1\t3\nBI001789\tData - Internet\t358.05\tC0222\tSparrow Group Management Pty Ltd\t1\t3\nBI001593\tData - Internet\t186.15\tC2888\tBT LAWYERS PTY LTD\t1\t3\nBI00219\tData - Internet\t186.15\tC2888\tBT LAWYERS PTY LTD\t1\t3\nBI00250\tData - Internet\t500.00\tC0159\tMega Electrics\t1\t2\nBI001626\tData - Internet\t500.00\tC0159\tMega Electrics\t1\t2\n",
+  "stderr": "",
+  "execution_time_ms": 1592
+}

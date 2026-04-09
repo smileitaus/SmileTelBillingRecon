@@ -1,0 +1,80 @@
+{
+  "query": "SELECT id, productName, wholesaleCost, defaultRetailPrice, notes\nFROM supplier_product_cost_map\nWHERE supplier = 'SasBoss'\nAND productName LIKE '%SmileTel%'\nORDER BY productName;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute SELECT id, productName, wholesaleCost, defaultRetailPrice, notes\nFROM supplier_product_cost_map\nWHERE supplier = 'SasBoss'\nAND productName LIKE '%SmileTel%'\nORDER BY productName;",
+  "rows": [
+    {
+      "id": "29",
+      "productName": "MC - SmileTel Basic User License",
+      "wholesaleCost": "6.00000",
+      "defaultRetailPrice": "10.00000",
+      "notes": "Multi-channel variant"
+    },
+    {
+      "id": "30",
+      "productName": "MC - SmileTel Executive User License",
+      "wholesaleCost": "9.00000",
+      "defaultRetailPrice": "15.00000",
+      "notes": "Migration product: Buy $9.00, Sell $15.00 (Access4 migration) - MC variant"
+    },
+    {
+      "id": "31",
+      "productName": "MC - SmileTel Lite User License",
+      "wholesaleCost": "6.00000",
+      "defaultRetailPrice": "12.00000",
+      "notes": "Multi-channel variant"
+    },
+    {
+      "id": "32",
+      "productName": "MC - SmileTel Premium User License",
+      "wholesaleCost": "15.00000",
+      "defaultRetailPrice": "27.00000",
+      "notes": "Multi-channel variant"
+    },
+    {
+      "id": "27",
+      "productName": "SmileTel Basic User License",
+      "wholesaleCost": "6.00000",
+      "defaultRetailPrice": "10.00000",
+      "notes": "SasBoss product name for Office User"
+    },
+    {
+      "id": "23",
+      "productName": "SmileTel Essential user",
+      "wholesaleCost": "9.00000",
+      "defaultRetailPrice": "17.00000",
+      "notes": "SasBoss product name. Diamond cost = $9. RRP is SmileIT default retail."
+    },
+    {
+      "id": "24",
+      "productName": "SmileTel Essential User Special",
+      "wholesaleCost": "9.00000",
+      "defaultRetailPrice": "22.50000",
+      "notes": "Special pricing variant"
+    },
+    {
+      "id": "25",
+      "productName": "SmileTel Executive User License",
+      "wholesaleCost": "9.00000",
+      "defaultRetailPrice": "15.00000",
+      "notes": "Migration product: Buy $9.00, Sell $15.00 (Access4 migration)"
+    },
+    {
+      "id": "26",
+      "productName": "SmileTel Lite user",
+      "wholesaleCost": "6.00000",
+      "defaultRetailPrice": "12.00000",
+      "notes": "SasBoss product name for Office User"
+    },
+    {
+      "id": "28",
+      "productName": "SmileTel Professional User License",
+      "wholesaleCost": "15.00000",
+      "defaultRetailPrice": "27.00000",
+      "notes": "SasBoss product name for Executive User - Included Calls"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tproductName\twholesaleCost\tdefaultRetailPrice\tnotes\n29\tMC - SmileTel Basic User License\t6.00000\t10.00000\tMulti-channel variant\n30\tMC - SmileTel Executive User License\t9.00000\t15.00000\tMigration product: Buy $9.00, Sell $15.00 (Access4 migration) - MC variant\n31\tMC - SmileTel Lite User License\t6.00000\t12.00000\tMulti-channel variant\n32\tMC - SmileTel Premium User License\t15.00000\t27.00000\tMulti-channel variant\n27\tSmileTel Basic User License\t6.00000\t10.00000\tSasBoss product name for Office User\n23\tSmileTel Essential user\t9.00000\t17.00000\tSasBoss product name. Diamond cost = $9. RRP is SmileIT default retail.\n24\tSmileTel Essential User Special\t9.00000\t22.50000\tSpecial pricing variant\n25\tSmileTel Executive User License\t9.00000\t15.00000\tMigration product: Buy $9.00, Sell $15.00 (Access4 migration)\n26\tSmileTel Lite user\t6.00000\t12.00000\tSasBoss product name for Office User\n28\tSmileTel Professional User License\t15.00000\t27.00000\tSasBoss product name for Executive User - Included Calls\n",
+  "stderr": "",
+  "execution_time_ms": 1651
+}

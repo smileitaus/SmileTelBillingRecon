@@ -1,0 +1,585 @@
+{
+  "query": "\n-- Get all DataGate customers with their externalIds\nSELECT externalId, name, billingPlatforms \nFROM customers \nWHERE billingPlatforms LIKE '%DataGate%' OR billingPlatforms LIKE '%DATAGATE%'\nORDER BY name;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Get all DataGate customers with their externalIds\nSELECT externalId, name, billingPlatforms \nFROM customers \nWHERE billingPlatforms LIKE '%DataGate%' OR billingPlatforms LIKE '%DATAGATE%'\nORDER BY name;\n",
+  "rows": [
+    {
+      "externalId": "C2638",
+      "name": "Affinity Partners Pty Ltd",
+      "billingPlatforms": "[\"DATAGATE\"]"
+    },
+    {
+      "externalId": "C7557",
+      "name": "ASDL Ltd",
+      "billingPlatforms": "[\"DataGate\"]"
+    },
+    {
+      "externalId": "C2415",
+      "name": "ASG",
+      "billingPlatforms": "[\"DataGate\"]"
+    },
+    {
+      "externalId": "C0015",
+      "name": "ASG Hail Pty Ltd",
+      "billingPlatforms": "[\"DataGate\"]"
+    },
+    {
+      "externalId": "C2639",
+      "name": "Aussie Hail Pty Ltd",
+      "billingPlatforms": "[\"DataGate\"]"
+    },
+    {
+      "externalId": "C0025",
+      "name": "Australian Air Science Pty Ltd",
+      "billingPlatforms": "[\"DATAGATE\"]"
+    },
+    {
+      "externalId": "C0026",
+      "name": "Australian Computer Traders",
+      "billingPlatforms": "[\"DATAGATE\"]"
+    },
+    {
+      "externalId": "C0027",
+      "name": "Australian Resort Management Pty Ltd",
+      "billingPlatforms": "[\"Sasboss\", \"DataGate\"]"
+    },
+    {
+      "externalId": "C2640",
+      "name": "Back Track Adventures",
+      "billingPlatforms": "[\"DataGate\"]"
+    },
+    {
+      "externalId": "C0029",
+      "name": "Back2Health",
+      "billingPlatforms": "[\"DATAGATE\",\"Sasboss\"]"
+    },
+    {
+      "externalId": "C0030",
+      "name": "Balanced Business Accounting",
+      "billingPlatforms": "[\"DATAGATE\",\"Sasboss\"]"
+    },
+    {
+      "externalId": "C0031",
+      "name": "Balgra Shopping Centre Management Pty Ltd",
+      "billingPlatforms": "[\"DATAGATE\"]"
+    },
+    {
+      "externalId": "C0034",
+      "name": "Bar Alto",
+      "billingPlatforms": "[\"DATAGATE\"]"
+    },
+    {
+      "externalId": "C2641",
+      "name": "Beechmont Estate",
+      "billingPlatforms": "[\"DATAGATE\"]"
+    },
+    {
+      "externalId": "C2643",
+      "name": "Better Business Finance",
+      "billingPlatforms": "[\"DATAGATE\"]"
+    },
+    {
+      "externalId": "C0045",
+      "name": "Branyan Early Learning Centre",
+      "billingPlatforms": "[\"DATAGATE\",\"Sasboss\"]"
+    },
+    {
+      "externalId": "C0047",
+      "name": "Brimar Pty Ltd",
+      "billingPlatforms": "[\"DataGate\"]"
+    },
+    {
+      "externalId": "C2419",
+      "name": "Buys Court",
+      "billingPlatforms": "[\"DATAGATE\"]"
+    },
+    {
+      "externalId": "C0050",
+      "name": "Buys Court Pty Ltd",
+      "billingPlatforms": "[\"DATAGATE\"]"
+    },
+    {
+      "externalId": "C2644",
+      "name": "Campos Coffee Qld",
+      "billingPlatforms": "[\"DATAGATE\"]"
+    },
+    {
+      "externalId": "C0054",
+      "name": "Caravan and RV Works",
+      "billingPlatforms": "[\"DATAGATE\"]"
+    },
+    {
+      "externalId": "C2645",
+      "name": "Carroll Consulting",
+      "billingPlatforms": "[\"DATAGATE\"]"
+    },
+    {
+      "externalId": "C0056",
+      "name": "CC Innovation Pty Ltd",
+      "billingPlatforms": "[\"DATAGATE\"]"
+    },
+    {
+      "externalId": "C0058",
+      "name": "CF Aust Pty Ltd",
+      "billingPlatforms": "[\"DATAGATE\"]"
+    },
+    {
+      "externalId": "C2422",
+      "name": "CMC",
+      "billingPlatforms": "[\"DataGate\"]"
+    },
+    {
+      "externalId": "C0062",
+      "name": "CMC Property Management",
+      "billingPlatforms": "[\"DATAGATE\",\"Sasboss\"]"
+    },
+    {
+      "externalId": "C0065",
+      "name": "Compass Assurance Services Pty Ltd",
+      "billingPlatforms": "[\"DATAGATE\"]"
+    },
+    {
+      "externalId": "C2424",
+      "name": "CPM",
+      "billingPlatforms": "[\"DataGate\"]"
+    },
+    {
+      "externalId": "C0070",
+      "name": "CPM Advisory and Project Management",
+      "billingPlatforms": "[\"DATAGATE\",\"Sasboss\"]"
+    },
+    {
+      "externalId": "C0071",
+      "name": "Creative Early Learning Group PTY LTD",
+      "billingPlatforms": "[\"DATAGATE\"]"
+    },
+    {
+      "externalId": "C0081",
+      "name": "Dolani Pty Ltd",
+      "billingPlatforms": "[\"DATAGATE\"]"
+    },
+    {
+      "externalId": "C0082",
+      "name": "Doyles Trade Centre",
+      "billingPlatforms": "[\"DATAGATE\",\"Sasboss\"]"
+    },
+    {
+      "externalId": "C0086",
+      "name": "Education and Care Hub Pty Ltd",
+      "billingPlatforms": "[\"DATAGATE\"]"
+    },
+    {
+      "externalId": "C0087",
+      "name": "Emergency Medicine Foundation",
+      "billingPlatforms": "[\"Sasboss\", \"DataGate\"]"
+    },
+    {
+      "externalId": "C2426",
+      "name": "Empowering Hive",
+      "billingPlatforms": "[\"DataGate\"]"
+    },
+    {
+      "externalId": "C0089",
+      "name": "Energy Pro Electrical",
+      "billingPlatforms": "[\"Sasboss\", \"DataGate\"]"
+    },
+    {
+      "externalId": "C2646",
+      "name": "Fortress Collision Repair Services Pty Ltd",
+      "billingPlatforms": "[\"DATAGATE\"]"
+    },
+    {
+      "externalId": "C0099",
+      "name": "Gainsdale Pty Ltd ATF The G.F. Turner Family Trust",
+      "billingPlatforms": "[\"DATAGATE\"]"
+    },
+    {
+      "externalId": "C0100",
+      "name": "Gateway Containers",
+      "billingPlatforms": "[\"DataGate\"]"
+    },
+    {
+      "externalId": "C2647",
+      "name": "Goodhew Electrical & Solar",
+      "billingPlatforms": "[\"DATAGATE\"]"
+    },
+    {
+      "externalId": "C0107",
+      "name": "Graphene Manufacturing Australia",
+      "billingPlatforms": "[\"Sasboss\",\"DATAGATE\"]"
+    },
+    {
+      "externalId": "C0116",
+      "name": "Hanwha Mining Services",
+      "billingPlatforms": "[\"DATAGATE\"]"
+    },
+    {
+      "externalId": "C7555",
+      "name": "Hazelwood Estate",
+      "billingPlatforms": "[\"DataGate\"]"
+    },
+    {
+      "externalId": "C2648",
+      "name": "Hefford Hampton Lawyers",
+      "billingPlatforms": "[\"DATAGATE\"]"
+    },
+    {
+      "externalId": "C0120",
+      "name": "Hip Pocket Logan",
+      "billingPlatforms": "[\"DATAGATE\"]"
+    },
+    {
+      "externalId": "C2649",
+      "name": "JDH Industrial",
+      "billingPlatforms": "[\"DATAGATE\"]"
+    },
+    {
+      "externalId": "C0128",
+      "name": "Jilrift Pty Ltd",
+      "billingPlatforms": "[\"DATAGATE\"]"
+    },
+    {
+      "externalId": "C0129",
+      "name": "Jude Turner",
+      "billingPlatforms": "[\"DATAGATE\"]"
+    },
+    {
+      "externalId": "C2650",
+      "name": "Law in Business",
+      "billingPlatforms": "[\"DataGate\"]"
+    },
+    {
+      "externalId": "C0134",
+      "name": "Lead Childcare Pty Ltd",
+      "billingPlatforms": "[\"DataGate\"]"
+    },
+    {
+      "externalId": "C0136",
+      "name": "Lead Institute",
+      "billingPlatforms": "[\"DATAGATE\",\"Sasboss\"]"
+    },
+    {
+      "externalId": "C0137",
+      "name": "Leading Childcare Pty Ltd",
+      "billingPlatforms": "[\"DATAGATE\"]"
+    },
+    {
+      "externalId": "C2651",
+      "name": "Legrand AV Australia",
+      "billingPlatforms": "[\"DATAGATE\"]"
+    },
+    {
+      "externalId": "C0138",
+      "name": "LFF Australia",
+      "billingPlatforms": "[\"OneBill\", \"DataGate\"]"
+    },
+    {
+      "externalId": "C2652",
+      "name": "Lifestyle Wealth Creation Group",
+      "billingPlatforms": "[\"DATAGATE\"]"
+    },
+    {
+      "externalId": "C0139",
+      "name": "LINK TRADING",
+      "billingPlatforms": "[\"DATAGATE\"]"
+    },
+    {
+      "externalId": "C0159",
+      "name": "Mega Electrics",
+      "billingPlatforms": "[\"Sasboss\", \"OneBill\", \"DataGate\"]"
+    },
+    {
+      "externalId": "C0161",
+      "name": "Middlemount Coal Pty Ltd",
+      "billingPlatforms": "[\"DataGate\"]"
+    },
+    {
+      "externalId": "C2654",
+      "name": "Mischief Travel",
+      "billingPlatforms": "[\"DATAGATE\"]"
+    },
+    {
+      "externalId": "C2653",
+      "name": "MSR Collision",
+      "billingPlatforms": "[\"DATAGATE\"]"
+    },
+    {
+      "externalId": "C0169",
+      "name": "Nina Bambino Dental",
+      "billingPlatforms": "[\"DATAGATE\",\"Sasboss\"]"
+    },
+    {
+      "externalId": "C7556",
+      "name": "Novus Glass",
+      "billingPlatforms": "[\"DataGate\"]"
+    },
+    {
+      "externalId": "C0177",
+      "name": "Nurturing Brain Potential",
+      "billingPlatforms": "[\"Sasboss\", \"DataGate\"]"
+    },
+    {
+      "externalId": "C0181",
+      "name": "Paedicare Pty Ltd",
+      "billingPlatforms": "[\"Sasboss\", \"DataGate\"]"
+    },
+    {
+      "externalId": "C0185",
+      "name": "PIP Theatre",
+      "billingPlatforms": "[\"DATAGATE\"]"
+    },
+    {
+      "externalId": "C2655",
+      "name": "Pleasure Cruises and Safaris",
+      "billingPlatforms": "[\"DATAGATE\"]"
+    },
+    {
+      "externalId": "C2656",
+      "name": "Primary Securities Limited ATF",
+      "billingPlatforms": "[\"DATAGATE\"]"
+    },
+    {
+      "externalId": "C0187",
+      "name": "Promogear",
+      "billingPlatforms": "[\"Sasboss\", \"DataGate\"]"
+    },
+    {
+      "externalId": "C0189",
+      "name": "Queensland Children's Gastroenterology",
+      "billingPlatforms": "[\"Sasboss\", \"DataGate\"]"
+    },
+    {
+      "externalId": "C2898",
+      "name": "Red Roo Australia",
+      "billingPlatforms": "[\"OneBill\", \"DataGate\"]"
+    },
+    {
+      "externalId": "C0191",
+      "name": "RedRoo Australia",
+      "billingPlatforms": "[\"DataGate\"]"
+    },
+    {
+      "externalId": "C0193",
+      "name": "Rentokil Initial Pty Ltd",
+      "billingPlatforms": "[\"DATAGATE\"]"
+    },
+    {
+      "externalId": "C0194",
+      "name": "Res-Com Air Conditioning Pty Ltd",
+      "billingPlatforms": "[\"DATAGATE\"]"
+    },
+    {
+      "externalId": "C0197",
+      "name": "River City Maintenance",
+      "billingPlatforms": "[\"DATAGATE\",\"Sasboss\"]"
+    },
+    {
+      "externalId": "C2657",
+      "name": "River Quarter No. 3 Development Co. Pty Ltd",
+      "billingPlatforms": "[\"DATAGATE\"]"
+    },
+    {
+      "externalId": "C2440",
+      "name": "Salter Brothers",
+      "billingPlatforms": "[\"DATAGATE\"]"
+    },
+    {
+      "externalId": "C0208",
+      "name": "Salter Brothers (Clovelly) Pty Ltd",
+      "billingPlatforms": "[\"DataGate\"]"
+    },
+    {
+      "externalId": "C0209",
+      "name": "Salter Brothers (Guesthouse) Pty Ltd",
+      "billingPlatforms": "[\"DATAGATE\"]"
+    },
+    {
+      "externalId": "C0210",
+      "name": "Salter Brothers (Peak Lodge) Pty Ltd",
+      "billingPlatforms": "[\"DATAGATE\"]"
+    },
+    {
+      "externalId": "C0211",
+      "name": "Salter Brothers (Sangoma) Pty Ltd",
+      "billingPlatforms": "[\"DataGate\"]"
+    },
+    {
+      "externalId": "C0212",
+      "name": "Salter Brothers (Tamarind) Pty Ltd",
+      "billingPlatforms": "[\"DATAGATE\"]"
+    },
+    {
+      "externalId": "C0213",
+      "name": "Salter Brothers (Vineyards) Pty Ltd",
+      "billingPlatforms": "[\"DataGate\"]"
+    },
+    {
+      "externalId": "C0214",
+      "name": "Salter Brothers Luxury Collection Operations Pty LTD",
+      "billingPlatforms": "[\"DATAGATE\"]"
+    },
+    {
+      "externalId": "C0216",
+      "name": "Salter Brothers Management Company Pty Ltd t/a Spicers Potts Point",
+      "billingPlatforms": "[\"DataGate\"]"
+    },
+    {
+      "externalId": "C2441",
+      "name": "Smile IT",
+      "billingPlatforms": "[\"DataGate\"]"
+    },
+    {
+      "externalId": "C0220",
+      "name": "Solahart Brisbane",
+      "billingPlatforms": "[\"DATAGATE\"]"
+    },
+    {
+      "externalId": "C2442",
+      "name": "Solar Centre Brisbane",
+      "billingPlatforms": "[\"DATAGATE\"]"
+    },
+    {
+      "externalId": "C2658",
+      "name": "Solar Centre Ipswich",
+      "billingPlatforms": "[\"DATAGATE\"]"
+    },
+    {
+      "externalId": "C0223",
+      "name": "Specialist Hail Repairs",
+      "billingPlatforms": "[\"DataGate\"]"
+    },
+    {
+      "externalId": "C0224",
+      "name": "Spicers Hiddenvale",
+      "billingPlatforms": "[\"DataGate\"]"
+    },
+    {
+      "externalId": "C0225",
+      "name": "Spicers Scenic Rim Trail",
+      "billingPlatforms": "[\"DATAGATE\"]"
+    },
+    {
+      "externalId": "C2446",
+      "name": "Spring Projects",
+      "billingPlatforms": "[\"OneBill\", \"DataGate\"]"
+    },
+    {
+      "externalId": "C0226",
+      "name": "Sta Consulting Engineers",
+      "billingPlatforms": "[\"Sasboss\", \"DataGate\"]"
+    },
+    {
+      "externalId": "C0234",
+      "name": "SWAG Motel Middlemount",
+      "billingPlatforms": "[\"DATAGATE\"]"
+    },
+    {
+      "externalId": "C2665",
+      "name": "Swains Motor Body Repairs",
+      "billingPlatforms": "[\"DATAGATE\"]"
+    },
+    {
+      "externalId": "C0235",
+      "name": "Swara",
+      "billingPlatforms": "[\"Sasboss\", \"DataGate\"]"
+    },
+    {
+      "externalId": "C0236",
+      "name": "T2 Electrical and Data",
+      "billingPlatforms": "[\"DATAGATE\", \"Sasboss\", \"OneBill\"]"
+    },
+    {
+      "externalId": "C2452",
+      "name": "Talisman Group",
+      "billingPlatforms": "[\"DataGate\"]"
+    },
+    {
+      "externalId": "C0237",
+      "name": "Talisman Partners",
+      "billingPlatforms": "[\"Sasboss\", \"DataGate\"]"
+    },
+    {
+      "externalId": "C0238",
+      "name": "Tennis Direct Australia",
+      "billingPlatforms": "[\"DATAGATE\"]"
+    },
+    {
+      "externalId": "C0243",
+      "name": "The Lune Co",
+      "billingPlatforms": "[\"DATAGATE\"]"
+    },
+    {
+      "externalId": "C0245",
+      "name": "The Packaging Place",
+      "billingPlatforms": "[\"DATAGATE\"]"
+    },
+    {
+      "externalId": "C0247",
+      "name": "The Sycamore School",
+      "billingPlatforms": "[\"Sasboss\", \"DataGate\"]"
+    },
+    {
+      "externalId": "C2667",
+      "name": "THRL Pty Ltd trading as Scenic Rim Trail",
+      "billingPlatforms": "[\"DATAGATE\"]"
+    },
+    {
+      "externalId": "C0267",
+      "name": "Touring Solutions Australia",
+      "billingPlatforms": "[\"OneBill\", \"DataGate\"]"
+    },
+    {
+      "externalId": "C2668",
+      "name": "Tower Lodge",
+      "billingPlatforms": "[\"DataGate\"]"
+    },
+    {
+      "externalId": "C0268",
+      "name": "TPG Rural 1 Pty Ltd",
+      "billingPlatforms": "[\"DATAGATE\"]"
+    },
+    {
+      "externalId": "C2669",
+      "name": "Tristar Australia",
+      "billingPlatforms": "[\"DataGate\"]"
+    },
+    {
+      "externalId": "C0273",
+      "name": "Turrisiproperty P/L",
+      "billingPlatforms": "[\"DATAGATE\"]"
+    },
+    {
+      "externalId": "C0287",
+      "name": "Wattlestone",
+      "billingPlatforms": "[\"Sasboss\", \"OneBill\", \"DataGate\"]"
+    },
+    {
+      "externalId": "C2670",
+      "name": "WG Interiors Pty Ltd",
+      "billingPlatforms": "[\"DATAGATE\"]"
+    },
+    {
+      "externalId": "C0290",
+      "name": "Wineology",
+      "billingPlatforms": "[\"DATAGATE\",\"Sasboss\"]"
+    },
+    {
+      "externalId": "C2671",
+      "name": "Young Guns Container Crew",
+      "billingPlatforms": "[\"DataGate\"]"
+    },
+    {
+      "externalId": "C2813",
+      "name": "Zambrero - Mentone",
+      "billingPlatforms": "[\"DataGate\"]"
+    },
+    {
+      "externalId": "C0364",
+      "name": "Zambrero Morayfield",
+      "billingPlatforms": "[\"OneBill\", \"DataGate\"]"
+    }
+  ],
+  "messages": [],
+  "stdout": "externalId\tname\tbillingPlatforms\nC2638\tAffinity Partners Pty Ltd\t[\"DATAGATE\"]\nC7557\tASDL Ltd\t[\"DataGate\"]\nC2415\tASG\t[\"DataGate\"]\nC0015\tASG Hail Pty Ltd\t[\"DataGate\"]\nC2639\tAussie Hail Pty Ltd\t[\"DataGate\"]\nC0025\tAustralian Air Science Pty Ltd\t[\"DATAGATE\"]\nC0026\tAustralian Computer Traders\t[\"DATAGATE\"]\nC0027\tAustralian Resort Management Pty Ltd\t[\"Sasboss\", \"DataGate\"]\nC2640\tBack Track Adventures\t[\"DataGate\"]\nC0029\tBack2Health\t[\"DATAGATE\",\"Sasboss\"]\nC0030\tBalanced Business Accounting\t[\"DATAGATE\",\"Sasboss\"]\nC0031\tBalgra Shopping Centre Management Pty Ltd\t[\"DATAGATE\"]\nC0034\tBar Alto\t[\"DATAGATE\"]\nC2641\tBeechmont Estate\t[\"DATAGATE\"]\nC2643\tBetter Business Finance\t[\"DATAGATE\"]\nC0045\tBranyan Early Learning Centre\t[\"DATAGATE\",\"Sasboss\"]\nC0047\tBrimar Pty Ltd\t[\"DataGate\"]\nC2419\tBuys Court\t[\"DATAGATE\"]\nC0050\tBuys Court Pty Ltd\t[\"DATAGATE\"]\nC2644\tCampos Coffee Qld\t[\"DATAGATE\"]\nC0054\tCaravan and RV Works\t[\"DATAGATE\"]\nC2645\tCarroll Consulting\t[\"DATAGATE\"]\nC0056\tCC Innovation Pty Ltd\t[\"DATAGATE\"]\nC0058\tCF Aust Pty Ltd\t[\"DATAGATE\"]\nC2422\tCMC\t[\"DataGate\"]\nC0062\tCMC Property Management\t[\"DATAGATE\",\"Sasboss\"]\nC0065\tCompass Assurance Services Pty Ltd\t[\"DATAGATE\"]\nC2424\tCPM\t[\"DataGate\"]\nC0070\tCPM Advisory and Project Management\t[\"DATAGATE\",\"Sasboss\"]\nC0071\tCreative Early Learning Group PTY LTD\t[\"DATAGATE\"]\nC0081\tDolani Pty Ltd\t[\"DATAGATE\"]\nC0082\tDoyles Trade Centre\t[\"DATAGATE\",\"Sasboss\"]\nC0086\tEducation and Care Hub Pty Ltd\t[\"DATAGATE\"]\nC0087\tEmergency Medicine Foundation\t[\"Sasboss\", \"DataGate\"]\nC2426\tEmpowering Hive\t[\"DataGate\"]\nC0089\tEnergy Pro Electrical\t[\"Sasboss\", \"DataGate\"]\nC2646\tFortress Collision Repair Services Pty Ltd\t[\"DATAGATE\"]\nC0099\tGainsdale Pty Ltd ATF The G.F. Turner Family Trust\t[\"DATAGATE\"]\nC0100\tGateway Containers\t[\"DataGate\"]\nC2647\tGoodhew Electrical & Solar\t[\"DATAGATE\"]\nC0107\tGraphene Manufacturing Australia\t[\"Sasboss\",\"DATAGATE\"]\nC0116\tHanwha Mining Services\t[\"DATAGATE\"]\nC7555\tHazelwood Estate\t[\"DataGate\"]\nC2648\tHefford Hampton Lawyers\t[\"DATAGATE\"]\nC0120\tHip Pocket Logan\t[\"DATAGATE\"]\nC2649\tJDH Industrial\t[\"DATAGATE\"]\nC0128\tJilrift Pty Ltd\t[\"DATAGATE\"]\nC0129\tJude Turner\t[\"DATAGATE\"]\nC2650\tLaw in Business\t[\"DataGate\"]\nC0134\tLead Childcare Pty Ltd\t[\"DataGate\"]\nC0136\tLead Institute\t[\"DATAGATE\",\"Sasboss\"]\nC0137\tLeading Childcare Pty Ltd\t[\"DATAGATE\"]\nC2651\tLegrand AV Australia\t[\"DATAGATE\"]\nC0138\tLFF Australia\t[\"OneBill\", \"DataGate\"]\nC2652\tLifestyle Wealth Creation Group\t[\"DATAGATE\"]\nC0139\tLINK TRADING\t[\"DATAGATE\"]\nC0159\tMega Electrics\t[\"Sasboss\", \"OneBill\", \"DataGate\"]\nC0161\tMiddlemount Coal Pty Ltd\t[\"DataGate\"]\nC2654\tMischief Travel\t[\"DATAGATE\"]\nC2653\tMSR Collision\t[\"DATAGATE\"]\nC0169\tNina Bambino Dental\t[\"DATAGATE\",\"Sasboss\"]\nC7556\tNovus Glass\t[\"DataGate\"]\nC0177\tNurturing Brain Potential\t[\"Sasboss\", \"DataGate\"]\nC0181\tPaedicare Pty Ltd\t[\"Sasboss\", \"DataGate\"]\nC0185\tPIP Theatre\t[\"DATAGATE\"]\nC2655\tPleasure Cruises and Safaris\t[\"DATAGATE\"]\nC2656\tPrimary Securities Limited ATF\t[\"DATAGATE\"]\nC0187\tPromogear\t[\"Sasboss\", \"DataGate\"]\nC0189\tQueensland Children's Gastroenterology\t[\"Sasboss\", \"DataGate\"]\nC2898\tRed Roo Australia\t[\"OneBill\", \"DataGate\"]\nC0191\tRedRoo Australia\t[\"DataGate\"]\nC0193\tRentokil Initial Pty Ltd\t[\"DATAGATE\"]\nC0194\tRes-Com Air Conditioning Pty Ltd\t[\"DATAGATE\"]\nC0197\tRiver City Maintenance\t[\"DATAGATE\",\"Sasboss\"]\nC2657\tRiver Quarter No. 3 Development Co. Pty Ltd\t[\"DATAGATE\"]\nC2440\tSalter Brothers\t[\"DATAGATE\"]\nC0208\tSalter Brothers (Clovelly) Pty Ltd\t[\"DataGate\"]\nC0209\tSalter Brothers (Guesthouse) Pty Ltd\t[\"DATAGATE\"]\nC0210\tSalter Brothers (Peak Lodge) Pty Ltd\t[\"DATAGATE\"]\nC0211\tSalter Brothers (Sangoma) Pty Ltd\t[\"DataGate\"]\nC0212\tSalter Brothers (Tamarind) Pty Ltd\t[\"DATAGATE\"]\nC0213\tSalter Brothers (Vineyards) Pty Ltd\t[\"DataGate\"]\nC0214\tSalter Brothers Luxury Collection Operations Pty LTD\t[\"DATAGATE\"]\nC0216\tSalter Brothers Management Company Pty Ltd t/a Spicers Potts Point\t[\"DataGate\"]\nC2441\tSmile IT\t[\"DataGate\"]\nC0220\tSolahart Brisbane\t[\"DATAGATE\"]\nC2442\tSolar Centre Brisbane\t[\"DATAGATE\"]\nC2658\tSolar Centre Ipswich\t[\"DATAGATE\"]\nC0223\tSpecialist Hail Repairs\t[\"DataGate\"]\nC0224\tSpicers Hiddenvale\t[\"DataGate\"]\nC0225\tSpicers Scenic Rim Trail\t[\"DATAGATE\"]\nC2446\tSpring Projects\t[\"OneBill\", \"DataGate\"]\nC0226\tSta Consulting Engineers\t[\"Sasboss\", \"DataGate\"]\nC0234\tSWAG Motel Middlemount\t[\"DATAGATE\"]\nC2665\tSwains Motor Body Repairs\t[\"DATAGATE\"]\nC0235\tSwara\t[\"Sasboss\", \"DataGate\"]\nC0236\tT2 Electrical and Data\t[\"DATAGATE\", \"Sasboss\", \"OneBill\"]\nC2452\tTalisman Group\t[\"DataGate\"]\nC0237\tTalisman Partners\t[\"Sasboss\", \"DataGate\"]\nC0238\tTennis Direct Australia\t[\"DATAGATE\"]\nC0243\tThe Lune Co\t[\"DATAGATE\"]\nC0245\tThe Packaging Place\t[\"DATAGATE\"]\nC0247\tThe Sycamore School\t[\"Sasboss\", \"DataGate\"]\nC2667\tTHRL Pty Ltd trading as Scenic Rim Trail\t[\"DATAGATE\"]\nC0267\tTouring Solutions Australia\t[\"OneBill\", \"DataGate\"]\nC2668\tTower Lodge\t[\"DataGate\"]\nC0268\tTPG Rural 1 Pty Ltd\t[\"DATAGATE\"]\nC2669\tTristar Australia\t[\"DataGate\"]\nC0273\tTurrisiproperty P/L\t[\"DATAGATE\"]\nC0287\tWattlestone\t[\"Sasboss\", \"OneBill\", \"DataGate\"]\nC2670\tWG Interiors Pty Ltd\t[\"DATAGATE\"]\nC0290\tWineology\t[\"DATAGATE\",\"Sasboss\"]\nC2671\tYoung Guns Container Crew\t[\"DataGate\"]\nC2813\tZambrero - Mentone\t[\"DataGate\"]\nC0364\tZambrero Morayfield\t[\"OneBill\", \"DataGate\"]\n",
+  "stderr": "",
+  "execution_time_ms": 1607
+}

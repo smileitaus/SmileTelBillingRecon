@@ -1,0 +1,30 @@
+{
+  "query": "\nSELECT 'tiab_supplier_invoices' as tbl, COUNT(*) as cnt FROM tiab_supplier_invoices\nUNION ALL\nSELECT 'tiab_supplier_invoice_line_items', COUNT(*) FROM tiab_supplier_invoice_line_items\nUNION ALL\nSELECT 'octane_customer_links', COUNT(*) FROM octane_customer_links\nUNION ALL\nSELECT 'tiab_customers', COUNT(*) FROM tiab_customers\nUNION ALL\nSELECT 'tiab_services', COUNT(*) FROM tiab_services;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \nSELECT 'tiab_supplier_invoices' as tbl, COUNT(*) as cnt FROM tiab_supplier_invoices\nUNION ALL\nSELECT 'tiab_supplier_invoice_line_items', COUNT(*) FROM tiab_supplier_invoice_line_items\nUNION ALL\nSELECT 'octane_customer_links', COUNT(*) FROM octane_customer_links\nUNION ALL\nSELECT 'tiab_customers', COUNT(*) FROM tiab_customers\nUNION ALL\nSELECT 'tiab_services', COUNT(*) FROM tiab_services;\n",
+  "rows": [
+    {
+      "tbl": "tiab_supplier_invoices",
+      "cnt": "4"
+    },
+    {
+      "tbl": "tiab_customers",
+      "cnt": "31"
+    },
+    {
+      "tbl": "tiab_supplier_invoice_line_items",
+      "cnt": "10"
+    },
+    {
+      "tbl": "tiab_services",
+      "cnt": "84"
+    },
+    {
+      "tbl": "octane_customer_links",
+      "cnt": "111"
+    }
+  ],
+  "messages": [],
+  "stdout": "tbl\tcnt\ntiab_supplier_invoices\t4\ntiab_customers\t31\ntiab_supplier_invoice_line_items\t10\ntiab_services\t84\noctane_customer_links\t111\n",
+  "stderr": "",
+  "execution_time_ms": 1601
+}
