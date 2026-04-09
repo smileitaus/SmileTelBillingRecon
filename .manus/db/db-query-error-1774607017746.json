@@ -1,8 +1,0 @@
-{
-  "query": "\n-- Check the 15 tiab_services with customer match but no service link\nSELECT ts.tiabServiceId, ts.tiabCustomerId, ts.msisdn, ts.planName, ts.status,\n       tc.internalCustomerExternalId, tc.contactName\nFROM tiab_services ts\nJOIN tiab_customers tc ON ts.tiabCustomerId = tc.tiabCustomerId\nWHERE ts.reconStatus = 'customer_matched'\nORDER BY tc.contactName;\n",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Check the 15 tiab_services with customer match but no service link\nSELECT ts.tiabServiceId, ts.tiabCustomerId, ts.msisdn, ts.planName, ts.status,\n       tc.internalCustomerExternalId, tc.contactName\nFROM tiab_services ts\nJOIN tiab_customers tc ON ts.tiabCustomerId = tc.tiabCustomerId\nWHERE ts.reconStatus = 'customer_matched'\nORDER BY tc.contactName;\n",
-  "returncode": 1,
-  "logs": [
-    "ERROR 1054 (42S22) at line 3: Unknown column 'tc.contactName' in 'order clause'"
-  ]
-}

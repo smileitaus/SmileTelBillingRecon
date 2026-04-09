@@ -1,8 +1,0 @@
-{
-  "query": "\nCREATE TABLE `revenue_groups` (\n\t`id` int AUTO_INCREMENT NOT NULL,\n\t`groupId` varchar(64) NOT NULL,\n\t`name` varchar(255) NOT NULL,\n\t`type` varchar(32) NOT NULL DEFAULT 'voice_pack',\n\t`customerExternalId` varchar(64) NOT NULL,\n\t`customerName` varchar(255) DEFAULT '',\n\t`totalRevenue` decimal(10,2) NOT NULL DEFAULT '0.00',\n\t`notes` text,\n\t`autoDetected` int NOT NULL DEFAULT 0,\n\t`createdAt` timestamp NOT NULL DEFAULT (now()),\n\t`updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,\n\tCONSTRAINT `revenue_groups_id` PRIMARY KEY(`id`),\n\tCONSTRAINT `revenue_groups_groupId_unique` UNIQUE(`groupId`)\n);\n",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \nCREATE TABLE `revenue_groups` (\n\t`id` int AUTO_INCREMENT NOT NULL,\n\t`groupId` varchar(64) NOT NULL,\n\t`name` varchar(255) NOT NULL,\n\t`type` varchar(32) NOT NULL DEFAULT 'voice_pack',\n\t`customerExternalId` varchar(64) NOT NULL,\n\t`customerName` varchar(255) DEFAULT '',\n\t`totalRevenue` decimal(10,2) NOT NULL DEFAULT '0.00',\n\t`notes` text,\n\t`autoDetected` int NOT NULL DEFAULT 0,\n\t`createdAt` timestamp NOT NULL DEFAULT (now()),\n\t`updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,\n\tCONSTRAINT `revenue_groups_id` PRIMARY KEY(`id`),\n\tCONSTRAINT `revenue_groups_groupId_unique` UNIQUE(`groupId`)\n);\n",
-  "returncode": 1,
-  "logs": [
-    "ERROR 1050 (42S01) at line 2: Table 'SkibUwiSvPndpvTSJv52KC.revenue_groups' already exists"
-  ]
-}

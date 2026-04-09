@@ -1,8 +1,0 @@
-{
-  "query": "\n-- ChannelHaus billing items\nSELECT DISTINCT bi.description, ROUND(bi.lineAmount, 2) AS amount, c.name AS customer\nFROM billing_items bi\nJOIN customers c ON c.externalId = bi.customerExternalId\nWHERE bi.customerExternalId IN (\n  SELECT DISTINCT customerExternalId FROM services WHERE provider = 'ChannelHaus'\n)\nAND bi.lineAmount > 0\nORDER BY bi.lineAmount DESC\nLIMIT 15;\n",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- ChannelHaus billing items\nSELECT DISTINCT bi.description, ROUND(bi.lineAmount, 2) AS amount, c.name AS customer\nFROM billing_items bi\nJOIN customers c ON c.externalId = bi.customerExternalId\nWHERE bi.customerExternalId IN (\n  SELECT DISTINCT customerExternalId FROM services WHERE provider = 'ChannelHaus'\n)\nAND bi.lineAmount > 0\nORDER BY bi.lineAmount DESC\nLIMIT 15;\n",
-  "returncode": 1,
-  "logs": [
-    "ERROR 3065 (HY000) at line 3: Expression #1 of ORDER BY clause is not in SELECT list, references column 'skibuwisvpndpvtsjv52kc.billing_items.lineamount' which is not in SELECT list; this is incompatible with DISTINCT"
-  ]
-}

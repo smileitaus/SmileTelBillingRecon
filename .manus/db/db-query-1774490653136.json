@@ -1,9 +1,0 @@
-{
-  "query": "\n-- Check S1UMC04 customer\nSELECT customerExternalId FROM services WHERE externalId = 'S1UMC04' LIMIT 1;\n",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Check S1UMC04 customer\nSELECT customerExternalId FROM services WHERE externalId = 'S1UMC04' LIMIT 1;\n",
-  "rows": [],
-  "messages": [],
-  "stdout": "",
-  "stderr": "",
-  "execution_time_ms": 1522
-}

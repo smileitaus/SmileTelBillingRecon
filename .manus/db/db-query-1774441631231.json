@@ -1,9 +1,0 @@
-{
-  "query": "\n-- The 9 unmatched SasBoss Voice services have no customer name and no service ID\n-- They appear to be Smile IT internal/demo UCXcel seats and blank entries\n-- Assign them to Smile IT (C9003 = primary Smile IT record with businessName set)\nUPDATE services SET \n  customerExternalId = 'C9003',\n  customerName = 'Smile IT',\n  status = 'active'\nWHERE externalId IN ('SS1NJNTP', 'SSL0OO3Q', 'SSQ16U1I', 'SSWDCLAW', 'SSORVHG1', 'SS4HTBPC', 'SSWJNY05', 'SSNHX6ZD', 'SS011MSO')\n  AND (customerExternalId IS NULL OR customerExternalId = '');\n",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- The 9 unmatched SasBoss Voice services have no customer name and no service ID\n-- They appear to be Smile IT internal/demo UCXcel seats and blank entries\n-- Assign them to Smile IT (C9003 = primary Smile IT record with businessName set)\nUPDATE services SET \n  customerExternalId = 'C9003',\n  customerName = 'Smile IT',\n  status = 'active'\nWHERE externalId IN ('SS1NJNTP', 'SSL0OO3Q', 'SSQ16U1I', 'SSWDCLAW', 'SSORVHG1', 'SS4HTBPC', 'SSWJNY05', 'SSNHX6ZD', 'SS011MSO')\n  AND (customerExternalId IS NULL OR customerExternalId = '');\n",
-  "rows": [],
-  "messages": [],
-  "stdout": "",
-  "stderr": "",
-  "execution_time_ms": 1553
-}

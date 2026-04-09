@@ -1,9 +1,0 @@
-{
-  "query": "\nUPDATE customers SET customerType = 'standard' WHERE customerType = 'retail_offering';\n\nUPDATE customers SET customerType = 'retail_offering'\nWHERE externalId IN (\n  SELECT DISTINCT customerExternalId FROM billing_items\n  WHERE description LIKE '%SmileTel supplied NBN voice and internet bundle%'\n     OR description LIKE '%Site Bundle%'\n     OR description LIKE '%SmileTel supplied mobile broadband%'\n     OR description LIKE 'ST- NBN%'\n     OR description LIKE 'ST-NBN%'\n);\n",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \nUPDATE customers SET customerType = 'standard' WHERE customerType = 'retail_offering';\n\nUPDATE customers SET customerType = 'retail_offering'\nWHERE externalId IN (\n  SELECT DISTINCT customerExternalId FROM billing_items\n  WHERE description LIKE '%SmileTel supplied NBN voice and internet bundle%'\n     OR description LIKE '%Site Bundle%'\n     OR description LIKE '%SmileTel supplied mobile broadband%'\n     OR description LIKE 'ST- NBN%'\n     OR description LIKE 'ST-NBN%'\n);\n",
-  "rows": [],
-  "messages": [],
-  "stdout": "",
-  "stderr": "",
-  "execution_time_ms": 1892
-}

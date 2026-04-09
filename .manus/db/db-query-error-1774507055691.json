@@ -1,8 +1,0 @@
-{
-  "query": "\nSELECT s.id, s.externalId, s.serviceId, s.serviceType, s.planName, s.monthlyCost, s.supplierName, s.dataSource,\n       s.customerExternalId, s.customerName as svcCustomerName, c.name as customerName\nFROM services s\nLEFT JOIN customers c ON s.customerExternalId = c.externalId\nWHERE s.supplierName = 'Channel Haus'\n  AND (s.isUnbillable = 0 OR s.isUnbillable IS NULL)\nORDER BY c.name, s.serviceId\nLIMIT 50;\n",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \nSELECT s.id, s.externalId, s.serviceId, s.serviceType, s.planName, s.monthlyCost, s.supplierName, s.dataSource,\n       s.customerExternalId, s.customerName as svcCustomerName, c.name as customerName\nFROM services s\nLEFT JOIN customers c ON s.customerExternalId = c.externalId\nWHERE s.supplierName = 'Channel Haus'\n  AND (s.isUnbillable = 0 OR s.isUnbillable IS NULL)\nORDER BY c.name, s.serviceId\nLIMIT 50;\n",
-  "returncode": 1,
-  "logs": [
-    "ERROR 1054 (42S22) at line 2: Unknown column 's.isunbillable' in 'where clause'"
-  ]
-}

@@ -1,9 +1,0 @@
-{
-  "query": "\nALTER TABLE services ADD COLUMN revenueGroupId VARCHAR(64) NULL DEFAULT NULL;\nALTER TABLE services ADD COLUMN revenueGroupLabel VARCHAR(255) NULL DEFAULT NULL;\nCREATE INDEX idx_services_revenue_group ON services(revenueGroupId);\n",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \nALTER TABLE services ADD COLUMN revenueGroupId VARCHAR(64) NULL DEFAULT NULL;\nALTER TABLE services ADD COLUMN revenueGroupLabel VARCHAR(255) NULL DEFAULT NULL;\nCREATE INDEX idx_services_revenue_group ON services(revenueGroupId);\n",
-  "rows": [],
-  "messages": [],
-  "stdout": "",
-  "stderr": "",
-  "execution_time_ms": 3303
-}

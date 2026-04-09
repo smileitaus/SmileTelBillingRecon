@@ -1,9 +1,0 @@
-{
-  "query": "\n-- The golf club has no services in the services table - it's already effectively inactive.\n-- Mark the customer as terminated.\nUPDATE customers SET status = 'terminated' WHERE externalId = 'C0241';\n\n-- Also check if there's a vocus_nbn_services entry for this customer\nSELECT vocusServiceId, planId, serviceStatus, customerName, address, suburb\nFROM vocus_nbn_services \nWHERE customerName LIKE '%Tewantin%' OR customerName LIKE '%Golf%'\nLIMIT 5;\n",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- The golf club has no services in the services table - it's already effectively inactive.\n-- Mark the customer as terminated.\nUPDATE customers SET status = 'terminated' WHERE externalId = 'C0241';\n\n-- Also check if there's a vocus_nbn_services entry for this customer\nSELECT vocusServiceId, planId, serviceStatus, customerName, address, suburb\nFROM vocus_nbn_services \nWHERE customerName LIKE '%Tewantin%' OR customerName LIKE '%Golf%'\nLIMIT 5;\n",
-  "rows": [],
-  "messages": [],
-  "stdout": "",
-  "stderr": "",
-  "execution_time_ms": 1823
-}

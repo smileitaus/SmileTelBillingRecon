@@ -1,9 +1,0 @@
-{
-  "query": "\n-- Check how many services got tagged\nSELECT COUNT(*) AS tagged, COUNT(DISTINCT revenueGroupId) AS groups\nFROM services WHERE revenueGroupId IS NOT NULL;\n",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Check how many services got tagged\nSELECT COUNT(*) AS tagged, COUNT(DISTINCT revenueGroupId) AS groups\nFROM services WHERE revenueGroupId IS NOT NULL;\n",
-  "returncode": 1,
-  "logs": [
-    "ERROR 1064 (42000) at line 3: You have an error in your SQL syntax; check the manual that corresponds to your TiDB version for the right syntax to use line 1 column 67 near \"groups",
-    "FROM services WHERE revenueGroupId IS NOT NULL\""
-  ]
-}

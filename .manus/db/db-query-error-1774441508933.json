@@ -1,8 +1,0 @@
-{
-  "query": "\n-- Check the sasboss_services table for UCXcel and blank plan services\nSELECT \n  ss.service_id, ss.enterprise_id, ss.enterprise_name, ss.service_ref_id,\n  ss.product_name, ss.product_type, ss.monthly_recurring, ss.status\nFROM sasboss_services ss\nWHERE ss.product_name IN ('UCXcel Essential', 'UCXcel Webex Basic', '')\n   OR ss.product_name IS NULL\nORDER BY ss.enterprise_name, ss.product_name\nLIMIT 20;\n",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \n-- Check the sasboss_services table for UCXcel and blank plan services\nSELECT \n  ss.service_id, ss.enterprise_id, ss.enterprise_name, ss.service_ref_id,\n  ss.product_name, ss.product_type, ss.monthly_recurring, ss.status\nFROM sasboss_services ss\nWHERE ss.product_name IN ('UCXcel Essential', 'UCXcel Webex Basic', '')\n   OR ss.product_name IS NULL\nORDER BY ss.enterprise_name, ss.product_name\nLIMIT 20;\n",
-  "returncode": 1,
-  "logs": [
-    "ERROR 1054 (42S22) at line 3: Unknown column 'ss.product_type' in 'field list'"
-  ]
-}

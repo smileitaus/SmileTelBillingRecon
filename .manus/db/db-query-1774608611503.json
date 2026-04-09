@@ -1,9 +1,0 @@
-{
-  "query": "\nSELECT COLUMN_NAME, COLUMN_TYPE \nFROM INFORMATION_SCHEMA.COLUMNS \nWHERE TABLE_NAME = 'services' AND TABLE_SCHEMA = DATABASE()\n  AND COLUMN_NAME REGEXP 'avc|address|contract|speed|supplier|plan'\nORDER BY ORDINAL_POSITION;\n",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user dgdAH8nVC5Tv7xw.94a9498ba7da --database SkibUwiSvPndpvTSJv52KC --execute \nSELECT COLUMN_NAME, COLUMN_TYPE \nFROM INFORMATION_SCHEMA.COLUMNS \nWHERE TABLE_NAME = 'services' AND TABLE_SCHEMA = DATABASE()\n  AND COLUMN_NAME REGEXP 'avc|address|contract|speed|supplier|plan'\nORDER BY ORDINAL_POSITION;\n",
-  "rows": [],
-  "messages": [],
-  "stdout": "",
-  "stderr": "",
-  "execution_time_ms": 1575
-}
